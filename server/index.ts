@@ -84,6 +84,31 @@ import passwordResetRouter from "./routes/password-reset";
 
 const app = express();
 
+// CORS middleware for production (Vercel frontend)
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://my-perfect-meals-frontend-clean.vercel.app',
+    'http://localhost:5173', // for local dev
+    'http://localhost:5000'  // for Replit dev
+  ];
+
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Device-Id');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 // Trust proxy MUST be set before any middleware that uses req.ip
 // Railway uses 1 proxy hop - trust exactly 1 in production, none in dev
 const isProd = process.env.NODE_ENV === "production";
@@ -109,7 +134,7 @@ app.use(logger);
 // CORS headers for API access with credentials support
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  
+
   // Build allowed origins from multiple sources
   const corsOrigins = process.env.CORS_ORIGIN?.split(',').map(o => o.trim()) || [];
   const allowedOrigins = [
@@ -124,7 +149,7 @@ app.use((req, res, next) => {
     "https://www.myperfectmeals.com",
     // Allow Vercel preview deployments (format: *.vercel.app)
   ].filter(Boolean);
-  
+
   // Also allow Vercel preview domains (ending with .vercel.app)
   const isVercelPreview = origin && origin.endsWith('.vercel.app');
 
@@ -138,10 +163,10 @@ app.use((req, res, next) => {
       log("cors", `Blocked origin: ${origin}`);
     }
   }
-  
+
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-device-id');
-  
+
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
@@ -310,14 +335,14 @@ app.post("/api/meals/holiday-feast", async (req, res) => {
   console.log("🎯 WORKING Holiday Feast route HIT! Body:", req.body);
   try {
     const { generateHolidayFeast } = await import("./services/holidayFeastService");
-    
+
     // Map frontend fields to backend fields
     const occasion = req.body.holiday || req.body.occasion || "Christmas";
     const servings = req.body.numberOfGuests || req.body.servings || 6;
     const counts = req.body.courses || req.body.counts || { appetizers: 1, mainDishes: 1, sideDishes: 1, desserts: 1 };
-    
+
     console.log("🔍 Mapped data:", { occasion, servings, counts });
-    
+
     const result = await generateHolidayFeast({
       occasion,
       servings,
@@ -327,7 +352,7 @@ app.post("/api/meals/holiday-feast", async (req, res) => {
       budgetLevel: req.body.budgetLevel || "moderate",
       familyRecipe: req.body.familyRecipe,
     });
-    
+
     res.json({
       holiday: occasion,
       servings: servings,
@@ -360,7 +385,7 @@ app.post("/api/meals/kids", async (req, res) => {
   try {
     const { storage } = await import("./storage");
     const { preferences, userId, servings = 1 } = req.body;
-    
+
     // Get user data for medical personalization
     let user = null;
     if (userId) {
@@ -370,7 +395,7 @@ app.post("/api/meals/kids", async (req, res) => {
         console.log("Could not fetch user for kids meal personalization:", error);
       }
     }
-    
+
     // Use stable catalog-based generation with ENFORCED kid-friendly scope
     const { generateCravingMeal } = await import("./services/stableMealGenerator");
     const userPrefs = {
@@ -382,9 +407,9 @@ app.post("/api/meals/kids", async (req, res) => {
       catalogScope: "kids",     // ENFORCED: Kids catalog only
       servings: servings
     };
-    
+
     console.log("🧒 KIDS ROUTE: Enforcing kidFriendly=true for:", preferences);
-    
+
     const generatedMeal = await generateCravingMeal(
       "lunch",          // targetMealType
       preferences,      // craving input
@@ -454,13 +479,13 @@ app.post("/twilio/inbound", express.urlencoded({ extended: false }), async (req,
   const from = req.body.From; 
   const body = String(req.body.Body || "").trim().toUpperCase();
   console.log(`Inbound SMS from ${from}: ${body}`);
-  
+
   // Handle STOP/START/HELP
   if (body === "STOP" || body === "UNSTOP" || body === "START") {
     const { userSmsSettings } = await import("./db/schema/sms");
     const { eq } = await import("drizzle-orm");
     const { db } = await import("./db");
-    
+
     const consent = body !== "STOP";
     await db.update(userSmsSettings)
       .set({ consent })
