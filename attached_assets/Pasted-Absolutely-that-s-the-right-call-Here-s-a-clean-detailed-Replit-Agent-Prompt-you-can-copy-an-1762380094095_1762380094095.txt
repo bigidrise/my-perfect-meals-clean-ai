@@ -1,0 +1,55 @@
+Absolutely — that’s the right call. Here’s a clean, detailed **Replit Agent Prompt** you can copy and paste directly into your Replit AI Assistant so the architect can quickly understand everything and help isolate the issue:
+
+---
+
+### 🧠 Replit Agent Prompt
+
+> **Prompt Title:** Vercel Build Using Wrong API Base (Needs Backend Route Resolution)
+
+**Prompt:**
+
+We deployed our My Perfect Meals full-stack app (Vite + Express) to **Vercel** for the frontend and **Render** for the backend (API).
+The app builds and loads fine on Vercel, but **the onboarding “Save” function fails** with 404 errors like these:
+
+```
+PUT https://my-perfect-meals-frontend-clean.vercel.app/api/onboarding/step/step-1 404 (Not Found)
+GET https://my-perfect-meals-frontend-clean.vercel.app/api/onboarding/progress?userId=1 404 (Not Found)
+```
+
+✅ The backend (Express server) is deployed separately on Render and works correctly when tested directly:
+
+```
+https://my-perfect-meals-clean-ai.onrender.com/api/health
+→ Returns ok: true
+```
+
+✅ Vercel environment variables are fully configured:
+
+```
+VITE_API_BASE=https://my-perfect-meals-clean-ai.onrender.com/api
+VITE_API_BASE_URL=https://my-perfect-meals-clean-ai.onrender.com/api
+VITE_API_URL=https://my-perfect-meals-clean-ai.onrender.com/api
+```
+
+All are applied to **Production, Preview, and Development**.
+
+❌ But the Vercel build is still calling `https://my-perfect-meals-frontend-clean.vercel.app/api/...` instead of the Render API base URL.
+Even after full redeploys **without cache**, the frontend ignores those env vars.
+
+I confirmed that API base resolution logic is in:
+
+* `client/src/lib/resolveApiBase.ts`
+* `client/src/lib/api.ts`
+
+and these use `import.meta.env.VITE_API_BASE` or `VITE_API_BASE_URL`.
+Even so, it keeps using the same-origin domain (Vercel).
+
+**Ask:**
+Can you identify why the Vite build on Vercel is ignoring the `VITE_API_BASE` variables and defaulting to same-origin?
+Also, confirm whether Vercel injects `import.meta.env` at build time or runtime.
+If this is baked at build time, should we hardcode the Render base URL in `resolveApiBase.ts` for production only (e.g., `if (import.meta.env.PROD)`)?
+Is there a better approach for this environment separation when frontend (Vercel) and backend (Render) are split?
+
+---
+
+Would you like me to include a final note for them referencing the repo name or branch (`my-perfect-meals-frontend-clean`) so they can locate the exact project quickly?
