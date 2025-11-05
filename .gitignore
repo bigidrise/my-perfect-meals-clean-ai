@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.vercel/
+.next/
+out/
+.env
+.env.*
+.DS_Store
+*.log
+.vscode/
+.idea/
+.replit

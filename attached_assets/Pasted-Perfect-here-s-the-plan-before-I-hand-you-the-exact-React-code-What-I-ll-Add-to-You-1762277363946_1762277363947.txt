@@ -1,0 +1,130 @@
+Perfect ✅ — here’s the plan before I hand you the exact React code:
+
+---
+
+## 💡 What I’ll Add to Your Biometrics Page
+
+**New Section:**
+Right above your manual macro entry grid (`Protein`, `Carbs`, `Fat`, `Calories`),
+you’ll get a button:
+
+```tsx
+<Button
+  onClick={handlePhotoUpload}
+  className="w-full bg-orange-600 hover:bg-orange-700 text-white mt-2"
+>
+  📸 Log from Photo
+</Button>
+```
+
+When clicked:
+
+1. It opens your camera or file picker.
+2. Sends the image to **OpenAI GPT-4o Vision**.
+3. GPT analyzes it and returns structured macros:
+
+   ```json
+   { "item": "Grilled chicken with rice", "calories": 420, "protein": 38, "carbs": 32, "fat": 12 }
+   ```
+4. The values auto-fill your macro input boxes.
+
+---
+
+## ⚙️ Requirements (You Already Have Most)
+
+* You must have `OPENAI_API_KEY` in your `.env` file (Vite reads it as `VITE_OPENAI_API_KEY`).
+* No backend rewrite needed — runs fully client-side.
+* Works on desktop and mobile.
+
+---
+
+## 🚀 Here’s the Add-In Code Snippet
+
+Paste this inside your Biometrics component, **below your imports but before the `return`**, where other hooks live:
+
+```tsx
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
+
+async function handlePhotoUpload() {
+  try {
+    // Prompt user to select or capture photo
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.capture = "environment";
+    input.click();
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const imageDataUrl = reader.result as string;
+
+        // Send to GPT-4o Vision
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a nutrition AI that analyzes food images and estimates nutrition values. Respond ONLY in JSON format.",
+            },
+            {
+              role: "user",
+              content: [
+                { type: "text", text: "Estimate the calories, protein, carbs, and fat in this meal." },
+                { type: "image_url", image_url: imageDataUrl },
+              ],
+            },
+          ],
+          response_format: "json",
+        });
+
+        const parsed = JSON.parse(response.choices[0].message.content);
+        const { calories, protein, carbs, fat } = parsed;
+
+        // Auto-fill Biometrics input boxes
+        setP(String(protein || ""));
+        setC(String(carbs || ""));
+        setF(String(fat || ""));
+        setK(String(calories || ""));
+
+        toast({
+          title: "AI Estimate Added",
+          description: `Detected ${Math.round(calories)} kcal — Protein ${protein}g, Carbs ${carbs}g, Fat ${fat}g.`,
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+  } catch (err) {
+    console.error("Photo upload failed:", err);
+    toast({
+      title: "Error",
+      description: "Could not process photo. Please try again.",
+    });
+  }
+}
+```
+
+Then add the button right above your macro inputs:
+
+```tsx
+<Button
+  onClick={handlePhotoUpload}
+  className="w-full bg-orange-600 hover:bg-orange-700 text-white mt-3"
+>
+  📸 Log from Photo
+</Button>
+```
+
+---
+
+Would you like me to insert this directly into your current **`MyBiometrics.tsx`** file and return the finished version ready to paste back in?
