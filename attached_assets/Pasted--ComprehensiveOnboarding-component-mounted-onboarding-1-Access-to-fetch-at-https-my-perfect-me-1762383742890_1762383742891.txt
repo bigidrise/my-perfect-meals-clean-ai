@@ -1,0 +1,281 @@
+🎯 ComprehensiveOnboarding component mounted
+onboarding:1  Access to fetch at 'https://my-perfect-meals-clean-ai.onrender.com/api/users/1' from origin 'https://my-perfect-meals-frontend-clean.vercel.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+my-perfect-meals-clean-ai.onrender.com/api/users/1:1   Failed to load resource: net::ERR_FAILED
+api/onboarding/progress?userId=1:1   Failed to load resource: the server responded with a status of 404 ()
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+api/onboarding/progress?userId=1:1   Failed to load resource: the server responded with a status of 404 ()
+9index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:643 🔧 Manual save triggered: Object
+index-Mi6Cf3SB.js:643 📤 Saving step: Object
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+api/onboarding/step/step-1:1   Failed to load resource: the server responded with a status of 404 ()
+index-Mi6Cf3SB.js:643 📥 Save response: Object
+index-Mi6Cf3SB.js:643  ❌ Save failed: Object
+mutationFn @ index-Mi6Cf3SB.js:643
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:643 📤 Saving step: Object
+api/onboarding/step/step-1:1   Failed to load resource: the server responded with a status of 404 ()
+index-Mi6Cf3SB.js:643 📥 Save response: Object
+index-Mi6Cf3SB.js:643  ❌ Save failed: Object
+mutationFn @ index-Mi6Cf3SB.js:643
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:643 📤 Saving step: Object
+api/onboarding/step/step-1:1   Failed to load resource: the server responded with a status of 404 ()
+index-Mi6Cf3SB.js:643 📥 Save response: Object
+index-Mi6Cf3SB.js:643  ❌ Save failed: Object
+mutationFn @ index-Mi6Cf3SB.js:643
+index-Mi6Cf3SB.js:643  💥 Save mutation error: Error: Failed to save step: 404 The page could not be found
+
+NOT_FOUND
+
+cle1::xd64t-1762383698933-449cffe43587
+
+    at Object.mutationFn (index-Mi6Cf3SB.js:643:75870)
+onError @ index-Mi6Cf3SB.js:643
+index-Mi6Cf3SB.js:643  ❌ Manual save failed: Error: Failed to save step: 404 The page could not be found
+
+NOT_FOUND
+
+cle1::xd64t-1762383698933-449cffe43587
+
+    at Object.mutationFn (index-Mi6Cf3SB.js:643:75870)
+onError @ index-Mi6Cf3SB.js:643
+2index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+onboarding:1   Failed to load resource: the server responded with a status of 404 ()
+index-Mi6Cf3SB.js:643 🔧 Manual save triggered: {step: 1, formData: {…}}
+index-Mi6Cf3SB.js:643 📤 Saving step: {stepKey: 'step-1', userId: '1', payload: {…}}
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:17   PUT https://my-perfect-meals-frontend-clean.vercel.app/api/onboarding/step/step-1 404 (Not Found)
+window.fetch @ index-Mi6Cf3SB.js:17
+Tf @ index-Mi6Cf3SB.js:643
+mutationFn @ index-Mi6Cf3SB.js:643
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643 📥 Save response: {status: 404, ok: false}
+index-Mi6Cf3SB.js:643  ❌ Save failed: {status: 404, errorText: 'The page could not be found\n\nNOT_FOUND\n\ncle1::lsv4v-1762383719905-04b77db10215\n'}
+mutationFn @ index-Mi6Cf3SB.js:643
+await in mutationFn
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:643 📤 Saving step: {stepKey: 'step-1', userId: '1', payload: {…}}
+index-Mi6Cf3SB.js:17   PUT https://my-perfect-meals-frontend-clean.vercel.app/api/onboarding/step/step-1 404 (Not Found)
+window.fetch @ index-Mi6Cf3SB.js:17
+Tf @ index-Mi6Cf3SB.js:643
+mutationFn @ index-Mi6Cf3SB.js:643
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643 📥 Save response: {status: 404, ok: false}
+index-Mi6Cf3SB.js:643  ❌ Save failed: {status: 404, errorText: 'The page could not be found\n\nNOT_FOUND\n\ncle1::kvj5b-1762383720960-619c92bcb50d\n'}
+mutationFn @ index-Mi6Cf3SB.js:643
+await in mutationFn
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
+index-Mi6Cf3SB.js:643 📤 Saving step: {stepKey: 'step-1', userId: '1', payload: {…}}
+index-Mi6Cf3SB.js:17   PUT https://my-perfect-meals-frontend-clean.vercel.app/api/onboarding/step/step-1 404 (Not Found)
+window.fetch @ index-Mi6Cf3SB.js:17
+Tf @ index-Mi6Cf3SB.js:643
+mutationFn @ index-Mi6Cf3SB.js:643
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643 📥 Save response: {status: 404, ok: false}
+index-Mi6Cf3SB.js:643  ❌ Save failed: {status: 404, errorText: 'The page could not be found\n\nNOT_FOUND\n\ncle1::lsv4v-1762383723017-5f52076e0c3e\n'}
+mutationFn @ index-Mi6Cf3SB.js:643
+await in mutationFn
+fn @ index-Mi6Cf3SB.js:40
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.then
+(anonymous) @ index-Mi6Cf3SB.js:40
+Promise.catch
+p @ index-Mi6Cf3SB.js:40
+start @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643  💥 Save mutation error: Error: Failed to save step: 404 The page could not be found
+
+NOT_FOUND
+
+cle1::lsv4v-1762383723017-5f52076e0c3e
+
+    at Object.mutationFn (index-Mi6Cf3SB.js:643:75870)
+onError @ index-Mi6Cf3SB.js:643
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+index-Mi6Cf3SB.js:643  ❌ Manual save failed: Error: Failed to save step: 404 The page could not be found
+
+NOT_FOUND
+
+cle1::lsv4v-1762383723017-5f52076e0c3e
+
+    at Object.mutationFn (index-Mi6Cf3SB.js:643:75870)
+onError @ index-Mi6Cf3SB.js:643
+(anonymous) @ index-Mi6Cf3SB.js:40
+batch @ index-Mi6Cf3SB.js:40
+XS @ index-Mi6Cf3SB.js:40
+onMutationUpdate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+batch @ index-Mi6Cf3SB.js:40
+Eo @ index-Mi6Cf3SB.js:40
+execute @ index-Mi6Cf3SB.js:40
+await in execute
+mutate @ index-Mi6Cf3SB.js:40
+(anonymous) @ index-Mi6Cf3SB.js:40
+D @ index-Mi6Cf3SB.js:643
+_Q @ index-Mi6Cf3SB.js:37
+TQ @ index-Mi6Cf3SB.js:37
+AQ @ index-Mi6Cf3SB.js:37
+DO @ index-Mi6Cf3SB.js:37
+mq @ index-Mi6Cf3SB.js:37
+(anonymous) @ index-Mi6Cf3SB.js:37
+B_ @ index-Mi6Cf3SB.js:40
+LF @ index-Mi6Cf3SB.js:37
+L1 @ index-Mi6Cf3SB.js:37
+p_ @ index-Mi6Cf3SB.js:37
+HQ @ index-Mi6Cf3SB.js:37
+2index-Mi6Cf3SB.js:643 🎯 ComprehensiveOnboarding component mounted
