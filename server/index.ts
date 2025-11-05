@@ -5,6 +5,7 @@ import express, {
   type NextFunction,
 } from "express";
 import path from "path";
+import cors from "cors"; // Import cors
 
 // Startup performance optimization
 const startTime = Date.now();

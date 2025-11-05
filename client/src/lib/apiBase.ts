@@ -4,13 +4,13 @@ export const getApiBase = (): string => {
   if ((import.meta as any).env?.DEV) {
     return '';
   }
-  
+
   // Check for explicit API base URL from environment
   const apiBaseUrl = (import.meta as any).env?.VITE_API_BASE_URL;
   if (apiBaseUrl) {
     return apiBaseUrl;
   }
-  
+
   // In production, use same-origin (works for Replit and Railway deployments)
   return window.location.origin;
 };
@@ -19,11 +19,11 @@ export const getApiBase = (): string => {
 export const getApiUrl = (path: string): string => {
   const base = getApiBase();
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
+
   // If base is empty (dev mode), return path as-is for Vite proxy
   if (!base) {
     return normalizedPath;
   }
-  
+
   return `${base}${normalizedPath}`;
 };
