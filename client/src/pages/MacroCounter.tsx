@@ -268,20 +268,20 @@ export default function MacroCounter() {
 
   const savedSettings = loadCalculatorSettings();
 
-  const [goal, setGoal] = useState<Goal>(savedSettings?.goal || "maint");
-  const [bodyType, setBodyType] = useState<BodyType>(savedSettings?.bodyType || "meso");
-  const [units, setUnits] = useState<Units>(savedSettings?.units || "imperial");
-  const [sex, setSex] = useState<Sex>(savedSettings?.sex || "female");
-  const [age, setAge] = useState<number>(savedSettings?.age || 30);
-  const [heightFt, setHeightFt] = useState<number>(savedSettings?.heightFt || 5);
-  const [heightIn, setHeightIn] = useState<number>(savedSettings?.heightIn || 7);
-  const [weightLbs, setWeightLbs] = useState<number>(savedSettings?.weightLbs || 160);
-  const [heightCm, setHeightCm] = useState<number>(savedSettings?.heightCm || 170);
-  const [weightKg, setWeightKg] = useState<number>(savedSettings?.weightKg || 72.5);
+  const [goal, setGoal] = useState<Goal>(savedSettings?.goal ?? "maint");
+  const [bodyType, setBodyType] = useState<BodyType>(savedSettings?.bodyType ?? "meso");
+  const [units, setUnits] = useState<Units>(savedSettings?.units ?? "imperial");
+  const [sex, setSex] = useState<Sex>(savedSettings?.sex ?? "female");
+  const [age, setAge] = useState<number>(savedSettings?.age ?? 30);
+  const [heightFt, setHeightFt] = useState<number>(savedSettings?.heightFt ?? 5);
+  const [heightIn, setHeightIn] = useState<number>(savedSettings?.heightIn ?? 7);
+  const [weightLbs, setWeightLbs] = useState<number>(savedSettings?.weightLbs ?? 160);
+  const [heightCm, setHeightCm] = useState<number>(savedSettings?.heightCm ?? 170);
+  const [weightKg, setWeightKg] = useState<number>(savedSettings?.weightKg ?? 72.5);
   const [activity, setActivity] =
-    useState<keyof typeof ACTIVITY_FACTORS>(savedSettings?.activity || "light");
-  const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg || 1.8);
-  const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct || 0.3);
+    useState<keyof typeof ACTIVITY_FACTORS>(savedSettings?.activity ?? "light");
+  const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg ?? 1.8);
+  const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct ?? 0.3);
 
   // Nutrition Profile state
   const [profile, setProfile] = useState<NutritionProfile>(() => loadProfile());
