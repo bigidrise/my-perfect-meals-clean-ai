@@ -1,4 +1,3 @@
-
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -82,7 +81,7 @@ export default function DashboardNew() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -103,9 +102,9 @@ export default function DashboardNew() {
       {/* Header Banner */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
         <div className="px-4 py-3 flex items-center gap-3">
-          <img 
-            src="/assets/MPMTransparentLogo.png" 
-            alt="My Perfect Meals Logo" 
+          <img
+            src="/assets/MPMTransparentLogo.png"
+            alt="My Perfect Meals Logo"
             className="h-16 w-16 object-contain"
           />
           <h1 className="text-lg font-bold text-white">My Perfect Meals</h1>
@@ -129,7 +128,7 @@ export default function DashboardNew() {
               <p className="text-white/70 text-sm mb-6">
                 Ready to achieve your health goals today?
               </p>
-              
+
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
@@ -197,7 +196,7 @@ export default function DashboardNew() {
           transition={{ delay: 0.6, duration: 0.5 }}
           className="mt-8"
         >
-          <Card className="bg-gradient-to-r from-orange-500/10 to-orange-700/10 backdrop-blur-lg border border-orange-500/20">
+          <Card className="bg-black/30 backdrop-blur-lg border border-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all">
             <CardContent className="p-6 text-center">
               <h3 className="text-white font-semibold mb-2">
                 Ready to plan your meals?
