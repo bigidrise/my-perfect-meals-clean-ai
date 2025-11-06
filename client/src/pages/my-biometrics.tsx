@@ -759,7 +759,7 @@ export default function MyBiometrics() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-white">📊 My Biometrics</CardTitle>
             <p className="text-white/90 text-sm mt-2">Track macros, calories, and weight</p>
-            <div className="mt-3 flex justify-center">
+            <div className="mt-3 flex justify-center hidden">
               <Button onClick={exportCSV} className="bg-orange-600 hover:bg-orange-700 text-white border border-white/20">Export CSV</Button>
             </div>
           </CardHeader>
