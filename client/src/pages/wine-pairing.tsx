@@ -147,10 +147,10 @@ export default function WinePairingPage() {
 
         {/* Glass Title Card */}
         <div className="bg-black/20 backdrop-blur-lg border border-purple-400/70 shadow-[0_0_30px_rgba(168,85,247,0.15)] rounded-2xl p-8 text-center mb-12 mt-14">
-          <h1 className="text-3xl font-bold text-white mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             🍷 Wine Pairing AI
           </h1>
-          <p className="text-md text-white/80 max-w-2xl mx-auto">
+          <p className="text-sm text-white/80 max-w-2xl mx-auto">
             Get expert sommelier recommendations for the perfect wine pairing with your meals.
           </p>
         </div>
@@ -158,7 +158,7 @@ export default function WinePairingPage() {
         {/* Pairing Form */}
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-purple-400/70 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <ChefHat className="h-5 w-5" />
               Find Your Perfect Pairing
             </CardTitle>

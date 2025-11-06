@@ -163,17 +163,17 @@ export default function BeerPairingMode() {
 
         <div className="bg-black/50 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 text-center mb-8 mt-14 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
-            <span className="text-5xl">🍺</span>
+            <span className="text-2xl">🍺</span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Beer Pairing Mode</h1>
-          <p className="text-white/90">
+          <h1 className="text-2xl font-bold text-white mb-2">Beer Pairing Mode</h1>
+          <p className="text-sm text-white/90">
             Find the best beer styles and specific picks to match your meal, taste, and ABV preferences.
           </p>
         </div>
 
         <Card className="bg-black/50 border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>
-            <CardTitle className="text-white">Tell us about the meal</CardTitle>
+            <CardTitle className="text-lg text-white">Tell us about the meal</CardTitle>
           </CardHeader>
           <CardContent className="text-white">
             <div className="grid sm:grid-cols-2 gap-4">

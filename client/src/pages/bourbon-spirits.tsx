@@ -143,7 +143,7 @@ export default function BourbonSpiritsPage() {
             className="flex items-center justify-center gap-3 mb-3"
             aria-hidden="true"
           >
-            <span className="text-4xl leading-none">🥃</span>
+            <span className="text-2xl leading-none">🥃</span>
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
             Bourbon &amp; Spirits Pairing
@@ -157,7 +157,7 @@ export default function BourbonSpiritsPage() {
         {/* Pairing Form */}
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <ChefHat className="h-5 w-5" />
               Find Your Perfect Spirit Pairing
             </CardTitle>

@@ -120,10 +120,10 @@ export default function MealPairingAIPage() {
 
         {/* Glass Title Card */}
         <div className="bg-black/20 backdrop-blur-none border border-blue-400/70 shadow-[0_0_30px_rgba(59,130,246,0.15)] rounded-2xl p-8 text-center mb-12 mt-14">
-          <h1 className="text-3xl font-bold text-white mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             🍽️ Meal Pairing AI
           </h1>
-          <p className="text-md text-white/90 max-w-2xl mx-auto">
+          <p className="text-sm text-white/90 max-w-2xl mx-auto">
             Tell us what you're drinking, and we'll create the perfect meal to complement it.
           </p>
         </div>
@@ -131,7 +131,7 @@ export default function MealPairingAIPage() {
         {/* Pairing Form */}
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <UtensilsCrossed className="h-5 w-5" />
               Design Your Perfect Meal
             </CardTitle>

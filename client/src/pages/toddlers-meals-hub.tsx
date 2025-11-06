@@ -126,7 +126,7 @@ export default function ToddlersMealsHub() {
         {/* Header */}
         <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <ChefHat className="h-8 w-8 text-orange-300" />
+            <ChefHat className="h-5 w-5 text-orange-300" />
             <h1 className="text-2xl font-bold text-white">
               Toddlers (1–3) Grazing
             </h1>

@@ -187,11 +187,11 @@ export default function AlcoholLogPage() {
         <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-gray-400 to-black/80 transition mb-8 mt-12">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-white flex items-center justify-center gap-3">
-                <Wine className="h-8 w-8 text-rose-400" />
+              <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
+                <Wine className="h-6 w-6 text-rose-400" />
                 Alcohol Log
               </CardTitle>
-              <p className="text-white/90 mt-2">
+              <p className="text-sm text-white/90 mt-2">
                 Voluntary logging. Simple charts. Alcohol calories/carbs are informational and do <strong>not</strong> reduce your food targets.
               </p>
               <div className="flex gap-2 justify-center mt-4 flex-wrap">
@@ -222,7 +222,7 @@ export default function AlcoholLogPage() {
         <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition mb-8">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Plus className="h-5 w-5" />
                 Log Entry
               </CardTitle>
@@ -230,7 +230,7 @@ export default function AlcoholLogPage() {
             <CardContent>
               <form onSubmit={submit} className="grid md:grid-cols-4 gap-4 text-white">
                 <div className="md:col-span-1">
-                  <Label className="text-white">Type</Label>
+                  <Label className="text-sm text-white">Type</Label>
                   <Select value={type} onValueChange={(v) => setType(v as DrinkType)}>
                     <SelectTrigger className="bg-black/20 border-white/20 text-white mt-2">
                       <SelectValue placeholder="Select type" />
@@ -313,7 +313,7 @@ export default function AlcoholLogPage() {
         <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition mb-8">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-lg text-white flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
                 Daily Drinks (Last {range} Days)
               </CardTitle>
@@ -347,7 +347,7 @@ export default function AlcoholLogPage() {
         {/* Recent entries */}
         <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
-            <CardHeader><CardTitle className="text-white">Recent Entries</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-lg text-white">Recent Entries</CardTitle></CardHeader>
             <CardContent>
               {rows.length === 0 ? (
                 <div className="text-center py-8 text-white/70">

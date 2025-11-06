@@ -140,17 +140,17 @@ export default function SupplementEducationPage() {
             className="flex items-center gap-2 bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 transition-all duration-200 rounded-xl shadow-lg"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Hub
+            
           </Button>
         </div>
 
         {/* Header */}
         <div className="text-center mb-8">
           <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-xl">
-            <h1 className="text-4xl font-bold text-white mb-4">
-              💊 Supplement Education Hub
+            <h1 className="text-2xl font-bold text-white mb-4">
+               Supplement Education Hub
             </h1>
-            <p className="text-lg text-white/90 max-w-3xl mx-auto">
+            <p className="text-sm text-white/90 max-w-2xl mx-auto">
               Evidence-based supplement information and personalized
               recommendations for your wellness journey
             </p>
@@ -161,7 +161,7 @@ export default function SupplementEducationPage() {
           {/* AI Supplement Advisor */}
           <Card className="h-fit bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardHeader className="bg-black/20 border-b border-white/10 rounded-t-lg">
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Brain className="h-6 w-6 text-orange-400" />
                 AI Supplement Advisor
               </CardTitle>
@@ -211,7 +211,7 @@ export default function SupplementEducationPage() {
           {/* Featured Products */}
           <Card className="h-fit bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardHeader className="bg-black/20 border-b border-white/10 rounded-t-lg">
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Star className="h-6 w-6 text-orange-400" />
                 Featured Products
               </CardTitle>
@@ -274,7 +274,7 @@ export default function SupplementEducationPage() {
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardHeader className="bg-black/20 border-b border-white/10">
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg  text-white">
                 <Shield className="h-5 w-5 text-orange-400" />
                 Safety First
               </CardTitle>
@@ -307,7 +307,7 @@ export default function SupplementEducationPage() {
 
           <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardHeader className="bg-black/20 border-b border-white/10">
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Target className="h-5 w-5 text-orange-400" />
                 Quality Matters
               </CardTitle>
@@ -325,7 +325,7 @@ export default function SupplementEducationPage() {
 
           <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardHeader className="bg-black/20 border-b border-white/10">
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Users className="h-5 w-5 text-orange-400" />
                 Community
               </CardTitle>
@@ -346,7 +346,7 @@ export default function SupplementEducationPage() {
         <div className="text-center mt-8">
           <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl">
             <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">
+              <h2 className="text-xl font-bold mb-4 text-white">
                 Ready to Optimize Your Health?
               </h2>
               <p className="mb-6 text-white/90">
@@ -354,7 +354,7 @@ export default function SupplementEducationPage() {
                 research-backed products
               </p>
               <Button
-                className="bg-orange-600 text-white hover:bg-orange-700"
+                className="bg-orange-600 text-sm text-white hover:bg-orange-700"
                 onClick={() => setLocation("/supplement-hub")}
               >
                 <ExternalLink className="h-4 w-4 mr-2" />

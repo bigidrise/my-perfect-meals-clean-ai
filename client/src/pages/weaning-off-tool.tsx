@@ -168,11 +168,11 @@ const WeaningOffTool = () => {
         <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-gray-400 to-black/80 transition mb-8 mt-12">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-white flex items-center justify-center gap-3">
+              <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
                 <TrendingDown className="h-8 w-8 text-teal-400" />
                 Weaning Off Tool
               </CardTitle>
-              <p className="text-white/90 mt-2">
+              <p className="text-sm text-white/90 mt-2">
                 Taper gently at your pace — zero judgment, just support
               </p>
             </CardHeader>
@@ -185,12 +185,12 @@ const WeaningOffTool = () => {
             <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
               <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-white">Step 1: Your Baseline</CardTitle>
+                  <CardTitle className="text-lg text-white">Step 1: Your Baseline</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 text-white">
                   {/* Drinks Per Day */}
                   <div className="space-y-3">
-                    <Label className="text-white">Average drinks per drinking day</Label>
+                    <Label className="text-sm text-white">Average drinks per drinking day</Label>
                     <div className="flex items-center gap-4">
                       <Button
                         variant="outline"
@@ -205,7 +205,7 @@ const WeaningOffTool = () => {
                         type="number"
                         value={drinksPerDay}
                         onChange={(e) => setDrinksPerDay(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="bg-black/20 border-white/20 text-white text-center text-2xl font-bold w-24"
+                        className="bg-black/20 border-white/20 text-white text-center text-xl font-bold w-24"
                         data-testid="input-drinks-per-day"
                       />
                       <Button
@@ -255,7 +255,7 @@ const WeaningOffTool = () => {
                   {/* Weekly Average */}
                   <div className="bg-black/20 p-4 rounded-lg text-center">
                     <p className="text-white/70 text-sm">Weekly average</p>
-                    <p className="text-3xl font-bold text-teal-400">{weeklyAverage} drinks/week</p>
+                    <p className="text-xl font-bold text-teal-400">{weeklyAverage} drinks/week</p>
                   </div>
 
                   {/* Medical Warning */}
@@ -276,7 +276,7 @@ const WeaningOffTool = () => {
             <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
               <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-white">Step 2: Pick Your Pace</CardTitle>
+                  <CardTitle className="text-lg text-white">Step 2: Pick Your Pace</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -287,7 +287,7 @@ const WeaningOffTool = () => {
                       data-testid="button-pace-gentle"
                     >
                       <div className="text-center">
-                        <div className="text-lg font-bold">Gentle</div>
+                        <div className="text-md font-bold">Gentle</div>
                         <div className="text-sm opacity-80">~10% per week</div>
                       </div>
                     </Button>
@@ -299,7 +299,7 @@ const WeaningOffTool = () => {
                       data-testid="button-pace-standard"
                     >
                       <div className="text-center">
-                        <div className="text-lg font-bold">Standard</div>
+                        <div className="text-md font-bold">Standard</div>
                         <div className="text-sm opacity-80">~20% per week</div>
                       </div>
                     </Button>
@@ -311,7 +311,7 @@ const WeaningOffTool = () => {
                       data-testid="button-pace-custom"
                     >
                       <div className="text-center">
-                        <div className="text-lg font-bold">Custom</div>
+                        <div className="text-md font-bold">Custom</div>
                         <div className="text-sm opacity-80">5-25% per week</div>
                       </div>
                     </Button>

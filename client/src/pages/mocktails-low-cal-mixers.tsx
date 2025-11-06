@@ -26,12 +26,12 @@ export default function MocktailsLowCalMixersPage() {
         {/* Header */}
         <div className="text-center mb-8 mt-14 bg-black/20 backdrop-blur-lg border border-emerald-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="h-12 w-12 text-emerald-300" />
-            <h1 className="text-3xl font-bold text-white">
+            
+            <h1 className="text-2xl font-bold text-white">
               🍹 Mocktails & Low-Cal Mixers
             </h1>
           </div>
-          <p className="text-md text-white/90 max-w-2xl mx-auto">
+          <p className="text-sm text-white/90 max-w-2xl mx-auto">
             Enjoy delicious alcohol-free drinks that won't compromise your
             health goals
           </p>

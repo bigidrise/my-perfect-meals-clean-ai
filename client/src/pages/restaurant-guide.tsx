@@ -370,16 +370,16 @@ export default function RestaurantGuidePage() {
         {/* Find Meals Near Me Card - MOVED TO TOP */}
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <MapPin className="h-5 w-5" />
               Find Meals Near Me
             </CardTitle>
-            <CardDescription className="text-white/80">
+            <CardDescription className="text-sm text-white/80">
               Search for meals you're craving at nearby restaurants by ZIP code
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <p className="mb-4 text-white/90">
+            <p className="mb-4 text-sm text-white/90">
               Enter what you're craving and your location to find healthy restaurant options near you.
             </p>
             <Button
@@ -394,7 +394,7 @@ export default function RestaurantGuidePage() {
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <Sparkles className="h-5 w-5" />
               Restaurant Meal Generator
             </CardTitle>
@@ -403,7 +403,7 @@ export default function RestaurantGuidePage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <p className="mb-4 text-white/90">
+            <p className="mb-4 text-sm text-white/90">
               Type the name of a restaurant or cuisine to get healthy ordering
               tips that work with your goals.
             </p>
@@ -443,7 +443,7 @@ export default function RestaurantGuidePage() {
                 {generateMealsMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="h-4 w-4 animate-spin" />
-                    Generating 3 Options...
+                    Generating 2 Options...
                   </div>
                 ) : (
                   "Get 2 Options"
@@ -645,7 +645,7 @@ export default function RestaurantGuidePage() {
             )}
 
             <div className="mt-6 pt-4 border-t border-white/20">
-              <h3 className="font-semibold text-white mb-2">
+              <h3 className="font-semibold text-lg text-white mb-2">
                 Quick Access:
               </h3>
               <div className="flex flex-wrap gap-2">
