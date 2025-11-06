@@ -92,7 +92,7 @@ export default function DashboardNew() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="min-h-screen bg-black pb-24"
+      className="h-screen bg-black overflow-hidden"
     >
       {/* Fixed Profile Avatar - Top Right */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
@@ -119,15 +119,15 @@ export default function DashboardNew() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-8">
+      <div className="max-w-6xl mx-auto px-4 pt-28 pb-16 h-full overflow-hidden flex flex-col">
         {/* Hero Image Section with Welcome Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
-          className="mb-8"
+          className="mb-6 flex-shrink-0"
         >
-          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden">
+          <div className="relative h-48 lg:h-64 rounded-xl overflow-hidden">
             <img 
               src="/images/home-hero.jpg" 
               alt="My Perfect Meals Dashboard"
@@ -165,7 +165,7 @@ export default function DashboardNew() {
         </motion.div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-shrink-0">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -207,7 +207,7 @@ export default function DashboardNew() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-8"
+          className="mt-auto flex-shrink-0"
         >
           <Card className="bg-black/30 backdrop-blur-lg border border-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all">
             <CardContent className="p-6 text-center">
