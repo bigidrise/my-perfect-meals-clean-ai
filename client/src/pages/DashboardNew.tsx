@@ -120,7 +120,7 @@ export default function DashboardNew() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 pt-28 pb-8">
-        {/* Hero Image Section */}
+        {/* Hero Image Section with Welcome Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,53 +133,35 @@ export default function DashboardNew() {
               alt="My Perfect Meals Dashboard"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-          </div>
-        </motion.div>
-
-        {/* Hero Welcome Card with Fire Gradient */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="mb-8"
-        >
-          <Card className="relative overflow-hidden border border-orange-500/30 shadow-2xl">
-            {/* Animated Fire Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-600 to-black animate-gradient-x">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              {/* Flame accent overlay */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-transparent to-transparent"></div>
-            </div>
-            
-            <CardContent className="relative z-10 p-6">
-              <h2 className="text-2xl font-bold text-white mb-2">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4">
+              <h2 className="text-2xl lg:text-4xl font-bold text-white mb-2">
                 Welcome back, {firstName}! 👋
               </h2>
-              <p className="text-white/90 text-sm mb-6">
+              <p className="text-white/90 text-sm lg:text-base mb-4">
                 Ready to hit your macro goals today?
               </p>
-
+              
               {/* Quick Stats - Real Macro Data */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <Flame className="h-5 w-5 text-blue-500 mb-1" />
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
+                  <Flame className="h-4 w-4 lg:h-5 lg:w-5 text-blue-500 mb-1" />
                   <div className="text-xs text-white/60">Protein</div>
-                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.protein)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.protein)}g</div>
                 </div>
-                <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <TrendingUp className="h-5 w-5 text-orange-500 mb-1" />
+                <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
+                  <TrendingUp className="h-4 w-4 lg:h-5 lg:w-5 text-orange-500 mb-1" />
                   <div className="text-xs text-white/60">Carbs</div>
-                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.carbs)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.carbs)}g</div>
                 </div>
-                <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <Activity className="h-5 w-5 text-purple-500 mb-1" />
+                <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
+                  <Activity className="h-4 w-4 lg:h-5 lg:w-5 text-purple-500 mb-1" />
                   <div className="text-xs text-white/60">Fat</div>
-                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.fat)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.fat)}g</div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
 
         {/* Feature Cards Grid */}
