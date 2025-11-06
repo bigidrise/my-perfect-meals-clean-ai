@@ -65,7 +65,7 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4">
-              <h1 className="text-2xl lg:text-4xl font-bold text-white mb-2">
+              <h1 className="text-2xl lg:text-2xl font-semi-bold text-white mb-2">
                 Welcome Back, Demo!
               </h1>
               <p className="text-white/90 text-sm lg:text-base max-w-3xl">
