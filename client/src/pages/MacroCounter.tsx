@@ -289,6 +289,16 @@ export default function MacroCounter() {
       };
     });
 
+  // Load profile from localStorage on component mount
+  useEffect(() => {
+    setProfile(loadProfile());
+  }, []);
+
+  // Save profile to localStorage whenever it changes
+  useEffect(() => {
+    saveProfile(profile);
+  }, [profile]);
+
   const kg = units === "imperial" ? kgFromLbs(weightLbs) : weightKg;
   const cm =
     units === "imperial" ? cmFromFeetInches(heightFt, heightIn) : heightCm;
