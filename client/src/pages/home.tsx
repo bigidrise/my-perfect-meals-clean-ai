@@ -42,8 +42,16 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
+      {/* Header Banner */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+        <div className="px-4 py-3 flex items-center gap-3">
+          <Utensils className="h-6 w-6 text-orange-500" />
+          <h1 className="text-lg font-bold text-white">My Perfect Meals</h1>
+        </div>
+      </div>
+
       {/* Hero Section */}
-      <section className="bg-background py-16 lg:py-24">
+      <section className="bg-background py-16 lg:py-24 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
             <div className="mb-12 lg:mb-0">
