@@ -50,16 +50,26 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-background py-16 lg:py-24 pt-32">
+      {/* Hero Section with Image */}
+      <section className="bg-background py-8 lg:py-16 pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-            <div className="mb-12 lg:mb-0">
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
+          {/* Hero Image Section */}
+          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden mb-12">
+            <img 
+              src="/images/home-hero.jpg" 
+              alt="My Perfect Meals - AI Powered Nutrition"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23000000;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EMy Perfect Meals%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-8 left-8 right-8">
+              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-3">
                 Your Perfect Meals,{" "}
-                <span className="text-primary">Powered by AI</span>
+                <span className="text-orange-500">Powered by AI</span>
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              <p className="text-white/90 text-lg lg:text-xl mb-6 max-w-3xl">
                 Effortlessly plan healthy meals tailored to your dietary preferences, health conditions, and fitness goals. Zero guesswork, maximum nutrition.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -74,7 +84,7 @@ export default function Home() {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="border-2 hover:border-primary hover:text-primary"
+                  className="border-2 border-white text-white hover:bg-white/10"
                   onClick={() => {
                     // Create demo user and go to meal planning
                     const demoUser = {
@@ -95,24 +105,6 @@ export default function Home() {
                   <Rocket className="mr-2 h-5 w-5" />
                   Quick Demo
                 </Button>
-              </div>
-            </div>
-            <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
-                alt="Healthy meal spread" 
-                className="rounded-2xl shadow-2xl w-full"
-              />
-              <div className="absolute -top-4 -right-4 bg-background rounded-xl shadow-lg p-4 border">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-foreground">AI Planning</span>
-                </div>
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-background rounded-xl shadow-lg p-4 border">
-                <div className="text-sm text-muted-foreground">Today's Nutrition</div>
-                <div className="text-lg font-bold text-foreground">1,847 / 2,200 cal</div>
-                <Progress value={84} className="w-20 h-2 mt-1" />
               </div>
             </div>
           </div>
