@@ -1,0 +1,39 @@
+Prompt for Replit Agent / Architect:
+
+We’ve successfully migrated my My Perfect Meals project from Replit to Railway for production hosting. The app deploys fine and shows “✅ Database: Connected,” but database writes are still failing due to a NOT NULL constraint on device_id in the onboarding_progress table.
+
+Here’s what has been done so far:
+
+The project runs both frontend and backend together inside Railway (Express + Vite).
+
+The backend connects to Railway Postgres using a manually added DATABASE_URL (the app logs show the connection works).
+
+The schema is managed with Drizzle. The shared/schema.ts defines:
+
+export const onboardingProgress = pgTable("onboarding_progress", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  deviceId: text("device_id"), // now optional (we removed .notNull())
+  userId: text("user_id"),
+  stepKey: text("step_key").notNull(),
+  data: jsonb("data").notNull().$type<Record<string, any>>().default({}),
+  completed: boolean("completed").notNull().default(false),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+})
+
+
+We already ran npm run db:push several times, and the logs show [✓] Changes applied, but the new database on Railway still has device_id as NOT NULL.
+
+When onboarding tries to save, Postgres throws:
+null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+
+This tells us Drizzle is not updating the schema on the current Railway database, even though the backend says it's connected.
+
+We need help confirming:
+
+How to ensure Drizzle’s db:push runs against the same Railway Postgres instance the app is connected to (the one defined by the active DATABASE_URL).
+
+Whether Railway’s build or deployment context could be caching an old connection string.
+
+The correct way to run drizzle-kit push inside the Railway container (e.g., via pre-deploy or manual run) so the schema truly syncs with the production database.
+
+In short — everything deploys perfectly, but schema updates (db:push) aren’t applying to the live DB the app is using. What’s the most reliable way to force Drizzle to update the actual connected database schema on Railway?
