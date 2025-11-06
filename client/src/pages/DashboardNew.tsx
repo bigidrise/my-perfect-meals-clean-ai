@@ -92,7 +92,7 @@ export default function DashboardNew() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-24"
+      className="min-h-screen bg-black pb-24"
     >
       {/* Fixed Profile Avatar - Top Right */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
@@ -120,6 +120,23 @@ export default function DashboardNew() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 pt-28 pb-8">
+        {/* Hero Image Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="mb-8"
+        >
+          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden">
+            <img 
+              src="/images/home-hero.jpg" 
+              alt="My Perfect Meals Dashboard"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          </div>
+        </motion.div>
+
         {/* Hero Welcome Card with Fire Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
