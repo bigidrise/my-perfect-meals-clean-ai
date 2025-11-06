@@ -35,6 +35,13 @@ export default function ProCareCover() {
       route: "/care-team",
       testId: "card-procare-portal",
     },
+    {
+      title: "Supplement Hub",
+      description: "Evidence-based supplement guidance and trusted partners",
+      icon: Crown,
+      route: "/supplement-hub-landing",
+      testId: "card-supplement-hub",
+    },
   ];
 
   const handleCardClick = (route: string) => {

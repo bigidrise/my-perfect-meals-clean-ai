@@ -135,12 +135,12 @@ export default function SupplementEducationPage() {
         {/* Back Button */}
         <div className="mb-6">
           <Button
-            onClick={() => setLocation("/dashboard")}
+            onClick={() => setLocation("/supplement-hub-landing")}
             variant="ghost"
             className="flex items-center gap-2 text-blue-700 hover:bg-blue-100"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+            Back to Hub
           </Button>
         </div>
 

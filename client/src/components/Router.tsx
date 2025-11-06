@@ -115,6 +115,11 @@ import FoundersPage from "@/pages/Founders";
 // Vitals Logger - Creating a placeholder for this route
 const VitalsLogger = () => <div>Vitals Logger - Coming Soon</div>;
 
+// Supplement Hub imports
+import SupplementHubLanding from "@/pages/SupplementHubLanding";
+import SupplementHub from "@/pages/supplement-hub";
+import SupplementEducationPage from "@/pages/supplement-education";
+
 export default function Router() {
   const [location] = useLocation();
 
@@ -300,6 +305,11 @@ export default function Router() {
 
         {/* Founders Route */}
         <Route path="/founders" component={FoundersPage} />
+
+        {/* Supplement Hub Routes */}
+        <Route path="/supplement-hub" component={SupplementHubLanding} />
+        <Route path="/supplements" component={SupplementHub} />
+        <Route path="/supplement-education" component={SupplementEducationPage} />
 
         {/* 404 fallback */}
         <Route component={NotFound} />
