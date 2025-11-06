@@ -97,7 +97,7 @@ export default function DashboardNew() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="h-screen bg-black overflow-hidden"
+      className="min-h-screen bg-black"
     >
       {/* Fixed Profile Avatar - Top Right */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
@@ -124,13 +124,13 @@ export default function DashboardNew() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-24 h-full overflow-y-auto flex flex-col">
+      <div className="max-w-6xl mx-auto px-4 pt-28 pb-32 flex flex-col gap-4">
         {/* Hero Image Section with Welcome Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
-          className="mb-6 flex-shrink-0"
+          className="mb-4"
         >
           <div className="relative h-48 lg:h-64 rounded-xl overflow-hidden">
             <img
@@ -174,7 +174,7 @@ export default function DashboardNew() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="mb-4 flex-shrink-0"
+          className="mb-4"
         >
           <Card
             className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl group"
@@ -203,7 +203,7 @@ export default function DashboardNew() {
         </motion.div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-shrink-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -245,7 +245,6 @@ export default function DashboardNew() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-auto pt-6 flex-shrink-0"
         >
           <Card className="bg-black/30 backdrop-blur-lg border border-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all">
             <CardContent className="p-6 text-center">
