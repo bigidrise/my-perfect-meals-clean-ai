@@ -307,8 +307,8 @@ export default function Router() {
         <Route path="/founders" component={FoundersPage} />
 
         {/* Supplement Hub Routes */}
-        <Route path="/supplement-hub" component={SupplementHubLanding} />
-        <Route path="/supplements" component={SupplementHub} />
+        <Route path="/supplement-hub-landing" component={SupplementHubLanding} />
+        <Route path="/supplement-hub" component={SupplementHub} />
         <Route path="/supplement-education" component={SupplementEducationPage} />
 
         {/* 404 fallback */}
