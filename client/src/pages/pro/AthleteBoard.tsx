@@ -107,7 +107,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   const [, athleteParams] = useRoute("/athlete-meal-board/:clientId");
   const [, proParams] = useRoute("/pro/clients/:id/athlete-board");
   const routeClientId = athleteParams?.clientId || proParams?.id;
-  
+
   // Get current user ID for standalone mode
   const getCurrentUserId = () => {
     const userStr = localStorage.getItem('user');
@@ -286,7 +286,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     const cached = loadAIMealsCache();
     if (cached && cached.dayISO === activeDayISO && cached.meals.length > 0) {
       console.log("🔋 Loading AI meals from localStorage:", cached.meals.length, "meals for", activeDayISO, "into slot:", cached.slot);
-      
+
       // Merge cached AI meals into the correct slot
       const dayLists = getDayLists(board, activeDayISO);
       const targetSlot = cached.slot || "breakfast";
@@ -294,7 +294,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
       const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-      
+
       setBoard(updatedBoard);
     }
   }, [board, activeDayISO]);
@@ -533,7 +533,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       const updatedSlotMeals = [...existingSlotMeals, ...newMeals];
       const updatedDayLists = { ...dayLists, [aiMealSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-      
+
       try {
         await saveBoard(updatedBoard);
         toast({
@@ -676,7 +676,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
   async function quickAdd(list: "breakfast"|"lunch"|"dinner"|"snacks", meal: Meal) {
     if (!board) return;
-    
+
     try {
       // In Day mode, add to the specific day. In Week mode, use legacy behavior
       if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
@@ -1062,7 +1062,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                       meal={meal}
                       onUpdated={(m) => {
                         if (m === null) {
-                          // REMOVE MEAL in Day mode
+                          // REMOVE MEAL in Day mode - use the new system
+
+                          // 🗑️ If it's an AI meal, also clear from localStorage
+                          if (meal.id.startsWith('ai-meal-')) {
+                            console.log("🗑️ Deleting AI meal from localStorage:", meal.name);
+                            clearAIMealsCache();
+                          }
+
                           const updatedDayLists = {
                             ...dayLists,
                             [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) => 
@@ -1070,8 +1077,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             )
                           };
                           const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          putWeekBoard(weekStartISO, updatedBoard)
-                            .then(({ week }) => setBoard(week))
+                          saveBoard(updatedBoard)
                             .catch((err) => {
                               console.error("❌ Delete failed (Day mode):", err);
                             });
@@ -1084,7 +1090,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             )
                           };
                           const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          putWeekBoard(weekStartISO, updatedBoard).then(({ week }) => setBoard(week));
+                          saveBoard(updatedBoard);
                         }
                       }}
                     />
@@ -1522,7 +1528,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       {/* Shopping List Buttons */}
       {board && (() => {
           const currentBoard = board; // Capture board in local variable for type safety
-          
+
           const allMeals =
             planningMode === "day" && activeDayISO
               ? (() => {
