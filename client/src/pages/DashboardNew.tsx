@@ -13,7 +13,7 @@ import {
   Flame,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
-import { BarcodeScanner } from "@/components/BarcodeScanner"; // Assuming BarcodeScanner is in this path
+import BarcodeScanner from "@/components/BarcodeScanner";
 
 interface FeatureCard {
   title: string;
