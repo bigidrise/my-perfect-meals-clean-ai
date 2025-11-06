@@ -382,7 +382,7 @@ export default function MacroCounter() {
           <Card className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
-                <Activity className="h-5 w-5 mr-2 text-emerald-300" /> Your Goal
+                <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
               </h3>
               <RadioGroup
                 value={goal}
@@ -410,7 +410,7 @@ export default function MacroCounter() {
           <Card className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
-                <User2 className="h-5 w-5 mr-2 text-pink-300" /> Body Type
+                <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
               </h3>
               <BodyTypeGuide />
               <RadioGroup
@@ -419,9 +419,9 @@ export default function MacroCounter() {
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
-                  { v: "ecto", label: "Ecto" },
-                  { v: "meso", label: "Meso" },
-                  { v: "endo", label: "Endo" },
+                  { v: "ecto", label: "Ectomorph" },
+                  { v: "meso", label: "Mesomorph" },
+                  { v: "endo", label: "Endomorph" },
                 ].map((b) => (
                   <Label
                     key={b.v}
