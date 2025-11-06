@@ -18,10 +18,10 @@ export default function BottomNav() {
       path: "/planner",
     },
     {
-      id: "emotion-ai",
-      label: "Emotion AI",
+      id: "lifestyle",
+      label: "Lifestyle",
       icon: Sparkles,
-      path: "/emotion-ai",
+      path: "/lifestyle",
     },
     {
       id: "procare",

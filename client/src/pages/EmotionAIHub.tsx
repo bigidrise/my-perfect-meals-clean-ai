@@ -1,8 +1,9 @@
+
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles, RefrigeratorIcon, Utensils, Baby, Pill, Wine } from "lucide-react";
+import { Sparkles, RefrigeratorIcon, Utensils, Baby, Wine } from "lucide-react";
 
 interface AIFeature {
   title: string;
@@ -13,15 +14,15 @@ interface AIFeature {
   testId: string;
 }
 
-export default function EmotionAIHub() {
+export default function LifestyleHub() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    document.title = "Emotion AI Eats | My Perfect Meals";
+    document.title = "Lifestyle | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
-  const aiFeatures: AIFeature[] = [
+  const lifestyleFeatures: AIFeature[] = [
     {
       title: "Craving Creator",
       description: "AI-powered personalized meal suggestions based on your cravings",
@@ -75,20 +76,29 @@ export default function EmotionAIHub() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
-      {/* Header Banner - eMotion AI */}
+      {/* Header Banner */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
         <div className="px-4 py-3 flex items-center gap-3">
           <Sparkles className="h-6 w-6 text-orange-500" />
-          <h1 className="text-lg font-bold text-white">eMotion AI</h1>
+          <h1 className="text-lg font-bold text-white">Lifestyle</h1>
         </div>
       </div>
 
-      {/* Main Content - Vertical Button Stack */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 pt-24">
-        <div className="max-w-2xl w-full">
-          {/* AI Features - Vertical Stack */}
+      {/* Main Content */}
+      <div className="flex-1 px-4 py-8 pt-20">
+        <div className="max-w-2xl mx-auto space-y-4">
+          {/* Context Summary Card */}
+          <Card className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl">
+            <CardContent className="p-4">
+              <p className="text-white/90 text-sm text-center">
+                Real life happens. Navigate cravings, dining out, and social drinking with AI-powered guidance.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Lifestyle Features - Vertical Stack */}
           <div className="flex flex-col gap-3">
-            {aiFeatures.map((feature) => {
+            {lifestyleFeatures.map((feature) => {
               const Icon = feature.icon;
               return (
                 <Card

@@ -291,6 +291,10 @@ export default function Router() {
         <Route path="/weaning-off-tool" component={WeaningOffTool} />
         <Route path="/wine-pairing" component={WinePairing} />
 
+        {/* Lifestyle Hub (formerly Emotion AI) */}
+        <Route path="/lifestyle" component={EmotionAIHub} />
+        <Route path="/emotion-ai" component={EmotionAIHub} />
+
         {/* Meal Finder Route */}
         <Route path="/meal-finder" component={MealFinder} />
 

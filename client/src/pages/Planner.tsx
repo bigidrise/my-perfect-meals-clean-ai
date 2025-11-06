@@ -70,9 +70,18 @@ export default function Planner() {
         </div>
       </div>
 
-      {/* Main Content - Vertical Button Stack */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 pt-24">
-        <div className="max-w-2xl w-full">
+      {/* Main Content */}
+      <div className="flex-1 px-4 py-8 pt-20">
+        <div className="max-w-2xl mx-auto space-y-4">
+          {/* Context Summary Card */}
+          <Card className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl">
+            <CardContent className="p-4">
+              <p className="text-white/90 text-sm text-center">
+                Medical-grade meal planning tailored to your health needs. Choose your protocol below.
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Planner Features - Vertical Stack */}
           <div className="flex flex-col gap-3">
             {plannerFeatures.map((feature) => {
