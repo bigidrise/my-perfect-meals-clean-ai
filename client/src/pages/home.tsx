@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b]">
       <Navigation />
       
       {/* Header Banner */}
@@ -51,7 +51,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section with Image */}
-      <section className="bg-background pt-20 pb-16 lg:pb-24">
+      <section className="pt-20 pb-8 lg:pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Image Section */}
           <div className="relative h-48 lg:h-64 rounded-xl overflow-hidden mb-8">
@@ -66,11 +66,10 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4">
               <h1 className="text-2xl lg:text-4xl font-bold text-white mb-2">
-                Your Perfect Meals,{" "}
-                <span className="text-orange-500">Powered by AI</span>
+                Welcome Back, Demo!
               </h1>
-              <p className="text-white/90 text-sm lg:text-base mb-4 max-w-3xl">
-                Effortlessly plan healthy meals tailored to your dietary preferences, health conditions, and fitness goals. Zero guesswork, maximum nutrition.
+              <p className="text-white/90 text-sm lg:text-base max-w-3xl">
+                Ready to Hit Your Macro Goals
               </p>
             </div>
           </div>
