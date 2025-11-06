@@ -73,14 +73,24 @@ export default function Planner() {
       {/* Main Content */}
       <div className="flex-1 px-4 py-8 pt-20">
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Context Summary Card */}
-          <Card className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl">
-            <CardContent className="p-4">
-              <p className="text-white/90 text-sm text-center">
-                Medical-grade meal planning tailored to your health needs. Choose your protocol below.
+          {/* Hero Image Section */}
+          <div className="relative h-48 rounded-xl overflow-hidden">
+            <img 
+              src="/images/planner-hero.jpg" 
+              alt="Medical meal planning"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EPlanner%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4">
+              <h2 className="text-2xl font-bold text-white mb-1">Medical-Grade Planning</h2>
+              <p className="text-white/90 text-sm">
+                Tailored meal planning for your specific health needs and goals.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Planner Features - Vertical Stack */}
           <div className="flex flex-col gap-3">

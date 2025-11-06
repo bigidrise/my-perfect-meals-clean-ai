@@ -73,9 +73,26 @@ export default function HealthyKidsMeals() {
         </div>
       </div>
 
-      {/* Main Content - Vertical Button Stack */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 pt-20">
-        <div className="max-w-2xl w-full">
+      {/* Main Content */}
+      <div className="flex-1 px-4 py-8">
+        <div className="max-w-2xl mx-auto space-y-4">
+          {/* Hero Image Section */}
+          <div className="relative h-40 rounded-xl overflow-hidden">
+            <img 
+              src="/images/kids-meals/happy-kids-eating.jpg" 
+              alt="Happy kids eating"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2310b981;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3EKids Love It!%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="text-white/90 text-sm">
+                Nutritious meals designed for little ones — they'll actually eat them!
+              </p>
+            </div>
+          </div>
           {/* Kids Features - Vertical Stack */}
           <div className="flex flex-col gap-3">
             {kidsFeatures.map((feature) => {
