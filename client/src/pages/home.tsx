@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b]">
+    <div className="min-h-screen bg-black">
       <Navigation />
       
       {/* Header Banner */}
@@ -113,7 +113,7 @@ export default function Home() {
       </section>
 
       {/* User Profile Setup Demo */}
-      <section className="bg-muted/30 py-16 lg:py-24">
+      <section className="bg-black py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -218,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* AI Meal Generation Demo */}
-      <section className="bg-background py-16 lg:py-24">
+      <section className="bg-black py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -368,7 +368,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-muted/30 py-16 lg:py-24">
+      <section className="bg-black py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -435,7 +435,7 @@ export default function Home() {
       </section>
 
       {/* Mobile App Preview */}
-      <section className="bg-background py-16 lg:py-24">
+      <section className="bg-black py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
             <div className="mb-12 lg:mb-0">
@@ -572,7 +572,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section className="bg-muted/30 py-16 lg:py-24">
+      <section className="bg-black py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
