@@ -110,7 +110,7 @@ export default function MyBiometrics() {
   // Profile selection for top-off adds
   type Profile = 'pure'|'chicken'|'turkey'|'whey'|'rice'|'oats'|'oil'|'fish'|'veggies'|'beef';
   const [selectedProfile, setSelectedProfile] = useState<Profile>('whey');
-  const PROFILES_ENABLED = false; // flip to false to hide UI and use pure macros
+  const PROFILES_ENABLED = true; // flip to false to hide UI and use pure macros
 
   // Heuristic tails (kept tiny + transparent)
   const applyProfile = (profile: Profile, P: number, C: number, F: number) => {
