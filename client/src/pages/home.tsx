@@ -51,10 +51,10 @@ export default function Home() {
       </div>
 
       {/* Hero Section with Image */}
-      <section className="bg-background py-8 lg:py-16 pt-24">
+      <section className="bg-black py-8 lg:py-16 pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Image Section */}
-          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden mb-12">
+          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden mb-8">
             <img 
               src="/images/home-hero.jpg" 
               alt="My Perfect Meals - AI Powered Nutrition"
