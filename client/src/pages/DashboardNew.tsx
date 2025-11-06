@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -13,6 +13,7 @@ import {
   Flame,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
+import { BarcodeScanner } from "@/components/BarcodeScanner"; // Assuming BarcodeScanner is in this path
 
 interface FeatureCard {
   title: string;
@@ -32,6 +33,7 @@ const todayMacros = {
 
 export default function DashboardNew() {
   const [, setLocation] = useLocation();
+  const [showScanner, setShowScanner] = useState(false); // State to control scanner modal visibility
 
   useEffect(() => {
     document.title = "Home | My Perfect Meals";
@@ -79,6 +81,17 @@ export default function DashboardNew() {
     setLocation(route);
   };
 
+  // Handler for when food is found via barcode scanner
+  const handleFoodFound = (foodData: any) => {
+    console.log("Food found:", foodData);
+    // Here you would typically process foodData:
+    // 1. Save to draft (if applicable)
+    // 2. Navigate to biometrics with the found food data
+    // For now, let's just navigate to biometrics and close the scanner
+    setLocation("/my-biometrics"); // Navigate to biometrics
+    setShowScanner(false); // Close the scanner modal
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -120,8 +133,8 @@ export default function DashboardNew() {
           className="mb-6 flex-shrink-0"
         >
           <div className="relative h-48 lg:h-64 rounded-xl overflow-hidden">
-            <img 
-              src="/images/home-hero.jpg" 
+            <img
+              src="/images/home-hero.jpg"
               alt="My Perfect Meals Dashboard"
               className="w-full h-full object-cover"
             />
@@ -133,7 +146,7 @@ export default function DashboardNew() {
               <p className="text-white/90 text-sm lg:text-base mb-4">
                 Ready to hit your macro goals today?
               </p>
-              
+
               {/* Quick Stats - Real Macro Data */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
@@ -163,9 +176,9 @@ export default function DashboardNew() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mb-4 flex-shrink-0"
         >
-          <Card 
+          <Card
             className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl group"
-            onClick={() => setLocation("/my-biometrics")}
+            onClick={() => setShowScanner(true)} // Open scanner modal on click
             data-testid="card-barcode-scanner"
           >
             <CardHeader className="pb-3">
@@ -253,6 +266,14 @@ export default function DashboardNew() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Barcode Scanner Modal */}
+      {showScanner && (
+        <BarcodeScanner
+          onFoodFound={handleFoodFound}
+          onClose={() => setShowScanner(false)}
+        />
+      )}
     </motion.div>
   );
 }
