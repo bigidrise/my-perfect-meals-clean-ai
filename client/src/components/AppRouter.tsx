@@ -53,15 +53,6 @@ export default function AppRouter({ children }: AppRouterProps) {
     
     setShowDisclaimer(false);
     setShowEmotionalGate(false);
-
-    // If at root, redirect to dashboard
-    if (location === "/") {
-      console.log("🔄 Redirecting to dashboard");
-      setLocation("/dashboard");
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }, 100);
-    }
   }, [location, setLocation]);
 
   const handleDisclaimerAccept = () => {
