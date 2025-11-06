@@ -106,7 +106,7 @@ export default function MyBiometrics() {
   }, [macroRows, today]);
 
   const [p,setP]=useState(""); const [c,setC]=useState(""); const [f,setF]=useState(""); const [k,setK]=useState("");
-  
+
   // Profile selection for top-off adds
   type Profile = 'pure'|'chicken'|'turkey'|'whey'|'rice'|'oats'|'oil'|'fish'|'veggies'|'beef';
   const [selectedProfile, setSelectedProfile] = useState<Profile>('whey');
@@ -128,12 +128,12 @@ export default function MyBiometrics() {
       default:       return { P: P, C: C, F: F };
     }
   };
-  
+
   // Macro Targets state (persistent, not date-specific) - now with pro override support
   const [targets, setTargets] = useState<MacroTargets | null>(null);
   const [targetSource, setTargetSource] = useState<'pro' | 'self' | 'none'>('none');
   const [proName, setProName] = useState<string>('');
-  
+
   useEffect(() => {
     const resolved = getResolvedTargets();
     if (resolved.source !== 'none') {
@@ -226,7 +226,7 @@ export default function MyBiometrics() {
     clearQuickView();
     setQv(null);
   };
-  
+
   const addMacros = () => {
     let P = Number(p || 0), C = Number(c || 0), F = Number(f || 0);
     // If nothing entered, do nothing (silent)
@@ -393,13 +393,13 @@ export default function MyBiometrics() {
     }
 
     clearDraft();
-    
+
     // Clear input fields after auto-adding (so manual "Add" button works correctly)
     setP("");
     setC("");
     setF("");
     setK("");
-    
+
     // Remove ?draft=1 from URL
     const url = new URL(window.location.href);
     url.searchParams.delete("draft");
@@ -419,7 +419,7 @@ export default function MyBiometrics() {
       .replace(/&amp;/g, '&')         // HTML ampersand
       .replace(/\s+/g, ' ')           // Multiple spaces to single space
       .trim();
-    
+
     const lower = cleaned.toLowerCase();
     const numRe = /-?\d+(?:\.\d+)?/g;
 
@@ -488,7 +488,7 @@ export default function MyBiometrics() {
   // ------- BODY / WEIGHT (local) -------
   const [body, setBody] = useState<{ heightIn?: number }>(() => loadJSON(LS_BODY, { heightIn: 68 }));
   useEffect(() => saveJSON(LS_BODY, body), [body]);
-  
+
   const [weightHistory, setWeightHistory] = useState<WeightRow[]>(() => loadJSON(LS_WEIGHT, [] as WeightRow[]));
   useEffect(() => saveJSON(LS_WEIGHT, weightHistory), [weightHistory]);
 
@@ -518,7 +518,7 @@ export default function MyBiometrics() {
     };
     fetchWeightHistory();
   }, []); // Fetch once on mount
-  
+
   // Check for pending weight sync from MacroCounter
   const [pendingWeightSync, setPendingWeightSync] = useState<{ weight: number; units: string; timestamp: number } | null>(() => {
     try {
@@ -532,7 +532,7 @@ export default function MyBiometrics() {
 
   const [weightLbs, setWeightLbs] = useState("");
   const [waistIn, setWaistIn] = useState("");
-  
+
   // Pre-fill weight if pending sync exists
   useEffect(() => {
     if (pendingWeightSync && !weightLbs) {
@@ -543,7 +543,7 @@ export default function MyBiometrics() {
       setWeightLbs(String(weightInLbs));
     }
   }, [pendingWeightSync]);
-  
+
   const saveWeight = () => {
     const w = weightLbs.trim() ? Number(weightLbs) : undefined;
     const wst = waistIn.trim() ? Number(waistIn) : undefined;
@@ -551,20 +551,20 @@ export default function MyBiometrics() {
     const row: WeightRow = { id: crypto.randomUUID(), date: today, weight: w, waist: wst };
     setWeightHistory(prev => [row, ...prev].slice(0, 365));
     setWeightLbs(""); setWaistIn("");
-    
+
     // Clear pending sync after saving
     if (pendingWeightSync) {
       localStorage.removeItem("pending-weight-sync");
       setPendingWeightSync(null);
       toast({ title: "✓ Weight saved", description: "Weight from Macro Calculator has been logged to your history." });
     }
-    
+
     // if (SYNC_ENDPOINT) fetch(SYNC_ENDPOINT+"/weight", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(row)}).catch(()=>{});
   };
-  
+
   const latestWeight = useMemo(() => weightHistory[0]?.weight, [weightHistory]);
   const latestWaist = useMemo(() => weightHistory.find(r => r.waist)?.waist, [weightHistory]);
-  
+
   const bmi = useMemo(() => {
     if (!latestWeight || !body.heightIn) return undefined;
     const kg = latestWeight * 0.453592; const m = body.heightIn * 0.0254; return (kg/(m*m)).toFixed(1);
@@ -572,7 +572,7 @@ export default function MyBiometrics() {
   const whr = useMemo(() => {
     if (!latestWaist || !body.heightIn) return undefined; return (latestWaist / body.heightIn).toFixed(2);
   }, [latestWaist, body.heightIn]);
-  
+
   // Weight history datasets for chart
   const weight7days = useMemo(() => {
     const days = new Map<string, number[]>();
@@ -591,7 +591,7 @@ export default function MyBiometrics() {
     }
     return out;
   }, [weightHistory]);
-  
+
   const weight1mo = useMemo(() => {
     const days = new Map<string, number[]>();
     for (const r of weightHistory) {
@@ -609,7 +609,7 @@ export default function MyBiometrics() {
     }
     return out;
   }, [weightHistory]);
-  
+
   const weight3mo = useMemo(() => {
     const days = new Map<string, number[]>();
     for (const r of weightHistory) {
@@ -627,7 +627,7 @@ export default function MyBiometrics() {
     }
     return out;
   }, [weightHistory]);
-  
+
   const weight6mo = useMemo(() => {
     const days = new Map<string, number[]>();
     for (const r of weightHistory) {
@@ -645,7 +645,7 @@ export default function MyBiometrics() {
     }
     return out;
   }, [weightHistory]);
-  
+
   const weight12mo = useMemo(() => {
     const days = new Map<string, number[]>();
     for (const r of weightHistory) {
@@ -752,7 +752,7 @@ export default function MyBiometrics() {
       >
         <Home className="h-4 w-4" />
       </Button>
-      
+
       <div className="max-w-6xl mx-auto space-y-6 pt-14">
         {/* Header */}
         <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
@@ -786,7 +786,7 @@ export default function MyBiometrics() {
         <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
           <CardHeader><CardTitle className="text-white text-lg flex items-center gap-2"><BarChart3 className="h-5 w-5"/> Today's Macros</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-              
+
               {/* Macro Targets Progress */}
               {targets ? (
                 <div className="rounded-2xl border border-orange-400/30 p-4 mb-3 bg-orange-900/20 backdrop-blur-sm">
@@ -832,7 +832,7 @@ export default function MyBiometrics() {
                               ? `These targets were set by ${proName}. They'll stay active until ${proName} changes them.`
                               : "You can change your macro targets anytime from:"}
                           </p>
-                          
+
                           {targetSource !== 'pro' && (
                             <div className="grid grid-cols-2 gap-3">
                               <Button
@@ -858,7 +858,7 @@ export default function MyBiometrics() {
                       </DialogContent>
                     </Dialog>
                   </div>
-                  
+
                   {/* Pro-set badge (if targets are set by professional) */}
                   {targetSource === 'pro' && (
                     <div className="mb-3 rounded-lg border border-orange-400/50 bg-orange-900/30 backdrop-blur-sm p-3">
@@ -871,7 +871,7 @@ export default function MyBiometrics() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Top summary badges with pulsing effect */}
                   <div className="flex flex-wrap gap-2 mb-3">
                     {summaryBadges.map(b => (
@@ -888,11 +888,11 @@ export default function MyBiometrics() {
                     ))}
                   </div>
 
-                  {/* Progress bars - yellow/pink system */}
+                  {/* Progress bars - white/yellow/pink system */}
                   {summaryBadges.map(row => {
                     const near = row.pct >= 90;
                     const over = row.pct >= 100;
-                    const barColor = over ? "bg-orange-500" : near ? "bg-orange-400" : "bg-white/70";
+                    const barColor = over ? "bg-pink-500" : near ? "bg-yellow-400" : "bg-white/70";
                     return (
                       <div key={row.key} className="space-y-2 mb-3">
                         <div className="flex justify-between text-sm">
