@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Home, ArrowUp, ArrowLeft } from "lucide-react";
+import { ArrowUp, ArrowLeft } from "lucide-react";
 
 // ---- LIVE PARTNER (Nutritional Frontiers) ----
 const AFFILIATE = {
@@ -107,17 +108,17 @@ export default function SupplementHub() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-amber-500 to-black/80">
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
       <main className="mx-auto max-w-screen-md px-4 pb-24 pt-6">
         {/* Header */}
         <header className="mb-6">
           <button
             onClick={() => setLocation("/supplement-hub-landing")}
-            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/30 backdrop-blur-lg border border-white/20 hover:bg-black/40 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
-          <div className="bg-black/20 backdrop-blur-none border border-white/20 rounded-2xl p-6 shadow-lg mb-6 mt-14">
+          <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg mb-6 mt-14">
             <h1 className="text-2xl font-bold leading-tight text-white">
               Supplement Hub
             </h1>
@@ -159,11 +160,11 @@ export default function SupplementHub() {
             />
 
             {/* Discount / access */}
-            <div className="bg-black/30 backdrop-blur-none border border-white/20 rounded-xl p-4">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-xl p-4">
               <h4 className="font-semibold text-white mb-2">
                 🎯 Member Access Code
               </h4>
-              <div className="bg-black/30 backdrop-blur-none border border-white/20 rounded-lg p-3 mb-2">
+              <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-lg p-3 mb-2">
                 <p className="text-lg font-mono font-bold text-white text-center tracking-wider">
                   {AFFILIATE.discountCode}
                 </p>
@@ -196,7 +197,7 @@ export default function SupplementHub() {
                   href={AFFILIATE.signupUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-black/10 backdrop-blur-none border border-white/20 text-white hover:bg-black/30 transition-all duration-200"
+                  className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 transition-all duration-200"
                 >
                   {AFFILIATE.signupCtaLabel || "Sign Up"}
                 </a>
@@ -244,7 +245,7 @@ export default function SupplementHub() {
         <section className="space-y-4">
           <SectionTitle>More Partners</SectionTitle>
           <p className="text-sm text-white/70">
-            We’re expanding carefully. Expect a few more trusted brands here
+            We're expanding carefully. Expect a few more trusted brands here
             soon.
           </p>
 
@@ -323,7 +324,7 @@ export default function SupplementHub() {
               className="bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 rounded-full w-14 h-14 p-0 shadow-xl"
               aria-label="Scroll to top"
             >
-              <ArrowUp className="h-6 w-6" />
+              <ArrowUp className="h-6 w-6 mx-auto" />
             </button>
           </div>
         )}
