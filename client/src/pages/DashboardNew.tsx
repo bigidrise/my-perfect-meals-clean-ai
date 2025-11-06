@@ -120,19 +120,26 @@ export default function DashboardNew() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 pt-28 pb-8">
-        {/* Welcome Section */}
+        {/* Hero Welcome Card with Fire Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
           className="mb-8"
         >
-          <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-            <CardContent className="p-6">
+          <Card className="relative overflow-hidden border border-orange-500/30 shadow-2xl">
+            {/* Animated Fire Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-600 to-black animate-gradient-x">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              {/* Flame accent overlay */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-transparent to-transparent"></div>
+            </div>
+            
+            <CardContent className="relative z-10 p-6">
               <h2 className="text-2xl font-bold text-white mb-2">
                 Welcome back, {firstName}! 👋
               </h2>
-              <p className="text-white/70 text-sm mb-6">
+              <p className="text-white/90 text-sm mb-6">
                 Ready to hit your macro goals today?
               </p>
 
