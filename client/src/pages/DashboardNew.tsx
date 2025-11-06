@@ -231,12 +231,12 @@ export default function DashboardNew() {
           })}
         </div>
 
-        {/* Bottom CTA Section */}
+        {/* Bottom CTA Section - Go to Planner */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-auto flex-shrink-0"
+          className="mt-6 flex-shrink-0"
         >
           <Card className="bg-black/30 backdrop-blur-lg border border-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all">
             <CardContent className="p-6 text-center">
@@ -249,6 +249,7 @@ export default function DashboardNew() {
               <button
                 onClick={() => setLocation("/planner")}
                 className="px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl"
+                data-testid="button-go-to-planner"
               >
                 Go to Planner
               </button>
