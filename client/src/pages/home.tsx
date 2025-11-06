@@ -51,10 +51,10 @@ export default function Home() {
       </div>
 
       {/* Hero Section with Image */}
-      <section className="bg-background py-8 lg:py-16 pt-24">
+      <section className="bg-background pt-20 pb-16 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Image Section */}
-          <div className="relative h-64 lg:h-96 rounded-xl overflow-hidden mb-12">
+          <div className="relative h-48 lg:h-64 rounded-xl overflow-hidden mb-8">
             <img 
               src="/images/home-hero.jpg" 
               alt="My Perfect Meals - AI Powered Nutrition"
@@ -64,49 +64,51 @@ export default function Home() {
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-8 left-8 right-8">
-              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-3">
+            <div className="absolute bottom-4 left-4 right-4">
+              <h1 className="text-2xl lg:text-4xl font-bold text-white mb-2">
                 Your Perfect Meals,{" "}
                 <span className="text-orange-500">Powered by AI</span>
               </h1>
-              <p className="text-white/90 text-lg lg:text-xl mb-6 max-w-3xl">
+              <p className="text-white/90 text-sm lg:text-base mb-4 max-w-3xl">
                 Effortlessly plan healthy meals tailored to your dietary preferences, health conditions, and fitness goals. Zero guesswork, maximum nutrition.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  onClick={handleStartPlanning}
-                  className="btn-primary shadow-lg hover:shadow-xl"
-                  size="lg"
-                >
-                  <Dice2 className="mr-2 h-5 w-5" />
-                  Start Planning Meals
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="border-2 border-white text-white hover:bg-white/10"
-                  onClick={() => {
-                    // Create demo user and go to meal planning
-                    const demoUser = {
-                      id: "demo_user_" + Date.now(),
-                      username: "demo_user",
-                      email: "demo@example.com", 
-                      firstName: "Demo",
-                      lastName: "User",
-                      age: 28,
-                      fitnessGoal: "muscle_gain",
-                      dietaryRestrictions: ["gluten-free"],
-                      dailyCalorieTarget: 2400
-                    };
-                    localStorage.setItem("userId", demoUser.id);
-                    navigate("/meal-planning");
-                  }}
-                >
-                  <Rocket className="mr-2 h-5 w-5" />
-                  Quick Demo
-                </Button>
-              </div>
             </div>
+          </div>
+          
+          {/* CTA Buttons below image */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+                <Button 
+              onClick={handleStartPlanning}
+              className="btn-primary shadow-lg hover:shadow-xl"
+              size="lg"
+            >
+              <Dice2 className="mr-2 h-5 w-5" />
+              Start Planning Meals
+            </Button>
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="border-2 hover:border-primary hover:text-primary"
+              onClick={() => {
+                // Create demo user and go to meal planning
+                const demoUser = {
+                  id: "demo_user_" + Date.now(),
+                  username: "demo_user",
+                  email: "demo@example.com", 
+                  firstName: "Demo",
+                  lastName: "User",
+                  age: 28,
+                  fitnessGoal: "muscle_gain",
+                  dietaryRestrictions: ["gluten-free"],
+                  dailyCalorieTarget: 2400
+                };
+                localStorage.setItem("userId", demoUser.id);
+                navigate("/meal-planning");
+              }}
+            >
+              <Rocket className="mr-2 h-5 w-5" />
+              Quick Demo
+            </Button>
           </div>
         </div>
       </section>
