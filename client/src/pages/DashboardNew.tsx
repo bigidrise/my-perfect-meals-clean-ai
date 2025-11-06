@@ -124,7 +124,7 @@ export default function DashboardNew() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-16 h-full overflow-hidden flex flex-col">
+      <div className="max-w-6xl mx-auto px-4 pt-28 pb-24 h-full overflow-y-auto flex flex-col">
         {/* Hero Image Section with Welcome Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
