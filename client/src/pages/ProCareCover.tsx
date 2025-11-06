@@ -29,10 +29,10 @@ export default function ProCareCover() {
       testId: "card-competition-beachbody",
     },
     {
-      title: "ProCare Portal",
+      title: "Care Team",
       description: "Professional client management and coaching tools",
       icon: Users,
-      route: "/pro-portal",
+      route: "/care-team",
       testId: "card-procare-portal",
     },
   ];
