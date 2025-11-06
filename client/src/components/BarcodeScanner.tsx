@@ -230,7 +230,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
                 <Button 
                   onClick={stopScanning}
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-white/1"
                 >
                   Stop Scanning
                 </Button>
