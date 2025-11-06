@@ -1564,7 +1564,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             ).toLocaleDateString(undefined, { weekday: "long" });
 
             return (
-              <div className="fixed bottom-0 left-0 right-0 pb-20 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl">
+              <div className="fixed bottom-0 left-0 right-0 pb-24 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl">
                 <div className="container mx-auto px-4 py-3">
                   <div className="flex flex-col gap-2">
                     <div className="text-white text-sm font-semibold">
@@ -1614,11 +1614,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
           // WEEK MODE: Use ShoppingAggregateBar
           return (
-            <ShoppingAggregateBar
-              ingredients={ingredients}
-              source="Athlete Meal Board"
-              sourceSlug="athlete-meal-board"
-            />
+            <div className="pb-20">
+              <ShoppingAggregateBar
+                ingredients={ingredients}
+                source="Athlete Meal Board"
+                sourceSlug="athlete-meal-board"
+              />
+            </div>
           );
         })()}
 
