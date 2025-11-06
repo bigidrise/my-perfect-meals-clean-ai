@@ -1123,13 +1123,102 @@ export default function MyBiometrics() {
             </CardContent>
           </Card>
 
+        {/* WATER LOG */}
+        <Card className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-white text-xl flex items-center gap-2">
+              💧 Water Log
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <WaterLog />
+          </CardContent>
+        </Card>
+
         {/* Version tag for deployment tracking */}
         <div className="text-[10px] text-white/40 text-center mt-4 mb-2">
-          Build: Biometrics v1.1 • Profiles ON
+          Build: Biometrics v1.1 • Profiles ON • Water Logger
         </div>
 
       </div>
     </motion.div>
+  );
+}
+
+// ============================== WATER LOG ==============================
+function WaterLog() {
+  const [water, setWater] = useState(() => {
+    const saved = localStorage.getItem("mpm_bio_water");
+    const today = new Date().toDateString();
+    if (!saved) return { date: today, ounces: 0 };
+    const parsed = JSON.parse(saved);
+    return parsed.date === today ? parsed : { date: today, ounces: 0 };
+  });
+
+  const goal = useMemo(() => {
+    const w = Number(localStorage.getItem("latestWeight")) || 180;
+    return Math.round(w * 0.67); // standard hydration formula
+  }, []);
+
+  const save = (oz: number) => {
+    const today = new Date().toDateString();
+    const updated = { date: today, ounces: oz };
+    setWater(updated);
+    localStorage.setItem("mpm_bio_water", JSON.stringify(updated));
+  };
+
+  const addWater = (oz: number) => {
+    save(Math.min(goal, water.ounces + oz));
+  };
+
+  const resetWater = () => save(0);
+
+  const pct = Math.min(100, (water.ounces / goal) * 100);
+
+  return (
+    <div className="flex flex-col items-center space-y-4 text-center">
+      <div className="relative w-32 h-32">
+        <svg className="w-full h-full -rotate-90">
+          <circle cx="64" cy="64" r="60" stroke="rgba(255,255,255,0.1)" strokeWidth="8" fill="none" />
+          <circle
+            cx="64"
+            cy="64"
+            r="60"
+            stroke="#38bdf8"
+            strokeWidth="8"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={`${2 * Math.PI * 60}`}
+            strokeDashoffset={`${2 * Math.PI * 60 * (1 - pct / 100)}`}
+            className="transition-all duration-500"
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold text-white">{water.ounces}</span>
+          <span className="text-sm text-white/70">/ {goal} oz</span>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <Button onClick={() => addWater(8)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-8oz">
+          +8 oz
+        </Button>
+        <Button onClick={() => addWater(16)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-16oz">
+          +16 oz
+        </Button>
+        <Button onClick={resetWater} className="bg-black/30 border border-white/20 text-white hover:bg-black/50" data-testid="button-reset-water">
+          Reset
+        </Button>
+      </div>
+
+      <p className="text-xs text-white/60">
+        {pct < 40
+          ? "Stay hydrated — your body loves water!"
+          : pct < 80
+          ? "Looking good — keep sipping 💧"
+          : "Perfect hydration! 💦"}
+      </p>
+    </div>
   );
 }
 
