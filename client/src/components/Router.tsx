@@ -150,8 +150,8 @@ export default function Router() {
       <ScrollRestorer />
       <Switch>
         {/* Core Routes */}
-        <Route path="/" component={Home} />
-        <Route path="/welcome" component={Welcome} />
+        <Route path="/" component={Welcome} />
+        <Route path="/home" component={Home} />
         <Route path="/auth" component={Auth} />
         <Route path="/forgot-password" component={ForgotPassword} />
         <Route path="/reset-password" component={ResetPassword} />
