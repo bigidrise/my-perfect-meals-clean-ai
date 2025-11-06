@@ -257,9 +257,12 @@ export default function MacroCounter() {
       const saved = localStorage.getItem('macro_calculator_settings');
       if (saved) {
         const parsed = JSON.parse(saved);
+        console.log('📥 Loaded macro settings:', parsed);
         return parsed;
       }
-    } catch {}
+    } catch (error) {
+      console.error('Failed to load macro settings:', error);
+    }
     return null;
   };
 
@@ -332,7 +335,10 @@ export default function MacroCounter() {
         fatPct
       };
       localStorage.setItem('macro_calculator_settings', JSON.stringify(settings));
-    } catch {}
+      console.log('💾 Saved macro settings:', settings);
+    } catch (error) {
+      console.error('Failed to save macro settings:', error);
+    }
   }, [goal, bodyType, units, sex, age, heightFt, heightIn, weightLbs, heightCm, weightKg, activity, proteinPerKg, fatPct]);
 
   const kg = units === "imperial" ? kgFromLbs(weightLbs) : weightKg;
