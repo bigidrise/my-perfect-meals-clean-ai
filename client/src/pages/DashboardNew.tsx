@@ -23,6 +23,13 @@ interface FeatureCard {
   testId: string;
 }
 
+// Placeholder for todayMacros - this would typically come from a query or state management
+const todayMacros = {
+  protein: 50,
+  carbs: 150,
+  fat: 70,
+};
+
 export default function DashboardNew() {
   const [, setLocation] = useLocation();
 
@@ -126,25 +133,25 @@ export default function DashboardNew() {
                 Welcome back, {firstName}! 👋
               </h2>
               <p className="text-white/70 text-sm mb-6">
-                Ready to achieve your health goals today?
+                Ready to hit your macro goals today?
               </p>
 
-              {/* Quick Stats */}
+              {/* Quick Stats - Real Macro Data */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <Flame className="h-5 w-5 text-orange-500 mb-1" />
-                  <div className="text-xs text-white/60">Streak</div>
-                  <div className="text-lg font-bold text-white">3 days</div>
+                  <Flame className="h-5 w-5 text-blue-500 mb-1" />
+                  <div className="text-xs text-white/60">Protein</div>
+                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.protein)}g</div>
                 </div>
                 <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <TrendingUp className="h-5 w-5 text-green-500 mb-1" />
-                  <div className="text-xs text-white/60">Progress</div>
-                  <div className="text-lg font-bold text-white">75%</div>
+                  <TrendingUp className="h-5 w-5 text-orange-500 mb-1" />
+                  <div className="text-xs text-white/60">Carbs</div>
+                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.carbs)}g</div>
                 </div>
                 <div className="flex flex-col items-center p-3 rounded-lg bg-white/5 border border-white/10">
-                  <Activity className="h-5 w-5 text-blue-500 mb-1" />
-                  <div className="text-xs text-white/60">Active</div>
-                  <div className="text-lg font-bold text-white">12 wks</div>
+                  <Activity className="h-5 w-5 text-purple-500 mb-1" />
+                  <div className="text-xs text-white/60">Fat</div>
+                  <div className="text-lg font-bold text-white">{Math.round(todayMacros.fat)}g</div>
                 </div>
               </div>
             </CardContent>
