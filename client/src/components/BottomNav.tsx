@@ -15,7 +15,7 @@ export default function BottomNav() {
       id: "shopping",
       label: "Shopping",
       icon: ShoppingCart,
-      path: "/shopping-list-master",
+      path: "/shopping-list-v2",
     },
     {
       id: "lifestyle",

@@ -236,12 +236,12 @@ export default function DashboardNew() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-6 flex-shrink-0"
+          className="mt-auto pt-6 flex-shrink-0"
         >
           <Card className="bg-black/30 backdrop-blur-lg border border-white/10 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all">
             <CardContent className="p-6 text-center">
               <h3 className="text-white font-semibold mb-2">
-                Ready to plan your meals?
+                Ready to Plan Your Meals?
               </h3>
               <p className="text-white/70 text-sm mb-4">
                 Start building your perfect week with AI-powered meal planning
