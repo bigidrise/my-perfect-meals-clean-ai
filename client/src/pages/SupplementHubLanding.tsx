@@ -74,14 +74,22 @@ export default function SupplementHubLanding() {
       {/* Main Content */}
       <div className="flex-1 px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Hero Card */}
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-xl mb-6">
-            <h1 className="text-3xl font-bold text-white mb-4">
-              💊 Supplement Hub
-            </h1>
-            <p className="text-white/90 text-md max-w-2xl mx-auto">
-              Evidence-based supplement guidance and trusted partner products
-            </p>
+          {/* Hero Image Section */}
+          <div className="relative h-40 rounded-xl overflow-hidden">
+            <img 
+              src="/images/supplements/supplement-hero.jpg" 
+              alt="Supplement Hub"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ea580c;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3ESupplement Hub%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="text-white/90 text-sm">
+                Evidence-based supplement guidance and trusted partner products
+              </p>
+            </div>
           </div>
 
           {/* Supplement Features - Vertical Stack */}
