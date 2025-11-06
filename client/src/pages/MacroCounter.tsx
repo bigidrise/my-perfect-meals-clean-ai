@@ -377,11 +377,15 @@ export default function MacroCounter() {
       </Button>
 
       <div className="max-w-5xl mx-auto space-y-6 pt-14">
-        <h1 className="text-2xl font-bold text-center">Macro Calculator</h1>
-        <p className="text-sm text-center text-white/80">
-          Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
-          <b>gain</b>.
-        </p>
+        <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-white">Macro Calculator</CardTitle>
+            <p className="text-white/90 text-sm mt-2">
+              Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
+              <b>gain</b>.
+            </p>
+          </CardHeader>
+        </Card>
 
         {/* Goal & Body Type */}
         <div className="grid md:grid-cols-2 gap-4">
