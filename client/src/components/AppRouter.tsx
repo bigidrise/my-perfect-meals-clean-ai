@@ -37,67 +37,30 @@ export default function AppRouter({ children }: AppRouterProps) {
   // Weekly plan generation removed as meal calendar functionality was disabled
 
   useEffect(() => {
-    // Guard bypass: Skip all checks for 3 seconds after onboarding completion
-    if (justFinished()) {
-      console.log("⏰ Bypassing all guards - just finished onboarding");
-      setShowDisclaimer(false);
-      setShowEmotionalGate(false);
-      return;
+    // AUTO-BYPASS: Skip all authentication gates to allow guest access
+    console.log("🚀 Auto-bypass enabled - allowing guest access to all routes");
+    
+    // Auto-complete onboarding and disclaimer for guest users
+    if (!localStorage.getItem("onboardingCompleted")) {
+      localStorage.setItem("onboardingCompleted", "true");
     }
-
-    const onboardingCompleted = localStorage.getItem("onboardingCompleted") === "true";
-    const disclaimerAccepted = localStorage.getItem("disclaimerAccepted") === "true";
-
-    console.log("🎯 AppRouter: Checking flow state", {
-      onboardingCompleted,
-      disclaimerAccepted,
-      currentLocation: location
-    });
-
-    // Exempt certain public routes from gates
-    const publicRoutes = ["/", "/pricing", "/affiliates", "/auth", "/competition-beachbody-board"];
-    const locationPath = location.split('?')[0]; // Strip query params for route matching
-    if (publicRoutes.includes(locationPath)) {
-      setShowDisclaimer(false);
-      setShowEmotionalGate(false);
-      return;
+    if (!localStorage.getItem("disclaimerAccepted")) {
+      localStorage.setItem("disclaimerAccepted", "true");
     }
-
-    // Show disclaimer if not accepted (for new accounts)
-    if (!disclaimerAccepted && !onboardingCompleted) {
-      console.log("📋 Showing disclaimer");
-      setShowDisclaimer(true);
-      setShowEmotionalGate(false);
-      return;
+    if (!localStorage.getItem("isAuthenticated")) {
+      localStorage.setItem("isAuthenticated", "true");
     }
-
-    // Route to onboarding if disclaimer accepted but onboarding not completed
-    if (disclaimerAccepted && !onboardingCompleted) {
-      console.log("📝 Routing to /onboarding");
-      setShowDisclaimer(false);
-      setShowEmotionalGate(false);
-      if (location !== "/onboarding") {
-        setLocation("/onboarding");
-      }
-      return;
-    }
-
-    // All gates passed - show normal app
-    console.log("✅ All gates passed, showing main app");
+    
     setShowDisclaimer(false);
     setShowEmotionalGate(false);
 
-    // If at root and everything is complete, go to main dashboard (logged in users)
-    if (location === "/" && onboardingCompleted) {
-      const isLoggedIn = localStorage.getItem("isAuthenticated") === "true";
-      if (isLoggedIn) {
-        console.log("🔄 Authenticated user at root - redirecting to dashboard");
-        setLocation("/dashboard");
-        // Ensure we start at top of dashboard on fresh app loads
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "instant" });
-        }, 100);
-      }
+    // If at root, redirect to dashboard
+    if (location === "/") {
+      console.log("🔄 Redirecting to dashboard");
+      setLocation("/dashboard");
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }, 100);
     }
   }, [location, setLocation]);
 

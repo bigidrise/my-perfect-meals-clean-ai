@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -147,10 +146,14 @@ export default function Welcome() {
     touchDeltaX.current = 0;
   };
 
-  const signIn = () => setLocation(LOGIN_ROUTE);
+  const signIn = () => {
+    // Auto-redirect to dashboard for guest access
+    setLocation("/dashboard");
+  };
+
   const createAccount = () => {
-    // Go to auth page in signup mode
-    setLocation(LOGIN_ROUTE);
+    // Auto-redirect to dashboard for guest access
+    setLocation("/dashboard");
   };
 
   const testerQuickAccess = () => {

@@ -19,8 +19,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize user from localStorage
-    const currentUser = getCurrentUser();
+    // Initialize user from localStorage or create guest user
+    let currentUser = getCurrentUser();
+    
+    // If no user exists, create a guest user automatically
+    if (!currentUser) {
+      const guestUser: User = {
+        id: "guest-" + Date.now(),
+        email: "guest@myperfectmeals.com",
+        name: "Guest User"
+      };
+      localStorage.setItem("mpm_current_user", JSON.stringify(guestUser));
+      localStorage.setItem("userId", guestUser.id);
+      localStorage.setItem("isAuthenticated", "true");
+      currentUser = guestUser;
+    }
+    
     setUser(currentUser);
     setLoading(false);
   }, []);
