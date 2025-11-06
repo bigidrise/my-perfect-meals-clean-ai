@@ -66,14 +66,6 @@ export default function DashboardNew() {
       testId: "card-biometrics",
     },
     {
-      title: "Shopping List",
-      description: "Organize your groceries",
-      icon: ShoppingCart,
-      route: "/shopping-list-v2",
-      size: "small",
-      testId: "card-shopping-list",
-    },
-    {
       title: "Get Inspiration",
       description: "Daily motivation",
       icon: Lightbulb,
@@ -194,7 +186,7 @@ export default function DashboardNew() {
         </motion.div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-shrink-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-shrink-0">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
