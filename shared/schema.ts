@@ -205,7 +205,7 @@ export const glucoseContextEnum = pgEnum("glucose_context", [
 // Onboarding Progress Table
 export const onboardingProgress = pgTable("onboarding_progress", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
-  deviceId: text("device_id").notNull(),
+  deviceId: text("device_id"),
   userId: text("user_id"),
   stepKey: text("step_key").notNull(),
   data: jsonb("data").notNull().$type<Record<string, any>>().default({}),
