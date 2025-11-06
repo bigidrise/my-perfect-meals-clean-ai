@@ -48,7 +48,7 @@ export default function SupplementHubLanding() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20 flex flex-col"
+      className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
       {/* Header */}
       <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
@@ -74,8 +74,8 @@ export default function SupplementHubLanding() {
       {/* Main Content */}
       <div className="flex-1 px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Hero Section */}
-          <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-xl mb-6 mt-6">
+          {/* Hero Card */}
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-xl mb-6">
             <h1 className="text-3xl font-bold text-white mb-4">
               💊 Supplement Hub
             </h1>
@@ -95,15 +95,15 @@ export default function SupplementHubLanding() {
                   onClick={() => handleCardClick(feature.route)}
                   data-testid={feature.testId}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-3">
-                        <Icon className="h-5 w-5 text-orange-500 flex-shrink-0" />
-                        <h3 className="text-base font-semibold text-white">
+                  <CardContent className="p-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <Icon className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                        <h3 className="text-sm font-semibold text-white">
                           {feature.title}
                         </h3>
                       </div>
-                      <p className="text-sm text-white/80 ml-8">
+                      <p className="text-xs text-white/80 ml-6">
                         {feature.description}
                       </p>
                     </div>
