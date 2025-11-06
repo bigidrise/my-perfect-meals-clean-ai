@@ -519,6 +519,7 @@ export default function MacroCounter() {
                           className="bg-black/60 border-white/50 text-white"
                           value={heightIn}
                           onChange={(e) => setHeightIn(toNum(e.target.value))}
+                          key={`height-in-${heightIn}`}
                         />
                       </div>
                     </>
