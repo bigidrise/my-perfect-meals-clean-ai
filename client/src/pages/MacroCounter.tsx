@@ -251,20 +251,34 @@ export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const [goal, setGoal] = useState<Goal>("maint");
-  const [bodyType, setBodyType] = useState<BodyType>("meso");
-  const [units, setUnits] = useState<Units>("imperial");
-  const [sex, setSex] = useState<Sex>("female");
-  const [age, setAge] = useState<number>(30);
-  const [heightFt, setHeightFt] = useState<number>(5);
-  const [heightIn, setHeightIn] = useState<number>(7);
-  const [weightLbs, setWeightLbs] = useState<number>(160);
-  const [heightCm, setHeightCm] = useState<number>(170);
-  const [weightKg, setWeightKg] = useState<number>(72.5);
+  // Load calculator settings from localStorage
+  const loadCalculatorSettings = () => {
+    try {
+      const saved = localStorage.getItem('macro_calculator_settings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed;
+      }
+    } catch {}
+    return null;
+  };
+
+  const savedSettings = loadCalculatorSettings();
+
+  const [goal, setGoal] = useState<Goal>(savedSettings?.goal || "maint");
+  const [bodyType, setBodyType] = useState<BodyType>(savedSettings?.bodyType || "meso");
+  const [units, setUnits] = useState<Units>(savedSettings?.units || "imperial");
+  const [sex, setSex] = useState<Sex>(savedSettings?.sex || "female");
+  const [age, setAge] = useState<number>(savedSettings?.age || 30);
+  const [heightFt, setHeightFt] = useState<number>(savedSettings?.heightFt || 5);
+  const [heightIn, setHeightIn] = useState<number>(savedSettings?.heightIn || 7);
+  const [weightLbs, setWeightLbs] = useState<number>(savedSettings?.weightLbs || 160);
+  const [heightCm, setHeightCm] = useState<number>(savedSettings?.heightCm || 170);
+  const [weightKg, setWeightKg] = useState<number>(savedSettings?.weightKg || 72.5);
   const [activity, setActivity] =
-    useState<keyof typeof ACTIVITY_FACTORS>("light");
-  const [proteinPerKg, setProteinPerKg] = useState<number>(1.8);
-  const [fatPct, setFatPct] = useState<number>(0.3);
+    useState<keyof typeof ACTIVITY_FACTORS>(savedSettings?.activity || "light");
+  const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg || 1.8);
+  const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct || 0.3);
 
   // Nutrition Profile state
   const [profile, setProfile] = useState<NutritionProfile>(() => loadProfile());
@@ -298,6 +312,28 @@ export default function MacroCounter() {
   useEffect(() => {
     saveProfile(profile);
   }, [profile]);
+
+  // Save calculator settings to localStorage whenever they change
+  useEffect(() => {
+    try {
+      const settings = {
+        goal,
+        bodyType,
+        units,
+        sex,
+        age,
+        heightFt,
+        heightIn,
+        weightLbs,
+        heightCm,
+        weightKg,
+        activity,
+        proteinPerKg,
+        fatPct
+      };
+      localStorage.setItem('macro_calculator_settings', JSON.stringify(settings));
+    } catch {}
+  }, [goal, bodyType, units, sex, age, heightFt, heightIn, weightLbs, heightCm, weightKg, activity, proteinPerKg, fatPct]);
 
   const kg = units === "imperial" ? kgFromLbs(weightLbs) : weightKg;
   const cm =
