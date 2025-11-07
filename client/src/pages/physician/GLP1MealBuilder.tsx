@@ -35,7 +35,6 @@ import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
-import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 
@@ -822,7 +821,6 @@ export default function GLP1MealBuilder() {
     >
       <DailyMealProgressBar />
       <MealProgressCoach />
-      <MealBuilderGuidedTour />
       <Button 
         variant="ghost" 
         size="sm" 
