@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { kidsMeals, type KidsMeal } from "@/data/kidsMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
+import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 
 const SERVING_OPTIONS = [1, 2, 4, 6, 8] as const;
 
@@ -283,6 +284,19 @@ export default function KidsMealsHub() {
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Shopping Bar - Fixed at bottom when modal is open */}
+        {selected && (
+          <ShoppingAggregateBar
+            ingredients={scaledIngs.map(ing => ({
+              name: ing.item,
+              qty: ing.quantity,
+              unit: ing.unit
+            }))}
+            source={`${selected.name} (${selectedServings} servings)`}
+            sourceSlug="kids-meals"
+          />
         )}
       </div>
     </div>
