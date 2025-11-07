@@ -37,6 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
+import DailyMealProgressBar from "@/components/DailyMealProgressBar";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -830,7 +831,9 @@ export default function WeeklyMealBoard() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
+      <DailyMealProgressBar />
       <MealProgressCoach />
+      <MealBuilderGuidedTour />
       <Button
         variant="ghost"
         size="sm"

@@ -154,19 +154,38 @@ User saves weight → Auto-route to /planner
 - **File:** `client/src/components/guided/MealProgressCoach.tsx`
 - **Utility:** `client/src/lib/mealProgress.ts`
 - **Flow:**
-  1. Flashing "Create AI Meal" button on first meal card
-  2. When picker opens: Shows flashing "?" help icon
-  3. On click: Overlay explains "Protein required, carbs/fats optional"
-  4. Sequential highlights: Protein → Carbs → Fats → Done
-  5. Auto-advances after 8s per step
-  6. Returns to board after Done
-- **Integration:** Added to `WeeklyMealBoard.tsx`
-- **Requirements:** Picker needs these IDs:
-  - `id="meal-picker-drawer"` with `className="open"` when visible
-  - `id="picker-protein-section"` on protein picker section
-  - `id="picker-carb-section"` on carb picker section
-  - `id="picker-fat-section"` on fat picker section
-  - `id="picker-done-btn"` on Done button
+  1. Tracks meal completion for today (localStorage, auto-resets daily)
+  2. Highlights next incomplete meal's "Create AI Meal" button
+  3. Listens for `meal:saved` events to advance progression
+  4. Works across all meal boards (Weekly, Diabetic, GLP-1, Athlete)
+  5. Only runs when Coach Mode is enabled
+- **Integration:** Added to all meal builder boards:
+  - `WeeklyMealBoard.tsx` ✅
+  - `DiabeticMenuBuilder.tsx` ✅
+  - `GLP1MealBuilder.tsx` ✅
+  - `AthleteBoard.tsx` ✅
+- **Requirements:** Meal sections need:
+  - `data-meal-id="breakfast|lunch|dinner|snack1|snack2"` on section container
+  - `data-role="create-ai-meal"` on Create AI Meal button
+  - Dispatch `meal:saved` event with mealId when meal is completed
+
+### 10. **Daily Meal Progress Bar** ✅ COMPLETE
+- **File:** `client/src/components/guided/DailyMealProgressBar.tsx`
+- **Flow:**
+  1. Visual progress bar showing % of meals completed
+  2. Updates in real-time as meals are saved
+  3. Resets daily at midnight
+  4. Shows 0-100% based on completion of all 5 meals (Breakfast, Lunch, Dinner, Snack 1, Snack 2)
+  5. Green gradient fill with percentage text overlay
+- **Integration:** Added to all meal builder boards:
+  - `WeeklyMealBoard.tsx` ✅
+  - `DiabeticMenuBuilder.tsx` ✅
+  - `GLP1MealBuilder.tsx` ✅
+  - `AthleteBoard.tsx` ✅
+- **Requirements:** 
+  - Relies on same `mealProgress.ts` utility
+  - Listens for `meal:saved` events
+  - Works seamlessly with MealProgressCoach
 
 ---
 
