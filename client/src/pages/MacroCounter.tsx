@@ -390,7 +390,7 @@ export default function MacroCounter() {
             <div className="grid md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-3">
                 <div className="text-xs text-white font-semibold">Units</div>
-                <RadioGroup value={units} onValueChange={(v: Units) => {setUnits(v); advance("details");}} className="grid grid-cols-2 gap-2">
+                <RadioGroup value={units} onValueChange={(v: Units) => setUnits(v)} className="grid grid-cols-2 gap-2">
                   {(["imperial", "metric"] as const).map((u) => (
                     <Label
                       key={u}
@@ -406,7 +406,7 @@ export default function MacroCounter() {
                 </RadioGroup>
 
                 <div className="text-xs text-white font-semibold">Sex</div>
-                <RadioGroup value={sex} onValueChange={(v: Sex) => {setSex(v); advance("details");}} className="grid grid-cols-2 gap-2">
+                <RadioGroup value={sex} onValueChange={(v: Sex) => setSex(v)} className="grid grid-cols-2 gap-2">
                   {(["female", "male"] as const).map((s) => (
                     <Label
                       key={s}
@@ -428,10 +428,7 @@ export default function MacroCounter() {
                       type="number"
                       className="bg-black/60 border-white/50 text-white placeholder-white"
                       value={age || ""}
-                      onChange={(e) => {
-                        setAge(e.target.value === "" ? 0 : toNum(e.target.value));
-                        if (e.target.value) advance("details");
-                      }}
+                      onChange={(e) => setAge(e.target.value === "" ? 0 : toNum(e.target.value))}
                     />
                   </div>
 
@@ -443,7 +440,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightFt || ""}
-                          onChange={(e) => {setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
+                          onChange={(e) => setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                       <div>
@@ -452,7 +449,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightIn || ""}
-                          onChange={(e) => {setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
+                          onChange={(e) => setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                       <div>
@@ -461,7 +458,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={weightLbs || ""}
-                          onChange={(e) => {setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
+                          onChange={(e) => setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                     </>
@@ -473,7 +470,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightCm || ""}
-                          onChange={(e) => {setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
+                          onChange={(e) => setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                       <div>
@@ -482,7 +479,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={weightKg || ""}
-                          onChange={(e) => {setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
+                          onChange={(e) => setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                     </>
