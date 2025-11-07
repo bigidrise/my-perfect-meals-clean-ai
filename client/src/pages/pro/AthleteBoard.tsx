@@ -850,7 +850,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       {/* Header */}
       <div className="bg-black/40 backdrop-blur-xl border-b border-white/20 shadow-2xl">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-center mt-16">
+          <div className="flex items-center justify-center mt-12">
             <div className="bg-black/60 backdrop-blur-none border border-white/20 rounded-2xl px-6 py-3 flex items-center gap-3">
               <h1 className="text-xl font-bold text-white">
                 Competition + Beachbody Meal Board
@@ -914,7 +914,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <div className="text-lg font-semibold">
                 {formatWeekLabel(weekStartISO)}
               </div>
-              <div className="text-xs text-white/60">
+              <div className="text-xs text-white">
                 Week of {weekStartISO}
               </div>
             </div>
