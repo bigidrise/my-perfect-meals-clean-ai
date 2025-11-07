@@ -30,7 +30,6 @@ import { WhyDrawer } from "@/components/WhyDrawer";
 import { getWeeklyPlanningWhy } from "@/utils/reasons";
 import { useToast } from "@/hooks/use-toast";
 import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
-import { FeatureInstructions } from "@/components/FeatureInstructions";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
@@ -987,21 +986,6 @@ export default function GLP1MealBuilder() {
                 </Button>
               </div>
             </div>
-
-            <FeatureInstructions
-              steps={[
-                "Step 1: Start with DAY view - Select which day you want to work on (today, tomorrow, any day this week)",
-                "Step 2: Add meals to that day - Click '+ Add from Menus' to browse meal builders OR click '+' button to create your own custom meal card",
-                "Step 3: Build your complete day - Add Breakfast, Lunch, Dinner, and Snacks until your day is complete",
-                "Step 4: Review totals at bottom - Check your daily nutrition totals (calories, protein, carbs, fat)",
-                "Step 5: Send to Biometrics - Click 'Send Entire Day to Macros' to log this day's meals",
-                "Step 6: Add to Shopping - Click 'Add & View List' to send all ingredients to your Shopping List",
-                "Step 7: Switch to WEEK view (at top) - Toggle to Week mode to see your entire week at once",
-                "Step 8A: Copy Entire Week - Click 'Copy Week' to duplicate your full week (Oct 13-19) to another target week in the month",
-                "Step 8B: Duplicate Single Day - Click 'Duplicate Day' for any day (e.g., Sunday), then check which days you want to copy it to (Monday, Tuesday, etc.)",
-                "Step 9: Save your work - Click 'Save' button to preserve all your weekly meal planning changes"
-              ]}
-            />
 
             {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && weekDatesList.length > 0 && (
               <div className="mb-3 mt-3">
