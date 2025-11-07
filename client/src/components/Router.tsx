@@ -143,6 +143,7 @@ export default function Router() {
     '/weekly-meal-board',
     '/weekly',
     '/athlete-board',
+    '/craving-creator',
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
