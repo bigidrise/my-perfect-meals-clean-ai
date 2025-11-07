@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MacroCalculatorGuidedTour from "@/components/guided/MacroCalculatorGuidedTour";
 import {
   Activity,
   User2,
@@ -373,12 +374,14 @@ export default function MacroCounter() {
   }, [sex, kg, cm, age, activity, goal, proteinPerKg, fatPct, bodyType]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white px-4 pt-8 pb-32"
-    >
+    <>
+      <MacroCalculatorGuidedTour />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white px-4 pt-8 pb-32"
+      >
       <Button
         onClick={() => setLocation("/dashboard")}
         className="fixed top-4 left-4 z-50 bg-black/30 hover:bg-black/50 text-white rounded-2xl border border-white/10 backdrop-blur-none"
@@ -401,7 +404,7 @@ export default function MacroCounter() {
 
         {/* Goal & Body Type */}
         <div className="grid md:grid-cols-2 gap-4">
-          <Card className="bg-zinc-900/80 border border-white/30 text-white">
+          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
@@ -429,7 +432,7 @@ export default function MacroCounter() {
             </CardContent>
           </Card>
 
-          <Card className="bg-zinc-900/80 border border-white/30 text-white">
+          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
@@ -460,7 +463,7 @@ export default function MacroCounter() {
         </div>
 
         {/* Inputs */}
-        <Card className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
               <Ruler className="h-5 w-5 mr-2" /> Your Details
@@ -805,6 +808,7 @@ export default function MacroCounter() {
         {/* Save Targets */}
         <div className="flex justify-center">
           <Button
+            id="calc-button"
             onClick={() => {
               setMacroTargets({
                 calories: results.target,
@@ -829,6 +833,7 @@ export default function MacroCounter() {
         </div>
       </div>
     </motion.div>
+    </>
   );
 }
 
