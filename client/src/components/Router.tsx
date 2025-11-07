@@ -144,6 +144,8 @@ export default function Router() {
     '/weekly',
     '/athlete-board',
     '/craving-creator',
+    '/glp1-meal-builder',
+    '/diabetic-menu-builder',
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
