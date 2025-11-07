@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Sparkles, ChefHat } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Sparkles, ChefHat, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -55,6 +55,16 @@ export default function MealIngredientPicker({
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
   
+  // Guided Tour state
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [hasSeenInfo, setHasSeenInfo] = useState(() => {
+    try {
+      return localStorage.getItem('meal-picker-info-seen') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  
   // 🎯 Macro Targeting State with localStorage persistence
   const MACRO_TARGETS_CACHE_KEY = `macro-targets-${mealSlot}`;
   
@@ -95,6 +105,22 @@ export default function MealIngredientPicker({
   });
   
   const { toast } = useToast();
+
+  // Handle info modal close - mark as seen
+  const handleInfoModalClose = useCallback(() => {
+    setShowInfoModal(false);
+    if (!hasSeenInfo) {
+      setHasSeenInfo(true);
+      localStorage.setItem('meal-picker-info-seen', 'true');
+    }
+  }, [hasSeenInfo]);
+
+  // Auto-open info modal on first load
+  useEffect(() => {
+    if (open && !hasSeenInfo) {
+      setShowInfoModal(true);
+    }
+  }, [open, hasSeenInfo]);
 
   // 🎯 Persist macro targets to localStorage whenever they change
   const saveMacroTargetsCache = (enabled: boolean, protein: number | '', carbs: number | '', fat: number | '') => {
@@ -286,6 +312,17 @@ export default function MealIngredientPicker({
           <DialogTitle className="text-white flex items-center gap-2 text-xl">
             <ChefHat className="w-6 h-6 text-purple-400" />
             AI Meal Creator - Pick Your Ingredients
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowInfoModal(true)}
+              className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                !hasSeenInfo ? 'flash-border' : ''
+              }`}
+              aria-label="How to use"
+            >
+              <Info className="h-5 w-5" />
+            </Button>
           </DialogTitle>
         </DialogHeader>
 
@@ -299,7 +336,7 @@ export default function MealIngredientPicker({
                 activeCategory === category
                   ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
                   : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
-              }`}
+              } ${category === 'proteins' && !hasSeenInfo ? 'flash-border' : ''}`}
             >
               {getCategoryLabel(category)}
             </button>
@@ -529,6 +566,49 @@ export default function MealIngredientPicker({
           )}
         </div>
       </DialogContent>
+
+      {/* Info Modal - How to Use */}
+      <Dialog open={showInfoModal} onOpenChange={(open) => {
+        if (!open) {
+          handleInfoModalClose();
+        } else {
+          setShowInfoModal(true);
+        }
+      }}>
+        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg">How to Use AI Meal Creator</DialogTitle>
+          </DialogHeader>
+          <div className="text-white/80 text-sm space-y-3">
+            <p className="font-semibold text-white">
+              1. Pick your protein first<span className="text-orange-400">*</span>
+            </p>
+            <p className="ml-4 text-white/70 text-xs">
+              Select at least one protein source to start building your meal
+            </p>
+            
+            <p className="font-semibold text-white">
+              2. Add starches, vegetables, and fats
+            </p>
+            <p className="ml-4 text-white/70 text-xs">
+              Choose from the category tabs to customize your meal
+            </p>
+            
+            <p className="font-semibold text-white">
+              3. Generate your meal
+            </p>
+            <p className="ml-4 text-white/70 text-xs">
+              AI will create a delicious recipe with your selected ingredients
+            </p>
+            
+            <div className="pt-2 mt-2 border-t border-white/10">
+              <p className="text-xs text-orange-300 font-medium">
+                💡 Tip: Use "Set Macro Targets" for precise meal portion sizes
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 }
