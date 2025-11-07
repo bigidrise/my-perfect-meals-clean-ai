@@ -1013,9 +1013,7 @@ export default function WeeklyMealBoard() {
                       size="sm"
                       variant="ghost"
                       data-role="create-ai-meal"
-                      className={`text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 ${
-                        hasSeenInfo && tourStep === key ? 'flash-border' : ''
-                      }`}
+                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                       onClick={() => {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
                         setAiMealModalOpen(true);
@@ -1116,7 +1114,7 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="ghost"
                   data-role="create-ai-meal"
-                  className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1"
+                  className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                   onClick={() => {
                     setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
                     setAiMealModalOpen(true);
