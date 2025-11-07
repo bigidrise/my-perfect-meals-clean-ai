@@ -16,6 +16,7 @@ import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
 import TourHighlight from "@/components/TourHighlight";
 import { useTour } from "@/contexts/TourContext";
+import BrandTileIcon from "@/components/BrandTileIcon"; // Import BrandTileIcon
 
 interface FeatureCard {
   title: string;
@@ -246,7 +247,10 @@ export default function DashboardNew() {
                   >
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4">
-                        <Icon className="h-10 w-10 text-emerald-400" />
+                        {/* Apply BrandTileIcon wrapper to icons */}
+                        <BrandTileIcon>
+                          <Icon className="h-10 w-10" />
+                        </BrandTileIcon>
                         <div>
                           <h3 className="text-lg font-semibold text-white">
                             {feature.title}
