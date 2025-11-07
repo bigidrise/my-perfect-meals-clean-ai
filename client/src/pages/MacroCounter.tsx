@@ -318,7 +318,17 @@ export default function MacroCounter() {
                   <Label
                     key={g.v}
                     htmlFor={g.v}
-                    onClick={() => {setGoal(g.v as Goal); advance("goal");}}
+                    onClick={() => {
+                      setGoal(g.v as Goal); 
+                      advance("goal");
+                      // Auto-scroll to body type card on every click
+                      setTimeout(() => {
+                        const bodyCard = document.getElementById("bodytype-card");
+                        if (bodyCard) {
+                          bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 200);
+                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
                     <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
