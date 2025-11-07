@@ -105,81 +105,6 @@ function applyBodyTypeTilt(base: any, bodyType: BodyType) {
   }
 }
 
-// ===== Nutrition Profile storage (localStorage) =====
-const LS_USER_PROFILE = "mpm_user_profile_v1";
-
-type NutritionProfile = {
-  dietaryPatterns: string[];
-  allergies: string[];
-  sodiumPreference: "normal" | "low" | "very_low";
-  notes?: string;
-};
-
-const defaultProfile: NutritionProfile = {
-  dietaryPatterns: [],
-  allergies: [],
-  sodiumPreference: "normal",
-  notes: "",
-};
-
-const loadProfile = (): NutritionProfile => {
-  try {
-    const raw = localStorage.getItem(LS_USER_PROFILE);
-    return raw ? { ...defaultProfile, ...JSON.parse(raw) } : defaultProfile;
-  } catch {
-    return defaultProfile;
-  }
-};
-
-const saveProfile = (p: NutritionProfile) => {
-  try {
-    localStorage.setItem(LS_USER_PROFILE, JSON.stringify(p));
-  } catch {}
-};
-
-const DIETARY_PATTERNS = [
-  { key: "diabetic", label: "Diabetic" },
-  { key: "glp1", label: "GLP-1" },
-  { key: "pescatarian", label: "Pescatarian" },
-  { key: "vegetarian", label: "Vegetarian" },
-  { key: "vegan", label: "Vegan" },
-  { key: "low_fodmap", label: "Low-FODMAP" },
-  { key: "keto", label: "Keto" },
-];
-
-const ALLERGY_LIST = [
-  { key: "peanut", label: "Peanut" },
-  { key: "tree_nut", label: "Tree Nuts" },
-  { key: "dairy", label: "Dairy" },
-  { key: "egg", label: "Egg" },
-  { key: "soy", label: "Soy" },
-  { key: "wheat", label: "Wheat/Gluten" },
-  { key: "fish", label: "Fish" },
-  { key: "shellfish", label: "Shellfish" },
-];
-
-function Pill({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`px-3 py-2 rounded-lg border text-sm transition
-        ${active ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}
-      `}
-    >
-      {children}
-    </button>
-  );
-}
-
 function BodyTypeGuide() {
   return (
     <div className="mb-3">
@@ -290,44 +215,12 @@ export default function MacroCounter() {
   const [heightCm, setHeightCm] = useState<number>(savedSettings?.heightCm ?? 170);
   const [weightKg, setWeightKg] = useState<number>(savedSettings?.weightKg ?? 72.5);
   const [activity, setActivity] =
-    useState<keyof typeof ACTIVITY_FACTORS>(savedSettings?.activity ?? "light");
+    useState<keyof typeof ACTIVITY_FACTORS | "">(savedSettings?.activity ?? "");
   const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg ?? 1.8);
   const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct ?? 0.3);
   const [sugarCapMode, setSugarCapMode] = useState<"AHA" | "DGA">(savedSettings?.sugarCapMode ?? "AHA");
 
   // Nutrition Profile state
-  const [profile, setProfile] = useState<NutritionProfile>(() => loadProfile());
-  const toggleDietary = (key: string) =>
-    setProfile((p) => {
-      const has = p.dietaryPatterns.includes(key);
-      return {
-        ...p,
-        dietaryPatterns: has
-          ? p.dietaryPatterns.filter((k) => k !== key)
-          : [...p.dietaryPatterns, key],
-      };
-    });
-  const toggleAllergy = (key: string) =>
-    setProfile((p) => {
-      const has = p.allergies.includes(key);
-      return {
-        ...p,
-        allergies: has
-          ? p.allergies.filter((k) => k !== key)
-          : [...p.allergies, key],
-      };
-    });
-
-  // Load profile from localStorage on component mount
-  useEffect(() => {
-    setProfile(loadProfile());
-  }, []);
-
-  // Save profile to localStorage whenever it changes
-  useEffect(() => {
-    saveProfile(profile);
-  }, [profile]);
-
   // Save calculator settings to localStorage whenever they change
   useEffect(() => {
     try {
@@ -359,8 +252,11 @@ export default function MacroCounter() {
     units === "imperial" ? cmFromFeetInches(heightFt, heightIn) : heightCm;
 
   const results = useMemo(() => {
+    // Don't calculate until activity is selected
+    if (!activity) return null;
+    
     const bmr = mifflin({ sex, kg, cm, age });
-    const tdee = Math.round(bmr * ACTIVITY_FACTORS[activity]);
+    const tdee = Math.round(bmr * ACTIVITY_FACTORS[activity as keyof typeof ACTIVITY_FACTORS]);
     const target = goalAdjust(tdee, goal);
     const base = calcMacrosBase({
       calories: target,
@@ -422,6 +318,7 @@ export default function MacroCounter() {
                   <Label
                     key={g.v}
                     htmlFor={g.v}
+                    onClick={() => {setGoal(g.v as Goal); advance("goal");}}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
                     <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
@@ -462,7 +359,8 @@ export default function MacroCounter() {
           </Card>
         </div>
 
-        {/* Inputs */}
+        {/* Inputs - Only show after activity level is selected */}
+        {activity && (
         <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
@@ -584,7 +482,7 @@ export default function MacroCounter() {
                         localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
                         toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
                       }}
-                      className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400"
+                      className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400 animate-pulse"
                       data-testid="button-sync-weight"
                     >
                       <Scale className="h-4 w-4 mr-2" />
@@ -598,7 +496,17 @@ export default function MacroCounter() {
                 <div className="text-xs text-white font-semibold">Activity</div>
                 <RadioGroup
                   value={activity}
-                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {setActivity(v); advance("activity");}}
+                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
+                    setActivity(v);
+                    advance("activity");
+                    // Auto-scroll to Set Macro Targets button after activity is selected
+                    setTimeout(() => {
+                      const button = document.getElementById("calc-button");
+                      if (button) {
+                        button.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }
+                    }, 300);
+                  }}
                   className="grid grid-cols-2 md:grid-cols-3 gap-2"
                 >
                   {(
@@ -623,215 +531,59 @@ export default function MacroCounter() {
                   ))}
                 </RadioGroup>
 
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <div>
-                    <div className="text-xs text-white font-semibold">Protein (g/kg)</div>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      className="bg-black/60 border-white/50 text-white placeholder-white"
-                      value={proteinPerKg}
-                      onChange={(e) => {setProteinPerKg(parseFloat(e.target.value || "0")); advance("macros");}}
-                    />
-                  </div>
-                  <div>
-                    <div className="text-xs text-white font-semibold">Fat share (% kcal)</div>
-                    <Input
-                      type="number"
-                      step="1"
-                      className="bg-black/60 border-white/50 text-white placeholder-white"
-                      value={Math.round(fatPct * 100)}
-                      onChange={(e) => {
-                        const pct = Math.max(10, Math.min(60, toNum(e.target.value)));
-                        setFatPct(pct / 100);
-                        advance("macros");
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <div className="text-xs text-white font-semibold">Sugar cap</div>
-                    <RadioGroup
-                      value={sugarCapMode}
-                      onValueChange={(v: "AHA" | "DGA") => {setSugarCapMode(v); advance("sugar-cap");}}
-                      className="grid grid-cols-2 gap-2"
-                    >
-                      {(["AHA", "DGA"] as const).map((k) => (
-                        <Label
-                          key={k}
-                          htmlFor={`sc-${k}`}
-                          className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                            sugarCapMode === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                          }`}
-                        >
-                          <RadioGroupItem id={`sc-${k}`} value={k} className="sr-only" />
-                          {k}
-                        </Label>
-                      ))}
-                    </RadioGroup>
-                  </div>
-                </div>
               </div>
             </div>
           </CardContent>
         </Card>
+        )}
 
-        {/* My Nutrition Profile */}
-        <Card className="bg-zinc-900/80 border border-white/30 text-white">
-          <CardContent className="p-5 space-y-5">
-            <h3 className="text-lg font-semibold flex items-center">
-              <Info className="h-5 w-5 mr-2" /> My Nutrition Profile
-            </h3>
-
-            {/* Dietary Patterns */}
-            <div>
-              <div className="text-xs font-semibold mb-2">
-                Dietary preferences / conditions
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {DIETARY_PATTERNS.map((opt) => (
-                  <Pill
-                    key={opt.key}
-                    active={profile.dietaryPatterns.includes(opt.key)}
-                    onClick={() => {toggleDietary(opt.key); advance("profile-settings");}}
-                  >
-                    {opt.label}
-                  </Pill>
-                ))}
-              </div>
-            </div>
-
-            {/* Allergies */}
-            <div>
-              <div className="text-xs font-semibold mb-2">Allergies</div>
-              <div className="flex flex-wrap gap-2">
-                {ALLERGY_LIST.map((opt) => (
-                  <Pill
-                    key={opt.key}
-                    active={profile.allergies.includes(opt.key)}
-                    onClick={() => {toggleAllergy(opt.key); advance("profile-settings");}}
-                  >
-                    {opt.label}
-                  </Pill>
-                ))}
-              </div>
-
-              {/* Active allergy chips */}
-              {profile.allergies.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {profile.allergies.map((a) => (
-                    <span
-                      key={a}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-white/10 border border-white/20"
-                    >
-                      {ALLERGY_LIST.find((x) => x.key === a)?.label || a}
-                      <button
-                        type="button"
-                        aria-label="remove allergy"
-                        className="opacity-80 hover:opacity-100"
-                        onClick={() => {toggleAllergy(a); advance("profile-settings");}}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
+        {/* Results - Only show when activity is selected */}
+        {results && (
+          <>
+            <Card className="bg-zinc-900/80 border border-white/30 text-white">
+              <CardContent className="p-5">
+                <h3 className="text-lg font-semibold flex items-center mb-4">
+                  <Scale className="h-5 w-5 mr-2 text-indigo-300" /> Your Baseline
+                </h3>
+                <div className="grid md:grid-cols-4 gap-3">
+                  <Stat label="BMR" value={results.bmr} suffix="kcal" />
+                  <Stat label="TDEE" value={results.tdee} suffix="kcal" />
+                  <Stat label="Target kcal" value={results.target} suffix="kcal" />
+                  <Stat
+                    label="Protein / Carbs / Fat"
+                    value={results.macros.protein.g}
+                    sub={`${results.macros.carbs.g}g C / ${results.macros.fat.g}g F`}
+                  />
                 </div>
-              )}
-            </div>
+              </CardContent>
+            </Card>
 
-            {/* Sodium preference */}
-            <div>
-              <div className="text-xs font-semibold mb-2">
-                Sodium preference
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {(["normal", "low", "very_low"] as const).map((lvl) => (
-                  <button
-                    key={lvl}
-                    type="button"
-                    onClick={() => {
-                      setProfile((p) => ({ ...p, sodiumPreference: lvl }));
-                      advance("profile-settings");
-                    }}
-                    className={`px-3 py-2 rounded-lg border text-sm transition
-                      ${profile.sodiumPreference === lvl ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}
-                    `}
-                  >
-                    {lvl === "normal"
-                      ? "Normal"
-                      : lvl === "low"
-                        ? "Low"
-                        : "Very Low"}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Save Targets */}
+            <div className="flex justify-center">
+              <Button
+                id="calc-button"
+                onClick={() => {
+                  advance("calc");
+                  setMacroTargets({
+                    calories: results.target,
+                    protein_g: results.macros.protein.g,
+                    carbs_g: results.macros.carbs.g,
+                    fat_g: results.macros.fat.g,
+                  });
 
-            {/* Notes (optional) */}
-            <div>
-              <div className="text-xs font-semibold mb-2">Notes (optional)</div>
-              <Input
-                value={profile.notes || ""}
-                onChange={(e) => {
-                  setProfile((p) => ({ ...p, notes: e.target.value }));
-                  advance("profile-settings");
+                  toast({
+                    title: "Macro Targets Set!",
+                    description: "Your targets have been saved.",
+                  });
+                  setLocation("/my-biometrics");
                 }}
-                placeholder="Anything we should know when generating meals?"
-                className="bg-black/60 border-white/50 text-white"
-              />
-              <p className="text-[11px] text-white/60 mt-2">
-                This profile helps **all** AI features (Fridge Rescue, Weekly
-                Board, GLP-1, Diabetic, etc.) adapt your meals.
-              </p>
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 animate-pulse"
+              >
+                <Target className="h-5 w-5 mr-2" /> Set Macro Targets
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Results */}
-        <Card className="bg-zinc-900/80 border border-white/30 text-white">
-          <CardContent className="p-5">
-            <h3 className="text-lg font-semibold flex items-center mb-4">
-              <Scale className="h-5 w-5 mr-2 text-indigo-300" /> Your Baseline
-            </h3>
-            <div className="grid md:grid-cols-4 gap-3">
-              <Stat label="BMR" value={results.bmr} suffix="kcal" />
-              <Stat label="TDEE" value={results.tdee} suffix="kcal" />
-              <Stat label="Target kcal" value={results.target} suffix="kcal" />
-              <Stat
-                label="Protein / Carbs / Fat"
-                value={results.macros.protein.g}
-                sub={`${results.macros.carbs.g}g C / ${results.macros.fat.g}g F`}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Save Targets */}
-        <div className="flex justify-center">
-          <Button
-            id="calc-button"
-            onClick={() => {
-              advance("calc");
-              setMacroTargets({
-                calories: results.target,
-                protein_g: results.macros.protein.g,
-                carbs_g: results.macros.carbs.g,
-                fat_g: results.macros.fat.g,
-              });
-
-              // Persist nutrition profile alongside targets
-              saveProfile(profile);
-
-              toast({
-                title: "Macro Targets Set!",
-                description: "Your targets have been saved.",
-              });
-              setLocation("/my-biometrics");
-            }}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 animate-pulse"
-          >
-            <Target className="h-5 w-5 mr-2" /> Set Macro Targets
-          </Button>
-        </div>
+          </>
+        )}
       </div>
     </motion.div>
     </>

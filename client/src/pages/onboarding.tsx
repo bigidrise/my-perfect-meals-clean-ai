@@ -299,6 +299,11 @@ interface ComprehensiveOnboardingData {
   preferredMidGICarbs: string[];
   preferredHighGICarbs: string[];
 
+  // Step 3 (New): Nutritional Profile
+  dietaryPatterns: string[];
+  sodiumPreference: string;
+  nutritionalNotes: string;
+
   // Placeholder for skipped sections
   skippedHormonalAssessment?: boolean;
   hormonalStage?: string;
@@ -320,7 +325,7 @@ interface ComprehensiveOnboardingData {
   };
 }
 
-const TOTAL_STEPS = 2; // Simplified: 1=Name+Profile+Goal, 2=Medical
+const TOTAL_STEPS = 3; // Simplified: 1=Name+Profile+Goal, 2=Medical, 3=Nutritional Profile
 
 export default function ComprehensiveOnboarding() {
   console.log("🎯 ComprehensiveOnboarding component mounted");
@@ -434,6 +439,11 @@ export default function ComprehensiveOnboarding() {
     preferredLowGICarbs: [],
     preferredMidGICarbs: [],
     preferredHighGICarbs: [],
+
+    // Step 3 (New): Nutritional Profile
+    dietaryPatterns: [],
+    sodiumPreference: "normal",
+    nutritionalNotes: "",
 
     // Added for completeness based on usage in handleSubmit
     skippedHormonalAssessment: false,
@@ -952,6 +962,8 @@ export default function ComprehensiveOnboarding() {
         );
       case 2: // Medical Conditions & Allergies
         return true; // Optional - allow proceeding even if nothing selected
+      case 3: // Nutritional Profile
+        return true; // Optional - allow proceeding even if nothing selected
       default:
         return true;
     }
@@ -965,6 +977,8 @@ export default function ComprehensiveOnboarding() {
           return renderAccountCreation(); // Name + Basic Profile + Goal merged
         case 2:
           return renderMedicalConditions();
+        case 3:
+          return renderNutritionalProfile();
         default:
           console.warn("🚨 Invalid step:", currentStep, "- defaulting to step 1");
           return renderAccountCreation(); // Default to the first step in this component
@@ -1883,6 +1897,136 @@ export default function ComprehensiveOnboarding() {
               selected allergens in meal planning. This information is used to
               create medically appropriate meal plans.
             </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const renderNutritionalProfile = () => {
+    const DIETARY_PATTERNS = [
+      { key: "diabetic", label: "Diabetic" },
+      { key: "glp1", label: "GLP-1" },
+      { key: "pescatarian", label: "Pescatarian" },
+      { key: "vegetarian", label: "Vegetarian" },
+      { key: "vegan", label: "Vegan" },
+      { key: "low_fodmap", label: "Low-FODMAP" },
+      { key: "keto", label: "Keto" },
+    ];
+
+    const toggleDietaryPattern = (key: string) => {
+      const currentPatterns = data.dietaryPatterns || [];
+      const newPatterns = currentPatterns.includes(key)
+        ? currentPatterns.filter((k) => k !== key)
+        : [...currentPatterns, key];
+      updateData({ dietaryPatterns: newPatterns });
+    };
+
+    return (
+      <Card className="w-full max-w-4xl mx-auto bg-black/40 backdrop-blur-md border-white/15">
+        <CardHeader className="bg-gradient-to-br from-neutral-600 via-black/600 to-black text-white rounded-t-lg">
+          <CardTitle className="text-2xl font-bold flex items-center gap-3">
+            <span className="text-3xl">🍽️</span>
+            My Nutritional Profile
+          </CardTitle>
+          <p className="text-white/90 mt-2">
+            Help us personalize your meal recommendations by sharing your dietary preferences and nutrition goals.
+          </p>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6 text-white">
+          {/* Dietary Patterns */}
+          <div>
+            <Label className="text-lg font-semibold mb-3 block">
+              Dietary Preferences / Conditions
+            </Label>
+            <p className="text-sm text-white/70 mb-4">
+              Select any dietary patterns or medical conditions that apply to you:
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {DIETARY_PATTERNS.map((pattern) => (
+                <button
+                  key={pattern.key}
+                  type="button"
+                  onClick={() => toggleDietaryPattern(pattern.key)}
+                  className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
+                    (data.dietaryPatterns || []).includes(pattern.key)
+                      ? "bg-white/15 border-white text-white"
+                      : "border-white/40 hover:border-white/70 text-white/80"
+                  }`}
+                  data-testid={`dietary-${pattern.key}`}
+                >
+                  {pattern.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Sodium Preference */}
+          <div>
+            <Label className="text-lg font-semibold mb-3 block">
+              Sodium Preference
+            </Label>
+            <p className="text-sm text-white/70 mb-4">
+              Choose your preferred sodium level for meal recommendations:
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { value: "normal", label: "Normal" },
+                { value: "low", label: "Low Sodium" },
+                { value: "very_low", label: "Very Low Sodium" },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => updateData({ sodiumPreference: option.value })}
+                  className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
+                    data.sodiumPreference === option.value
+                      ? "bg-white/15 border-white text-white"
+                      : "border-white/40 hover:border-white/70 text-white/80"
+                  }`}
+                  data-testid={`sodium-${option.value}`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Additional Notes */}
+          <div>
+            <Label htmlFor="nutritionalNotes" className="text-lg font-semibold mb-3 block">
+              Additional Notes (Optional)
+            </Label>
+            <p className="text-sm text-white/70 mb-4">
+              Any other dietary preferences or information we should know when generating your meals?
+            </p>
+            <Textarea
+              id="nutritionalNotes"
+              value={data.nutritionalNotes || ""}
+              onChange={(e) => updateData({ nutritionalNotes: e.target.value })}
+              placeholder="E.g., I prefer spicy food, avoid raw onions, love Mediterranean flavors..."
+              className="bg-black/60 border-white/50 text-white placeholder-white/50 min-h-[100px]"
+              data-testid="textarea-nutritional-notes"
+            />
+          </div>
+
+          {/* Info Box */}
+          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border-l-4 border-white/30">
+            <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+              <span className="text-xl">💡</span>
+              How This Helps
+            </h3>
+            <ul className="text-white/90 space-y-2 text-sm">
+              <li>
+                • <strong>AI-Powered Personalization:</strong> Your preferences guide all meal generators (Fridge Rescue, Weekly Board, GLP-1 Builder, etc.)
+              </li>
+              <li>
+                • <strong>Safety First:</strong> Dietary restrictions and medical conditions are strictly honored in all recommendations
+              </li>
+              <li>
+                • <strong>Always Editable:</strong> You can update these preferences anytime in your profile settings
+              </li>
+            </ul>
           </div>
         </CardContent>
       </Card>
