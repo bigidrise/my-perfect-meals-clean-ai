@@ -923,12 +923,12 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="ghost"
                   onClick={() => setShowInfoModal(true)}
-                  className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
-                    !hasSeenInfo ? 'flash-border' : ''
+                  className={`h-10 w-10 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                    !hasSeenInfo ? 'animate-pulse border-2 border-orange-500' : ''
                   }`}
                   aria-label="How to use"
                 >
-                  <Info className="h-5 w-5" />
+                  <Info className="h-6 w-6" />
                 </Button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
