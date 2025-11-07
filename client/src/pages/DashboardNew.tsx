@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
+import TourHighlight from "@/components/TourHighlight";
+import { useTour } from "@/contexts/TourContext";
 
 interface FeatureCard {
   title: string;
@@ -34,10 +36,24 @@ const todayMacros = {
 export default function DashboardNew() {
   const [, setLocation] = useLocation();
   const [showScanner, setShowScanner] = useState(false); // State to control scanner modal visibility
+  const { isActive, getCurrentStepTarget, getCurrentStepMessage, nextStep, startTour } = useTour();
+
 
   useEffect(() => {
     document.title = "Home | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
+
+    // Initialize tour steps on mount if in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const tourCompleted = localStorage.getItem("tourCompleted");
+
+    if (coachMode === "guided" && !tourCompleted) {
+      startTour([
+        { id: "macro-calculator", target: "macro-calculator", message: "Start here: Set up your nutrition targets" },
+        { id: "biometrics", target: "biometrics", message: "Next: Track your progress", route: "/my-biometrics" },
+        { id: "meal-creator", target: "meal-creator", message: "Then: Create your first meal" }
+      ]);
+    }
   }, []);
 
   // Get user profile for greeting
@@ -57,7 +73,7 @@ export default function DashboardNew() {
       icon: Calculator,
       route: "/macro-counter",
       size: "large",
-      testId: "card-macro-calculator",
+      testId: "macro-calculator", // Updated testId for tour
     },
     {
       title: "My Biometrics",
@@ -65,7 +81,7 @@ export default function DashboardNew() {
       icon: Activity,
       route: "/my-biometrics",
       size: "large",
-      testId: "card-biometrics",
+      testId: "biometrics", // Updated testId for tour
     },
     {
       title: "Get Inspiration",
@@ -77,7 +93,10 @@ export default function DashboardNew() {
     },
   ];
 
-  const handleCardClick = (route: string) => {
+  const handleCardClick = (route: string, tourTarget?: string) => {
+    if (isActive && tourTarget && getCurrentStepTarget() === tourTarget) {
+      nextStep();
+    }
     setLocation(route);
   };
 
@@ -214,27 +233,32 @@ export default function DashboardNew() {
                 transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
                 className={feature.size === "large" ? "md:col-span-1" : "md:col-span-1"}
               >
-                <Card
-                  className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl h-full group"
-                  onClick={() => handleCardClick(feature.route)}
-                  data-testid={feature.testId}
+                <TourHighlight
+                  active={isActive && getCurrentStepTarget() === feature.testId}
+                  message={getCurrentStepMessage() || undefined}
+                  position="bottom"
+                  onComplete={nextStep}
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
-                        <Icon className="h-6 w-6 text-orange-500" />
+                  <Card
+                    onClick={() => handleCardClick(feature.route, feature.testId)}
+                    className="bg-gradient-to-br from-neutral-800 to-black border-white/20 hover:border-white/40 transition-all cursor-pointer transform hover:scale-105 duration-300"
+                    data-tour-target={feature.testId} // Add data-tour-target for TourHighlight
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <Icon className="h-10 w-10 text-emerald-400" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">
+                            {feature.title}
+                          </h3>
+                          <p className="text-sm text-white/70">
+                            {feature.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-white text-lg">
-                          {feature.title}
-                        </CardTitle>
-                        <CardDescription className="text-white/70 text-sm mt-1">
-                          {feature.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </TourHighlight>
               </motion.div>
             );
           })}

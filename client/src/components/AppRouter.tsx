@@ -25,12 +25,19 @@ import MedicalDietHub from "@/pages/MedicalDietHub";
 import SmartMenuBuilder from "@/pages/SmartMenuBuilder";
 import GLP1Hub from "@/pages/GLP1Hub";
 
+import WelcomeGate from "./WelcomeGate";
+import { TourProvider } from "@/contexts/TourContext";
+
 interface AppRouterProps {
   children: React.ReactNode;
 }
 
 export default function AppRouter({ children }: AppRouterProps) {
   const [location, setLocation] = useLocation();
+  const [isReady, setIsReady] = useState(false);
+  const [showGate, setShowGate] = useState(false);
+  const [coachMode, setCoachMode] = useState(() => localStorage.getItem("coachMode"));
+
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showEmotionalGate, setShowEmotionalGate] = useState(false);
 
@@ -39,7 +46,7 @@ export default function AppRouter({ children }: AppRouterProps) {
   useEffect(() => {
     // AUTO-BYPASS: Skip all authentication gates to allow guest access
     console.log("🚀 Auto-bypass enabled - allowing guest access to all routes");
-    
+
     // Auto-complete onboarding and disclaimer for guest users
     if (!localStorage.getItem("onboardingCompleted")) {
       localStorage.setItem("onboardingCompleted", "true");
@@ -50,7 +57,7 @@ export default function AppRouter({ children }: AppRouterProps) {
     if (!localStorage.getItem("isAuthenticated")) {
       localStorage.setItem("isAuthenticated", "true");
     }
-    
+
     setShowDisclaimer(false);
     setShowEmotionalGate(false);
 
@@ -63,6 +70,32 @@ export default function AppRouter({ children }: AppRouterProps) {
       }, 100);
     }
   }, [location, setLocation]);
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const completedProfile = localStorage.getItem("completedProfile") === "true";
+    const completedIntro = localStorage.getItem("completedIntro") === "true";
+
+    console.log("🔄 AppRouter checking flow state:", {
+      location,
+      isAuthenticated,
+      completedProfile,
+      completedIntro,
+      coachMode,
+    });
+
+    // Check if we need to show the welcome gate
+    if (!coachMode && location === "/" && isAuthenticated && completedProfile && completedIntro) {
+      setShowGate(true);
+    }
+
+    // Allow time for localStorage to be read
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location, setLocation, coachMode]);
 
   const handleDisclaimerAccept = () => {
     console.log("✅ Disclaimer accepted");
@@ -95,10 +128,26 @@ export default function AppRouter({ children }: AppRouterProps) {
     );
   }
 
+  if (!isReady) {
+    return null;
+  }
+
+  if (showGate) {
+    return (
+      <WelcomeGate
+        onComplete={() => {
+          setShowGate(false);
+          setCoachMode(localStorage.getItem("coachMode"));
+          setLocation("/dashboard");
+        }}
+      />
+    );
+  }
+
   // Show normal app
   return (
-    <>
+    <TourProvider>
       {children}
-    </>
+    </TourProvider>
   );
 }
