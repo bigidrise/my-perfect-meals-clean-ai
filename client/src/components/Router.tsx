@@ -147,6 +147,8 @@ export default function Router() {
     '/craving-presets',
     '/glp1-meal-builder',
     '/diabetic-menu-builder',
+    '/toddler-meals',
+    '/kids-meals',
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
