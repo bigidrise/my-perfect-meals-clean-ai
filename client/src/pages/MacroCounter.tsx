@@ -247,10 +247,14 @@ function BodyTypeGuide() {
   );
 }
 
-// Dummy advance function for the guided tour
+// Advance the guided tour to the next step
 const advance = (step: string) => {
-  console.log(`Advancing tour to step: ${step}`);
-  // In a real implementation, this would trigger the next step of the guided tour
+  const coachMode = localStorage.getItem("coachMode") === "guided";
+  if (!coachMode) return;
+  
+  window.dispatchEvent(
+    new CustomEvent("macro:nextStep", { detail: { step } })
+  );
 };
 
 export default function MacroCounter() {
