@@ -314,9 +314,8 @@ export default function MealIngredientPicker({
               size="sm"
               variant="ghost"
               onClick={() => setShowInfoModal(true)}
-              className={`h-6 w-6 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded ${
-                !hasSeenInfo ? 'flash-border' : ''
-              }`}
+              className="h-6 w-6 p-0 text-white/90 hover:text-white hover:bg-white/10 flash-border"
+              style={{ borderRadius: '0.25rem' }}
               aria-label="How to use"
             >
               <Info className="h-4 w-4" />
