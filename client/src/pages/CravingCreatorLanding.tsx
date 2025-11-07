@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Brain, Sparkles } from "lucide-react";
+import { ArrowLeft, Brain, Sparkles, Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface CravingFeature {
   title: string;
@@ -69,6 +70,19 @@ export default function CravingCreatorLanding() {
               <Brain className="h-6 w-6 text-orange-400" />
               <h1 className="text-xl font-bold text-white">Craving Creator Hub</h1>
             </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-orange-400 hover:bg-white/10">
+                  <Info className="h-5 w-5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-black/80 border border-white/10 text-white backdrop-blur-md">
+                <h3 className="font-bold mb-2">Craving Creator Hub</h3>
+                <p className="text-sm">
+                  This is where you can create custom meals based on your cravings or choose from our healthy premade options. Both methods can help you achieve your macro goals and add ingredients directly to your shopping list.
+                </p>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>

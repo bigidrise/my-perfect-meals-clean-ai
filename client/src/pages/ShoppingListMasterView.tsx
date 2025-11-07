@@ -181,7 +181,7 @@ export default function ShoppingListMasterView() {
                       <Info className="h-7 w-7 text-orange-300" />
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 bg-black/90 border-orange-400/30 text-white">
+                  <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
                     <div className="space-y-3">
                       <h3 className="font-semibold text-orange-400 flex items-center gap-2">
                         <Info className="h-4 w-4 text-orange-400" />
