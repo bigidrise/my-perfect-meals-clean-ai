@@ -120,6 +120,10 @@ import SupplementHubLanding from "@/pages/SupplementHubLanding";
 import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
+// Wrapper components for athlete boards
+const AthleteBoardStandalone = (_props: any) => <AthleteBoard mode="athlete" />;
+const AthleteBoardProCare = (_props: any) => <AthleteBoard mode="procare" />;
+
 export default function Router() {
   const [location] = useLocation();
 
@@ -272,10 +276,8 @@ export default function Router() {
         <Route path="/pro/clients" component={ProClients} />
         <Route path="/pro/clients/:id" component={ProClientDashboard} />
         <Route path="/pro-client-dashboard" component={ProClientDashboard} />
-        <Route path="/athlete-board" component={AthleteBoard} />
-        <Route path="/pro/clients/:id/athlete-board">
-          {() => <AthleteBoard mode="procare" />}
-        </Route>
+        <Route path="/athlete-board" component={AthleteBoardStandalone} />
+        <Route path="/pro/clients/:id/athlete-board" component={AthleteBoardProCare} />
 
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
         <Route path="/diabetic-hub" component={DiabeticSupportHub} />

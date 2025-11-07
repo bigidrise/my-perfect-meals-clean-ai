@@ -804,7 +804,7 @@ export default function CravingCreator() {
                           <h3 className="font-semibold mb-2 text-white">
                             Medical Safety
                           </h3>
-                          <HealthBadgesPopover badges={medicalBadges.map(b => b.badge)} className="mt-2" />
+                          <HealthBadgesPopover badges={medicalBadges.map((b: any) => b.badge)} className="mt-2" />
                         </div>
                       ) : null;
                     })()}
