@@ -384,37 +384,37 @@ export default function Home() {
                 icon: Brain,
                 title: "AI-Powered Planning",
                 description: "Our advanced AI analyzes your unique profile to generate perfectly balanced meal plans that adapt to your changing needs.",
-                color: "text-primary"
+                color: "text-orange-500"
               },
               {
                 icon: UserCheck,
                 title: "Health Condition Support",
                 description: "Specialized meal plans for diabetes, heart disease, and other health conditions, designed with medical expertise.",
-                color: "text-secondary"
+                color: "text-orange-500"
               },
               {
                 icon: RefreshCw,
                 title: "Smart Substitutions",
                 description: "Don't have an ingredient? Our AI suggests perfect alternatives that maintain nutritional balance and taste.",
-                color: "text-accent"
+                color: "text-orange-500"
               },
               {
                 icon: TrendingUp,
                 title: "Progress Tracking",
                 description: "Monitor your nutrition intake, track compliance, and see your progress toward health and fitness goals.",
-                color: "text-primary"
+                color: "text-orange-500"
               },
               {
                 icon: ShoppingCart,
                 title: "Smart Shopping Lists",
                 description: "Automatically generated shopping lists organized by store section, with quantity optimization and cost estimates.",
-                color: "text-secondary"
+                color: "text-orange-500"
               },
               {
                 icon: Users,
                 title: "Family Planning",
                 description: "Plan meals for the whole family with different dietary needs, preferences, and portion sizes all in one place.",
-                color: "text-accent"
+                color: "text-orange-500"
               }
             ].map((feature, index) => (
               <Card key={index} className="shadow-sm hover:shadow-lg transition-all">
@@ -452,19 +452,19 @@ export default function Home() {
                     icon: Smartphone,
                     title: "Offline Access",
                     description: "View your meal plans and recipes even without internet connection.",
-                    color: "text-primary"
+                    color: "text-orange-500"
                   },
                   {
                     icon: Camera,
                     title: "Meal Logging",
                     description: "Snap photos of your meals for easy tracking and AI analysis.",
-                    color: "text-secondary"
+                    color: "text-orange-500"
                   },
                   {
                     icon: Bell,
                     title: "Smart Reminders",
                     description: "Get personalized notifications for meal prep and eating times.",
-                    color: "text-accent"
+                    color: "text-orange-500"
                   }
                 ].map((feature, index) => (
                   <div key={index} className="flex items-start space-x-4">
