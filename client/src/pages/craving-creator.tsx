@@ -406,15 +406,6 @@ export default function CravingCreator() {
         transition={{ duration: 0.6 }}
         className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4"
       >
-        {/* Hub button moved outside container with ultra-high z-index */}
-      <button
-        onClick={() => setLocation("/craving-creator-landing")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 inline-flex items-center justify-center w-6 h-6 bg-black/10 backdrop-blur-md border border-white/20 rounded-md text-white hover:bg-black/30 transition-all"
-        data-testid="hub-button-mobile-fix"
-      >
-        <ArrowLeft className="h-4 w-4" />
-      </button>
-
       {/* Premium Feature Banner */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl px-3 sm:px-4 py-2 text-white shadow-2xl">
         <div className="flex items-center gap-2">
