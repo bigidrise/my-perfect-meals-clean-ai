@@ -44,32 +44,39 @@ export default function AppRouter({ children }: AppRouterProps) {
   // Weekly plan generation removed as meal calendar functionality was disabled
 
   useEffect(() => {
-    // AUTO-BYPASS: Skip all authentication gates to allow guest access
-    console.log("🚀 Auto-bypass enabled - allowing guest access to all routes");
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const hasSeenWelcome = localStorage.getItem("mpm.hasSeenWelcome") === "true";
 
-    // Auto-complete onboarding and disclaimer for guest users
-    if (!localStorage.getItem("onboardingCompleted")) {
-      localStorage.setItem("onboardingCompleted", "true");
-    }
-    if (!localStorage.getItem("disclaimerAccepted")) {
-      localStorage.setItem("disclaimerAccepted", "true");
-    }
-    if (!localStorage.getItem("isAuthenticated")) {
-      localStorage.setItem("isAuthenticated", "true");
-    }
-
-    setShowDisclaimer(false);
-    setShowEmotionalGate(false);
-
-    // If at root, redirect to dashboard
+    // If at root, determine where to send them
     if (location === "/") {
+      if (!isAuthenticated) {
+        // Not signed in → go to Welcome page (sign up/sign in)
+        console.log("🔄 Not authenticated - redirecting to /welcome");
+        setLocation("/welcome");
+        return;
+      }
+      
+      if (!coachMode) {
+        // Signed in but hasn't chosen coach mode yet → show WelcomeGate
+        console.log("🔄 Showing WelcomeGate for mode selection");
+        setShowGate(true);
+        return;
+      }
+      
+      // Signed in and has chosen mode → go to dashboard
       console.log("🔄 Redirecting to dashboard");
       setLocation("/dashboard");
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
       }, 100);
     }
-  }, [location, setLocation]);
+
+    // If user is not authenticated and trying to access protected routes
+    if (!isAuthenticated && location !== "/welcome" && location !== "/auth") {
+      console.log("🔄 Not authenticated - redirecting to /welcome");
+      setLocation("/welcome");
+    }
+  }, [location, setLocation, coachMode]);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";

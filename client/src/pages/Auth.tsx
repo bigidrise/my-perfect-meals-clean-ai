@@ -19,10 +19,19 @@ export default function Auth() {
       const u =
         mode === "signup" ? signUp(email.trim(), pwd) : login(email.trim(), pwd);
       setUser(u);
-      // Respect intended destination, else follow your current flow
-      const intended = sessionStorage.getItem("postAuthPath");
-      sessionStorage.removeItem("postAuthPath");
-      setLocation(intended || (mode === "signup" ? "/onboarding" : "/dashboard"));
+      
+      // Mark as authenticated
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("mpm.hasSeenWelcome", "true");
+      
+      // After successful auth, go to root which will show WelcomeGate
+      // (unless they've already chosen a coach mode)
+      const coachMode = localStorage.getItem("coachMode");
+      if (coachMode) {
+        setLocation("/dashboard");
+      } else {
+        setLocation("/");
+      }
     } catch (e: any) {
       setErr(e?.message || "Authentication failed.");
     }

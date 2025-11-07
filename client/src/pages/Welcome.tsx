@@ -147,17 +147,17 @@ export default function Welcome() {
   };
 
   const signIn = () => {
-    // Auto-redirect to dashboard for guest access
-    setLocation("/dashboard");
+    // Route to auth page for sign-in
+    setLocation("/auth");
   };
 
   const createAccount = () => {
-    // Auto-redirect to dashboard for guest access
-    setLocation("/dashboard");
+    // Route to auth page for account creation
+    setLocation("/auth");
   };
 
   const testerQuickAccess = () => {
-    // Auto-login as tester - bypass sign in
+    // Auto-login as tester - bypass sign in (for testing only)
     const testUser = {
       id: "tester-123",
       email: "tester@myperfectmeals.com",
@@ -167,7 +167,10 @@ export default function Welcome() {
     };
     localStorage.setItem("mpm_current_user", JSON.stringify(testUser));
     localStorage.setItem("userId", testUser.id);
-    setLocation("/dashboard");
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("mpm.hasSeenWelcome", "true");
+    // After test login, go to root which will show WelcomeGate
+    setLocation("/");
   };
 
   // 🎨 SIMPLE LAYOUT (Option 2 - Minimal Plus without trust indicator)
