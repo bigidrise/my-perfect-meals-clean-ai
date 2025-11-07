@@ -557,6 +557,8 @@ export default function MyBiometrics() {
       localStorage.removeItem("pending-weight-sync");
       setPendingWeightSync(null);
       toast({ title: "✓ Weight saved", description: "Weight from Macro Calculator has been logged to your history." });
+      // Redirect to Planner page after saving weight from macro calculator
+      setLocation("/planner");
     }
 
     // if (SYNC_ENDPOINT) fetch(SYNC_ENDPOINT+"/weight", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(row)}).catch(()=>{});
@@ -772,9 +774,9 @@ export default function MyBiometrics() {
               <div className="flex items-start gap-3">
                 <Scale className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <div className="text-orange-300 font-semibold text-sm mb-1">Weight Synced from Macro Calculator</div>
+                  <div className="text-orange-300 font-semibold text-sm mb-1">Your Macro Targets Are Active and Live</div>
                   <div className="text-white/80 text-sm">
-                    Your weight has been pre-filled in the Body Stats section below. Click <strong className="text-white">"Save Weight"</strong> to add it to your history.
+                    Your macro targets are set in today's macros. Scroll down to save your weight. Upon click, you will be sent to build your plan.
                   </div>
                 </div>
               </div>
