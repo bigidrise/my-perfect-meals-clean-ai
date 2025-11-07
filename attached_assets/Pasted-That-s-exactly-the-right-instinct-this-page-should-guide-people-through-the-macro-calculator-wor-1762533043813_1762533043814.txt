@@ -1,0 +1,191 @@
+That’s exactly the right instinct — this page should *guide* people through the macro-calculator workflow instead of just dumping them into a static form.
+Here’s how to wire it up cleanly so it matches the rest of the “Coach-Mode” system you already have:
+
+---
+
+## 🧭 Goal
+
+When the user opens **/macro-counter** in Coach Mode:
+
+1. The border of the **“Choose Your Goal”** card pulses first.
+2. After they select a goal → the border flash moves to **“Body Type.”**
+3. After they select a body type → the border flash moves to **“Your Details” (age, weight, etc.).**
+4. After they fill in details → the **“Calculate Macros” / Next** button flashes.
+5. When they press it, we’ll proceed as usual (send macros → Biometrics page).
+
+---
+
+## ⚙️ 1  Create a guided component
+
+`client/src/components/guided/MacroCalculatorGuidedTour.tsx`
+
+```tsx
+import { useEffect, useState } from "react";
+
+/**
+ * Guides the user through the macro calculator steps
+ * by flashing each section border in order.
+ *
+ * Required IDs in MacroCounter.tsx:
+ *   - id="goal-card"
+ *   - id="bodytype-card"
+ *   - id="details-card"
+ *   - id="calc-button"
+ */
+
+export default function MacroCalculatorGuidedTour() {
+  const coachMode = localStorage.getItem("coachMode") === "guided";
+  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(
+    coachMode ? "goal" : null
+  );
+
+  useEffect(() => {
+    if (!coachMode || !step) return;
+    const map = {
+      goal: "goal-card",
+      body: "bodytype-card",
+      details: "details-card",
+      calc: "calc-button",
+    } as const;
+
+    const el = document.getElementById(map[step]);
+    if (el) el.classList.add("flash-border");
+    return () => el?.classList.remove("flash-border");
+  }, [step, coachMode]);
+
+  // simple listeners you’ll call from inside MacroCounter when user completes each section
+  useEffect(() => {
+    const next = (e: Event) => {
+      const { step: finished } = (e as CustomEvent).detail;
+      if (finished === "goal") setStep("body");
+      if (finished === "body") setStep("details");
+      if (finished === "details") setStep("calc");
+      if (finished === "calc") setStep(null);
+    };
+    window.addEventListener("macro:nextStep", next as EventListener);
+    return () => window.removeEventListener("macro:nextStep", next as EventListener);
+  }, []);
+
+  if (!coachMode) return null;
+  return null;
+}
+```
+
+---
+
+## 🎨 2  Add a border-flash animation to global CSS
+
+```css
+@keyframes pulseBorder {
+  0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  50%     { box-shadow: 0 0 12px 4px rgba(16,185,129,0.3); }
+}
+.flash-border {
+  animation: pulseBorder 1.3s infinite;
+  border: 2px solid rgba(16,185,129,0.7);
+  border-radius: 1rem;
+}
+```
+
+This uses the same emerald tone as the rest of your Coach Mode glow.
+
+---
+
+## 🧩 3  Integrate on the macro-calculator page
+
+In `client/src/pages/MacroCounter.tsx`:
+
+```tsx
+import MacroCalculatorGuidedTour from "@/components/guided/MacroCalculatorGuidedTour";
+
+export default function MacroCounter() {
+  // ...existing logic
+
+  const advance = (step: "goal" | "body" | "details" | "calc") => {
+    window.dispatchEvent(new CustomEvent("macro:nextStep", { detail: { step } }));
+  };
+
+  return (
+    <div className="relative space-y-6">
+      <MacroCalculatorGuidedTour />
+
+      {/* Goal card */}
+      <section id="goal-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">Choose Your Goal</h3>
+        <div className="flex gap-2">
+          {["Lose Fat", "Maintain", "Build Muscle"].map((g) => (
+            <button
+              key={g}
+              onClick={() => advance("goal")}
+              className="btn btn-glass"
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Body type card */}
+      <section id="bodytype-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">Select Body Type</h3>
+        <div className="flex gap-2">
+          {["Ectomorph", "Mesomorph", "Endomorph"].map((b) => (
+            <button
+              key={b}
+              onClick={() => advance("body")}
+              className="btn btn-glass"
+            >
+              {b}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Details card */}
+      <section id="details-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">Your Details</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {/* age, height, weight inputs */}
+          <input type="number" placeholder="Age" className="input input-glass" />
+          <input type="number" placeholder="Weight (lb)" className="input input-glass" />
+          <input type="number" placeholder="Height (in)" className="input input-glass" />
+        </div>
+        <button onClick={() => advance("details")} className="mt-3 btn btn-glass">
+          Save Details
+        </button>
+      </section>
+
+      {/* Calculate button */}
+      <div className="flex justify-center">
+        <button
+          id="calc-button"
+          onClick={() => advance("calc")}
+          className="btn btn-primary"
+        >
+          Calculate Macros
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+Each section fires `macro:nextStep` when the user finishes it, and the tour component automatically moves the highlight.
+
+---
+
+### 🧠 How it feels to the user
+
+* When the page opens: **Goal card border glows.**
+* Choose a goal → glow jumps to **Body Type.**
+* Pick a body type → glow jumps to **Details.**
+* Enter details & save → glow moves to **Calculate Macros** button.
+* Press it → calculation runs → Coach Mode continues to Biometrics page.
+
+---
+
+### 🧩 Next connection
+
+When you’re happy with this, we’ll hook the “Calculate Macros” button so, after macros are sent to Biometrics, the next guided flow (the one you already built there) begins automatically.
+
+Would you like me to wire that transition up next?
