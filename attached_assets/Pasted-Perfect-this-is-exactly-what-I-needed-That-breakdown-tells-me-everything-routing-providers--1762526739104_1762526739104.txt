@@ -1,0 +1,172 @@
+Perfect — this is **exactly** what I needed. That breakdown tells me everything: routing, providers, redirect logic, and the right insertion points.
+Now that I see your flow clearly, here’s the **complete setup plan** for the “Coach Mode / Welcome Gate” system — and then I’ll hand you the full React/Tailwind code to drop in.
+
+---
+
+## 🧭 OVERALL PLAN
+
+### 🔹 Where It Lives
+
+We’ll integrate this right inside **`AppRouter.tsx`**, since that file already controls redirects and auth gates.
+
+### 🔹 Flow Overview
+
+1. **App opens** → location is `/`.
+2. `AppRouter.tsx` checks:
+
+   * If user has **never chosen** a guide → show `WelcomeGate`.
+   * If user has chosen:
+
+     * **Self Mode** → skip directly to `/dashboard`.
+     * **Coach Mode** → route to `/dashboard`, then trigger guided flashes.
+3. On the first visit:
+
+   * `WelcomeGate.tsx` (black glass screen) appears.
+   * Two buttons:
+     **🧭 Self-Guided Mode** or **✨ Intuitive Coach Mode**.
+   * Once they pick, we store preference → fade out → continue to Home (`/dashboard`).
+
+---
+
+## 🧩 FILES TO ADD / UPDATE
+
+### **1️⃣ Create `client/src/components/WelcomeGate.tsx`**
+
+A sleek, black-glass overlay that fades out after the user chooses.
+
+```tsx
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function WelcomeGate({ onComplete }: { onComplete: () => void }) {
+  const [fade, setFade] = useState(false);
+
+  const chooseMode = (mode: "guided" | "self") => {
+    localStorage.setItem("coachMode", mode);
+    setFade(true);
+    setTimeout(onComplete, 1000);
+  };
+
+  return (
+    <AnimatePresence>
+      {!fade && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fade ? 0 : 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md"
+        >
+          <div className="text-center space-y-6 px-6 max-w-md">
+            <h1 className="text-3xl font-bold text-white">Welcome to My Perfect Meals</h1>
+            <p className="text-lg text-white/80">Powered by Emotion AI</p>
+            <p className="text-sm text-white/60">
+              Choose how you'd like to begin your journey:
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+              <button
+                onClick={() => chooseMode("guided")}
+                className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl border border-white/20"
+              >
+                ✨ Intuitive Coach Mode
+              </button>
+              <button
+                onClick={() => chooseMode("self")}
+                className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl border border-white/20"
+              >
+                🧭 Self-Guided Mode
+              </button>
+            </div>
+            <p className="text-xs text-white/40 pt-4">
+              You can change this anytime in Settings under “Coach Mode.”
+            </p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+```
+
+---
+
+### **2️⃣ Modify `client/src/components/AppRouter.tsx`**
+
+Insert the WelcomeGate *before* redirects happen.
+
+```tsx
+import { useEffect, useState } from "react";
+import WelcomeGate from "./WelcomeGate";
+import { useLocation, useRouter } from "wouter";
+
+export default function AppRouter({ children }) {
+  const [location, setLocation] = useLocation();
+  const [showGate, setShowGate] = useState(false);
+  const [coachMode, setCoachMode] = useState(() => localStorage.getItem("coachMode"));
+
+  useEffect(() => {
+    if (!coachMode) {
+      setShowGate(true);
+    } else if (location === "/") {
+      // If no welcome gate needed, continue to dashboard
+      setLocation("/dashboard");
+    }
+  }, [location, coachMode]);
+
+  if (showGate) {
+    return (
+      <WelcomeGate
+        onComplete={() => {
+          setShowGate(false);
+          setCoachMode(localStorage.getItem("coachMode"));
+          setLocation("/dashboard");
+        }}
+      />
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+---
+
+### **3️⃣ Guided Flash Trigger (MacroCalculator Button)**
+
+Inside **`DashboardNew.tsx`**, wrap your *Macro Calculator* card/button with a conditional glow if coach mode is on.
+
+```tsx
+const coachMode = localStorage.getItem("coachMode") === "guided";
+const [flashMacro, setFlashMacro] = useState(coachMode);
+
+useEffect(() => {
+  if (coachMode) {
+    // Stop flashing after a few seconds or once clicked
+    const timer = setTimeout(() => setFlashMacro(false), 8000);
+    return () => clearTimeout(timer);
+  }
+}, []);
+
+<Button
+  onClick={() => setLocation("/macro-counter")}
+  className={`${flashMacro ? "animate-pulse ring-2 ring-white/60" : ""}`}
+/>
+```
+
+Later, we’ll build the **`?` guided flow** inside the MacroCounter page (using small animations and highlights per field).
+
+---
+
+## 🪄 EXPERIENCE FLOW
+
+1. User opens app → sees **black glass WelcomeGate** (powered by Emotion AI).
+2. Chooses:
+
+   * ✨ **Intuitive Coach Mode** → sets mode → fade → “Welcome Back” screen appears → Macro Calculator flashes.
+   * 🧭 **Self-Guided Mode** → skips all cues → goes straight to Home.
+3. At any time, they can toggle “Coach Mode” inside settings or profile (we can add that easily later).
+4. Later pages (Biometrics, Craving Creator, etc.) can reuse the same coachMode flag for blinking walkthroughs.
+
+---
+
+Would you like me to continue next by writing the **guided blinking flow for the Macro Calculator page** (`MacroCounter.tsx`) — so when they’re in Coach Mode, it flashes through each step (Goal → Body Type → Activity → Calculate → Send to Biometrics)?
