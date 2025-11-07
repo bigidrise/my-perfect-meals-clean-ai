@@ -27,11 +27,9 @@ type Units = "imperial" | "metric";
 type BodyType = "ecto" | "meso" | "endo";
 
 const toNum = (v: string | number) => {
-  if (typeof v === "number") return v;
-  const trimmed = v.trim();
-  if (trimmed === "" || trimmed === "0") return 0;
-  const out = Number(trimmed);
-  return Number.isFinite(out) && out >= 0 ? out : 0;
+  const n = typeof v === "string" ? v.trim() : v;
+  const out = Number(n || 0);
+  return Number.isFinite(out) ? out : 0;
 };
 
 const kgFromLbs = (lbs: number) => lbs * 0.45359237;
@@ -502,10 +500,8 @@ export default function MacroCounter() {
                     <div className="text-xs font-semibold">Age</div>
                     <Input
                       type="number"
-                      min="1"
-                      max="120"
                       className="bg-black/60 border-white/50 text-white"
-                      value={age || ""}
+                      value={age}
                       onChange={(e) => setAge(toNum(e.target.value))}
                     />
                   </div>
@@ -515,10 +511,8 @@ export default function MacroCounter() {
                         <div className="text-xs font-semibold">Height (ft)</div>
                         <Input
                           type="number"
-                          min="0"
-                          max="8"
                           className="bg-black/60 border-white/50 text-white"
-                          value={heightFt || ""}
+                          value={heightFt}
                           onChange={(e) => setHeightFt(toNum(e.target.value))}
                         />
                       </div>
@@ -526,85 +520,35 @@ export default function MacroCounter() {
                         <div className="text-xs font-semibold">Height (in)</div>
                         <Input
                           type="number"
-                          min="0"
-                          max="11"
                           className="bg-black/60 border-white/50 text-white"
-                          value={heightIn || ""}
+                          value={heightIn}
                           onChange={(e) => setHeightIn(toNum(e.target.value))}
                         />
                       </div>
                     </>
                   ) : (
-                    <div className="col-span-2">
-                      <div className="text-xs font-semibold">Height (cm)</div>
-                      <Input
-                        type="number"
-                        min="0"
-                        max="300"
-                        className="bg-black/60 border-white/50 text-white"
-                        value={heightCm || ""}
-                        onChange={(e) => setHeightCm(toNum(e.target.value))}
-                      />
-                    </div>
+                    <>
+                      <div className="col-span-2">
+                        <div className="text-xs font-semibold">Height (cm)</div>
+                        <Input
+                          type="number"
+                          className="bg-black/60 border-white/50 text-white"
+                          value={heightCm}
+                          onChange={(e) => setHeightCm(toNum(e.target.value))}
+                        />
+                      </div>
+                      <div>
+                        <div className="text-xs font-semibold">Weight (kg)</div>
+                        <Input
+                          type="number"
+                          className="bg-black/60 border-white/50 text-white"
+                          value={weightKg}
+                          onChange={(e) => setWeightKg(toNum(e.target.value))}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
-
-                {/* Weight input - shows for both imperial and metric */}
-                <div>
-                  <div className="text-xs font-semibold">
-                    Weight ({units === "imperial" ? "lbs" : "kg"})
-                  </div>
-                  <Input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    className="bg-black/60 border-white/50 text-white"
-                    value={(units === "imperial" ? weightLbs : weightKg) || ""}
-                    onChange={(e) => {
-                      const val = toNum(e.target.value);
-                      if (units === "imperial") {
-                        setWeightLbs(val);
-                      } else {
-                        setWeightKg(val);
-                      }
-                    }}
-                  />
-                </div>
-
-                {/* Sync Weight Button */}
-                <Button
-                  onClick={() => {
-                    const weight = units === "imperial" ? weightLbs : weightKg;
-                    if (!weight || weight <= 0) {
-                      toast({
-                        title: "Weight Required",
-                        description: "Please enter your weight first.",
-                        variant: "destructive",
-                      });
-                      return;
-                    }
-
-                    // Save to localStorage for My Biometrics to pick up
-                    localStorage.setItem(
-                      "pending-weight-sync",
-                      JSON.stringify({
-                        weight,
-                        units,
-                        timestamp: Date.now(),
-                      })
-                    );
-
-                    toast({
-                      title: "✓ Weight Synced",
-                      description: `Weight (${weight} ${units === "imperial" ? "lbs" : "kg"}) will be available in My Biometrics. Go to My Biometrics and click "Save Weight" to add it to your history.`,
-                    });
-                  }}
-                  className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400"
-                  data-testid="button-sync-weight"
-                >
-                  <Scale className="h-4 w-4 mr-2" />
-                  Sync Weight (After Setting Targets)
-                </Button>
 
                 <ReadOnlyNote>
                   <strong>Finish setup first:</strong> Changing your weight
