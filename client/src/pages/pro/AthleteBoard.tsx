@@ -815,7 +815,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-40"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-24"
     >
       {/* Fixed Back Button - Top Left */}
       <Button
