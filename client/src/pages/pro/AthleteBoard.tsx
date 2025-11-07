@@ -39,7 +39,9 @@ import {
   Copy,
   Target,
   Home,
+  Info,
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -850,9 +852,38 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-center mt-16">
             <div className="bg-black/60 backdrop-blur-none border border-white/20 rounded-2xl px-6 py-3 flex items-center gap-3">
-              <h1 className="text-xl font-bold">
+              <h1 className="text-xl font-bold text-white">
                 Competition + Beachbody Meal Board
               </h1>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button 
+                    className="flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-900/90 transition-all duration-200 animate-pulse hover:animate-none shadow-lg"
+                    aria-label="How to use Athlete Meal Board"
+                  >
+                    <Info className="h-7 w-7 text-orange-300" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-orange-400 flex items-center gap-2">
+                      <Info className="h-4 w-4 text-orange-400" />
+                      How to Use Athlete Meal Board
+                    </h3>
+                    <div className="text-sm text-white/90 space-y-2">
+                      <p>Strategic meal planning for competition prep and beachbody goals.</p>
+                      <p><strong>Steps:</strong></p>
+                      <ul className="list-disc list-inside space-y-1 text-white/80">
+                        <li>View coach-set macro targets at top</li>
+                        <li>Use "Create with AI" for each meal slot</li>
+                        <li>Click "Set Macros to Biometrics" to sync targets</li>
+                        <li>Plan day-by-day or entire week</li>
+                        <li>Add to shopping list when ready</li>
+                      </ul>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               <div className="flex gap-2">
                 {saving && (

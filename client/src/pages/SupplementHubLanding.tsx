@@ -74,6 +74,20 @@ export default function SupplementHubLanding() {
       {/* Main Content */}
       <div className="flex-1 px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-4">
+          {/* Info Banner */}
+          <div className="rounded-2xl p-[1px] bg-gradient-to-r from-orange-500/50 via-orange-500/40 to-orange-500/50 animate-pulse">
+            <div className="rounded-2xl bg-orange-900/20 backdrop-blur-lg px-4 py-3 border border-orange-500/30">
+              <div className="flex items-start gap-3">
+                <Info className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <div className="text-orange-300 font-semibold text-sm mb-1">Supplement Resources</div>
+                  <div className="text-white/80 text-sm">
+                    Browse trusted supplement partners and learn about evidence-based supplementation. Click any card below to get started.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Hero Image Section */}
           <div className="relative h-40 rounded-xl overflow-hidden">
             <img 

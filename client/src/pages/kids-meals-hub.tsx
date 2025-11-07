@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Users, ChefHat, ArrowLeft } from "lucide-react";
+import { Users, ChefHat, ArrowLeft, Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { kidsMeals, type KidsMeal } from "@/data/kidsMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
@@ -113,8 +114,37 @@ export default function KidsMealsHub() {
         {/* Header */}
         <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <ChefHat className="h58 w-5 text-orange-300" />
+            <ChefHat className="h-5 w-5 text-orange-300" />
             <h1 className="text-2xl font-bold text-white">Kids Meals Hub</h1>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button 
+                  className="flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-900/90 transition-all duration-200 animate-pulse hover:animate-none shadow-lg"
+                  aria-label="How to use Kids Meals Hub"
+                >
+                  <Info className="h-7 w-7 text-orange-300" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-orange-400 flex items-center gap-2">
+                    <Info className="h-4 w-4 text-orange-400" />
+                    How to Use Kids Meals Hub
+                  </h3>
+                  <div className="text-sm text-white/90 space-y-2">
+                    <p>20+ kid-friendly meals designed for ages 4-12 with fun presentations and balanced nutrition.</p>
+                    <p><strong>Steps:</strong></p>
+                    <ul className="list-disc list-inside space-y-1 text-white/80">
+                      <li>Click any meal card to view details</li>
+                      <li>Choose servings (1-8 kids)</li>
+                      <li>Ingredients scale automatically</li>
+                      <li>Add to shopping list at bottom</li>
+                      <li>Filter by name or health badges</li>
+                    </ul>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
           <p className="text-sm text-white/90 max-w-2xl mx-auto">
             Pick a meal, choose servings (1–8), and we'll scale ingredients automatically
