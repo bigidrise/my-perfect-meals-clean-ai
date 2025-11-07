@@ -911,7 +911,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             </Button>
 
             <div className="text-center">
-              <div className="text-lg font-semibold">
+              <div className="text-lg font-semibold text-white">
                 {formatWeekLabel(weekStartISO)}
               </div>
               <div className="text-xs text-white">
