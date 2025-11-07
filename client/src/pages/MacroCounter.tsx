@@ -358,6 +358,17 @@ export default function MacroCounter() {
                   <Label
                     key={b.v}
                     htmlFor={b.v}
+                    onClick={() => {
+                      setBodyType(b.v as BodyType);
+                      advance("body-type");
+                      // Auto-scroll to details card on every click
+                      setTimeout(() => {
+                        const detailsCard = document.getElementById("details-card");
+                        if (detailsCard) {
+                          detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 200);
+                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
                     <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
@@ -531,6 +542,17 @@ export default function MacroCounter() {
                     <Label
                       key={k}
                       htmlFor={`act-${k}`}
+                      onClick={() => {
+                        setActivity(k);
+                        advance("activity");
+                        // Auto-scroll to Set Macro Targets button on every click
+                        setTimeout(() => {
+                          const button = document.getElementById("calc-button");
+                          if (button) {
+                            button.scrollIntoView({ behavior: "smooth", block: "center" });
+                          }
+                        }, 300);
+                      }}
                       className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
                         activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
                       }`}
@@ -587,7 +609,7 @@ export default function MacroCounter() {
                   });
                   setLocation("/my-biometrics");
                 }}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 animate-pulse"
+                className={`bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 ${activity ? "animate-pulse" : ""}`}
               >
                 <Target className="h-5 w-5 mr-2" /> Set Macro Targets
               </Button>
