@@ -409,7 +409,7 @@ export default function CravingCreator() {
         {/* Hub button moved outside container with ultra-high z-index */}
       <button
         onClick={() => setLocation("/craving-creator-landing")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 p-2 bg-black/10 backdrop-blur-md border border-white/20 rounded-xl text-white hover:bg-black/30 transition-all"
+        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 p-1.5 bg-black/10 backdrop-blur-md border border-white/20 rounded-lg text-white hover:bg-black/30 transition-all"
         data-testid="hub-button-mobile-fix"
       >
         <ArrowLeft className="h-4 w-4" />
