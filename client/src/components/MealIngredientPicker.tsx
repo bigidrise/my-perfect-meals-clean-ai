@@ -356,7 +356,7 @@ export default function MealIngredientPicker({
                   }}
                   className="h-4 w-4 border-orange-400/50 data-[state=checked]:bg-orange-600 data-[state=checked]:border-orange-500"
                 />
-                🎯 Set Macro Targets (Contest Prep Mode)
+                🎯 Set Macro Targets
               </label>
             </div>
 
