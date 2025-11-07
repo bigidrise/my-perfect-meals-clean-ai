@@ -19,7 +19,7 @@ import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
 import { todayISOInTZ } from "@/utils/midnight";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft } from "lucide-react";
+import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -30,11 +30,11 @@ import { WhyDrawer } from "@/components/WhyDrawer";
 import { getWeeklyPlanningWhy } from "@/utils/reasons";
 import { useToast } from "@/hooks/use-toast";
 import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
-import { FeatureInstructions } from "@/components/FeatureInstructions";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -132,6 +132,28 @@ export default function WeeklyMealBoard() {
   // AI Meal Creator modal state (for all meal slots)
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
+
+  // Guided Tour state
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
+
+  // Load/save tour progress from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("weekly-meal-board-tour-step");
+    if (saved && saved !== "complete") {
+      setTourStep(saved as "breakfast" | "lunch" | "dinner" | "snacks" | "complete");
+    }
+  }, []);
+
+  const advanceTourStep = useCallback(() => {
+    const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
+    const currentIndex = sequence.indexOf(tourStep);
+    if (currentIndex < sequence.length - 1) {
+      const nextStep = sequence[currentIndex + 1];
+      setTourStep(nextStep);
+      localStorage.setItem("weekly-meal-board-tour-step", nextStep);
+    }
+  }, [tourStep]);
 
   // 🔋 AI Meal Creator localStorage persistence (copy Fridge Rescue pattern)
   const AI_MEALS_CACHE_KEY = "ai-meal-creator-cached-meals";
@@ -431,7 +453,10 @@ export default function WeeklyMealBoard() {
       title: "AI Meal Created!",
       description: `${generatedMeal.name} saved to your ${slotLabel.toLowerCase()}`,
     });
-  }, [board, activeDayISO, aiMealSlot, toast]);
+
+    // Advance guided tour to next step
+    advanceTourStep();
+  }, [board, activeDayISO, aiMealSlot, toast, advanceTourStep]);
 
   const profile = useOnboardingProfile();
   const targets = computeTargetsFromOnboarding(profile);
@@ -870,6 +895,15 @@ export default function WeeklyMealBoard() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">Weekly Meal Board</h1>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowInfoModal(true)}
+                  className="h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/10 rounded-full"
+                  aria-label="How to use"
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}
@@ -926,21 +960,6 @@ export default function WeeklyMealBoard() {
               </div>
             </div>
 
-            <FeatureInstructions
-              steps={[
-                "Step 1: Start with DAY view - Select which day you want to work on (today, tomorrow, any day this week)",
-                "Step 2: Add meals to that day - Click '+ Add from Menus' to browse meal builders OR click '+' button to create your own custom meal card",
-                "Step 3: Build your complete day - Add Breakfast, Lunch, Dinner, and Snacks until your day is complete",
-                "Step 4: Review totals at bottom - Check your daily nutrition totals (calories, protein, carbs, fat)",
-                "Step 5: Send to Biometrics - Click 'Send Entire Day to Macros' to log this day's meals",
-                "Step 6: Add to Shopping - Click 'Add & View List' to send all ingredients to your Shopping List",
-                "Step 7: Switch to WEEK view (at top) - Toggle to Week mode to see your entire week at once",
-                "Step 8A: Copy Entire Week - Click 'Copy Week' to duplicate your full week (Oct 13-19) to another target week in the month",
-                "Step 8B: Duplicate Single Day - Click 'Duplicate Day' for any day (e.g., Sunday), then check which days you want to copy it to (Monday, Tuesday, etc.)",
-                "Step 9: Save your work - Click 'Save' button to preserve all your weekly meal planning changes"
-              ]}
-            />
-
             {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && weekDatesList.length > 0 && (
               <div className="mb-3 mt-3">
                 <DayChips
@@ -970,7 +989,9 @@ export default function WeeklyMealBoard() {
                       size="sm"
                       variant="ghost"
                       data-role="create-ai-meal"
-                      className="text-white/80 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-purple-600/20 border border-pink-400/30 text-xs font-medium flex items-center gap-1"
+                      className={`text-white/80 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-purple-600/20 border border-pink-400/30 text-xs font-medium flex items-center gap-1 ${
+                        tourStep === key ? 'flash-border' : ''
+                      }`}
                       onClick={() => {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
                         setAiMealModalOpen(true);
@@ -1427,6 +1448,22 @@ export default function WeeklyMealBoard() {
                 />
               );
             })()}
+
+      {/* Info Modal - How to Use */}
+      <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
+        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg">How to Use Weekly Meal Board</DialogTitle>
+          </DialogHeader>
+          <div className="text-white/80 text-sm space-y-2">
+            <p>Create your day or week by starting with breakfast.</p>
+            <p className="text-xs text-white/60">
+              Click the "Create with AI" button on each meal section to build your plan. 
+              You can create one day and duplicate it across the week, or create each day individually.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
           </motion.div>
         );
       }
