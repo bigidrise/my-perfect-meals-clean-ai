@@ -115,14 +115,22 @@ User saves weight → Auto-route to /planner
 - **CSS:** Added `.flash-white` animation (pulseWhite keyframes)
 - **Integration:** Added to `Planner.tsx`
 
-### Next Implementation: Meal Builder Tour
-- Flash **"Create AI Meal"** button
-- Open meal picker
-- Show explainer: "Protein required; carbs/fats optional"
-- Flash **Done** button
-- Return to board
-- Advance to next meal slot
-- Mark tour as complete after first meal added
+### 8. **Meal Builder Guided Tour** ✅ COMPLETE
+- **File:** `client/src/components/guided/MealBuilderGuidedTour.tsx`
+- **Flow:**
+  1. Flashing "Create AI Meal" button on first meal card
+  2. When picker opens: Shows flashing "?" help icon
+  3. On click: Overlay explains "Protein required, carbs/fats optional"
+  4. Sequential highlights: Protein → Carbs → Fats → Done
+  5. Auto-advances after 8s per step
+  6. Returns to board after Done
+- **Integration:** Added to `WeeklyMealBoard.tsx`
+- **Requirements:** Picker needs these IDs:
+  - `id="meal-picker-drawer"` with `className="open"` when visible
+  - `id="picker-protein-section"` on protein picker section
+  - `id="picker-carb-section"` on carb picker section
+  - `id="picker-fat-section"` on fat picker section
+  - `id="picker-done-btn"` on Done button
 
 ---
 
@@ -224,19 +232,19 @@ useEffect(() => {
 - `client/src/contexts/TourContext.tsx`
 - `client/src/components/guided/BiometricsGuidedTour.tsx`
 - `client/src/components/guided/PlannerGuidedTour.tsx`
+- `client/src/components/guided/MealBuilderGuidedTour.tsx`
 - `GUIDED_TOUR_SYSTEM_IMPLEMENTATION.md` (this file)
 
 ### Modified:
 - `client/src/components/AppRouter.tsx` - Added WelcomeGate, TourProvider
 - `client/src/pages/DashboardNew.tsx` - Added tour initialization, TourHighlight wrappers
 - `client/src/pages/Planner.tsx` - Added PlannerGuidedTour component
+- `client/src/pages/WeeklyMealBoard.tsx` - Added MealBuilderGuidedTour component
 - `client/src/index.css` - Added `.flash-green`, `.flash-green-strong`, and `.flash-white` animations
 
 ### To Be Modified (Next Steps):
 - `client/src/pages/my-biometrics.tsx` - Add BiometricsGuidedTour, required IDs
-- `client/src/pages/Planner.tsx` - Add PlannerGuidedTour component
-- Create `client/src/components/guided/PlannerGuidedTour.tsx`
-- Create `client/src/components/guided/MealBuilderGuidedTour.tsx`
+- `client/src/components/pickers/MealPickerDrawer.tsx` - Add required IDs for tour highlighting
 
 ---
 

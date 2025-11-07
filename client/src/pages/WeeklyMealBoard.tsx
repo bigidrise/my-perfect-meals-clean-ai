@@ -35,6 +35,7 @@ import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
+import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -55,18 +56,18 @@ function addDaysISO(iso: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-function nextWeekISO(weekStartISO: string) { 
-  return addDaysISO(weekStartISO, 7); 
+function nextWeekISO(weekStartISO: string) {
+  return addDaysISO(weekStartISO, 7);
 }
 
-function prevWeekISO(weekStartISO: string) { 
-  return addDaysISO(weekStartISO, -7); 
+function prevWeekISO(weekStartISO: string) {
+  return addDaysISO(weekStartISO, -7);
 }
 
 function formatWeekLabel(weekStartISO: string): string {
   // Lightweight formatter: "Sep 8–14"
   const start = new Date(weekStartISO + 'T00:00:00Z');
-  const end = new Date(start); 
+  const end = new Date(start);
   end.setUTCDate(start.getUTCDate() + 6);
   const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   return `${fmt(start)}–${fmt(end)}`;
@@ -76,11 +77,11 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
   const { board: hookBoard, loading: hookLoading, error, save: saveToHook, source } = useWeeklyBoard("1", weekStartISO);
-  
+
   // Local mutable board state for optimistic updates
   const [board, setBoard] = React.useState<WeekBoard | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -152,7 +153,7 @@ export default function WeeklyMealBoard() {
         slot,
         generatedAtISO: new Date().toISOString(),
       };
-      localStorage.setItem(AI_MEALS_CACHE_KEY, JSON.stringify(state));
+      localStorage.setItem(AI_MEALS_CACHE_KEY, JSON.JSON.stringify(state));
     } catch {}
   }
 
@@ -195,7 +196,7 @@ export default function WeeklyMealBoard() {
     const cached = loadAIMealsCache();
     if (cached && cached.dayISO === activeDayISO && cached.meals.length > 0) {
       console.log("🔋 Loading AI meals from localStorage:", cached.meals.length, "meals for", activeDayISO, "into slot:", cached.slot);
-      
+
       // Merge cached AI meals into the correct slot (not hardcoded to breakfast!)
       const dayLists = getDayLists(board, activeDayISO);
       const targetSlot = cached.slot || "breakfast"; // Fallback to breakfast for old cached data
@@ -203,7 +204,7 @@ export default function WeeklyMealBoard() {
       const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
       const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-      
+
       setBoard(updatedBoard);
     }
   }, [board, activeDayISO]); // Run when board loads OR day changes
@@ -229,7 +230,7 @@ export default function WeeklyMealBoard() {
     }
   }, [board, activeDayISO, saveBoard, toast]);
 
-  // Duplicate week handler  
+  // Duplicate week handler
   const handleDuplicateWeek = useCallback(async (targetWeekStartISO: string) => {
     if (!board) return;
 
@@ -292,7 +293,7 @@ export default function WeeklyMealBoard() {
     }
 
     // Normalize ingredients and add to shopping list store
-    const ingredients = allMeals.flatMap(meal => 
+    const ingredients = allMeals.flatMap(meal =>
       normalizeIngredients(meal.ingredients || [])
     );
 
@@ -300,13 +301,13 @@ export default function WeeklyMealBoard() {
       name: i.name,
       qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
       unit: i.unit,
-      note: planningMode === 'day' && activeDayISO 
+      note: planningMode === 'day' && activeDayISO
         ? `${new Date(activeDayISO + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'long' })} Meal Plan`
         : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`
     }));
 
     addItems(items);
-    
+
     toast({
       title: "Added to Shopping List",
       description: `${ingredients.length} items added to your master list`
@@ -326,7 +327,7 @@ export default function WeeklyMealBoard() {
 
     // Collect ALL meals from ALL 7 days of the week
     let allMeals: Meal[] = [];
-    
+
     // Loop through all days in the week
     weekDatesList.forEach(dateISO => {
       const dayLists = getDayLists(board, dateISO);
@@ -348,7 +349,7 @@ export default function WeeklyMealBoard() {
     }
 
     // Normalize ingredients and add to shopping list store
-    const ingredients = allMeals.flatMap(meal => 
+    const ingredients = allMeals.flatMap(meal =>
       normalizeIngredients(meal.ingredients || [])
     );
 
@@ -360,7 +361,7 @@ export default function WeeklyMealBoard() {
     }));
 
     addItems(items);
-    
+
     toast({
       title: "Added to Shopping List",
       description: `${ingredients.length} items from entire week added to your master list`
@@ -440,8 +441,8 @@ export default function WeeklyMealBoard() {
   useMidnightReset(userTimezone, () => {
     console.log('🌅 Midnight macro reset triggered');
     // Force refresh of today's macros at midnight
-    queryClient.invalidateQueries({ 
-      queryKey: ["/api/users", "00000000-0000-0000-0000-000000000001", "macros", "today"] 
+    queryClient.invalidateQueries({
+      queryKey: ["/api/users", "00000000-0000-0000-0000-000000000001", "macros", "today"]
     });
     // Also dispatch the global event for other components
     window.dispatchEvent(new Event("macros:updated"));
@@ -468,7 +469,7 @@ export default function WeeklyMealBoard() {
   // 🎯 Show toast when loading from cache/offline
   React.useEffect(() => {
     if (!loading && source && source !== "db") {
-      const msg = source === "cache" 
+      const msg = source === "cache"
         ? "Viewing cached meal plan (offline)"
         : "Starting fresh meal plan for this week";
       toast({
@@ -494,7 +495,7 @@ export default function WeeklyMealBoard() {
   // Check for localStorage meal to add (after board loads)
   React.useEffect(() => {
     if (!board || loading) return;
-    
+
     const pendingMealData = localStorage.getItem("weeklyPlanMealToAdd");
     if (pendingMealData) {
       try {
@@ -525,10 +526,10 @@ export default function WeeklyMealBoard() {
       const customEvent = event as CustomEvent;
       const { weekStartISO: eventWeekISO } = customEvent.detail || {};
 
-      console.log("🔄 Board update event received:", { 
-        eventWeekISO, 
+      console.log("🔄 Board update event received:", {
+        eventWeekISO,
         currentWeekISO: weekStartISO,
-        matches: eventWeekISO === weekStartISO 
+        matches: eventWeekISO === weekStartISO
       });
 
       // Refetch if it's for the current week OR if we don't have a week loaded yet
@@ -622,7 +623,7 @@ export default function WeeklyMealBoard() {
     } catch (e) {
       console.error("Failed to save snack:", e);
       // Best-effort rollback if we had optimistically set state in week mode
-      try { 
+      try {
         const { week } = await getWeekBoardByDate(weekStartISO);
         setBoard(week);
       } catch {}
@@ -672,8 +673,8 @@ export default function WeeklyMealBoard() {
   async function handleSave() {
     if (!board) return;
     setSaving(true);
-    try { 
-      const saved = await saveWeekBoard(board); 
+    try {
+      const saved = await saveWeekBoard(board);
       setBoard(saved);
       setJustSaved(true);
       // Reset success state after 2.5 seconds
@@ -689,7 +690,7 @@ export default function WeeklyMealBoard() {
 
   async function quickAdd(list: "breakfast"|"lunch"|"dinner"|"snacks", meal: Meal) {
     if (!board) return;
-    
+
     try {
       // In Day mode, add to the specific day. In Week mode, use legacy behavior
       if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
@@ -748,7 +749,7 @@ export default function WeeklyMealBoard() {
 
   const handleLogAllMacros = useCallback(async () => {
     if (!board) return;
-    
+
     try {
       const allMeals = [
         ...board.lists.breakfast,
@@ -768,7 +769,7 @@ export default function WeeklyMealBoard() {
 
       let successCount = 0;
       const { post } = await import("@/lib/api");
-      
+
       for (const meal of allMeals) {
         const logEntry = {
           mealName: meal.title || meal.name || "Meal",
@@ -811,15 +812,15 @@ export default function WeeklyMealBoard() {
   );
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
-      <Button 
-        variant="ghost" 
-        size="sm" 
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setLocation("/planner")}
         className="fixed top-4 left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 text-white hover:bg-white/10 rounded-2xl overflow-hidden text-ellipsis whitespace-nowrap p-2"
       >
@@ -932,7 +933,7 @@ export default function WeeklyMealBoard() {
 
             {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && weekDatesList.length > 0 && (
               <div className="mb-3 mt-3">
-                <DayChips 
+                <DayChips
                   weekDates={weekDatesList}
                   activeDayISO={activeDayISO}
                   onDayChange={setActiveDayISO}
@@ -969,9 +970,9 @@ export default function WeeklyMealBoard() {
                     </Button>
 
                     {/* Plus button for manual entry */}
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -996,22 +997,22 @@ export default function WeeklyMealBoard() {
                   {dayLists[key as keyof typeof dayLists].map((meal: Meal, idx: number) => (
                     <MealCard
                       key={meal.id}
-                      date={activeDayISO} 
+                      date={activeDayISO}
                       slot={key}
                       meal={meal}
                       onUpdated={(m) => {
                         if (m === null) {
                           // REMOVE MEAL in Day mode - use the new system
-                          
+
                           // 🗑️ If it's an AI meal, also clear from localStorage
                           if (meal.id.startsWith('ai-meal-')) {
                             console.log("🗑️ Deleting AI meal from localStorage:", meal.name);
                             clearAIMealsCache();
                           }
-                          
+
                           const updatedDayLists = {
                             ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) => 
+                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) =>
                               existingMeal.id !== meal.id
                             )
                           };
@@ -1027,7 +1028,7 @@ export default function WeeklyMealBoard() {
                           // Update meal in day lists
                           const updatedDayLists = {
                             ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) => 
+                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) =>
                               i === idx ? m : existingMeal
                             )
                           };
@@ -1069,9 +1070,9 @@ export default function WeeklyMealBoard() {
                 </Button>
 
                 {/* Plus button for manual entry */}
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="text-white/80 hover:bg-white/10"
                   onClick={() => openManualModal(key)}
                 >
@@ -1096,7 +1097,7 @@ export default function WeeklyMealBoard() {
               {board.lists[key].map((meal: Meal, idx: number) => (
                 <MealCard
                   key={meal.id}
-                  date={"board"} 
+                  date={"board"}
                   slot={key}
                   meal={meal}
                   onUpdated={(m) => {
@@ -1169,7 +1170,7 @@ export default function WeeklyMealBoard() {
                     }
                     return [...board.lists.breakfast, ...board.lists.lunch, ...board.lists.dinner, ...board.lists.snacks]
                       .reduce((sum, meal) => sum + (meal.nutrition?.protein ?? 0), 0);
-                  })())}g
+                  })())}
                 </div>
                 <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Protein</div>
               </div>
@@ -1212,29 +1213,29 @@ export default function WeeklyMealBoard() {
               items={(() => {
                 const dayLists = getDayLists(board, activeDayISO);
                 return [
-                  ...dayLists.breakfast.map(m => ({ 
-                    protein: m.nutrition?.protein || 0, 
-                    carbs: m.nutrition?.carbs || 0, 
-                    fat: m.nutrition?.fat || 0, 
-                    calories: m.nutrition?.calories || 0 
+                  ...dayLists.breakfast.map(m => ({
+                    protein: m.nutrition?.protein || 0,
+                    carbs: m.nutrition?.carbs || 0,
+                    fat: m.nutrition?.fat || 0,
+                    calories: m.nutrition?.calories || 0
                   })),
-                  ...dayLists.lunch.map(m => ({ 
-                    protein: m.nutrition?.protein || 0, 
-                    carbs: m.nutrition?.carbs || 0, 
-                    fat: m.nutrition?.fat || 0, 
-                    calories: m.nutrition?.calories || 0 
+                  ...dayLists.lunch.map(m => ({
+                    protein: m.nutrition?.protein || 0,
+                    carbs: m.nutrition?.carbs || 0,
+                    fat: m.nutrition?.fat || 0,
+                    calories: m.nutrition?.calories || 0
                   })),
-                  ...dayLists.dinner.map(m => ({ 
-                    protein: m.nutrition?.protein || 0, 
-                    carbs: m.nutrition?.carbs || 0, 
-                    fat: m.nutrition?.fat || 0, 
-                    calories: m.nutrition?.calories || 0 
+                  ...dayLists.dinner.map(m => ({
+                    protein: m.nutrition?.protein || 0,
+                    carbs: m.nutrition?.carbs || 0,
+                    fat: m.nutrition?.fat || 0,
+                    calories: m.nutrition?.calories || 0
                   })),
-                  ...dayLists.snacks.map(m => ({ 
-                    protein: m.nutrition?.protein || 0, 
-                    carbs: m.nutrition?.carbs || 0, 
-                    fat: m.nutrition?.fat || 0, 
-                    calories: m.nutrition?.calories || 0 
+                  ...dayLists.snacks.map(m => ({
+                    protein: m.nutrition?.protein || 0,
+                    carbs: m.nutrition?.carbs || 0,
+                    fat: m.nutrition?.fat || 0,
+                    calories: m.nutrition?.calories || 0
                   }))
                 ];
               })()}
@@ -1325,8 +1326,8 @@ export default function WeeklyMealBoard() {
 
       {/* Why Drawer */}
       {FEATURES.explainMode === 'alpha' && (
-        <WhyDrawer 
-          open={boardWhyOpen} 
+        <WhyDrawer
+          open={boardWhyOpen}
           onClose={() => setBoardWhyOpen(false)}
           title="Why weekly planning?"
           reasons={getWeeklyPlanningWhy()}
@@ -1356,8 +1357,8 @@ export default function WeeklyMealBoard() {
               return [...dayLists.breakfast, ...dayLists.lunch, ...dayLists.dinner, ...dayLists.snacks];
             })()
           : [...board.lists.breakfast, ...board.lists.lunch, ...board.lists.dinner, ...board.lists.snacks];
-        
-        const ingredients = allMeals.flatMap(meal => 
+
+        const ingredients = allMeals.flatMap(meal =>
           normalizeIngredients(meal.ingredients || [])
         );
 
@@ -1367,9 +1368,9 @@ export default function WeeklyMealBoard() {
         // DAY MODE: Show dual buttons (Send Day + Send Entire Week)
         if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
           const dayName = new Date(activeDayISO + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'long' });
-          
+
           return (
-            <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl safe-area-inset-bottom">
+            <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl shadow-2xl safe-area-inset-bottom">
               <div className="container mx-auto px-4 py-3">
                 <div className="flex flex-col gap-2">
                   <div className="text-white text-sm font-semibold">
