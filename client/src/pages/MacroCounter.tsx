@@ -247,6 +247,12 @@ function BodyTypeGuide() {
   );
 }
 
+// Dummy advance function for the guided tour
+const advance = (step: string) => {
+  console.log(`Advancing tour to step: ${step}`);
+  // In a real implementation, this would trigger the next step of the guided tour
+};
+
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -398,7 +404,7 @@ export default function MacroCounter() {
               </h3>
               <RadioGroup
                 value={goal}
-                onValueChange={(v: Goal) => setGoal(v)}
+                onValueChange={(v: Goal) => {setGoal(v); advance("goal");}}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -427,7 +433,7 @@ export default function MacroCounter() {
               <BodyTypeGuide />
               <RadioGroup
                 value={bodyType}
-                onValueChange={(v: BodyType) => setBodyType(v)}
+                onValueChange={(v: BodyType) => {setBodyType(v); advance("body-type");}}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -458,7 +464,7 @@ export default function MacroCounter() {
             <div className="grid md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-3">
                 <div className="text-xs text-white font-semibold">Units</div>
-                <RadioGroup value={units} onValueChange={(v: Units) => setUnits(v)} className="grid grid-cols-2 gap-2">
+                <RadioGroup value={units} onValueChange={(v: Units) => {setUnits(v); advance("details");}} className="grid grid-cols-2 gap-2">
                   {(["imperial", "metric"] as const).map((u) => (
                     <Label
                       key={u}
@@ -474,7 +480,7 @@ export default function MacroCounter() {
                 </RadioGroup>
 
                 <div className="text-xs text-white font-semibold">Sex</div>
-                <RadioGroup value={sex} onValueChange={(v: Sex) => setSex(v)} className="grid grid-cols-2 gap-2">
+                <RadioGroup value={sex} onValueChange={(v: Sex) => {setSex(v); advance("details");}} className="grid grid-cols-2 gap-2">
                   {(["female", "male"] as const).map((s) => (
                     <Label
                       key={s}
@@ -496,7 +502,10 @@ export default function MacroCounter() {
                       type="number"
                       className="bg-black/60 border-white/50 text-white placeholder-white"
                       value={age || ""}
-                      onChange={(e) => setAge(e.target.value === "" ? 0 : toNum(e.target.value))}
+                      onChange={(e) => {
+                        setAge(e.target.value === "" ? 0 : toNum(e.target.value));
+                        if (e.target.value) advance("details");
+                      }}
                     />
                   </div>
 
@@ -508,7 +517,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightFt || ""}
-                          onChange={(e) => setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          onChange={(e) => {setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
                         />
                       </div>
                       <div>
@@ -517,7 +526,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightIn || ""}
-                          onChange={(e) => setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          onChange={(e) => {setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
                         />
                       </div>
                       <div>
@@ -526,7 +535,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={weightLbs || ""}
-                          onChange={(e) => setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          onChange={(e) => {setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
                         />
                       </div>
                     </>
@@ -538,7 +547,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={heightCm || ""}
-                          onChange={(e) => setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          onChange={(e) => {setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
                         />
                       </div>
                       <div>
@@ -547,7 +556,7 @@ export default function MacroCounter() {
                           type="number"
                           className="bg-black/60 border-white/50 text-white placeholder-white"
                           value={weightKg || ""}
-                          onChange={(e) => setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          onChange={(e) => {setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value)); advance("details");}}
                         />
                       </div>
                     </>
@@ -582,7 +591,7 @@ export default function MacroCounter() {
                 <div className="text-xs text-white font-semibold">Activity</div>
                 <RadioGroup
                   value={activity}
-                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => setActivity(v)}
+                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {setActivity(v); advance("activity");}}
                   className="grid grid-cols-2 md:grid-cols-3 gap-2"
                 >
                   {(
@@ -615,7 +624,7 @@ export default function MacroCounter() {
                       step="0.1"
                       className="bg-black/60 border-white/50 text-white placeholder-white"
                       value={proteinPerKg}
-                      onChange={(e) => setProteinPerKg(parseFloat(e.target.value || "0"))}
+                      onChange={(e) => {setProteinPerKg(parseFloat(e.target.value || "0")); advance("macros");}}
                     />
                   </div>
                   <div>
@@ -628,6 +637,7 @@ export default function MacroCounter() {
                       onChange={(e) => {
                         const pct = Math.max(10, Math.min(60, toNum(e.target.value)));
                         setFatPct(pct / 100);
+                        advance("macros");
                       }}
                     />
                   </div>
@@ -635,7 +645,7 @@ export default function MacroCounter() {
                     <div className="text-xs text-white font-semibold">Sugar cap</div>
                     <RadioGroup
                       value={sugarCapMode}
-                      onValueChange={(v: "AHA" | "DGA") => setSugarCapMode(v)}
+                      onValueChange={(v: "AHA" | "DGA") => {setSugarCapMode(v); advance("sugar-cap");}}
                       className="grid grid-cols-2 gap-2"
                     >
                       {(["AHA", "DGA"] as const).map((k) => (
@@ -675,7 +685,7 @@ export default function MacroCounter() {
                   <Pill
                     key={opt.key}
                     active={profile.dietaryPatterns.includes(opt.key)}
-                    onClick={() => toggleDietary(opt.key)}
+                    onClick={() => {toggleDietary(opt.key); advance("profile-settings");}}
                   >
                     {opt.label}
                   </Pill>
@@ -691,7 +701,7 @@ export default function MacroCounter() {
                   <Pill
                     key={opt.key}
                     active={profile.allergies.includes(opt.key)}
-                    onClick={() => toggleAllergy(opt.key)}
+                    onClick={() => {toggleAllergy(opt.key); advance("profile-settings");}}
                   >
                     {opt.label}
                   </Pill>
@@ -711,7 +721,7 @@ export default function MacroCounter() {
                         type="button"
                         aria-label="remove allergy"
                         className="opacity-80 hover:opacity-100"
-                        onClick={() => toggleAllergy(a)}
+                        onClick={() => {toggleAllergy(a); advance("profile-settings");}}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -731,9 +741,10 @@ export default function MacroCounter() {
                   <button
                     key={lvl}
                     type="button"
-                    onClick={() =>
-                      setProfile((p) => ({ ...p, sodiumPreference: lvl }))
-                    }
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, sodiumPreference: lvl }));
+                      advance("profile-settings");
+                    }}
                     className={`px-3 py-2 rounded-lg border text-sm transition
                       ${profile.sodiumPreference === lvl ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}
                     `}
@@ -753,9 +764,10 @@ export default function MacroCounter() {
               <div className="text-xs font-semibold mb-2">Notes (optional)</div>
               <Input
                 value={profile.notes || ""}
-                onChange={(e) =>
-                  setProfile((p) => ({ ...p, notes: e.target.value }))
-                }
+                onChange={(e) => {
+                  setProfile((p) => ({ ...p, notes: e.target.value }));
+                  advance("profile-settings");
+                }}
                 placeholder="Anything we should know when generating meals?"
                 className="bg-black/60 border-white/50 text-white"
               />
