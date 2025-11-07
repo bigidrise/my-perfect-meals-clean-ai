@@ -104,11 +104,16 @@ User saves weight → Auto-route to /planner
 
 ## 🚧 REMAINING WORK
 
-### Next Implementation: Planner Tour
-- Flash the **?** (help) icon
-- Show overlay explaining each hub
-- Pulse all hub buttons simultaneously
-- User chooses a hub → Navigate to meal builder
+### 7. **Planner Guided Tour** ✅ COMPLETE
+- **File:** `client/src/components/guided/PlannerGuidedTour.tsx`
+- **Flow:**
+  1. Shows floating white pulsing "?" icon in top-right
+  2. On click: Opens overlay explaining all planner hubs
+  3. All hub buttons pulse with white animation
+  4. User clicks a hub → Routes to that planner
+  5. Next: Meal Builder tour will activate
+- **CSS:** Added `.flash-white` animation (pulseWhite keyframes)
+- **Integration:** Added to `Planner.tsx`
 
 ### Next Implementation: Meal Builder Tour
 - Flash **"Create AI Meal"** button
@@ -117,6 +122,7 @@ User saves weight → Auto-route to /planner
 - Flash **Done** button
 - Return to board
 - Advance to next meal slot
+- Mark tour as complete after first meal added
 
 ---
 
@@ -217,12 +223,14 @@ useEffect(() => {
 - `client/src/components/TourHighlight.tsx`
 - `client/src/contexts/TourContext.tsx`
 - `client/src/components/guided/BiometricsGuidedTour.tsx`
+- `client/src/components/guided/PlannerGuidedTour.tsx`
 - `GUIDED_TOUR_SYSTEM_IMPLEMENTATION.md` (this file)
 
 ### Modified:
 - `client/src/components/AppRouter.tsx` - Added WelcomeGate, TourProvider
 - `client/src/pages/DashboardNew.tsx` - Added tour initialization, TourHighlight wrappers
-- `client/src/index.css` - Added `.flash-green` and `.flash-green-strong` animations
+- `client/src/pages/Planner.tsx` - Added PlannerGuidedTour component
+- `client/src/index.css` - Added `.flash-green`, `.flash-green-strong`, and `.flash-white` animations
 
 ### To Be Modified (Next Steps):
 - `client/src/pages/my-biometrics.tsx` - Add BiometricsGuidedTour, required IDs

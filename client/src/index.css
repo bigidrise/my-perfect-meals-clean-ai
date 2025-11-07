@@ -20,6 +20,16 @@
   outline-offset: 2px;
 }
 
+@keyframes pulseWhite {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  50% { box-shadow: 0 0 18px 8px rgba(255,255,255,0.3); }
+}
+
+.flash-white {
+  animation: pulseWhite 1.5s infinite;
+  border-radius: 1rem;
+}
+
 @keyframes gradient-x {
   0%, 100% {
     background-position: 0% 50%;
