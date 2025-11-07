@@ -223,14 +223,6 @@ export default function ShoppingListMasterView() {
               />
               <span>Exclude pantry staples</span>
             </div>
-            <div className="flex items-center gap-2 text-white/80 text-sm" data-testid="option-scope-week">
-              <Checkbox 
-                checked={opts.scopeByWeek} 
-                onCheckedChange={()=>toggleOpt("scopeByWeek")} 
-                className="h-3 w-3 border-white/40"
-              />
-              <span>Scope to this week</span>
-            </div>
             <select
               value={opts.rounding}
               onChange={(e)=>writeOptions({ ...opts, rounding: e.target.value as "none" | "friendly" })}
@@ -356,45 +348,6 @@ export default function ShoppingListMasterView() {
             </p>
           </div>
         </details>
-
-        {/* How to Use Instructions Dropdown */}
-        <div className="rounded-2xl bg-white/5 border border-white/20 overflow-hidden backdrop-blur">
-          <button
-            onClick={() => setInstructionsOpen(!instructionsOpen)}
-            className="w-full p-4 flex items-center justify-between text-white hover:bg-white/5 transition-colors"
-          >
-            <span className="font-semibold">
-              <span className="text-emerald-400">How to Use</span>{" "}
-              <span className="text-white">This Shopping List</span>
-            </span>
-            {instructionsOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-          </button>
-          {instructionsOpen && (
-            <div className="px-4 pb-4 text-white/90 text-sm space-y-3">
-              <div>
-                <span className="font-semibold text-emerald-400">1. Your List</span> - Items from your meal plans automatically appear here, grouped by store aisle for easy shopping.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">2. Add Items</span> - Type in the "Quick add" box to manually add anything you need.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">3. Check It Off</span> - When you buy an item in the store, check the box. It gets crossed out so you know it's done.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">4. Purchased Items</span> - Checked items move to a "Purchased Today" section at the bottom so you can still see what you bought.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">5. Copy Your List</span> - Hit "Copy List" to get a clean text version you can paste into notes, text to someone, or print.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">6. Clear It Out</span> - "Clear Purchased" removes checked items. "Clear All" empties the whole list to start fresh.
-              </div>
-              <div>
-                <span className="font-semibold text-emerald-400">7. Smart Options</span> - Toggle "Group by aisle" to organize by store sections, or "Scope to this week" to only see items for this week's meals.
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* Actions */}
         {(counts.checked > 0 || counts.total > 0) && (
