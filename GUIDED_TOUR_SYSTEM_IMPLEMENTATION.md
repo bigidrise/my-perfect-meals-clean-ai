@@ -100,6 +100,20 @@ User saves weight → Auto-route to /planner
 4. **TourContext** - Centralized state management
 5. **TourHighlight** - Reusable visual wrapper
 
+- **File:** `client/src/components/guided/MealProgressCoach.tsx`
+- **Utility:** `client/src/lib/mealProgress.ts`
+- **Flow:**
+  1. Tracks meal completion for today (localStorage, auto-resets daily)
+  2. Highlights next incomplete meal's "Create AI Meal" button
+  3. Listens for `meal:saved` events to advance progression
+  4. Works across all meal boards (Weekly, Diabetic, GLP-1)
+  5. Only runs when Coach Mode is enabled
+- **Integration:** Added to `WeeklyMealBoard.tsx`
+- **Requirements:** Meal sections need:
+  - `data-meal-id="breakfast|lunch|dinner|snack1|snack2"` on section container
+  - `data-role="create-ai-meal"` on Create AI Meal button
+  - Dispatch `meal:saved` event with mealId when meal is completed
+
 ---
 
 ## 🚧 REMAINING WORK
@@ -116,6 +130,23 @@ User saves weight → Auto-route to /planner
 - **Integration:** Added to `Planner.tsx`
 
 ### 8. **Meal Builder Guided Tour** ✅ COMPLETE
+- **File:** `client/src/components/guided/MealBuilderGuidedTour.tsx`
+- **Flow:**
+  1. Flashing "Create AI Meal" button on first meal card
+  2. When picker opens: Shows flashing "?" help icon
+  3. On click: Overlay explains "Protein required, carbs/fats optional"
+  4. Sequential highlights: Protein → Carbs → Fats → Done
+  5. Auto-advances after 8s per step
+  6. Returns to board after Done
+- **Integration:** Added to `WeeklyMealBoard.tsx`
+- **Requirements:** Picker needs these IDs:
+  - `id="meal-picker-drawer"` with `className="open"` when visible
+  - `id="picker-protein-section"` on protein picker section
+  - `id="picker-carb-section"` on carb picker section
+  - `id="picker-fat-section"` on fat picker section
+  - `id="picker-done-btn"` on Done button
+
+### 9. **Meal Progress Coach** ✅ COMPLETE
 - **File:** `client/src/components/guided/MealBuilderGuidedTour.tsx`
 - **Flow:**
   1. Flashing "Create AI Meal" button on first meal card
@@ -233,6 +264,8 @@ useEffect(() => {
 - `client/src/components/guided/BiometricsGuidedTour.tsx`
 - `client/src/components/guided/PlannerGuidedTour.tsx`
 - `client/src/components/guided/MealBuilderGuidedTour.tsx`
+- `client/src/components/guided/MealProgressCoach.tsx`
+- `client/src/lib/mealProgress.ts`
 - `GUIDED_TOUR_SYSTEM_IMPLEMENTATION.md` (this file)
 
 ### Modified:

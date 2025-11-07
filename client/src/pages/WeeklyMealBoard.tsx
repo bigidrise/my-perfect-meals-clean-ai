@@ -36,6 +36,7 @@ import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
+import MealProgressCoach from "@/components/guided/MealProgressCoach";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -416,6 +417,17 @@ export default function WeeklyMealBoard() {
 
     // Format slot name for display (capitalize first letter)
     const slotLabel = aiMealSlot.charAt(0).toUpperCase() + aiMealSlot.slice(1);
+
+    // Dispatch meal:saved event for coach progression
+    const mealIdMap: Record<string, string> = {
+      breakfast: "breakfast",
+      lunch: "lunch",
+      dinner: "dinner",
+      snacks: "snack1"
+    };
+    window.dispatchEvent(
+      new CustomEvent("meal:saved", { detail: { mealId: mealIdMap[aiMealSlot] || "snack1" } })
+    );
 
     toast({
       title: "AI Meal Created!",
@@ -818,6 +830,7 @@ export default function WeeklyMealBoard() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
+      <MealProgressCoach />
       <Button
         variant="ghost"
         size="sm"
@@ -951,7 +964,7 @@ export default function WeeklyMealBoard() {
           (() => {
             const dayLists = getDayLists(board, activeDayISO);
             return lists.map(([key, label]) => (
-              <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+              <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
                   <div className="flex gap-2">
@@ -959,6 +972,7 @@ export default function WeeklyMealBoard() {
                     <Button
                       size="sm"
                       variant="ghost"
+                      data-role="create-ai-meal"
                       className="text-white/80 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-purple-600/20 border border-pink-400/30 text-xs font-medium flex items-center gap-1"
                       onClick={() => {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
@@ -1051,7 +1065,7 @@ export default function WeeklyMealBoard() {
         ) : (
           // WEEK MODE: Show traditional week view (legacy lists)
           lists.map(([key, label]) => (
-          <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+          <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
@@ -1059,6 +1073,7 @@ export default function WeeklyMealBoard() {
                 <Button
                   size="sm"
                   variant="ghost"
+                  data-role="create-ai-meal"
                   className="text-white/80 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-purple-600/20 border border-pink-400/30 text-xs font-medium flex items-center gap-1"
                   onClick={() => {
                     setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
