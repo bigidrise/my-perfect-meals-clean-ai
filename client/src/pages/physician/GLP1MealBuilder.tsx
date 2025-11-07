@@ -881,7 +881,6 @@ export default function GLP1MealBuilder() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
-      <DailyMealProgressBar />
       <Button 
         variant="ghost" 
         size="sm" 
@@ -922,15 +921,6 @@ export default function GLP1MealBuilder() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">GLP-1 Meal Board</h1>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setShowInfoModal(true)}
-                  className="h-12 w-12 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full flash-border"
-                  aria-label="How to use"
-                >
-                  <Info className="h-7 w-7" />
-                </Button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}
