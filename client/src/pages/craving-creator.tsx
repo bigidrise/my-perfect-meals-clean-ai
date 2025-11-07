@@ -406,6 +406,15 @@ export default function CravingCreator() {
         transition={{ duration: 0.6 }}
         className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4"
       >
+        {/* Back to Hub button */}
+        <button
+          onClick={() => setLocation("/craving-creator-landing")}
+          className="fixed top-4 left-4 z-50 inline-flex items-center justify-center p-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg text-white hover:bg-black/60 transition-all"
+          data-testid="button-back-to-hub"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+
       {/* Premium Feature Banner */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl px-3 sm:px-4 py-2 text-white shadow-2xl">
         <div className="flex items-center gap-2">
