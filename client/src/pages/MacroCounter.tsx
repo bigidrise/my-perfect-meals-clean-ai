@@ -282,6 +282,7 @@ export default function MacroCounter() {
     useState<keyof typeof ACTIVITY_FACTORS>(savedSettings?.activity ?? "light");
   const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg ?? 1.8);
   const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct ?? 0.3);
+  const [sugarCapMode, setSugarCapMode] = useState<"AHA" | "DGA">(savedSettings?.sugarCapMode ?? "AHA");
 
   // Nutrition Profile state
   const [profile, setProfile] = useState<NutritionProfile>(() => loadProfile());
@@ -332,14 +333,15 @@ export default function MacroCounter() {
         weightKg,
         activity,
         proteinPerKg,
-        fatPct
+        fatPct,
+        sugarCapMode
       };
       localStorage.setItem('macro_calculator_settings', JSON.stringify(settings));
       console.log('💾 Saved macro settings:', settings);
     } catch (error) {
       console.error('Failed to save macro settings:', error);
     }
-  }, [goal, bodyType, units, sex, age, heightFt, heightIn, weightLbs, heightCm, weightKg, activity, proteinPerKg, fatPct]);
+  }, [goal, bodyType, units, sex, age, heightFt, heightIn, weightLbs, heightCm, weightKg, activity, proteinPerKg, fatPct, sugarCapMode]);
 
   const kg = units === "imperial" ? kgFromLbs(weightLbs) : weightKg;
   const cm =
@@ -448,162 +450,207 @@ export default function MacroCounter() {
         </div>
 
         {/* Inputs */}
-        <Card className="bg-zinc-900/80 border border-white/30 text-white">
-          <CardContent className="p-5 space-y-4">
+        <Card className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+          <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
               <Ruler className="h-5 w-5 mr-2" /> Your Details
             </h3>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-3">
-                <div>
-                  <div className="text-xs font-semibold">Units</div>
-                  <RadioGroup
-                    value={units}
-                    onValueChange={(v: Units) => setUnits(v)}
-                    className="grid grid-cols-2 gap-2"
-                  >
-                    {["imperial", "metric"].map((u) => (
-                      <Label
-                        key={u}
-                        htmlFor={u}
-                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer ${units === u ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
-                      >
-                        <RadioGroupItem id={u} value={u} className="sr-only" />
-                        {u === "imperial" ? "US" : "Metric"}
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                </div>
+                <div className="text-xs text-white font-semibold">Units</div>
+                <RadioGroup value={units} onValueChange={(v: Units) => setUnits(v)} className="grid grid-cols-2 gap-2">
+                  {(["imperial", "metric"] as const).map((u) => (
+                    <Label
+                      key={u}
+                      htmlFor={`u-${u}`}
+                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                        units === u ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                      }`}
+                    >
+                      <RadioGroupItem id={`u-${u}`} value={u} className="sr-only" />
+                      {u === "imperial" ? "US / Imperial" : "Metric"}
+                    </Label>
+                  ))}
+                </RadioGroup>
 
-                <div>
-                  <div className="text-xs font-semibold">Sex</div>
-                  <RadioGroup
-                    value={sex}
-                    onValueChange={(v: Sex) => setSex(v)}
-                    className="grid grid-cols-2 gap-2"
-                  >
-                    {["female", "male"].map((s) => (
-                      <Label
-                        key={s}
-                        htmlFor={s}
-                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer ${sex === s ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
-                      >
-                        <RadioGroupItem id={s} value={s} className="sr-only" />
-                        {s}
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                </div>
+                <div className="text-xs text-white font-semibold">Sex</div>
+                <RadioGroup value={sex} onValueChange={(v: Sex) => setSex(v)} className="grid grid-cols-2 gap-2">
+                  {(["female", "male"] as const).map((s) => (
+                    <Label
+                      key={s}
+                      htmlFor={`sex-${s}`}
+                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                        sex === s ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                      }`}
+                    >
+                      <RadioGroupItem id={`sex-${s}`} value={s} className="sr-only" />
+                      {s}
+                    </Label>
+                  ))}
+                </RadioGroup>
 
                 <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <div className="text-xs font-semibold">Age</div>
+                  <div className="col-span-3">
+                    <div className="text-xs text-white font-semibold">Age</div>
                     <Input
                       type="number"
-                      className="bg-black/60 border-white/50 text-white"
-                      value={age}
-                      onChange={(e) => setAge(toNum(e.target.value))}
+                      className="bg-black/60 border-white/50 text-white placeholder-white"
+                      value={age || ""}
+                      onChange={(e) => setAge(e.target.value === "" ? 0 : toNum(e.target.value))}
                     />
                   </div>
+
                   {units === "imperial" ? (
                     <>
                       <div>
-                        <div className="text-xs font-semibold">Height (ft)</div>
+                        <div className="text-xs text-white font-semibold">Height (ft)</div>
                         <Input
                           type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={heightFt}
-                          onChange={(e) => setHeightFt(toNum(e.target.value))}
+                          className="bg-black/60 border-white/50 text-white placeholder-white"
+                          value={heightFt || ""}
+                          onChange={(e) => setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold">Height (in)</div>
+                        <div className="text-xs text-white font-semibold">Height (in)</div>
                         <Input
                           type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={heightIn}
-                          onChange={(e) => setHeightIn(toNum(e.target.value))}
+                          className="bg-black/60 border-white/50 text-white placeholder-white"
+                          value={heightIn || ""}
+                          onChange={(e) => setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value))}
+                        />
+                      </div>
+                      <div>
+                        <div className="text-xs text-white font-semibold">Weight (lbs)</div>
+                        <Input
+                          type="number"
+                          className="bg-black/60 border-white/50 text-white placeholder-white"
+                          value={weightLbs || ""}
+                          onChange={(e) => setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="col-span-2">
-                        <div className="text-xs font-semibold">Height (cm)</div>
+                        <div className="text-xs text-white font-semibold">Height (cm)</div>
                         <Input
                           type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={heightCm}
-                          onChange={(e) => setHeightCm(toNum(e.target.value))}
+                          className="bg-black/60 border-white/50 text-white placeholder-white"
+                          value={heightCm || ""}
+                          onChange={(e) => setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold">Weight (kg)</div>
+                        <div className="text-xs text-white font-semibold">Weight (kg)</div>
                         <Input
                           type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={weightKg}
-                          onChange={(e) => setWeightKg(toNum(e.target.value))}
+                          className="bg-black/60 border-white/50 text-white placeholder-white"
+                          value={weightKg || ""}
+                          onChange={(e) => setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value))}
                         />
                       </div>
                     </>
                   )}
+                  <div className="col-span-3">
+                    <ReadOnlyNote>
+                      <strong>Finish Your Macro Setup First:</strong> Changing your weight automatically recalculates your targets. Complete all settings below, then click <strong>Set Macro Targets</strong>. After that, you can sync your weight to Biometrics.
+                    </ReadOnlyNote>
+                  </div>
+                  <div className="col-span-3 mt-3">
+                    <Button
+                      onClick={() => {
+                        const weight = units === "imperial" ? weightLbs : weightKg;
+                        if (!weight || weight <= 0) {
+                          toast({ title: "Enter weight first", description: "Please enter a valid weight before syncing.", variant: "destructive" });
+                          return;
+                        }
+                        localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
+                        toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
+                      }}
+                      className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400"
+                      data-testid="button-sync-weight"
+                    >
+                      <Scale className="h-4 w-4 mr-2" />
+                      Sync Weight (After Setting Targets)
+                    </Button>
+                  </div>
                 </div>
-
-                <ReadOnlyNote>
-                  <strong>Finish setup first:</strong> Changing your weight
-                  recalculates your targets. Complete all settings, then click{" "}
-                  <strong>Set Macro Targets</strong>.
-                </ReadOnlyNote>
               </div>
 
               <div className="space-y-3">
-                <div>
-                  <div className="text-xs font-semibold">Activity</div>
-                  <RadioGroup
-                    value={activity}
-                    onValueChange={(v: keyof typeof ACTIVITY_FACTORS) =>
-                      setActivity(v)
-                    }
-                    className="grid grid-cols-2 md:grid-cols-3 gap-2"
-                  >
-                    {Object.keys(ACTIVITY_FACTORS).map((k) => (
-                      <Label
-                        key={k}
-                        htmlFor={k}
-                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer ${activity === k ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
-                      >
-                        <RadioGroupItem id={k} value={k} className="sr-only" />
-                        {k}
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                </div>
+                <div className="text-xs text-white font-semibold">Activity</div>
+                <RadioGroup
+                  value={activity}
+                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => setActivity(v)}
+                  className="grid grid-cols-2 md:grid-cols-3 gap-2"
+                >
+                  {(
+                    [
+                      ["sedentary", "Sedentary"],
+                      ["light", "Light"],
+                      ["moderate", "Moderate"],
+                      ["very", "Very Active"],
+                      ["extra", "Extra"],
+                    ] as const
+                  ).map(([k, label]) => (
+                    <Label
+                      key={k}
+                      htmlFor={`act-${k}`}
+                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                        activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                      }`}
+                    >
+                      <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
+                      {label}
+                    </Label>
+                  ))}
+                </RadioGroup>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 pt-2">
                   <div>
-                    <div className="text-xs font-semibold">Protein (g/kg)</div>
+                    <div className="text-xs text-white font-semibold">Protein (g/kg)</div>
                     <Input
                       type="number"
                       step="0.1"
-                      className="bg-black/60 border-white/50 text-white"
+                      className="bg-black/60 border-white/50 text-white placeholder-white"
                       value={proteinPerKg}
-                      onChange={(e) =>
-                        setProteinPerKg(parseFloat(e.target.value || "0"))
-                      }
+                      onChange={(e) => setProteinPerKg(parseFloat(e.target.value || "0"))}
                     />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold">
-                      Fat share (% kcal)
-                    </div>
+                    <div className="text-xs text-white font-semibold">Fat share (% kcal)</div>
                     <Input
                       type="number"
                       step="1"
-                      className="bg-black/60 border-white/50 text-white"
+                      className="bg-black/60 border-white/50 text-white placeholder-white"
                       value={Math.round(fatPct * 100)}
-                      onChange={(e) => setFatPct(toNum(e.target.value) / 100)}
+                      onChange={(e) => {
+                        const pct = Math.max(10, Math.min(60, toNum(e.target.value)));
+                        setFatPct(pct / 100);
+                      }}
                     />
+                  </div>
+                  <div>
+                    <div className="text-xs text-white font-semibold">Sugar cap</div>
+                    <RadioGroup
+                      value={sugarCapMode}
+                      onValueChange={(v: "AHA" | "DGA") => setSugarCapMode(v)}
+                      className="grid grid-cols-2 gap-2"
+                    >
+                      {(["AHA", "DGA"] as const).map((k) => (
+                        <Label
+                          key={k}
+                          htmlFor={`sc-${k}`}
+                          className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                            sugarCapMode === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                          }`}
+                        >
+                          <RadioGroupItem id={`sc-${k}`} value={k} className="sr-only" />
+                          {k}
+                        </Label>
+                      ))}
+                    </RadioGroup>
                   </div>
                 </div>
               </div>
