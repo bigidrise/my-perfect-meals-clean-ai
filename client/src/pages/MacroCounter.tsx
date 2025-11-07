@@ -27,9 +27,11 @@ type Units = "imperial" | "metric";
 type BodyType = "ecto" | "meso" | "endo";
 
 const toNum = (v: string | number) => {
-  const n = typeof v === "string" ? v.trim() : v;
-  const out = Number(n || 0);
-  return Number.isFinite(out) ? out : 0;
+  if (typeof v === "number") return v;
+  const trimmed = v.trim();
+  if (trimmed === "" || trimmed === "0") return 0;
+  const out = Number(trimmed);
+  return Number.isFinite(out) && out >= 0 ? out : 0;
 };
 
 const kgFromLbs = (lbs: number) => lbs * 0.45359237;
@@ -500,8 +502,10 @@ export default function MacroCounter() {
                     <div className="text-xs font-semibold">Age</div>
                     <Input
                       type="number"
+                      min="1"
+                      max="120"
                       className="bg-black/60 border-white/50 text-white"
-                      value={age}
+                      value={age || ""}
                       onChange={(e) => setAge(toNum(e.target.value))}
                     />
                   </div>
@@ -511,8 +515,10 @@ export default function MacroCounter() {
                         <div className="text-xs font-semibold">Height (ft)</div>
                         <Input
                           type="number"
+                          min="0"
+                          max="8"
                           className="bg-black/60 border-white/50 text-white"
-                          value={heightFt}
+                          value={heightFt || ""}
                           onChange={(e) => setHeightFt(toNum(e.target.value))}
                         />
                       </div>
@@ -520,8 +526,10 @@ export default function MacroCounter() {
                         <div className="text-xs font-semibold">Height (in)</div>
                         <Input
                           type="number"
+                          min="0"
+                          max="11"
                           className="bg-black/60 border-white/50 text-white"
-                          value={heightIn}
+                          value={heightIn || ""}
                           onChange={(e) => setHeightIn(toNum(e.target.value))}
                         />
                       </div>
@@ -531,8 +539,10 @@ export default function MacroCounter() {
                       <div className="text-xs font-semibold">Height (cm)</div>
                       <Input
                         type="number"
+                        min="0"
+                        max="300"
                         className="bg-black/60 border-white/50 text-white"
-                        value={heightCm}
+                        value={heightCm || ""}
                         onChange={(e) => setHeightCm(toNum(e.target.value))}
                       />
                     </div>
@@ -546,8 +556,10 @@ export default function MacroCounter() {
                   </div>
                   <Input
                     type="number"
+                    min="0"
+                    step="0.1"
                     className="bg-black/60 border-white/50 text-white"
-                    value={units === "imperial" ? weightLbs : weightKg}
+                    value={(units === "imperial" ? weightLbs : weightKg) || ""}
                     onChange={(e) => {
                       const val = toNum(e.target.value);
                       if (units === "imperial") {
