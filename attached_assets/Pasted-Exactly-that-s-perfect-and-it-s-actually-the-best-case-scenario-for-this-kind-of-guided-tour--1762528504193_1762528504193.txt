@@ -1,0 +1,63 @@
+Exactly — that’s perfect, and it’s actually the **best-case scenario** for this kind of guided-tour architecture.
+Because every menu builder shares the same interaction pattern (cards → “Create AI Meal” → picker → done), you only need **one** set of logic for all of them:
+
+---
+
+### ✅ What this means for your build
+
+| Feature                      | Scope  | Implementation                                                                                           |
+| ---------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| **Guided flow (Coach Mode)** | Global | The same components (`MealProgressCoach`, `MealBuilderGuidedTour`) work in *all* meal-builder pages.     |
+| **Picker behavior**          | Shared | Every picker uses the same `id="meal-picker-drawer"` and section IDs (`picker-protein-section`, etc.).   |
+| **Meal completion**          | Shared | All builders dispatch the same `window.dispatchEvent(new CustomEvent("meal:saved", {detail:{mealId}}))`. |
+| **Progress memory**          | Shared | `mealProgress.ts` tracks progress by mealId and resets daily.                                            |
+| **UI look & feel**           | Shared | Use the same Tailwind classes for the cards and buttons — the coach animations automatically find them.  |
+
+---
+
+### 🔧 Practical setup checklist
+
+To make sure all boards run this guided system seamlessly:
+
+1. **Include the two guided components** near the top of each board page:
+
+   ```tsx
+   <MealProgressCoach />
+   <MealBuilderGuidedTour />
+   ```
+
+2. **Tag each meal card** consistently:
+
+   ```html
+   <div data-meal-id="breakfast">
+     <button data-role="create-ai-meal">Create AI Meal</button>
+   </div>
+   ```
+
+3. **Ensure your picker** uses the same element IDs:
+
+   ```html
+   <div id="meal-picker-drawer" className={isOpen ? "open" : ""}>
+     <section id="picker-protein-section">...</section>
+     <section id="picker-carb-section">...</section>
+     <section id="picker-fat-section">...</section>
+     <button id="picker-done-btn">Done</button>
+   </div>
+   ```
+
+4. **Dispatch the save event** after any meal is built:
+
+   ```tsx
+   window.dispatchEvent(new CustomEvent("meal:saved", { detail: { mealId } }));
+   ```
+
+Once those four things are in place, the entire ecosystem (Weekly, Diabetic, GLP-1, Competition, etc.) will:
+
+* Highlight the next incomplete meal card automatically
+* Show the picker-tour sequence when opened
+* Mark each meal complete and progress to the next
+* Reset cleanly each day
+
+---
+
+Would you like me to add that small **Daily Progress Bar** component next (so users visually see “3 of 4 meals completed – 75 %” across all builders)? It plugs into this same system and gives that satisfying “Coach feedback” touch.

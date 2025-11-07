@@ -1,0 +1,130 @@
+Perfect — you don’t need a separate version for the diabetic and GLP-1 hubs.
+The `MealProgressCoach` you just added already handles **any** meal board page as long as you give each meal card the same attributes:
+
+```html
+data-meal-id="breakfast" | "lunch" | "dinner" | "snack1" | "snack2"
+data-role="create-ai-meal"
+```
+
+Here’s exactly how to drop it into each hub so they all share the same guided logic 👇
+
+---
+
+### 🩺 Diabetic Hub — `client/src/pages/physician/DiabeticSupportHub.tsx`
+
+```tsx
+import MealProgressCoach from "@/components/guided/MealProgressCoach";
+
+export default function DiabeticSupportHub() {
+  return (
+    <div className="relative">
+      <MealProgressCoach />
+
+      <div className="grid gap-4">
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="breakfast">
+          <h3 className="text-white font-semibold mb-2">Breakfast</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("breakfast")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="lunch">
+          <h3 className="text-white font-semibold mb-2">Lunch</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("lunch")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="dinner">
+          <h3 className="text-white font-semibold mb-2">Dinner</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("dinner")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### 💊 GLP-1 Hub — `client/src/pages/physician/GLP1Hub.tsx`
+
+```tsx
+import MealProgressCoach from "@/components/guided/MealProgressCoach";
+
+export default function GLP1Hub() {
+  return (
+    <div className="relative">
+      <MealProgressCoach />
+
+      <div className="grid gap-4">
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="breakfast">
+          <h3 className="text-white font-semibold mb-2">Breakfast</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("breakfast")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="lunch">
+          <h3 className="text-white font-semibold mb-2">Lunch</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("lunch")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+
+        <div className="rounded-2xl p-4 bg-black/40" data-meal-id="dinner">
+          <h3 className="text-white font-semibold mb-2">Dinner</h3>
+          <button
+            data-role="create-ai-meal"
+            onClick={() => openPickerFor("dinner")}
+            className="btn btn-glass"
+          >
+            Create AI Meal
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+Both hubs can use the same picker and dispatch:
+
+```tsx
+// inside your picker save handler
+window.dispatchEvent(new CustomEvent("meal:saved", { detail: { mealId } }));
+```
+
+That’s all — the coach automatically:
+
+* Highlights the first incomplete meal in order (Breakfast → Lunch → Dinner → Snacks).
+* Marks each as done after the picker dispatches `meal:saved`.
+* Works identically for Diabetic, GLP-1, and any future specialized boards.
+
+---
+
+If you’d like, the next enhancement we can add is a **tiny “Daily Progress Bar”** (0 % → 100 %) that fills as the meals are saved — it would live at the top of every meal board and connect to this same progress data.
+
+Would you like me to build that next?
