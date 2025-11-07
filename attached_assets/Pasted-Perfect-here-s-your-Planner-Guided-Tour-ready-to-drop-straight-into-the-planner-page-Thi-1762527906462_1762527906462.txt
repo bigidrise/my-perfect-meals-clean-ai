@@ -1,0 +1,186 @@
+Perfect — here’s your **Planner Guided Tour**, ready to drop straight into the `/planner` page.
+This one picks up automatically after the Biometrics Guided Tour redirects there.
+
+---
+
+# 1) Create: `client/src/components/guided/PlannerGuidedTour.tsx`
+
+```tsx
+import { useState } from "react";
+
+/**
+ * Planner Guided Tour
+ *
+ * Displays:
+ *  - Flashing ? icon at the top (if coachMode = guided)
+ *  - When clicked, opens an overlay explaining each planner/hub
+ *  - All hub buttons pulse together
+ */
+
+export default function PlannerGuidedTour() {
+  const coachMode = localStorage.getItem("coachMode") === "guided";
+  const [open, setOpen] = useState(false);
+
+  if (!coachMode) return null;
+
+  return (
+    <>
+      {/* Flashing question mark icon */}
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed top-4 right-4 z-[60] bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center border border-white/20 backdrop-blur-sm flash-white"
+        title="Open guided overview"
+      >
+        ?
+      </button>
+
+      {open && <PlannerOverlay onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
+function PlannerOverlay({ onClose }: { onClose: () => void }) {
+  const hubs = [
+    { name: "Weekly Meal Board", desc: "Everyday balanced meal planning." },
+    { name: "Diabetic Hub", desc: "Plans that stabilize blood sugar." },
+    { name: "GLP-1 Hub", desc: "Small, high-nutrient meals for GLP-1 users." },
+    { name: "Competition Hub", desc: "Advanced meal building for athletes." },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center">
+      <div className="bg-black/50 border border-white/15 text-white rounded-3xl shadow-xl p-6 max-w-lg w-[92vw] relative">
+        <h2 className="text-2xl font-bold mb-2">Choose Your Planner</h2>
+        <p className="text-white/80 text-sm mb-6">
+          This is your meal-planning center. Pick the type of plan that fits you.
+        </p>
+
+        <div className="space-y-4">
+          {hubs.map((h) => (
+            <button
+              key={h.name}
+              onClick={() => {
+                onClose();
+                // Simulate click of the real hub button
+                const el = document.querySelector(
+                  `[data-hub="${h.name.toLowerCase()}"]`
+                ) as HTMLElement | null;
+                el?.click();
+              }}
+              className="w-full p-4 text-left rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 transition-all flash-white"
+            >
+              <p className="font-semibold">{h.name}</p>
+              <p className="text-white/70 text-sm">{h.desc}</p>
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-white/60 hover:text-white text-xl"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+# 2) Add white flash animation
+
+Add to your global CSS file (`globals.css` or `index.css`):
+
+```css
+@keyframes pulseWhite {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  50% { box-shadow: 0 0 18px 8px rgba(255,255,255,0.3); }
+}
+.flash-white {
+  animation: pulseWhite 1.5s infinite;
+  border-radius: 1rem;
+}
+```
+
+---
+
+# 3) Integrate on Planner page
+
+Open:
+`client/src/pages/Planner.tsx`
+
+At the top:
+
+```tsx
+import PlannerGuidedTour from "@/components/guided/PlannerGuidedTour";
+```
+
+Then near the start of your component’s JSX:
+
+```tsx
+export default function Planner() {
+  return (
+    <div className="relative">
+      <PlannerGuidedTour />
+
+      {/* existing planner content */}
+      <div className="mt-4 space-y-6">
+        <button
+          data-hub="weekly meal board"
+          onClick={() => setLocation("/weekly-meal-board")}
+          className="btn btn-glass"
+        >
+          Weekly Meal Board
+        </button>
+        <button
+          data-hub="diabetic hub"
+          onClick={() => setLocation("/physician/DiabeticSupportHub")}
+          className="btn btn-glass"
+        >
+          Diabetic Hub
+        </button>
+        <button
+          data-hub="glp-1 hub"
+          onClick={() => setLocation("/physician/GLP1Hub")}
+          className="btn btn-glass"
+        >
+          GLP-1 Hub
+        </button>
+        <button
+          data-hub="competition hub"
+          onClick={() => setLocation("/pro/AthleteBoard")}
+          className="btn btn-glass"
+        >
+          Competition Hub
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+Each of these buttons now pulses when the overlay is open (user clicks “?” → explanation shows → all buttons flash).
+
+---
+
+✅ **Result**
+
+1. When Biometrics redirects to `/planner`, Coach Mode is still on.
+2. A **flashing question mark** appears top-right.
+3. User clicks it → overlay slides down, explains each hub, all hub buttons flash.
+4. User chooses one → overlay closes, routes to that hub automatically.
+5. Next page (Meal Builder) will begin its own guided flow.
+
+---
+
+If you confirm this matches what you want visually and behaviorally,
+the next file I’ll build is **MealBuilderGuidedTour.tsx**, which will handle:
+
+* Flashing **“Create AI Meal”** button
+* Opening picker
+* Flashing **Protein → Carbs → Fats → Done**
+* Returning to board and advancing to the next meal slot.
+
+Ready for that step?
