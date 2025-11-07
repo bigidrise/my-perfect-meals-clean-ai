@@ -45,7 +45,6 @@ export default function AppRouter({ children }: AppRouterProps) {
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-    const hasSeenWelcome = localStorage.getItem("mpm.hasSeenWelcome") === "true";
 
     // If at root, determine where to send them
     if (location === "/") {
