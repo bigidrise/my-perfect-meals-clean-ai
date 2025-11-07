@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
-import TourHighlight from "@/components/TourHighlight";
-import { useTour } from "@/contexts/TourContext";
 interface FeatureCard {
   title: string;
   description: string;
@@ -34,25 +32,15 @@ const todayMacros = {
 
 export default function DashboardNew() {
   const [, setLocation] = useLocation();
-  const [showScanner, setShowScanner] = useState(false); // State to control scanner modal visibility
-  const { isActive, getCurrentStepTarget, getCurrentStepMessage, nextStep, startTour } = useTour();
-
+  const [showScanner, setShowScanner] = useState(false);
+  const [isGuidedMode, setIsGuidedMode] = useState(false);
 
   useEffect(() => {
     document.title = "Home | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
 
-    // Initialize tour steps on mount if in coach mode
     const coachMode = localStorage.getItem("coachMode");
-    const tourCompleted = localStorage.getItem("tourCompleted");
-
-    if (coachMode === "guided" && !tourCompleted) {
-      startTour([
-        { id: "macro-calculator", target: "macro-calculator", message: "Start here: Set up your nutrition targets" },
-        { id: "biometrics", target: "biometrics", message: "Next: Track your progress", route: "/my-biometrics" },
-        { id: "meal-creator", target: "meal-creator", message: "Then: Create your first meal" }
-      ]);
-    }
+    setIsGuidedMode(coachMode === "guided");
   }, []);
 
   // Get user profile for greeting
@@ -92,10 +80,7 @@ export default function DashboardNew() {
     },
   ];
 
-  const handleCardClick = (route: string, tourTarget?: string) => {
-    if (isActive && tourTarget && getCurrentStepTarget() === tourTarget) {
-      nextStep();
-    }
+  const handleCardClick = (route: string) => {
     setLocation(route);
   };
 
@@ -224,6 +209,9 @@ export default function DashboardNew() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
+            const isMacroCalculator = feature.testId === "macro-calculator";
+            const shouldFlash = isGuidedMode && isMacroCalculator;
+
             return (
               <motion.div
                 key={feature.testId}
@@ -232,34 +220,27 @@ export default function DashboardNew() {
                 transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
                 className={feature.size === "large" ? "md:col-span-1" : "md:col-span-1"}
               >
-                <TourHighlight
-                  active={isActive && getCurrentStepTarget() === feature.testId}
-                  message={getCurrentStepMessage() || undefined}
-                  position="bottom"
-                  onComplete={nextStep}
+                <Card
+                  onClick={() => handleCardClick(feature.route)}
+                  className={`cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl group ${shouldFlash ? "flash-border" : ""}`}
+                  data-testid={feature.testId}
                 >
-                  <Card
-                    onClick={() => handleCardClick(feature.route, feature.testId)}
-                    className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl group"
-                    data-tour-target={feature.testId}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
-                          <Icon className="h-6 w-6 text-orange-500" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-white">
-                            {feature.title}
-                          </h3>
-                          <p className="text-sm text-white/70">
-                            {feature.description}
-                          </p>
-                        </div>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
+                        <Icon className="h-6 w-6 text-orange-500" />
                       </div>
-                    </CardContent>
-                  </Card>
-                </TourHighlight>
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">
+                          {feature.title}
+                        </h3>
+                        <p className="text-sm text-white/70">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             );
           })}
