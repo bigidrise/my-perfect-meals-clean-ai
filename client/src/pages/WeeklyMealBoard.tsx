@@ -135,15 +135,30 @@ export default function WeeklyMealBoard() {
 
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
 
   // Load/save tour progress from localStorage
   useEffect(() => {
+    const infoSeen = localStorage.getItem("weekly-meal-board-info-seen");
+    if (infoSeen === "true") {
+      setHasSeenInfo(true);
+    }
+    
     const saved = localStorage.getItem("weekly-meal-board-tour-step");
     if (saved && saved !== "complete") {
       setTourStep(saved as "breakfast" | "lunch" | "dinner" | "snacks" | "complete");
     }
   }, []);
+
+  // Handle info modal close - start the tour
+  const handleInfoModalClose = useCallback(() => {
+    setShowInfoModal(false);
+    if (!hasSeenInfo) {
+      setHasSeenInfo(true);
+      localStorage.setItem("weekly-meal-board-info-seen", "true");
+    }
+  }, [hasSeenInfo]);
 
   const advanceTourStep = useCallback(() => {
     const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
@@ -899,10 +914,12 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="ghost"
                   onClick={() => setShowInfoModal(true)}
-                  className="h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/10 rounded-full"
+                  className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                    !hasSeenInfo ? 'flash-border' : ''
+                  }`}
                   aria-label="How to use"
                 >
-                  <Info className="h-4 w-4" />
+                  <Info className="h-5 w-5" />
                 </Button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
@@ -990,7 +1007,7 @@ export default function WeeklyMealBoard() {
                       variant="ghost"
                       data-role="create-ai-meal"
                       className={`text-white/80 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-purple-600/20 border border-pink-400/30 text-xs font-medium flex items-center gap-1 ${
-                        tourStep === key ? 'flash-border' : ''
+                        hasSeenInfo && tourStep === key ? 'flash-border' : ''
                       }`}
                       onClick={() => {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
@@ -1450,7 +1467,13 @@ export default function WeeklyMealBoard() {
             })()}
 
       {/* Info Modal - How to Use */}
-      <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
+      <Dialog open={showInfoModal} onOpenChange={(open) => {
+        if (!open) {
+          handleInfoModalClose();
+        } else {
+          setShowInfoModal(true);
+        }
+      }}>
         <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white text-lg">How to Use Weekly Meal Board</DialogTitle>
