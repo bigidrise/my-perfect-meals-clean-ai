@@ -240,12 +240,14 @@ export default function DashboardNew() {
                 >
                   <Card
                     onClick={() => handleCardClick(feature.route, feature.testId)}
-                    className="bg-gradient-to-br from-neutral-800 to-black border-white/20 hover:border-white/40 transition-all cursor-pointer transform hover:scale-105 duration-300"
-                    data-tour-target={feature.testId} // Add data-tour-target for TourHighlight
+                    className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl group"
+                    data-tour-target={feature.testId}
                   >
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4">
-                        <Icon className="h-6 w-6 text-orange-400" />
+                        <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
+                          <Icon className="h-6 w-6 text-orange-500" />
+                        </div>
                         <div>
                           <h3 className="text-lg font-semibold text-white">
                             {feature.title}
