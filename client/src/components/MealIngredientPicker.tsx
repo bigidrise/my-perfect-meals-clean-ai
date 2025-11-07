@@ -335,7 +335,7 @@ export default function MealIngredientPicker({
                 activeCategory === category
                   ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
                   : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
-              } ${category === 'proteins' && !hasSeenInfo ? 'flash-border' : ''}`}
+              } ${!hasSeenInfo ? 'flash-border' : ''}`}
             >
               {getCategoryLabel(category)}
             </button>
