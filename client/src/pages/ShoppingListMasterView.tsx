@@ -244,48 +244,6 @@ export default function ShoppingListMasterView() {
           </div>
         </div>
 
-        {/* "Came from" Strip */}
-        <div className="rounded-2xl border border-white/20 bg-black/60 text-white px-4 py-3">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <span className="text-white/70 text-sm whitespace-nowrap">Came from:</span>
-              <Select value={fromSlug} onValueChange={(value) => {
-                setFromSlug(value);
-                if (value) {
-                  const source = getMacroSourceBySlug(value);
-                  if (source) {
-                    setLocation(source.route);
-                  }
-                }
-              }}>
-                <SelectTrigger className="bg-white/10 border-white/30 text-white hover:bg-white/20 flex-1">
-                  <SelectValue placeholder="Select a meal builder" />
-                </SelectTrigger>
-                <SelectContent>
-                  {MACRO_SOURCES.map(source => (
-                    <SelectItem key={source.slug} value={source.slug}>
-                      {source.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {fromSlug && (() => {
-                const source = getMacroSourceBySlug(fromSlug);
-                return source ? (
-                  <Button
-                    onClick={() => setLocation(source.route)}
-                    variant="outline"
-                    size="sm"
-                    className="bg-white/10 border-white/30 text-white hover:bg-white/20 whitespace-nowrap"
-                    data-testid="button-back-to-source"
-                  >
-                    <ArrowLeft className="h-3 w-3 mr-1" />
-                    Back
-                  </Button>
-                ) : null;
-              })()}
-            </div>
-        </div>
-
         {/* Add Other Items Section */}
         <AddOtherItems />
 
