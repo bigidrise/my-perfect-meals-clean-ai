@@ -168,8 +168,12 @@ export default function Welcome() {
     localStorage.setItem("mpm_current_user", JSON.stringify(testUser));
     localStorage.setItem("userId", testUser.id);
     localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("mpm.hasSeenWelcome", "true");
+    
+    // Clear coachMode to ensure WelcomeGate shows
+    localStorage.removeItem("coachMode");
+    
     // After test login, go to root which will show WelcomeGate
+    console.log("🧪 Tester logged in - redirecting to WelcomeGate");
     setLocation("/");
   };
 
