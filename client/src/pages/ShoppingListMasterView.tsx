@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { useLocation } from "wouter";
 import TrashButton from "@/components/ui/TrashButton";
 import { readList, setItems, toggleChecked, deleteItems, updateItem, clearAll, clearChecked, ShopItem, readOptions, writeOptions, setWeekScope } from "@/stores/shoppingListStore";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
@@ -164,11 +165,48 @@ export default function ShoppingListMasterView() {
         {/* Header */}
         <div className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-white text-2xl font-md flex items-center gap-2">
-                <ShoppingCart className="h-6 w-6" />
-                Master Shopping List
-              </h1>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-white text-2xl font-md flex items-center gap-2">
+                  <ShoppingCart className="h-6 w-6" />
+                  Master Shopping List
+                </h1>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button 
+                      className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-500/30 border border-blue-400/50 hover:bg-blue-500/40 transition-all duration-200 animate-pulse hover:animate-none"
+                      aria-label="How to use shopping list"
+                      data-testid="shopping-list-info-button"
+                    >
+                      <Info className="h-4 w-4 text-blue-300" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 bg-black/90 border-blue-400/30 text-white">
+                    <div className="space-y-3">
+                      <h3 className="font-semibold text-blue-300 flex items-center gap-2">
+                        <Info className="h-4 w-4" />
+                        How to Use Your Shopping List
+                      </h3>
+                      <div className="text-sm text-white/90 space-y-2">
+                        <p>
+                          You can add items from your meal plans and other grocery lists here. Use this list to go grocery shopping—either check items off as you shop in-store or use one of the grocery delivery services.
+                        </p>
+                        <p>
+                          Add your other groceries using the "Add Other Items" section so you have one complete list. Send your grocery list to a delivery service and have your groceries come right to your house.
+                        </p>
+                        <p>
+                          <strong>Tips:</strong>
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 text-white/80">
+                          <li>Delete items you already have at home</li>
+                          <li>Keep items you need to pick up on the list</li>
+                          <li>Check items off as you buy them—they'll move to the bottom</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className="text-white/70 text-sm mt-1">
                 {counts.total} items • {counts.checked} checked
               </div>
