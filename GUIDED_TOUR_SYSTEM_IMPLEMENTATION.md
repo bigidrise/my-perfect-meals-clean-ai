@@ -108,7 +108,11 @@ User saves weight → Auto-route to /planner
   3. Listens for `meal:saved` events to advance progression
   4. Works across all meal boards (Weekly, Diabetic, GLP-1)
   5. Only runs when Coach Mode is enabled
-- **Integration:** Added to `WeeklyMealBoard.tsx`
+- **Integration:** Added to all meal builder boards:
+  - `WeeklyMealBoard.tsx` ✅
+  - `DiabeticMenuBuilder.tsx` ✅
+  - `GLP1MealBuilder.tsx` ✅
+  - `AthleteBoard.tsx` ✅
 - **Requirements:** Meal sections need:
   - `data-meal-id="breakfast|lunch|dinner|snack1|snack2"` on section container
   - `data-role="create-ai-meal"` on Create AI Meal button
@@ -147,7 +151,8 @@ User saves weight → Auto-route to /planner
   - `id="picker-done-btn"` on Done button
 
 ### 9. **Meal Progress Coach** ✅ COMPLETE
-- **File:** `client/src/components/guided/MealBuilderGuidedTour.tsx`
+- **File:** `client/src/components/guided/MealProgressCoach.tsx`
+- **Utility:** `client/src/lib/mealProgress.ts`
 - **Flow:**
   1. Flashing "Create AI Meal" button on first meal card
   2. When picker opens: Shows flashing "?" help icon

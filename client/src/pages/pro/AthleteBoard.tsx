@@ -49,6 +49,8 @@ import { setMacroTargets } from "@/lib/dailyLimits";
 import { proStore } from "@/lib/proData";
 import { linkUserToClient } from "@/lib/macroResolver";
 import { saveLastAthleteClientId } from "@/lib/macroSourcesConfig";
+import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
+import MealProgressCoach from "@/components/guided/MealProgressCoach";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -89,7 +91,7 @@ function formatWeekLabel(weekStartISO: string): string {
 // Athlete Meal Slots - same schema as Weekly Meal Board, different labels
 const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
   ["breakfast","Meal 1"],
-  ["lunch","Meal 2"], 
+  ["lunch","Meal 2"],
   ["dinner","Meal 3"],
   ["snacks","Meal 4"]
 ];
@@ -811,11 +813,11 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       : board.lists;
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-6"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-6"
     >
       {/* Fixed Back Button - Top Left */}
       <Button
@@ -1029,9 +1031,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     </Button>
 
                     {/* Plus button for manual entry */}
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -1056,7 +1058,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   {dayLists[key as keyof typeof dayLists].map((meal: Meal, idx: number) => (
                     <MealCard
                       key={meal.id}
-                      date={activeDayISO} 
+                      date={activeDayISO}
                       slot={key}
                       meal={meal}
                       onUpdated={(m) => {
@@ -1071,7 +1073,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
                           const updatedDayLists = {
                             ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) => 
+                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) =>
                               existingMeal.id !== meal.id
                             )
                           };
@@ -1084,7 +1086,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                           // Update meal in day lists
                           const updatedDayLists = {
                             ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) => 
+                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) =>
                               i === idx ? m : existingMeal
                             )
                           };
@@ -1107,7 +1109,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         ) : (
           // WEEK MODE: Show traditional week view (legacy lists)
           lists.map(([key, label]) => (
-          <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+          <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
@@ -1126,9 +1128,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 </Button>
 
                 {/* Plus button for manual entry */}
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="text-white/80 hover:bg-white/10"
                   onClick={() => openManualModal(key)}
                 >
@@ -1153,7 +1155,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               {board.lists[key].map((meal: Meal, idx: number) => (
                 <MealCard
                   key={meal.id}
-                  date={"board"} 
+                  date={"board"}
                   slot={key}
                   meal={meal}
                   onUpdated={(m) => {

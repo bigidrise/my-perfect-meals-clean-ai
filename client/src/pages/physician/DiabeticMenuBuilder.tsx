@@ -34,6 +34,8 @@ import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
+import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
+import MealProgressCoach from "@/components/guided/MealProgressCoach";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -816,6 +818,8 @@ export default function DiabeticMenuBuilder() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
+      <MealProgressCoach />
+      <MealBuilderGuidedTour />
       <Button 
         variant="ghost" 
         size="sm" 
@@ -949,7 +953,7 @@ export default function DiabeticMenuBuilder() {
           (() => {
             const dayLists = getDayLists(board, activeDayISO);
             return lists.map(([key, label]) => (
-              <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+              <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
                   <div className="flex gap-2">
@@ -1049,7 +1053,7 @@ export default function DiabeticMenuBuilder() {
         ) : (
           // WEEK MODE: Show traditional week view (legacy lists)
           lists.map(([key, label]) => (
-          <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+          <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
