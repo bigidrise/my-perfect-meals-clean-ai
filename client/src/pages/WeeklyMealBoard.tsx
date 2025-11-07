@@ -1406,17 +1406,14 @@ export default function WeeklyMealBoard() {
         }
 
         // WEEK MODE: Use existing ShoppingAggregateBar component
-        return (
-          <ShoppingAggregateBar
-            ingredients={ingredients}
-            source="Weekly Meal Board"
-            sourceSlug="weekly-meal-board"
-            bottomPadding="pb-20"
-          />
+              return (
+                <ShoppingAggregateBar
+                  ingredients={ingredients}
+                  source="Weekly Meal Board"
+                  sourceSlug="weekly-meal-board"
+                />
+              );
+            })()}
+          </motion.div>
         );
-      })()}
-
-      <BottomNav />
-    </motion.div>
-  );
-}
+      }
