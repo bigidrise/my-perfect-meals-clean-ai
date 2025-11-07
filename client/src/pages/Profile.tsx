@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Target,
   CreditCard,
+  RotateCcw,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 import { useAuth } from "@/contexts/AuthContext";
@@ -168,6 +169,26 @@ export default function Profile() {
             })}
           </div>
         </div>
+
+        {/* Tutorial Reset */}
+        <Card className="mt-6 bg-black/90 backdrop-blur-lg border border-white/10">
+          <CardContent className="p-4">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-white hover:text-white hover:bg-purple-900/20"
+              onClick={() => {
+                // Clear coach mode to trigger WelcomeGate again
+                localStorage.removeItem("coachMode");
+                // Redirect to home which will show WelcomeGate
+                setLocation("/");
+              }}
+              data-testid="button-reset-tutorial"
+            >
+              <RotateCcw className="mr-2 h-5 w-5" />
+              Reset Tutorial & Coach Mode
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Sign Out */}
         <Card className="mt-6 bg-black/90 backdrop-blur-lg border border-white/10">
