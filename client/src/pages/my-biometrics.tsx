@@ -544,24 +544,58 @@ export default function MyBiometrics() {
     }
   }, [pendingWeightSync]);
 
-  const saveWeight = () => {
+  const saveWeight = async () => {
     const w = weightLbs.trim() ? Number(weightLbs) : undefined;
     const wst = waistIn.trim() ? Number(waistIn) : undefined;
     if (!w) return;
-    const row: WeightRow = { id: crypto.randomUUID(), date: today, weight: w, waist: wst };
-    setWeightHistory(prev => [row, ...prev].slice(0, 365));
-    setWeightLbs(""); setWaistIn("");
+    
+    try {
+      // Save to database
+      const response = await fetch("/api/biometrics/weight", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          value: w,
+          unit: "lb",
+          measuredAt: new Date().toISOString()
+        })
+      });
 
-    // Clear pending sync after saving
-    if (pendingWeightSync) {
-      localStorage.removeItem("pending-weight-sync");
-      setPendingWeightSync(null);
-      toast({ title: "✓ Weight saved", description: "Weight from Macro Calculator has been logged to your history." });
-      // Redirect to Planner page after saving weight from macro calculator
-      setLocation("/planner");
+      if (!response.ok) {
+        throw new Error("Failed to save weight");
+      }
+
+      const savedData = await response.json();
+      
+      // Update local state with saved data
+      const row: WeightRow = { 
+        id: savedData.id || crypto.randomUUID(), 
+        date: today, 
+        weight: w, 
+        waist: wst 
+      };
+      setWeightHistory(prev => [row, ...prev].slice(0, 365));
+      setWeightLbs(""); 
+      setWaistIn("");
+
+      // Clear pending sync after saving
+      if (pendingWeightSync) {
+        localStorage.removeItem("pending-weight-sync");
+        setPendingWeightSync(null);
+        toast({ title: "✓ Weight saved", description: "Weight from Macro Calculator has been logged to your history." });
+        // Redirect to Planner page after saving weight from macro calculator
+        setLocation("/planner");
+      } else {
+        toast({ title: "✓ Weight saved", description: "Your weight has been saved successfully." });
+      }
+    } catch (error) {
+      console.error("Error saving weight:", error);
+      toast({ 
+        title: "Error saving weight", 
+        description: "Failed to save weight. Please try again.",
+        variant: "destructive"
+      });
     }
-
-    // if (SYNC_ENDPOINT) fetch(SYNC_ENDPOINT+"/weight", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(row)}).catch(()=>{});
   };
 
   const latestWeight = useMemo(() => weightHistory[0]?.weight, [weightHistory]);
