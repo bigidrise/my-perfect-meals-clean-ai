@@ -295,22 +295,22 @@ export default function CravingPresetsPage() {
                     </ol>
                   </div>
                 )}
-
-                {/* Shopping Bar - Fixed within modal */}
-                <div className="sticky bottom-0 left-0 right-0 mt-6">
-                  <ShoppingAggregateBar
-                    ingredients={scaledIngs.map(ing => ({
-                      name: ing.name,
-                      qty: ing.quantity,
-                      unit: ing.unit || ''
-                    }))}
-                    source={`${selected.name} (${selectedServings} servings)`}
-                    sourceSlug="craving-presets"
-                  />
-                </div>
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Shopping Bar - Fixed at bottom when modal is open */}
+        {selected && (
+          <ShoppingAggregateBar
+            ingredients={scaledIngs.map(ing => ({
+              name: ing.name,
+              qty: ing.quantity,
+              unit: ing.unit || ''
+            }))}
+            source={`${selected.name} (${selectedServings} servings)`}
+            sourceSlug="craving-presets"
+          />
         )}
       </div>
     </div>
