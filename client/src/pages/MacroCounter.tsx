@@ -500,7 +500,7 @@ export default function MacroCounter() {
                         localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
                         toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
                       }}
-                      className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400 animate-pulse"
+                      className="w-full bg-orange-600 border border-orange-500 text-white hover:bg-orange-700 hover:border-orange-600 animate-pulse font-semibold"
                       data-testid="button-sync-weight"
                     >
                       <Scale className="h-4 w-4 mr-2" />
