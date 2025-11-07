@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Sparkles, ChefHat, Info } from 'lucide-react';
+import { Sparkles, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -310,8 +310,6 @@ export default function MealIngredientPicker({
       <DialogContent className="max-w-2xl h-[90vh] sm:h-auto sm:max-h-[80vh] bg-gradient-to-b from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] border border-white/10 p-4 flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-white flex items-center gap-2 text-xl">
-            <ChefHat className="w-6 h-6 text-purple-400" />
-            AI Meal Creator - Pick Your Ingredients
             <Button
               size="sm"
               variant="ghost"
@@ -323,6 +321,7 @@ export default function MealIngredientPicker({
             >
               <Info className="h-5 w-5" />
             </Button>
+            AI Meal Creator - Pick Your Ingredients
           </DialogTitle>
         </DialogHeader>
 
