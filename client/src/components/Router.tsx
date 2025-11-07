@@ -144,6 +144,7 @@ export default function Router() {
     '/weekly',
     '/athlete-board',
     '/craving-creator',
+    '/craving-presets',
     '/glp1-meal-builder',
     '/diabetic-menu-builder',
   ];
