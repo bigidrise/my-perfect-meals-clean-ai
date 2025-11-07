@@ -960,6 +960,20 @@ export default function GLP1MealBuilder() {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
                   <div className="flex gap-2">
+                    {/* AI Meal Creator button for all meal sections */}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1"
+                      onClick={() => {
+                        setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                        setAiMealModalOpen(true);
+                      }}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Create with AI
+                    </Button>
+
                     {/* Plus button for manual entry */}
                     <Button 
                       size="sm" 
