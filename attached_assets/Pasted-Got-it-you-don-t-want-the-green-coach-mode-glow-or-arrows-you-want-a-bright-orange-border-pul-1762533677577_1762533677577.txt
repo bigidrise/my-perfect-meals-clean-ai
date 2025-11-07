@@ -1,0 +1,79 @@
+Got it — you don’t want the green “coach-mode” glow or arrows; you want a **bright orange border pulse** around the active tile or card so users immediately see where to go next.
+
+Here’s how to do that cleanly without changing any other colors or icons:
+
+---
+
+### 1️⃣ Add an **orange flash animation**
+
+In your global stylesheet (`globals.css`, `index.css`, or wherever you keep the pulse rules):
+
+```css
+@keyframes pulseBorderOrange {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255,122,0,0.7);   /* brand orange glow */
+  }
+  50% {
+    box-shadow: 0 0 12px 6px rgba(255,122,0,0.45);
+  }
+}
+
+.flash-border-orange {
+  animation: pulseBorderOrange 1.3s infinite;
+  border: 2px solid rgba(255,122,0,0.9);        /* bright orange outline */
+  border-radius: 1rem;
+}
+```
+
+That’s the same orange you use throughout the app (`#FF7A00`).
+
+---
+
+### 2️⃣ Use it in the guided component
+
+In **`MacroCalculatorTour.tsx`**, replace any green/red references with the new orange class:
+
+```tsx
+useEffect(() => {
+  if (!coachMode || !step) return;
+
+  const map = {
+    goal: "goal-card",
+    body: "bodytype-card",
+    details: "details-card",
+    targets: "macro-targets-btn",
+  } as const;
+
+  const el = document.getElementById(map[step]);
+  if (!el) return;
+
+  el.classList.add("flash-border-orange");
+  return () => el.classList.remove("flash-border-orange");
+}, [step, coachMode]);
+```
+
+Now every active card gets an **orange flashing border** instead of green or red.
+
+---
+
+### 3️⃣ Keep the trigger logic the same
+
+Your existing triggers (`window.dispatchEvent(new CustomEvent("macro:next",{detail:{step}}))`) still control when the border moves; only the color changed.
+
+---
+
+### 4️⃣ Remove the arrow overlay
+
+If that arrow currently appears because of an older onboarding or tooltip script, comment out or delete its render block (e.g., `CoachArrow`, `IntroArrow`, or whatever component draws it).
+With the orange border pulse in place, you don’t need it—the highlight itself becomes the visual guide.
+
+---
+
+### ✅ Result
+
+* When the Macro Calculator (or any guided page) opens, the first card border **flashes bright orange**.
+* Each completed step triggers the next card to flash orange.
+* No more arrows; the glow does all the guiding.
+* The orange matches your brand gradient and fits the black-glass UI perfectly.
+
+Would you like me to extend this same **orange border flash** style to the other guided components (Planner, Biometrics, Meal Builder, Lifestyle)?
