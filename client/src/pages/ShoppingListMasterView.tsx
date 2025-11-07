@@ -16,13 +16,13 @@ import { readOtherItems } from "@/stores/otherItemsStore";
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
   // Extract "from" query parameter once on mount
   const [fromSlug, setFromSlug] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('from') || '';
   });
-  
+
   const [items, setLocalItems] = useState<ShopItem[]>(() => readList().items);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [quickAddText, setQuickAddText] = useState("");
@@ -89,11 +89,11 @@ export default function ShoppingListMasterView() {
     const mealItems = items
       .filter(i => !i.checked)
       .map(i => `• ${i.name}${i.qty ? ` — ${i.qty}${i.unit ? ' ' + i.unit : ''}` : ''}`);
-    
+
     const otherItems = readOtherItems().items
       .filter(i => !i.checked)
       .map(i => `• ${i.brand ? i.brand + ' ' : ''}${i.name} — ${i.qty} ${i.unit} (${i.category})`);
-    
+
     const sections = [];
     if (mealItems.length > 0) {
       sections.push("Meal Ingredients:\n" + mealItems.join("\n"));
@@ -101,10 +101,10 @@ export default function ShoppingListMasterView() {
     if (otherItems.length > 0) {
       sections.push("Other Items:\n" + otherItems.join("\n"));
     }
-    
+
     const text = sections.join("\n\n");
     const totalCount = mealItems.length + otherItems.length;
-    
+
     try {
       await navigator.clipboard.writeText(text);
       toast({ title: "Copied to clipboard", description: `${totalCount} items copied` });
@@ -172,16 +172,6 @@ export default function ShoppingListMasterView() {
               <div className="text-white/70 text-sm mt-1">
                 {counts.total} items • {counts.checked} checked
               </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                className="bg-emerald-600/20 border border-emerald-400/30 text-emerald-200 hover:bg-emerald-600/30" 
-                onClick={onCopyToClipboard}
-                disabled={items.filter(i => !i.checked).length === 0}
-                data-testid="button-copy-list"
-              >
-                Copy List
-              </Button>
             </div>
           </div>
 
@@ -432,7 +422,7 @@ export default function ShoppingListMasterView() {
                         className="border-white/30"
                         data-testid={`checkbox-bought-${item.id}`}
                       />
-                      
+
                       {editingId === item.id ? (
                         <>
                           <Input
