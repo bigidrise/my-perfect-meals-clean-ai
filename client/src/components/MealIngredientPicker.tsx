@@ -314,12 +314,12 @@ export default function MealIngredientPicker({
               size="sm"
               variant="ghost"
               onClick={() => setShowInfoModal(true)}
-              className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+              className={`h-6 w-6 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded ${
                 !hasSeenInfo ? 'flash-border' : ''
               }`}
               aria-label="How to use"
             >
-              <Info className="h-5 w-5" />
+              <Info className="h-4 w-4" />
             </Button>
             AI Meal Creator - Pick Your Ingredients
           </DialogTitle>
