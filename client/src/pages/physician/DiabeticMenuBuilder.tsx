@@ -10,7 +10,6 @@ import { AddSnackModal } from "@/components/AddSnackModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import BottomNav from "@/components/BottomNav";
 import { normalizeIngredients } from "@/utils/ingredientParser";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
 import { addItems } from "@/stores/shoppingListStore";
@@ -1411,12 +1410,9 @@ export default function DiabeticMenuBuilder() {
             ingredients={ingredients}
             source={`Diabetic Meal Plan (${formatWeekLabel(weekStartISO)})`}
             sourceSlug="diabetic-meal-board"
-            bottomPadding="pb-20"
           />
         );
       })()}
-
-      <BottomNav />
     </motion.div>
   );
 }
