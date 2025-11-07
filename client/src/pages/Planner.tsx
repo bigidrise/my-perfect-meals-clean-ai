@@ -94,21 +94,6 @@ export default function Planner() {
             </div>
           </div>
 
-          {/* Choose Your Meal Builder Banner */}
-          <div className="rounded-2xl p-[1px] bg-gradient-to-r from-orange-500/50 via-orange-500/40 to-orange-500/50 animate-pulse">
-            <div className="rounded-2xl bg-orange-900/20 backdrop-blur-lg px-4 py-3 border border-orange-500/30">
-              <div className="flex items-start gap-3">
-                <ListChecks className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-orange-300 font-semibold text-sm mb-1">Choose Your Meal Builder</div>
-                  <div className="text-white/80 text-sm">
-                    Select the meal board that matches your health goals and dietary needs.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Planner Features - Vertical Stack */}
           <div className="flex flex-col gap-3">
             {plannerFeatures.map((feature) => {
