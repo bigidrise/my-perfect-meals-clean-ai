@@ -76,11 +76,11 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
   const { board: hookBoard, loading: hookLoading, error, save: saveToHook, source } = useWeeklyBoard("1", weekStartISO);
-  
+
   // Local mutable board state for optimistic updates
   const [board, setBoard] = React.useState<WeekBoard | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -195,7 +195,7 @@ export default function WeeklyMealBoard() {
     const cached = loadAIMealsCache();
     if (cached && cached.dayISO === activeDayISO && cached.meals.length > 0) {
       console.log("🔋 Loading AI meals from localStorage:", cached.meals.length, "meals for", activeDayISO, "into slot:", cached.slot);
-      
+
       // Merge cached AI meals into the correct slot (not hardcoded to breakfast!)
       const dayLists = getDayLists(board, activeDayISO);
       const targetSlot = cached.slot || "breakfast"; // Fallback to breakfast for old cached data
@@ -203,7 +203,7 @@ export default function WeeklyMealBoard() {
       const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
       const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-      
+
       setBoard(updatedBoard);
     }
   }, [board, activeDayISO]); // Run when board loads OR day changes
@@ -306,7 +306,7 @@ export default function WeeklyMealBoard() {
     }));
 
     addItems(items);
-    
+
     toast({
       title: "Added to Shopping List",
       description: `${ingredients.length} items added to your master list`
@@ -326,7 +326,7 @@ export default function WeeklyMealBoard() {
 
     // Collect ALL meals from ALL 7 days of the week
     let allMeals: Meal[] = [];
-    
+
     // Loop through all days in the week
     weekDatesList.forEach(dateISO => {
       const dayLists = getDayLists(board, dateISO);
@@ -360,7 +360,7 @@ export default function WeeklyMealBoard() {
     }));
 
     addItems(items);
-    
+
     toast({
       title: "Added to Shopping List",
       description: `${ingredients.length} items from entire week added to your master list`
@@ -494,7 +494,7 @@ export default function WeeklyMealBoard() {
   // Check for localStorage meal to add (after board loads)
   React.useEffect(() => {
     if (!board || loading) return;
-    
+
     const pendingMealData = localStorage.getItem("weeklyPlanMealToAdd");
     if (pendingMealData) {
       try {
@@ -689,7 +689,7 @@ export default function WeeklyMealBoard() {
 
   async function quickAdd(list: "breakfast"|"lunch"|"dinner"|"snacks", meal: Meal) {
     if (!board) return;
-    
+
     try {
       // In Day mode, add to the specific day. In Week mode, use legacy behavior
       if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
@@ -748,7 +748,7 @@ export default function WeeklyMealBoard() {
 
   const handleLogAllMacros = useCallback(async () => {
     if (!board) return;
-    
+
     try {
       const allMeals = [
         ...board.lists.breakfast,
@@ -768,7 +768,7 @@ export default function WeeklyMealBoard() {
 
       let successCount = 0;
       const { post } = await import("@/lib/api");
-      
+
       for (const meal of allMeals) {
         const logEntry = {
           mealName: meal.title || meal.name || "Meal",
@@ -1002,13 +1002,13 @@ export default function WeeklyMealBoard() {
                       onUpdated={(m) => {
                         if (m === null) {
                           // REMOVE MEAL in Day mode - use the new system
-                          
+
                           // 🗑️ If it's an AI meal, also clear from localStorage
                           if (meal.id.startsWith('ai-meal-')) {
                             console.log("🗑️ Deleting AI meal from localStorage:", meal.name);
                             clearAIMealsCache();
                           }
-                          
+
                           const updatedDayLists = {
                             ...dayLists,
                             [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) => 
@@ -1334,89 +1334,8 @@ export default function WeeklyMealBoard() {
       )}
 
       {/* Shopping List Preview Modal */}
-      <ShoppingListPreviewModal
-        isOpen={shoppingListModal.isOpen}
-        onClose={() => setShoppingListModal({ isOpen: false, meal: null })}
-        meal={shoppingListModal.meal}
-      />
+      <ShoppingListPreviewModal isOpen={shoppingListModal.isOpen} onClose={() => setShoppingListModal({ isOpen: false, meal: null })} meal={shoppingListModal.meal} />
 
-      {/* AI Meal Creator with Ingredient Picker - Breakfast Only */}
-      <MealIngredientPicker
-        open={aiMealModalOpen}
-        onOpenChange={setAiMealModalOpen}
-        onMealGenerated={handleAIMealGenerated}
-        mealSlot="breakfast"
-      />
-
-      {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
-      {board && (() => {
-        const allMeals = planningMode === 'day' && activeDayISO
-          ? (() => {
-              const dayLists = getDayLists(board, activeDayISO);
-              return [...dayLists.breakfast, ...dayLists.lunch, ...dayLists.dinner, ...dayLists.snacks];
-            })()
-          : [...board.lists.breakfast, ...board.lists.lunch, ...board.lists.dinner, ...board.lists.snacks];
-        
-        const ingredients = allMeals.flatMap(meal => 
-          normalizeIngredients(meal.ingredients || [])
-        );
-
-        // If no ingredients, don't show the bar
-        if (ingredients.length === 0) return null;
-
-        // DAY MODE: Show dual buttons (Send Day + Send Entire Week)
-        if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
-          const dayName = new Date(activeDayISO + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'long' });
-          
-          return (
-            <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl safe-area-inset-bottom">
-              <div className="container mx-auto px-4 py-3">
-                <div className="flex flex-col gap-2">
-                  <div className="text-white text-sm font-semibold">
-                    Shopping List Ready - {ingredients.length} ingredients
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => {
-                        handleAddToShoppingList();
-                        setTimeout(() => setLocation('/shopping-list-v2?from=weekly-meal-board'), 100);
-                      }}
-                      className="flex-1 min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"
-                      data-testid="button-send-day-shopping"
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Send {dayName}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        handleAddEntireWeekToShoppingList();
-                        setTimeout(() => setLocation('/shopping-list-v2?from=weekly-meal-board'), 100);
-                      }}
-                      className="flex-1 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white border border-white/30"
-                      data-testid="button-send-week-shopping"
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Send Entire Week
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        // WEEK MODE: Use existing ShoppingAggregateBar component
-        return (
-          <ShoppingAggregateBar
-            ingredients={ingredients}
-            source="Weekly Meal Board"
-            sourceSlug="weekly-meal-board"
-            bottomPadding="pb-20"
-          />
-        );
-      })()}
-
-      <BottomNav />
     </motion.div>
   );
 }

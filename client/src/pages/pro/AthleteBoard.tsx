@@ -19,7 +19,6 @@ import MealIngredientPicker from "@/components/MealIngredientPicker";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import BottomNav from "@/components/BottomNav";
 import { normalizeIngredients } from "@/utils/ingredientParser";
 import { addItems } from "@/stores/shoppingListStore";
 import { useToast } from "@/hooks/use-toast";
