@@ -19,7 +19,7 @@ import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
 import { todayISOInTZ } from "@/utils/midnight";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft } from "lucide-react";
+import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -36,6 +36,7 @@ import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -134,6 +135,15 @@ export default function GLP1MealBuilder() {
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
 
+  // Guided Tour state
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [hasSeenInfo, setHasSeenInfo] = useState(false);
+  const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
+
+  // Daily Totals Info state (appears after first meal is created)
+  const [showDailyTotalsInfo, setShowDailyTotalsInfo] = useState(false);
+  const [hasSeenDailyTotalsInfo, setHasSeenDailyTotalsInfo] = useState(false);
+
   // 🔋 AI Meal Creator localStorage persistence (copy Fridge Rescue pattern)
   const AI_MEALS_CACHE_KEY = "glp1-ai-meal-creator-cached-meals";
 
@@ -208,6 +218,60 @@ export default function GLP1MealBuilder() {
       setBoard(updatedBoard);
     }
   }, [board, activeDayISO]); // Run when board loads OR day changes
+
+  // Load/save tour progress from localStorage
+  useEffect(() => {
+    const infoSeen = localStorage.getItem("glp1-meal-builder-info-seen");
+    if (infoSeen === "true") {
+      setHasSeenInfo(true);
+    }
+    
+    const dailyTotalsInfoSeen = localStorage.getItem("glp1-meal-builder-daily-totals-info-seen");
+    if (dailyTotalsInfoSeen === "true") {
+      setHasSeenDailyTotalsInfo(true);
+    }
+
+    const savedStep = localStorage.getItem("glp1-meal-builder-tour-step");
+    if (savedStep === "breakfast" || savedStep === "lunch" || savedStep === "dinner" || savedStep === "snacks" || savedStep === "complete") {
+      setTourStep(savedStep);
+    }
+  }, []);
+
+  // Handle info modal close - start the guided tour
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    setHasSeenInfo(true);
+    localStorage.setItem("glp1-meal-builder-info-seen", "true");
+  };
+
+  // Update tour step when meals are created
+  useEffect(() => {
+    if (!board) return;
+
+    const lists = FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO
+      ? getDayLists(board, activeDayISO)
+      : board.lists;
+
+    // Check meal completion and advance tour
+    if (tourStep === "breakfast" && lists.breakfast.length > 0) {
+      setTourStep("lunch");
+      localStorage.setItem("glp1-meal-builder-tour-step", "lunch");
+      
+      // Show Daily Totals info after first meal
+      if (!hasSeenDailyTotalsInfo) {
+        setShowDailyTotalsInfo(true);
+      }
+    } else if (tourStep === "lunch" && lists.lunch.length > 0) {
+      setTourStep("dinner");
+      localStorage.setItem("glp1-meal-builder-tour-step", "dinner");
+    } else if (tourStep === "dinner" && lists.dinner.length > 0) {
+      setTourStep("snacks");
+      localStorage.setItem("glp1-meal-builder-tour-step", "snacks");
+    } else if (tourStep === "snacks" && lists.snacks.length > 0) {
+      setTourStep("complete");
+      localStorage.setItem("glp1-meal-builder-tour-step", "complete");
+    }
+  }, [board, tourStep, planningMode, activeDayISO, hasSeenDailyTotalsInfo]);
 
   // Duplicate day handler
   const handleDuplicateDay = useCallback(async (targetDates: string[]) => {
@@ -861,6 +925,15 @@ export default function GLP1MealBuilder() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">GLP-1 Meal Board</h1>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowInfoModal(true)}
+                  className="h-12 w-12 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full flash-border"
+                  aria-label="How to use"
+                >
+                  <Info className="h-7 w-7" />
+                </Button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}
@@ -1131,7 +1204,38 @@ export default function GLP1MealBuilder() {
         {/* Daily Totals Summary */}
         <div className="col-span-full">
           <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-lg p-6">
-            <h3 className="text-white font-semibold text-lg mb-4 text-center">Daily Totals</h3>
+            <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
+              Daily Totals
+              {(() => {
+                // Check if there are any meals
+                const hasMeals = board && (
+                  (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO
+                    ? (() => {
+                        const dayLists = getDayLists(board, activeDayISO);
+                        return dayLists.breakfast.length > 0 || dayLists.lunch.length > 0 || dayLists.dinner.length > 0 || dayLists.snacks.length > 0;
+                      })()
+                    : board.lists.breakfast.length > 0 || board.lists.lunch.length > 0 || board.lists.dinner.length > 0 || board.lists.snacks.length > 0)
+                );
+
+                // Show button if there are meals, flash only if user hasn't seen the info
+                if (hasMeals) {
+                  return (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setShowDailyTotalsInfo(true)}
+                      className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                        !hasSeenDailyTotalsInfo ? 'flash-border' : ''
+                      }`}
+                      aria-label="Next Steps Info"
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  );
+                }
+                return null;
+              })()}
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-xl font-semi-bold text-white">
@@ -1402,6 +1506,103 @@ export default function GLP1MealBuilder() {
           />
         );
       })()}
+
+      {/* Info Modal - How to Use */}
+      <Dialog open={showInfoModal} onOpenChange={(open) => {
+        if (!open) {
+          handleInfoModalClose();
+        } else {
+          setShowInfoModal(true);
+        }
+      }}>
+        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg">How to Use GLP-1 Meal Builder</DialogTitle>
+          </DialogHeader>
+          <div className="text-white/80 text-sm space-y-2">
+            <p>Create your day or week by starting with breakfast.</p>
+            <p className="text-xs text-white/60">
+              Click the "Create with AI" button on each meal section to build your plan. 
+              You can create one day and duplicate it across the week, or create each day individually.
+            </p>
+            <p className="text-xs text-white/60 mt-3">
+              If you change your mind about a meal, just hit the <span className="font-semibold text-white/80">trash can</span> to delete it and create a new one.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Daily Totals Info Modal - Next Steps After First Meal */}
+      <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {
+        if (!open) {
+          setShowDailyTotalsInfo(false);
+          setHasSeenDailyTotalsInfo(true);
+          localStorage.setItem("glp1-meal-builder-daily-totals-info-seen", "true");
+        }
+      }}>
+        <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-white text-xl flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-orange-400" />
+              Next Steps - Track Your Progress!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-white/90 text-sm space-y-4">
+            <p className="text-base font-semibold text-orange-300">
+              Great job creating your meals! Here's what to do next:
+            </p>
+
+            <div className="space-y-3">
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-orange-400" />
+                  Option 1: Track Your Macros
+                </p>
+                <p className="text-white/70 text-xs">
+                  Send your day to the Macro Calculator to ensure you're hitting your nutrition targets.
+                  Look for the "Send to Macros" button below.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1">
+                  Option 2: Plan Your Week
+                </p>
+                <p className="text-white/70 text-xs">
+                  Use the Day/Week toggle at the top to switch between planning a single day or your entire week.
+                  You can duplicate days or create each day individually.
+                </p>
+              </div>
+
+              <div className="bg-orange-900/30 p-3 rounded-lg border border-orange-400/30">
+                <p className="font-semibold text-orange-200 mb-1">
+                  💡 Pro Tip: Macro Tracking
+                </p>
+                <p className="text-orange-100/80 text-xs">
+                  Send just ONE day to macros at a time (not the whole week). 
+                  This way, if you change meals on other days, you won't have outdated data.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4 text-emerald-400" />
+                  Shopping List Ready
+                </p>
+                <p className="text-white/70 text-xs">
+                  You CAN send your entire week to the shopping list! 
+                  This consolidates all ingredients for easy grocery shopping.
+                  Click "Send Entire Week" at the bottom.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-white/60 text-center pt-2 border-t border-white/10">
+              Next: Check out the Shopping List to learn how to use it effectively!
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

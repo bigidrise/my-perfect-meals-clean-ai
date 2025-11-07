@@ -1522,6 +1522,9 @@ export default function WeeklyMealBoard() {
               Click the "Create with AI" button on each meal section to build your plan. 
               You can create one day and duplicate it across the week, or create each day individually.
             </p>
+            <p className="text-xs text-white/60 mt-3">
+              If you change your mind about a meal, just hit the <span className="font-semibold text-white/80">trash can</span> to delete it and create a new one.
+            </p>
           </div>
         </DialogContent>
       </Dialog>
