@@ -815,7 +815,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-24"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-6"
     >
       {/* Fixed Back Button - Top Left */}
       <Button
@@ -1003,7 +1003,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       </div>
 
       {/* Meal Cards Grid - Same structure as Weekly Meal Board */}
-      <div className="max-w-[1600px] mx-auto px-4 pb-10 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      <div className="max-w-[1600px] mx-auto px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
         {/* Render day view or week view based on mode */}
         {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board ? (
           // DAY MODE: Show only the active day's meals
