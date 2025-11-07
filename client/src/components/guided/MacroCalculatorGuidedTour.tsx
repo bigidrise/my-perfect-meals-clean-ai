@@ -10,11 +10,7 @@ import { useEffect, useState } from "react";
  * 3. Fill in Details
  * 4. Calculate Macros
  * 
- * Required IDs in MacroCounter.tsx:
- *   - id="goal-card"
- *   - id="bodytype-card"
- *   - id="details-card"
- *   - id="calc-button"
+ * Each step automatically advances to the next when completed.
  */
 
 export default function MacroCalculatorGuidedTour() {
@@ -23,6 +19,7 @@ export default function MacroCalculatorGuidedTour() {
     coachMode ? "goal" : null
   );
 
+  // Apply/remove orange flash to current step
   useEffect(() => {
     if (!coachMode || !step) return;
     
@@ -45,19 +42,21 @@ export default function MacroCalculatorGuidedTour() {
     };
   }, [step, coachMode]);
 
+  // Listen for completion events and advance to next step
   useEffect(() => {
     if (!coachMode) return;
 
-    const next = (e: Event) => {
-      const { step: finished } = (e as CustomEvent).detail;
-      if (finished === "goal") setStep("body");
-      if (finished === "body") setStep("details");
-      if (finished === "details") setStep("calc");
-      if (finished === "calc") setStep(null);
+    const handleNext = (e: Event) => {
+      const { step: completedStep } = (e as CustomEvent).detail;
+      
+      if (completedStep === "goal") setStep("body");
+      else if (completedStep === "body-type") setStep("details");
+      else if (completedStep === "details") setStep("calc");
+      else if (completedStep === "calc") setStep(null);
     };
     
-    window.addEventListener("macro:nextStep", next as EventListener);
-    return () => window.removeEventListener("macro:nextStep", next as EventListener);
+    window.addEventListener("macro:nextStep", handleNext as EventListener);
+    return () => window.removeEventListener("macro:nextStep", handleNext as EventListener);
   }, [coachMode]);
 
   if (!coachMode) return null;

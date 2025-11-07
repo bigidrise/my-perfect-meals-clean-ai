@@ -810,6 +810,7 @@ export default function MacroCounter() {
           <Button
             id="calc-button"
             onClick={() => {
+              advance("calc");
               setMacroTargets({
                 calories: results.target,
                 protein_g: results.macros.protein.g,
