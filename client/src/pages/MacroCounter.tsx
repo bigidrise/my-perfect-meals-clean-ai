@@ -527,28 +527,72 @@ export default function MacroCounter() {
                       </div>
                     </>
                   ) : (
-                    <>
-                      <div className="col-span-2">
-                        <div className="text-xs font-semibold">Height (cm)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={heightCm}
-                          onChange={(e) => setHeightCm(toNum(e.target.value))}
-                        />
-                      </div>
-                      <div>
-                        <div className="text-xs font-semibold">Weight (kg)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white"
-                          value={weightKg}
-                          onChange={(e) => setWeightKg(toNum(e.target.value))}
-                        />
-                      </div>
-                    </>
+                    <div className="col-span-2">
+                      <div className="text-xs font-semibold">Height (cm)</div>
+                      <Input
+                        type="number"
+                        className="bg-black/60 border-white/50 text-white"
+                        value={heightCm}
+                        onChange={(e) => setHeightCm(toNum(e.target.value))}
+                      />
+                    </div>
                   )}
                 </div>
+
+                {/* Weight input - shows for both imperial and metric */}
+                <div>
+                  <div className="text-xs font-semibold">
+                    Weight ({units === "imperial" ? "lbs" : "kg"})
+                  </div>
+                  <Input
+                    type="number"
+                    className="bg-black/60 border-white/50 text-white"
+                    value={units === "imperial" ? weightLbs : weightKg}
+                    onChange={(e) => {
+                      const val = toNum(e.target.value);
+                      if (units === "imperial") {
+                        setWeightLbs(val);
+                      } else {
+                        setWeightKg(val);
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* Sync Weight Button */}
+                <Button
+                  onClick={() => {
+                    const weight = units === "imperial" ? weightLbs : weightKg;
+                    if (!weight || weight <= 0) {
+                      toast({
+                        title: "Weight Required",
+                        description: "Please enter your weight first.",
+                        variant: "destructive",
+                      });
+                      return;
+                    }
+
+                    // Save to localStorage for My Biometrics to pick up
+                    localStorage.setItem(
+                      "pending-weight-sync",
+                      JSON.stringify({
+                        weight,
+                        units,
+                        timestamp: Date.now(),
+                      })
+                    );
+
+                    toast({
+                      title: "✓ Weight Synced",
+                      description: `Weight (${weight} ${units === "imperial" ? "lbs" : "kg"}) will be available in My Biometrics. Go to My Biometrics and click "Save Weight" to add it to your history.`,
+                    });
+                  }}
+                  className="w-full bg-emerald-600/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-400"
+                  data-testid="button-sync-weight"
+                >
+                  <Scale className="h-4 w-4 mr-2" />
+                  Sync Weight (After Setting Targets)
+                </Button>
 
                 <ReadOnlyNote>
                   <strong>Finish setup first:</strong> Changing your weight
