@@ -89,7 +89,7 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
   if (ingredients.length === 0) return null;
 
   return (
-    <div className={`fixed left-0 right-0 bottom-shopping-banner z-40 bg-black/80 backdrop-blur-xl border-t border-white/20 shadow-2xl`}>
+    <div className={`fixed left-0 right-0 bottom-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/20 shadow-2xl`}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
           <div className="flex-1 text-white">
