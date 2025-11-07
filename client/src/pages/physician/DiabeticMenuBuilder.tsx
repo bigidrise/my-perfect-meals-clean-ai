@@ -819,7 +819,7 @@ export default function DiabeticMenuBuilder() {
       <Button 
         variant="ghost" 
         size="sm" 
-        onClick={() => setLocation("/diabetes-support")}
+        onClick={() => setLocation("/diabetic-hub")}
         className="fixed top-4 left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 text-white hover:bg-white/10 rounded-2xl overflow-hidden text-ellipsis whitespace-nowrap p-2"
       >
         <ArrowLeft className="h-4 w-4" />
