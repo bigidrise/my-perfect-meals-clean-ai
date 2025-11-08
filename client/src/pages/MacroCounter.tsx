@@ -186,6 +186,20 @@ const advance = (step: string) => {
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  
+  // Track guided tour step for showing fingers
+  const [tourStep, setTourStep] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const checkTourStep = () => {
+      const step = localStorage.getItem("macro:currentStep");
+      setTourStep(step);
+    };
+    
+    checkTourStep();
+    window.addEventListener("macro:nextStep", checkTourStep);
+    return () => window.removeEventListener("macro:nextStep", checkTourStep);
+  }, []);
 
   // Load calculator settings from localStorage
   const loadCalculatorSettings = () => {
@@ -300,10 +314,11 @@ export default function MacroCounter() {
 
         {/* Goal & Body Type */}
         <div className="grid md:grid-cols-2 gap-4">
-          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
+          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white relative">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
+                {tourStep === "goal" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
               </h3>
               <RadioGroup
                 value={goal}
@@ -339,10 +354,11 @@ export default function MacroCounter() {
             </CardContent>
           </Card>
 
-          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white">
+          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white relative">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
+                {tourStep === "body" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
               </h3>
               <BodyTypeGuide />
               <RadioGroup
@@ -382,10 +398,11 @@ export default function MacroCounter() {
 
         {/* Inputs - Only show after activity level is selected */}
         {activity && (
-        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5 relative">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
               <Ruler className="h-5 w-5 mr-2" /> Your Details
+              {tourStep === "details" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
             </h3>
             <div className="grid md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-3">
@@ -588,7 +605,8 @@ export default function MacroCounter() {
             </Card>
 
             {/* Save Targets */}
-            <div className="flex justify-center">
+            <div className="flex justify-center items-center gap-2">
+              {tourStep === "calc" && <span className="text-3xl animate-bounce">👉</span>}
               <Button
                 id="calc-button"
                 onClick={() => {

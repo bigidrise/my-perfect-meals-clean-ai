@@ -19,6 +19,15 @@ export default function MacroCalculatorGuidedTour() {
     coachMode ? "goal" : null
   );
 
+  // Share current step via localStorage so MacroCounter can show fingers
+  useEffect(() => {
+    if (coachMode && step) {
+      localStorage.setItem("macro:currentStep", step);
+    } else {
+      localStorage.removeItem("macro:currentStep");
+    }
+  }, [step, coachMode]);
+
   // Apply/remove orange flash to current step and add pointing finger
   useEffect(() => {
     if (!coachMode || !step) return;
