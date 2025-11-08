@@ -49,7 +49,8 @@ export default function MealBuilderGuidedTour() {
     <>
       {/* Flashing Create AI Meal (when board first opens) */}
       {step === "ai" && (
-        <div className="absolute top-2 left-2 z-[40] animate-pulse">
+        <div className="absolute top-2 left-2 z-[40] flex items-center gap-2">
+          <span className="text-3xl animate-bounce">👉</span>
           <button
             onClick={() => setStep("protein")}
             className="bg-emerald-600/90 border border-emerald-300/40 text-white rounded-lg px-4 py-2 flash-green"
@@ -62,20 +63,23 @@ export default function MealBuilderGuidedTour() {
       {/* When picker is open, show question mark help */}
       {pickerOpen && (
         <>
-          <button
-            onClick={() => setShowHelp(true)}
-            className="fixed top-4 right-4 z-[80] bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center border border-white/20 backdrop-blur-sm flash-white"
-            title="How it works"
-          >
-            ?
-          </button>
+          <div className="fixed top-4 right-4 z-[80] flex items-center gap-2">
+            <span className="text-2xl animate-bounce">👉</span>
+            <button
+              onClick={() => setShowHelp(true)}
+              className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center border border-white/20 backdrop-blur-sm flash-white"
+              title="How it works"
+            >
+              ?
+            </button>
+          </div>
 
           {showHelp && <PickerHelpOverlay onClose={() => setShowHelp(false)} />}
         </>
       )}
 
       {/* Highlight sequence inside picker */}
-      {pickerOpen && step && <PickerHighlights step={step} nextStep={nextStep} />}
+      {pickerOpen && step && step !== "ai" && <PickerHighlights step={step} nextStep={nextStep} />}
     </>
   );
 }
@@ -120,7 +124,22 @@ function PickerHighlights({
     const el = document.getElementById(idMap[step]);
     if (el) {
       el.classList.add("flash-green-strong");
-      return () => el.classList.remove("flash-green-strong");
+      
+      // Add pointing finger next to the element
+      const finger = document.createElement("div");
+      finger.id = `tour-finger-${step}`;
+      finger.innerHTML = "👉";
+      finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 90; animation: bounce 1s infinite; pointer-events: none;";
+      const rect = el.getBoundingClientRect();
+      finger.style.top = `${rect.top + window.scrollY + 10}px`;
+      finger.style.left = `${rect.left + window.scrollX - 60}px`;
+      document.body.appendChild(finger);
+      
+      return () => {
+        el.classList.remove("flash-green-strong");
+        const existingFinger = document.getElementById(`tour-finger-${step}`);
+        if (existingFinger) existingFinger.remove();
+      };
     }
   }, [step]);
 
@@ -128,7 +147,7 @@ function PickerHighlights({
   useEffect(() => {
     const timer = setTimeout(nextStep, 8000);
     return () => clearTimeout(timer);
-  }, [step]);
+  }, [step, nextStep]);
 
   return null;
 }

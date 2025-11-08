@@ -59,13 +59,29 @@ export default function BiometricsGuidedTour() {
     const saveBtn = document.getElementById("save-weight-btn");
     if (saveBtn) {
       saveBtn.classList.add("flash-green-strong");
-      setTimeout(() => saveBtn.classList.remove("flash-green-strong"), 10000);
+      
+      // Add pointing finger next to save button
+      const finger = document.createElement("div");
+      finger.id = "tour-finger-save";
+      finger.innerHTML = "👉";
+      finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 60; animation: bounce 1s infinite; pointer-events: none;";
+      const rect = saveBtn.getBoundingClientRect();
+      finger.style.top = `${rect.top + window.scrollY}px`;
+      finger.style.left = `${rect.left + window.scrollX - 60}px`;
+      document.body.appendChild(finger);
+      
+      setTimeout(() => {
+        saveBtn.classList.remove("flash-green-strong");
+        const existingFinger = document.getElementById("tour-finger-save");
+        if (existingFinger) existingFinger.remove();
+      }, 10000);
     }
   };
 
   return (
     <>
-      <div className="fixed left-1/2 -translate-x-1/2 top-4 z-[60]">
+      <div className="fixed left-1/2 -translate-x-1/2 top-4 z-[60] flex items-center gap-3">
+        <span className="text-4xl animate-bounce">👉</span>
         <button
           onClick={handleStart}
           className="px-4 py-2 rounded-xl text-white font-medium bg-emerald-600/90 border border-emerald-300/40 backdrop-blur flash-green"
