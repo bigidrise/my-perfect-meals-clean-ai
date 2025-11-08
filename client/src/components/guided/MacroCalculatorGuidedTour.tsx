@@ -28,7 +28,7 @@ export default function MacroCalculatorGuidedTour() {
     }
   }, [step, coachMode]);
 
-  // Apply/remove orange flash to current step and add pointing finger
+  // Apply/remove orange flash to current step
   useEffect(() => {
     if (!coachMode || !step) return;
     
@@ -42,23 +42,11 @@ export default function MacroCalculatorGuidedTour() {
     const el = document.getElementById(map[step]);
     if (el) {
       el.classList.add("flash-border");
-      
-      // Add pointing finger next to the element
-      const finger = document.createElement("div");
-      finger.id = `tour-finger-${step}`;
-      finger.innerHTML = "👉";
-      finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 60; animation: bounce 1s infinite; pointer-events: none;";
-      const rect = el.getBoundingClientRect();
-      finger.style.top = `${rect.top + window.scrollY + 10}px`;
-      finger.style.left = `${rect.left + window.scrollX - 60}px`;
-      document.body.appendChild(finger);
     }
     
     return () => {
       if (el) {
         el.classList.remove("flash-border");
-        const existingFinger = document.getElementById(`tour-finger-${step}`);
-        if (existingFinger) existingFinger.remove();
       }
     };
   }, [step, coachMode]);

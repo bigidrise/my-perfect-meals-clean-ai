@@ -125,20 +125,8 @@ function PickerHighlights({
     if (el) {
       el.classList.add("flash-green-strong");
       
-      // Add pointing finger next to the element
-      const finger = document.createElement("div");
-      finger.id = `tour-finger-${step}`;
-      finger.innerHTML = "👉";
-      finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 90; animation: bounce 1s infinite; pointer-events: none;";
-      const rect = el.getBoundingClientRect();
-      finger.style.top = `${rect.top + window.scrollY + 10}px`;
-      finger.style.left = `${rect.left + window.scrollX - 60}px`;
-      document.body.appendChild(finger);
-      
       return () => {
         el.classList.remove("flash-green-strong");
-        const existingFinger = document.getElementById(`tour-finger-${step}`);
-        if (existingFinger) existingFinger.remove();
       };
     }
   }, [step]);

@@ -60,20 +60,8 @@ export default function BiometricsGuidedTour() {
     if (saveBtn) {
       saveBtn.classList.add("flash-green-strong");
       
-      // Add pointing finger next to save button
-      const finger = document.createElement("div");
-      finger.id = "tour-finger-save";
-      finger.innerHTML = "👉";
-      finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 60; animation: bounce 1s infinite; pointer-events: none;";
-      const rect = saveBtn.getBoundingClientRect();
-      finger.style.top = `${rect.top + window.scrollY}px`;
-      finger.style.left = `${rect.left + window.scrollX - 60}px`;
-      document.body.appendChild(finger);
-      
       setTimeout(() => {
         saveBtn.classList.remove("flash-green-strong");
-        const existingFinger = document.getElementById("tour-finger-save");
-        if (existingFinger) existingFinger.remove();
       }, 10000);
     }
   };
