@@ -15,9 +15,12 @@ import { useEffect, useState } from "react";
 
 export default function MacroCalculatorGuidedTour() {
   const coachMode = localStorage.getItem("coachMode") === "guided";
-  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(
-    coachMode ? "goal" : null
-  );
+  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(() => {
+    if (!coachMode) return null;
+    // Hydrate from localStorage to maintain state across reloads
+    const saved = localStorage.getItem("macro:currentStep") as "goal" | "body" | "details" | "calc" | null;
+    return saved || "goal";
+  });
 
   // Share current step via localStorage so MacroCounter can show fingers
   useEffect(() => {
@@ -60,7 +63,7 @@ export default function MacroCalculatorGuidedTour() {
       
       if (completedStep === "goal") setStep("body");
       else if (completedStep === "body-type") setStep("details");
-      else if (completedStep === "details") setStep("calc");
+      else if (completedStep === "activity") setStep("calc");
       else if (completedStep === "calc") setStep(null);
     };
     

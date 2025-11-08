@@ -188,17 +188,24 @@ export default function MacroCounter() {
   const { toast } = useToast();
   
   // Track guided tour step for showing fingers
-  const [tourStep, setTourStep] = useState<string | null>(null);
+  const [tourStep, setTourStep] = useState<string | null>(
+    localStorage.getItem("coachMode") === "guided" 
+      ? localStorage.getItem("macro:currentStep") || "goal"
+      : null
+  );
   
   useEffect(() => {
-    const checkTourStep = () => {
-      const step = localStorage.getItem("macro:currentStep");
-      setTourStep(step);
+    const handleStepChange = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      // Map the completion events to the NEXT step that should be highlighted
+      if (detail.step === "goal") setTourStep("body");
+      else if (detail.step === "body-type") setTourStep("details");
+      else if (detail.step === "activity") setTourStep("calc");
+      else if (detail.step === "calc") setTourStep(null);
     };
     
-    checkTourStep();
-    window.addEventListener("macro:nextStep", checkTourStep);
-    return () => window.removeEventListener("macro:nextStep", checkTourStep);
+    window.addEventListener("macro:nextStep", handleStepChange);
+    return () => window.removeEventListener("macro:nextStep", handleStepChange);
   }, []);
 
   // Load calculator settings from localStorage
