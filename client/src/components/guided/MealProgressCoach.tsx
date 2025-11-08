@@ -69,10 +69,24 @@ function highlight(mealId: MealId | null) {
   if (!card) return;
   const btn = card.querySelector<HTMLElement>('[data-role="create-ai-meal"]');
   card.classList.add("coach-card-focus");
-  if (btn) btn.classList.add("flash-green-strong");
+  if (btn) {
+    btn.classList.add("flash-green-strong");
+    
+    // Add pointing finger next to the button
+    const finger = document.createElement("div");
+    finger.id = `tour-finger-meal-${mealId}`;
+    finger.innerHTML = "👉";
+    finger.style.cssText = "position: fixed; font-size: 2.5rem; z-index: 60; animation: bounce 1s infinite; pointer-events: none;";
+    const rect = btn.getBoundingClientRect();
+    finger.style.top = `${rect.top + window.scrollY}px`;
+    finger.style.left = `${rect.left + window.scrollX - 60}px`;
+    document.body.appendChild(finger);
+  }
 }
 
 function removeAllHighlights() {
   document.querySelectorAll(".coach-card-focus").forEach((el) => el.classList.remove("coach-card-focus"));
   document.querySelectorAll('[data-role="create-ai-meal"]').forEach((el) => el.classList.remove("flash-green-strong"));
+  // Remove all meal finger pointers
+  document.querySelectorAll('[id^="tour-finger-meal-"]').forEach((el) => el.remove());
 }
