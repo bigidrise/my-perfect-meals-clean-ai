@@ -33,7 +33,7 @@ export default function WelcomeGate({ onComplete }: { onComplete: () => void }) 
                 className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl border border-white/20 transition-all"
                 data-testid="button-coach-mode"
               >
-                ✨ Intuitive Coach Mode
+                ✨ App Assistant
               </button>
               <button
                 onClick={() => chooseMode("self")}
