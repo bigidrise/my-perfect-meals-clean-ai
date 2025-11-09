@@ -403,13 +403,69 @@ export default function MacroCounter() {
           </Card>
         </div>
 
-        {/* Inputs - Only show after activity level is selected */}
-        {activity && (
+        {/* Activity Level - Always visible */}
         <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5 relative">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
-              <Ruler className="h-5 w-5 mr-2" /> Your Details
+              <Target className="h-5 w-5 mr-2 text-purple-300" /> Activity Level
               {tourStep === "details" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
+            </h3>
+            <div className="mt-4">
+              <RadioGroup
+                value={activity}
+                onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
+                  setActivity(v);
+                  advance("activity");
+                  setTimeout(() => {
+                    const button = document.getElementById("calc-button");
+                    if (button) {
+                      button.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                  }, 300);
+                }}
+                className="grid grid-cols-2 md:grid-cols-3 gap-2"
+              >
+                {(
+                  [
+                    ["sedentary", "Sedentary"],
+                    ["light", "Light"],
+                    ["moderate", "Moderate"],
+                    ["very", "Very Active"],
+                    ["extra", "Extra"],
+                  ] as const
+                ).map(([k, label]) => (
+                  <Label
+                    key={k}
+                    htmlFor={`act-${k}`}
+                    onClick={() => {
+                      setActivity(k);
+                      advance("activity");
+                      setTimeout(() => {
+                        const button = document.getElementById("calc-button");
+                        if (button) {
+                          button.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 300);
+                    }}
+                    className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                      activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                    }`}
+                  >
+                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
+                    {label}
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Details - Only show after activity level is selected */}
+        {activity && (
+        <Card className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+          <CardContent className="p-5">
+            <h3 className="text-lg font-semibold flex items-center">
+              <Ruler className="h-5 w-5 mr-2" /> Your Details
             </h3>
             <div className="grid md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-3">
@@ -532,58 +588,6 @@ export default function MacroCounter() {
                     </Button>
                   </div>
                 </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="text-xs text-white font-semibold">Activity</div>
-                <RadioGroup
-                  value={activity}
-                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
-                    setActivity(v);
-                    advance("activity");
-                    // Auto-scroll to Set Macro Targets button after activity is selected
-                    setTimeout(() => {
-                      const button = document.getElementById("calc-button");
-                      if (button) {
-                        button.scrollIntoView({ behavior: "smooth", block: "center" });
-                      }
-                    }, 300);
-                  }}
-                  className="grid grid-cols-2 md:grid-cols-3 gap-2"
-                >
-                  {(
-                    [
-                      ["sedentary", "Sedentary"],
-                      ["light", "Light"],
-                      ["moderate", "Moderate"],
-                      ["very", "Very Active"],
-                      ["extra", "Extra"],
-                    ] as const
-                  ).map(([k, label]) => (
-                    <Label
-                      key={k}
-                      htmlFor={`act-${k}`}
-                      onClick={() => {
-                        setActivity(k);
-                        advance("activity");
-                        // Auto-scroll to Set Macro Targets button on every click
-                        setTimeout(() => {
-                          const button = document.getElementById("calc-button");
-                          if (button) {
-                            button.scrollIntoView({ behavior: "smooth", block: "center" });
-                          }
-                        }, 300);
-                      }}
-                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                        activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                      }`}
-                    >
-                      <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
-                      {label}
-                    </Label>
-                  ))}
-                </RadioGroup>
-
               </div>
             </div>
           </CardContent>
