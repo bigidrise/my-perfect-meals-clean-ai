@@ -21,7 +21,7 @@ export default function PlannerGuidedTour() {
       {/* Flashing question mark icon */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-[60] bg-orange-500/20 hover:bg-orange-500/30 text-white rounded-full w-10 h-10 flex items-center justify-center border border-orange-500/40 backdrop-blur-sm flash-orange"
+        className="fixed top-4 right-4 z-[60] bg-emerald-500/20 hover:bg-emerald-500/30 text-white rounded-full w-10 h-10 flex items-center justify-center border border-emerald-500/40 backdrop-blur-sm flash-orange"
         title="Open guided overview"
       >
         ?
@@ -60,7 +60,7 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
                 ) as HTMLElement | null;
                 el?.click();
               }}
-              className="w-full p-4 text-left rounded-xl border border-orange-500/30 bg-orange-500/10 hover:bg-orange-500/20 transition-all flash-orange"
+              className="w-full p-4 text-left rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all flash-orange"
             >
               <p className="font-semibold">{h.name}</p>
               <p className="text-white/70 text-sm">{h.desc}</p>
