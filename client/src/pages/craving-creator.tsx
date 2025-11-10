@@ -491,9 +491,18 @@ export default function CravingCreator() {
                 
                 
                 <div>
-                  <label className="block text-xs font-medium mb-1 text-white">
-                    What are you craving?
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-medium text-white">
+                      What are you craving?
+                    </label>
+                    <button
+                      onClick={() => {/* TODO: Add info modal */}}
+                      className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+                      aria-label="How to use Craving Creator"
+                    >
+                      ?
+                    </button>
+                  </div>
                   <div className="relative">
                     <textarea
                       value={cravingInput}
