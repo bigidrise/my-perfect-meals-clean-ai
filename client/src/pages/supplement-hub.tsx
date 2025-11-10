@@ -1,7 +1,14 @@
 
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ArrowUp, ArrowLeft } from "lucide-react";
+import { ArrowUp, ArrowLeft, Info } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 // ---- LIVE PARTNER (Nutritional Frontiers) ----
 const AFFILIATE = {
@@ -93,6 +100,7 @@ const HeroImage: React.FC<{ url: string; alt?: string }> = ({
 export default function SupplementHub() {
   const [, setLocation] = useLocation();
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -119,15 +127,26 @@ export default function SupplementHub() {
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg mb-6 mt-14">
-            <h1 className="text-2xl font-bold leading-tight text-white">
-              Supplement Hub
-            </h1>
-            <p className="text-sm text-white/80">
-              Curated partners across{" "}
-              <span className="font-semibold">two distinct lanes</span>:
-              <span className="ml-1">Clinician-grade Nutraceuticals</span> and{" "}
-              <span className="ml-1">Sports Nutrition</span>.
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h1 className="text-2xl font-bold leading-tight text-white">
+                  Supplement Hub
+                </h1>
+                <p className="text-sm text-white/80">
+                  Curated partners across{" "}
+                  <span className="font-semibold">two distinct lanes</span>:
+                  <span className="ml-1">Clinician-grade Nutraceuticals</span> and{" "}
+                  <span className="ml-1">Sports Nutrition</span>.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400"
+                aria-label="How to use Supplement Hub"
+              >
+                ?
+              </button>
+            </div>
           </div>
         </header>
 
@@ -328,6 +347,42 @@ export default function SupplementHub() {
             </button>
           </div>
         )}
+
+        {/* Info Modal */}
+        <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
+          <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
+                <Info className="h-6 w-6 text-orange-400" />
+                How to Use Supplement Hub
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-white/90">
+              <p>
+                Browse our curated supplement partners offering clinician-grade nutraceuticals and sports nutrition products.
+              </p>
+              <div>
+                <h3 className="font-semibold text-orange-400 mb-2">Steps:</h3>
+                <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
+                  <li>Review our official partner (Nutritional Frontiers) for clinician-grade supplements</li>
+                  <li>Use the member access code (31878) to register as a patient</li>
+                  <li>Browse products with therapeutic dosing and transparent labels</li>
+                  <li>Check out the "Coming Soon" section for upcoming sports nutrition partners</li>
+                  <li>All products are 3rd-party tested with cGMP/NSF manufacturing</li>
+                </ul>
+              </div>
+              <p className="text-orange-400 font-medium">
+                💡 Tip: We feature two distinct lanes - Clinician-grade Nutraceuticals for functional wellness and Sports Nutrition for performance goals.
+              </p>
+            </div>
+            <Button
+              onClick={() => setShowInfoModal(false)}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-xl"
+            >
+              Got It!
+            </Button>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
