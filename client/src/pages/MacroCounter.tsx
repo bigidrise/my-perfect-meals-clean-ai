@@ -516,7 +516,7 @@ export default function MacroCounter() {
                   value={activity}
                   onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
                     setActivity(v);
-                    advance("activity");
+                    advance("details");
                     // Auto-scroll to Set Macro Targets button after activity is selected
                     setTimeout(() => {
                       const button = document.getElementById("calc-button");
@@ -541,7 +541,7 @@ export default function MacroCounter() {
                       htmlFor={`act-${k}`}
                       onClick={() => {
                         setActivity(k);
-                        advance("activity");
+                        advance("details");
                         // Auto-scroll to Set Macro Targets button on every click
                         setTimeout(() => {
                           const button = document.getElementById("calc-button");
