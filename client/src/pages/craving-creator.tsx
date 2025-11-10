@@ -150,6 +150,7 @@ export default function CravingCreator() {
   // 🔋 Progress bar state (real-time ticker like Restaurant Guide)
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
+  const [showCravingInfoModal, setShowCravingInfoModal] = useState(false);
   // Development user ID - consistent across app
   const userId = DEV_USER_ID;
 
@@ -496,7 +497,7 @@ export default function CravingCreator() {
                       What are you craving?
                     </label>
                     <button
-                      onClick={() => {/* TODO: Add info modal */}}
+                      onClick={() => setShowCravingInfoModal(true)}
                       className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
                       aria-label="How to use Craving Creator"
                     >
@@ -927,6 +928,52 @@ export default function CravingCreator() {
           )}
           source="Craving Creator"
         />
+      )}
+
+      {/* Craving Creator Info Modal */}
+      {showCravingInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-zinc-900/95 border border-white/20 rounded-2xl p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Craving Creator</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <div>
+                <p className="font-semibold text-white mb-1">📝 Describe Your Craving</p>
+                <p className="text-white/70">
+                  Be specific! Tell us exactly what you want. For example: "I want something lowfat, strawberry, with graham cracker crust, my equal sweetener, and non-dairy"
+                </p>
+              </div>
+
+              <div>
+                <p className="font-semibold text-white mb-1">🎯 The More Details, The Better</p>
+                <p className="text-white/70">
+                  You have 200 characters to describe your perfect craving. Include flavors, textures, dietary needs, and specific ingredients you want.
+                </p>
+              </div>
+
+              <div>
+                <p className="font-semibold text-white mb-1">⚡ AI-Powered Generation</p>
+                <p className="text-white/70">
+                  Our AI analyzes your health profile, checks ingredient safety, calculates nutrition, and creates a personalized recipe in 15-30 seconds.
+                </p>
+              </div>
+
+              <div>
+                <p className="font-semibold text-white mb-1">👨‍👩‍👧‍👦 Serving Size</p>
+                <p className="text-white/70">
+                  Choose 1-10 servings. Ingredients and nutrition will be scaled automatically for your needs.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowCravingInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
       )}
     </motion.div>
     </PhaseGate>
