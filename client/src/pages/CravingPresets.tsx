@@ -325,8 +325,8 @@ export default function CravingPresetsPage() {
                     </ol>
                   </div>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
