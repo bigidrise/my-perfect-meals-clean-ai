@@ -5,8 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Users, ChefHat, ArrowLeft, Info } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { CRAVING_PRESETS, type CravingPreset, type Ingredient } from "@/data/cravingsPresetsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
@@ -71,6 +70,7 @@ export default function CravingPresetsPage() {
   const [rounding, setRounding] = useState<RoundingMode>("tenth");
   const [filterText, setFilterText] = useState("");
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const meals = useMemo(() => {
     const q = filterText.trim().toLowerCase();
@@ -111,35 +111,13 @@ export default function CravingPresetsPage() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <ChefHat className="h-5 w-5 text-orange-300" />
             <h1 className="text-2xl font-bold text-white">Healthy Premade Cravings</h1>
-            <Popover>
-              <PopoverTrigger asChild>
-                <button
-                  className="flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-900/90 transition-all duration-200 animate-pulse hover:animate-none shadow-lg"
-                  aria-label="How to use premade cravings"
-                >
-                  <Info className="h-7 w-7 text-orange-300" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-orange-400 flex items-center gap-2">
-                    <Info className="h-4 w-4 text-orange-400" />
-                    How to Use Premade Cravings
-                  </h3>
-                  <div className="text-sm text-white/90 space-y-2">
-                    <p>Browse 20+ healthy recipes designed to satisfy cravings without derailing your goals.</p>
-                    <p><strong>Steps:</strong></p>
-                    <ul className="list-disc list-inside space-y-1 text-white/80">
-                      <li>Click any meal card to view details</li>
-                      <li>Choose servings (1-10 people)</li>
-                      <li>Ingredients scale automatically</li>
-                      <li>Add to shopping list at bottom</li>
-                      <li>Filter by name or health badges</li>
-                    </ul>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use premade cravings"
+            >
+              ?
+            </button>
           </div>
           <p className="text-sm text-white/90 max-w-2xl mx-auto">
             Pick a craving, choose servings (1–10), and we'll scale ingredients automatically
@@ -341,6 +319,44 @@ export default function CravingPresetsPage() {
             source={`${selected.name} (${selectedServings} servings)`}
             sourceSlug="craving-presets"
           />
+        )}
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">How to Use Premade Cravings</h3>
+
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>Browse 20+ healthy recipes designed to satisfy cravings without derailing your goals.</p>
+
+                <div className="space-y-2">
+                  <p><strong className="text-white">Steps:</strong></p>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    <li><strong className="text-white">Click any meal card</strong> to view full details</li>
+                    <li><strong className="text-white">Choose servings</strong> (1-10 people)</li>
+                    <li><strong className="text-white">Ingredients scale automatically</strong> based on servings</li>
+                    <li><strong className="text-white">Add to shopping list</strong> at bottom of screen</li>
+                    <li><strong className="text-white">Filter by name or health badges</strong> to find what you need</li>
+                  </ul>
+                </div>
+
+                <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                  <p className="font-semibold text-white mb-1">Pro Tip:</p>
+                  <p className="text-white/70 italic">
+                    Use the rounding options (tenth, half, whole) to make ingredient measurements easier to work with in your kitchen!
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>
