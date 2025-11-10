@@ -120,10 +120,10 @@ export default function TutorialHub() {
     >
       <div className="max-w-6xl mx-auto">
         {/* Dashboard button at the top */}
-        <div className="mb-4">
+        <div className="fixed top-4 left-4 z-50">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-xl font-medium px-4 py-2 text-sm text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-xl font-medium px-4 py-2 text-sm text-white bg-black/30 hover:bg-black/50 border border-white/20 backdrop-blur-sm transition-colors shadow-lg"
             data-testid="link-back-dashboard"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -132,7 +132,7 @@ export default function TutorialHub() {
         </div>
 
         {/* Header card - matching green dashboard style */}
-        <header className="bg-gradient-to-br from-black via-black-500 to-black border border-emerald-300/30 text-white rounded-2xl shadow-xl p-6 mt-12">
+        <header className="bg-gradient-to-br from-black via-black-500 to-black border border-emerald-300/30 text-white rounded-2xl shadow-xl p-6 mt-4">
           <div className="text-center">
             <h1 className="text-3xl font-extrabold">📚 Tutorial Hub</h1>
             <p className="text-white/95 mt-2 text-sm">
