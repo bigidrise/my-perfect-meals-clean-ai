@@ -26,6 +26,7 @@ import Home from "@/pages/home";
 import DashboardNew from "@/pages/DashboardNew";
 import Learn from "@/pages/Learn";
 import ProfileNew from "@/pages/Profile";
+import PrivacySecurity from "@/pages/privacy";
 import Onboarding from "@/pages/onboarding"; // Legacy onboarding
 import OnboardingV2 from "@/pages/OnboardingV2"; // New V2 onboarding
 import Welcome from "@/pages/Welcome";
@@ -183,6 +184,8 @@ export default function Router() {
         <Route path="/learn" component={Learn} />
         <Route path="/get-inspiration" component={GetInspiration} />
         <Route path="/profile" component={ProfileNew} />
+        <Route path="/privacy" component={PrivacySecurity} />
+        <Route path="/settings" component={Settings} />
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
 
         {/* DELETED: MealPlanning, LowGlycemicCarbPage, AiMealCreatorPage, MealPlanningHubRevised routes */}
