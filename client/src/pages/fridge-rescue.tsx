@@ -486,7 +486,7 @@ const FridgeRescuePage = () => {
             </h1>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold"
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
               aria-label="How to use Fridge Rescue"
             >
               ?

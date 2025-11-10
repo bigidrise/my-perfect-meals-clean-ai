@@ -72,7 +72,7 @@ export default function CravingCreatorLanding() {
             </div>
             <button
               onClick={() => {/* Info modal trigger - implement if needed */}}
-              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
               aria-label="How to use"
             >
               ?
