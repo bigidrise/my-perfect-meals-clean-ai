@@ -11,7 +11,7 @@ export default function PrivacySecurity() {
       <header className="space-y-6">
         <Button
           variant="ghost"
-          onClick={() => setLocation("/profile-sheet")}
+          onClick={() => setLocation("/profile")}
           className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
           data-testid="button-back"
         >
