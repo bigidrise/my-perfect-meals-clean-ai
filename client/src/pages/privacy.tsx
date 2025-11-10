@@ -8,70 +8,70 @@ export default function PrivacySecurity() {
   const [, setLocation] = useLocation();
 
   return (
-    <SafePageContainer className="p-6 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-6">
-      <header className="space-y-4">
+    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-8">
+      <header className="space-y-6">
         <Button
           variant="ghost"
           onClick={() => setLocation("/profile")}
-          className="text-white bg-white/10 active:bg-white/20 -ml-2"
+          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
           data-testid="button-back"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
+          <ArrowLeft className="h-5 w-5 mr-3" />
           Back to Profile
         </Button>
         
-        <div className="flex items-center gap-3">
-          <Shield className="h-6 w-6 text-lime-400" />
+        <div className="flex items-center gap-4">
+          <Shield className="h-7 w-7 text-lime-400" />
           <div>
-            <h1 className="text-2xl font-semibold">Privacy & Security</h1>
-            <p className="text-white/80">Manage your privacy and security settings</p>
+            <h1 className="text-3xl font-semibold">Privacy & Security</h1>
+            <p className="text-white/80 text-base">Manage your privacy and security settings</p>
           </div>
         </div>
       </header>
 
-      <section className="space-y-4">
-        <div className="bg-black/40 backdrop-blur-lg p-4 rounded-xl border border-white/10">
+      <section className="space-y-6">
+        <div className="bg-black/40 backdrop-blur-lg p-6 rounded-xl border border-white/10">
           <h2 className="font-semibold mb-2">Data & Storage</h2>
           <p className="text-sm text-white/80 mb-3">
             Control your stored data in My Perfect Meals.
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
               data-testid="button-export-data"
             >
-              <Download className="h-5 w-5 mr-3" /> Export My Data
+              <Download className="h-5 w-5 mr-4" /> Export My Data
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
               data-testid="button-clear-data"
             >
-              <Trash2 className="h-5 w-5 mr-3" /> Clear Saved Macros & Meals
+              <Trash2 className="h-5 w-5 mr-4" /> Clear Saved Macros & Meals
             </Button>
           </div>
         </div>
 
-        <div className="bg-black/40 backdrop-blur-lg p-4 rounded-xl border border-white/10">
-          <h2 className="font-semibold mb-2">Account Security</h2>
-          <p className="text-sm text-white/80 mb-3">
+        <div className="bg-black/40 backdrop-blur-lg p-6 rounded-xl border border-white/10">
+          <h2 className="font-semibold mb-2 text-lg">Account Security</h2>
+          <p className="text-sm text-white/80 mb-4">
             Manage login methods and secure your account.
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
               data-testid="button-change-password"
             >
-              <Lock className="h-5 w-5 mr-3" /> Change Password
+              <Lock className="h-5 w-5 mr-4" /> Change Password
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
               data-testid="button-manage-accounts"
             >
-              <Eye className="h-5 w-5 mr-3" /> Manage Linked Accounts
+              <Eye className="h-5 w-5 mr-4" /> Manage Linked Accounts
             </Button>
           </div>
         </div>
