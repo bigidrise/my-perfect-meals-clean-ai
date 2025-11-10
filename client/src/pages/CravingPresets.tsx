@@ -113,7 +113,7 @@ export default function CravingPresetsPage() {
             <h1 className="text-2xl font-bold text-white">Healthy Premade Cravings</h1>
             <Popover>
               <PopoverTrigger asChild>
-                <button 
+                <button
                   className="flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-900/90 transition-all duration-200 animate-pulse hover:animate-none shadow-lg"
                   aria-label="How to use premade cravings"
                 >
@@ -317,16 +317,16 @@ export default function CravingPresetsPage() {
                 {/* Instructions */}
                 {selected.instructions && selected.instructions.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="font-bold text-lg mb-2 text-white">Instructions</h3>
-                    <ol className="list-decimal list-inside space-y-1">
+                    <h3 className="font-bold text-white mb-2">Instructions</h3>
+                    <ol className="list-decimal list-inside space-y-1 text-sm">
                       {selected.instructions.map((instruction, idx) => (
                         <li key={idx} className="text-white/90">{instruction}</li>
                       ))}
                     </ol>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
 
