@@ -923,7 +923,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 size="sm"
                 variant="ghost"
                 onClick={() => setShowInfoModal(true)}
-                className="h-12 w-12 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full flash-border"
+                className="h-12 w-12 p-0 bg-lime-900/80 text-white/90 hover:text-white hover:bg-lime-800 rounded-full flash-border"
                 aria-label="How to use"
               >
                 <Info className="h-7 w-7" />
