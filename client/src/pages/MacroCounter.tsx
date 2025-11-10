@@ -297,7 +297,16 @@ export default function MacroCounter() {
               </h3>
               <RadioGroup
                 value={goal}
-                onValueChange={(v: Goal) => setGoal(v)}
+                onValueChange={(v: Goal) => {
+                  setGoal(v);
+                  // Auto-scroll to body type card on every change
+                  setTimeout(() => {
+                    const bodyCard = document.getElementById("bodytype-card");
+                    if (bodyCard) {
+                      bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                  }, 200);
+                }}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -308,19 +317,9 @@ export default function MacroCounter() {
                   <Label
                     key={g.v}
                     htmlFor={g.v}
-                    onClick={() => {
-                      setGoal(g.v as Goal);
-                      // Auto-scroll to body type card on every click
-                      setTimeout(() => {
-                        const bodyCard = document.getElementById("bodytype-card");
-                        if (bodyCard) {
-                          bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                      }, 200);
-                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
-                    <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
+                    <RadioGroupItem id={g.v} value={g.v} className="sr-only" name="goal" />
                     {g.label}
                   </Label>
                 ))}
@@ -336,7 +335,16 @@ export default function MacroCounter() {
               <BodyTypeGuide />
               <RadioGroup
                 value={bodyType}
-                onValueChange={(v: BodyType) => setBodyType(v)}
+                onValueChange={(v: BodyType) => {
+                  setBodyType(v);
+                  // Auto-scroll to details card on every change
+                  setTimeout(() => {
+                    const detailsCard = document.getElementById("details-card");
+                    if (detailsCard) {
+                      detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                  }, 200);
+                }}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -347,19 +355,9 @@ export default function MacroCounter() {
                   <Label
                     key={b.v}
                     htmlFor={b.v}
-                    onClick={() => {
-                      setBodyType(b.v as BodyType);
-                      // Auto-scroll to details card on every click
-                      setTimeout(() => {
-                        const detailsCard = document.getElementById("details-card");
-                        if (detailsCard) {
-                          detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                      }, 200);
-                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
-                    <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
+                    <RadioGroupItem id={b.v} value={b.v} className="sr-only" name="bodyType" />
                     {b.label}
                   </Label>
                 ))}
@@ -400,20 +398,11 @@ export default function MacroCounter() {
                   <Label
                     key={k}
                     htmlFor={`act-${k}`}
-                    onClick={() => {
-                      setActivity(k);
-                      setTimeout(() => {
-                        const button = document.getElementById("calc-button");
-                        if (button) {
-                          button.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                      }, 300);
-                    }}
                     className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
                       activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
                     }`}
                   >
-                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
+                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" name="activity" />
                     {label}
                   </Label>
                 ))}
