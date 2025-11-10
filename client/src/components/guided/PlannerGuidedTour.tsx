@@ -18,17 +18,14 @@ export default function PlannerGuidedTour() {
 
   return (
     <>
-      {/* Flashing question mark icon with pointing finger */}
-      <div className="fixed top-4 right-4 z-[60] flex items-center gap-2">
-        <span className="text-3xl animate-bounce">👉</span>
-        <button
-          onClick={() => setOpen(true)}
-          className="bg-lime-500/20 hover:bg-lime-500/30 text-white rounded-full w-10 h-10 flex items-center justify-center border border-lime-500/40 backdrop-blur-sm flash-border"
-          title="Open guided overview"
-        >
-          ?
-        </button>
-      </div>
+      {/* Flashing question mark icon */}
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed top-4 right-4 z-[60] bg-orange-500/20 hover:bg-orange-500/30 text-white rounded-full w-10 h-10 flex items-center justify-center border border-orange-500/40 backdrop-blur-sm flash-orange"
+        title="Open guided overview"
+      >
+        ?
+      </button>
 
       {open && <PlannerOverlay onClose={() => setOpen(false)} />}
     </>
@@ -53,23 +50,21 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
 
         <div className="space-y-4">
           {hubs.map((h) => (
-            <div key={h.name} className="flex items-center gap-3">
-              <span className="text-3xl animate-bounce">👉</span>
-              <button
-                onClick={() => {
-                  onClose();
-                  // Simulate click of the real hub button
-                  const el = document.querySelector(
-                    `[data-testid="card-${h.name.toLowerCase().replace(/\s+/g, "-")}"]`
-                  ) as HTMLElement | null;
-                  el?.click();
-                }}
-                className="w-full p-4 text-left rounded-xl border border-lime-500/30 bg-lime-500/10 hover:bg-lime-500/20 transition-all flash-border"
-              >
-                <p className="font-semibold">{h.name}</p>
-                <p className="text-white/70 text-sm">{h.desc}</p>
-              </button>
-            </div>
+            <button
+              key={h.name}
+              onClick={() => {
+                onClose();
+                // Simulate click of the real hub button
+                const el = document.querySelector(
+                  `[data-testid="card-${h.name.toLowerCase().replace(/\s+/g, "-")}"]`
+                ) as HTMLElement | null;
+                el?.click();
+              }}
+              className="w-full p-4 text-left rounded-xl border border-orange-500/30 bg-orange-500/10 hover:bg-orange-500/20 transition-all flash-orange"
+            >
+              <p className="font-semibold">{h.name}</p>
+              <p className="text-white/70 text-sm">{h.desc}</p>
+            </button>
           ))}
         </div>
 

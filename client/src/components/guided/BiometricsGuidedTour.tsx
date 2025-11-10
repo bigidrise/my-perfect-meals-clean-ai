@@ -59,17 +59,13 @@ export default function BiometricsGuidedTour() {
     const saveBtn = document.getElementById("save-weight-btn");
     if (saveBtn) {
       saveBtn.classList.add("flash-green-strong");
-      
-      setTimeout(() => {
-        saveBtn.classList.remove("flash-green-strong");
-      }, 10000);
+      setTimeout(() => saveBtn.classList.remove("flash-green-strong"), 10000);
     }
   };
 
   return (
     <>
-      <div className="fixed left-1/2 -translate-x-1/2 top-4 z-[60] flex items-center gap-3">
-        <span className="text-4xl animate-bounce">👉</span>
+      <div className="fixed left-1/2 -translate-x-1/2 top-4 z-[60]">
         <button
           onClick={handleStart}
           className="px-4 py-2 rounded-xl text-white font-medium bg-emerald-600/90 border border-emerald-300/40 backdrop-blur flash-green"

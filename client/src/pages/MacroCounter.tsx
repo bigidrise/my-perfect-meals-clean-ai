@@ -173,6 +173,16 @@ function BodyTypeGuide() {
   );
 }
 
+// Advance the guided tour to the next step
+const advance = (step: string) => {
+  const coachMode = localStorage.getItem("coachMode") === "guided";
+  if (!coachMode) return;
+  
+  window.dispatchEvent(
+    new CustomEvent("macro:nextStep", { detail: { step } })
+  );
+};
+
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -244,7 +254,7 @@ export default function MacroCounter() {
   const results = useMemo(() => {
     // Don't calculate until activity is selected
     if (!activity) return null;
-
+    
     const bmr = mifflin({ sex, kg, cm, age });
     const tdee = Math.round(bmr * ACTIVITY_FACTORS[activity as keyof typeof ACTIVITY_FACTORS]);
     const target = goalAdjust(tdee, goal);
@@ -290,23 +300,14 @@ export default function MacroCounter() {
 
         {/* Goal & Body Type */}
         <div className="grid md:grid-cols-2 gap-4">
-          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white relative">
+          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
               </h3>
               <RadioGroup
                 value={goal}
-                onValueChange={(v: Goal) => {
-                  setGoal(v);
-                  // Auto-scroll to body type card on every change
-                  setTimeout(() => {
-                    const bodyCard = document.getElementById("bodytype-card");
-                    if (bodyCard) {
-                      bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
-                  }, 200);
-                }}
+                onValueChange={(v: Goal) => {setGoal(v); advance("goal");}}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -317,6 +318,17 @@ export default function MacroCounter() {
                   <Label
                     key={g.v}
                     htmlFor={g.v}
+                    onClick={() => {
+                      setGoal(g.v as Goal); 
+                      advance("goal");
+                      // Auto-scroll to body type card on every click
+                      setTimeout(() => {
+                        const bodyCard = document.getElementById("bodytype-card");
+                        if (bodyCard) {
+                          bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 200);
+                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
                     <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
@@ -327,7 +339,7 @@ export default function MacroCounter() {
             </CardContent>
           </Card>
 
-          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white relative">
+          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
@@ -335,16 +347,7 @@ export default function MacroCounter() {
               <BodyTypeGuide />
               <RadioGroup
                 value={bodyType}
-                onValueChange={(v: BodyType) => {
-                  setBodyType(v);
-                  // Auto-scroll to details card on every change
-                  setTimeout(() => {
-                    const detailsCard = document.getElementById("details-card");
-                    if (detailsCard) {
-                      detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
-                  }, 200);
-                }}
+                onValueChange={(v: BodyType) => {setBodyType(v); advance("body-type");}}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -355,6 +358,17 @@ export default function MacroCounter() {
                   <Label
                     key={b.v}
                     htmlFor={b.v}
+                    onClick={() => {
+                      setBodyType(b.v as BodyType);
+                      advance("body-type");
+                      // Auto-scroll to details card on every click
+                      setTimeout(() => {
+                        const detailsCard = document.getElementById("details-card");
+                        if (detailsCard) {
+                          detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 200);
+                    }}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
                     <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
@@ -366,54 +380,9 @@ export default function MacroCounter() {
           </Card>
         </div>
 
-        {/* Activity Level - Always visible */}
-        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5 relative">
-          <CardContent className="p-5">
-            <h3 className="text-lg font-semibold flex items-center">
-              <Target className="h-5 w-5 mr-2 text-purple-300" /> Activity Level
-            </h3>
-            <div className="mt-4">
-              <RadioGroup
-                value={activity}
-                onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
-                  setActivity(v);
-                  setTimeout(() => {
-                    const button = document.getElementById("calc-button");
-                    if (button) {
-                      button.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
-                  }, 300);
-                }}
-                className="grid grid-cols-2 md:grid-cols-3 gap-2"
-              >
-                {(
-                  [
-                    ["sedentary", "Sedentary"],
-                    ["light", "Light"],
-                    ["moderate", "Moderate"],
-                    ["very", "Very Active"],
-                    ["extra", "Extra"],
-                  ] as const
-                ).map(([k, label]) => (
-                  <Label
-                    key={k}
-                    htmlFor={`act-${k}`}
-                    className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                      activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                    }`}
-                  >
-                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
-                    {label}
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Details - Only show after activity level is selected */}
+        {/* Inputs - Only show after activity level is selected */}
         {activity && (
-        <Card className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
               <Ruler className="h-5 w-5 mr-2" /> Your Details
@@ -540,6 +509,58 @@ export default function MacroCounter() {
                   </div>
                 </div>
               </div>
+
+              <div className="space-y-3">
+                <div className="text-xs text-white font-semibold">Activity</div>
+                <RadioGroup
+                  value={activity}
+                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
+                    setActivity(v);
+                    advance("activity");
+                    // Auto-scroll to Set Macro Targets button after activity is selected
+                    setTimeout(() => {
+                      const button = document.getElementById("calc-button");
+                      if (button) {
+                        button.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }
+                    }, 300);
+                  }}
+                  className="grid grid-cols-2 md:grid-cols-3 gap-2"
+                >
+                  {(
+                    [
+                      ["sedentary", "Sedentary"],
+                      ["light", "Light"],
+                      ["moderate", "Moderate"],
+                      ["very", "Very Active"],
+                      ["extra", "Extra"],
+                    ] as const
+                  ).map(([k, label]) => (
+                    <Label
+                      key={k}
+                      htmlFor={`act-${k}`}
+                      onClick={() => {
+                        setActivity(k);
+                        advance("activity");
+                        // Auto-scroll to Set Macro Targets button on every click
+                        setTimeout(() => {
+                          const button = document.getElementById("calc-button");
+                          if (button) {
+                            button.scrollIntoView({ behavior: "smooth", block: "center" });
+                          }
+                        }, 300);
+                      }}
+                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                        activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                      }`}
+                    >
+                      <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
+                      {label}
+                    </Label>
+                  ))}
+                </RadioGroup>
+
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -567,10 +588,11 @@ export default function MacroCounter() {
             </Card>
 
             {/* Save Targets */}
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex justify-center">
               <Button
                 id="calc-button"
                 onClick={() => {
+                  advance("calc");
                   setMacroTargets({
                     calories: results.target,
                     protein_g: results.macros.protein.g,

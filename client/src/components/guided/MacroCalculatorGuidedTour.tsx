@@ -7,29 +7,26 @@ import { useEffect, useState } from "react";
  * Guides users through the macro calculator workflow in sequence:
  * 1. Choose Goal
  * 2. Select Body Type
- * 3. Fill in Details (Activity Level)
+ * 3. Fill in Details
  * 4. Calculate Macros
  * 
- * Each step automatically highlights and advances when completed.
- * 
- * Uses localStorage polling since React RadioGroup doesn't emit DOM events.
+ * Each step automatically advances to the next when completed.
  */
 
 export default function MacroCalculatorGuidedTour() {
   const coachMode = localStorage.getItem("coachMode") === "guided";
-  const [step, setStep] = useState<"goal" | "body" | "activity" | "calc" | null>(() => {
-    if (!coachMode) return null;
-    return "goal";
-  });
+  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(
+    coachMode ? "goal" : null
+  );
 
-  // Apply lime green flash to current step
+  // Apply/remove orange flash to current step
   useEffect(() => {
     if (!coachMode || !step) return;
     
     const map = {
       goal: "goal-card",
       body: "bodytype-card",
-      activity: "details-card",
+      details: "details-card",
       calc: "calc-button",
     } as const;
 
@@ -45,44 +42,22 @@ export default function MacroCalculatorGuidedTour() {
     };
   }, [step, coachMode]);
 
-  // Poll localStorage for changes (since React components don't emit DOM events)
+  // Listen for completion events and advance to next step
   useEffect(() => {
-    if (!coachMode || !step) return;
+    if (!coachMode) return;
 
-    const interval = setInterval(() => {
-      try {
-        const settings = JSON.parse(localStorage.getItem("macro-settings") || "{}");
-        
-        // Check if current step is complete and advance
-        if (step === "goal" && settings.goal) {
-          setStep("body");
-        } else if (step === "body" && settings.bodyType) {
-          setStep("activity");
-        } else if (step === "activity" && settings.activity) {
-          setStep("calc");
-        }
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }, 200); // Poll every 200ms
-
-    return () => clearInterval(interval);
-  }, [step, coachMode]);
-
-  // Listen for calc button click
-  useEffect(() => {
-    if (!coachMode || step !== "calc") return;
-
-    const calcButton = document.getElementById("calc-button");
-    const handleCalc = () => {
-      setStep(null);
+    const handleNext = (e: Event) => {
+      const { step: completedStep } = (e as CustomEvent).detail;
+      
+      if (completedStep === "goal") setStep("body");
+      else if (completedStep === "body-type") setStep("details");
+      else if (completedStep === "details") setStep("calc");
+      else if (completedStep === "calc") setStep(null);
     };
     
-    if (calcButton) {
-      calcButton.addEventListener("click", handleCalc);
-      return () => calcButton.removeEventListener("click", handleCalc);
-    }
-  }, [step, coachMode]);
+    window.addEventListener("macro:nextStep", handleNext as EventListener);
+    return () => window.removeEventListener("macro:nextStep", handleNext as EventListener);
+  }, [coachMode]);
 
   if (!coachMode) return null;
   return null;

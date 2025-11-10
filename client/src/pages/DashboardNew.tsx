@@ -227,9 +227,6 @@ export default function DashboardNew() {
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      {shouldFlash && (
-                        <span className="text-4xl animate-bounce">👉</span>
-                      )}
                       <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
                         <Icon className="h-6 w-6 text-orange-500" />
                       </div>
