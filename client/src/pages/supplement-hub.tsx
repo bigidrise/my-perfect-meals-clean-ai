@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ArrowUp, ArrowLeft, Info } from "lucide-react";
@@ -126,7 +125,7 @@ export default function SupplementHub() {
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
-          <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg mb-6 mt-14">
+          <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 mb-6 mt-14">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h1 className="text-2xl font-bold leading-tight text-white">
@@ -141,7 +140,7 @@ export default function SupplementHub() {
               </div>
               <button
                 onClick={() => setShowInfoModal(true)}
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400"
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400 flash-border"
                 aria-label="How to use Supplement Hub"
               >
                 ?
@@ -353,7 +352,7 @@ export default function SupplementHub() {
           <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-                <Info className="h-6 w-6 text-orange-400" />
+                <Info className="h-6 w-6 text-emerald-400" />
                 How to Use Supplement Hub
               </DialogTitle>
             </DialogHeader>
@@ -362,7 +361,7 @@ export default function SupplementHub() {
                 Browse our curated supplement partners offering clinician-grade nutraceuticals and sports nutrition products.
               </p>
               <div>
-                <h3 className="font-semibold text-orange-400 mb-2">Steps:</h3>
+                <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
                 <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
                   <li>Review our official partner (Nutritional Frontiers) for clinician-grade supplements</li>
                   <li>Use the member access code (31878) to register as a patient</li>
@@ -371,13 +370,13 @@ export default function SupplementHub() {
                   <li>All products are 3rd-party tested with cGMP/NSF manufacturing</li>
                 </ul>
               </div>
-              <p className="text-orange-400 font-medium">
+              <p className="text-emerald-400 font-medium">
                 💡 Tip: We feature two distinct lanes - Clinician-grade Nutraceuticals for functional wellness and Sports Nutrition for performance goals.
               </p>
             </div>
             <Button
               onClick={() => setShowInfoModal(false)}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-xl"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
             >
               Got It!
             </Button>

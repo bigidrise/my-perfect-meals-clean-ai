@@ -242,7 +242,7 @@ export default function CareTeamPage() {
               </div>
               <button
                 onClick={() => setShowInfoModal(true)}
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400"
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400 flash-border"
                 aria-label="How to use Care Team"
               >
                 ?
