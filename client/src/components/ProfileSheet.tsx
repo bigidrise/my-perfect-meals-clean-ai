@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   User,
-  Settings,
-  Bell,
   Shield,
   CreditCard,
   LogOut,
@@ -58,11 +56,11 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
 
   const menuItems = [
     {
-      title: "Account Settings",
-      description: "Manage your account preferences",
-      icon: Settings,
-      route: "/settings",
-      testId: "menu-settings",
+      title: "Privacy & Security",
+      description: "Manage your privacy settings",
+      icon: Shield,
+      route: "/privacy",
+      testId: "menu-privacy",
     },
     {
       title: "Subscription",
@@ -70,20 +68,6 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
       icon: CreditCard,
       route: "/pricing",
       testId: "menu-subscription",
-    },
-    {
-      title: "Notifications",
-      description: "Control your notification preferences",
-      icon: Bell,
-      route: "/notifications",
-      testId: "menu-notifications",
-    },
-    {
-      title: "Privacy & Security",
-      description: "Manage your privacy settings",
-      icon: Shield,
-      route: "/privacy",
-      testId: "menu-privacy",
     },
     {
       title: "Tutorial Hub",
