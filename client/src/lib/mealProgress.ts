@@ -1,47 +1,38 @@
+export type MealId = "breakfast" | "lunch" | "dinner" | "snack1" | "snack2";
 
-// Simple per-day meal progression store
-
-export type MealId =
-  | "breakfast"
-  | "lunch"
-  | "dinner"
-  | "snack1"
-  | "snack2";
-
-const ORDER: MealId[] = ["breakfast", "lunch", "dinner", "snack1", "snack2"];
-
-const keyForToday = () => {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `mpm.mealProgress.${y}-${m}-${day}`;
-};
-
-export function getProgress(): Partial<Record<MealId, boolean>> {
+export function getProgress(): Record<MealId, boolean> {
+  const today = new Date().toISOString().split("T")[0];
+  const key = `meal-progress-${today}`;
+  const stored = localStorage.getItem(key);
+  
+  if (!stored) {
+    return {
+      breakfast: false,
+      lunch: false,
+      dinner: false,
+      snack1: false,
+      snack2: false,
+    };
+  }
+  
   try {
-    const raw = localStorage.getItem(keyForToday());
-    return raw ? JSON.parse(raw) : {};
+    return JSON.parse(stored);
   } catch {
-    return {};
+    return {
+      breakfast: false,
+      lunch: false,
+      dinner: false,
+      snack1: false,
+      snack2: false,
+    };
   }
 }
 
-export function setCompleted(mealId: MealId) {
-  const data = getProgress();
-  data[mealId] = true;
-  localStorage.setItem(keyForToday(), JSON.stringify(data));
-}
-
-export function resetToday() {
-  localStorage.removeItem(keyForToday());
-}
-
-export function nextIncomplete(mealsPresent?: MealId[]): MealId | null {
-  const data = getProgress();
-  const list = mealsPresent && mealsPresent.length ? mealsPresent : ORDER;
-  for (const id of list) {
-    if (!data[id]) return id;
-  }
-  return null;
+export function markMealComplete(mealId: MealId): void {
+  const today = new Date().toISOString().split("T")[0];
+  const key = `meal-progress-${today}`;
+  const progress = getProgress();
+  progress[mealId] = true;
+  localStorage.setItem(key, JSON.stringify(progress));
+  window.dispatchEvent(new CustomEvent("meal:saved"));
 }
