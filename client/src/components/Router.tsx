@@ -184,7 +184,7 @@ export default function Router() {
         <Route path="/learn" component={Learn} />
         <Route path="/get-inspiration" component={GetInspiration} />
         <Route path="/privacy" component={PrivacySecurity} />
-        {/* Profile functionality in My Hub (ProfileSheet) - no separate /profile page needed */}
+        <Route path="/profile" component={Profile} />
         {/* Settings functionality now in My Hub (ProfileSheet) */}
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
 
