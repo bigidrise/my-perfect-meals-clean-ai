@@ -890,8 +890,10 @@ export default function GLP1MealBuilder() {
         <ArrowLeft className="h-4 w-4" />
       </Button>
 
-      <div className="mx-4 mb-6">
-        {/* Week Navigation Header */}
+      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div>
+            {/* Week Navigation Header */}
             <div className="flex items-center gap-3 mb-2">
               <button
                 type="button"
@@ -921,6 +923,13 @@ export default function GLP1MealBuilder() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">GLP-1 Meal Board</h1>
+                <button
+                  onClick={() => setShowInfoModal(true)}
+                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
+                  aria-label="How to use"
+                >
+                  ?
+                </button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}
@@ -986,6 +995,8 @@ export default function GLP1MealBuilder() {
                 />
               </div>
             )}
+          </div>
+        </div>
       </div>
 
       <div className="max-w-[1600px] mx-auto px-4 pb-10 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
