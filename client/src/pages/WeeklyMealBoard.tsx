@@ -923,7 +923,7 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="ghost"
                   onClick={() => setShowInfoModal(true)}
-                  className="h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-xl flash-border"
+                  className="h-4 w-4 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-xl flash-border"
                   aria-label="How to use"
                 >
                   <Info className="h-4 w-4" />
