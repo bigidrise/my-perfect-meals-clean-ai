@@ -1,0 +1,146 @@
+Exactly — you want the guide to *chain-react* automatically:
+every time the user completes one section, that section’s flash ends and the **next** section immediately starts flashing until the whole calculator is done.
+
+Here’s the full setup that does that.
+(We’ll keep your bright-orange border pulse and add real event-to-event triggering.)
+
+---
+
+### 1️⃣ Keep your orange flash CSS
+
+You already have:
+
+```css
+@keyframes pulseBorderOrange {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,122,0,0.7); }
+  50%      { box-shadow: 0 0 12px 6px rgba(255,122,0,0.45); }
+}
+.flash-border-orange {
+  animation: pulseBorderOrange 1.3s infinite;
+  border: 2px solid rgba(255,122,0,0.9);
+  border-radius: 1rem;
+}
+```
+
+Leave that as is.
+
+---
+
+### 2️⃣ Drop-in guided controller
+
+Replace your existing `MacroCalculatorTour.tsx` with this version:
+
+```tsx
+import { useEffect, useState } from "react";
+
+/**
+ * Sequential flashing controller for Macro Calculator
+ * (Choose Goal → Body Type → Details → Set Targets)
+ */
+export default function MacroCalculatorTour() {
+  const coachMode = localStorage.getItem("coachMode") === "guided";
+  const [step, setStep] = useState<"goal" | "body" | "details" | "targets" | null>(
+    coachMode ? "goal" : null
+  );
+
+  // Apply / remove flash
+  useEffect(() => {
+    if (!coachMode || !step) return;
+    const map = {
+      goal: "goal-card",
+      body: "bodytype-card",
+      details: "details-card",
+      targets: "macro-targets-btn",
+    } as const;
+
+    const el = document.getElementById(map[step]);
+    if (el) el.classList.add("flash-border-orange");
+    return () => el?.classList.remove("flash-border-orange");
+  }, [step, coachMode]);
+
+  // Listen for next triggers
+  useEffect(() => {
+    if (!coachMode) return;
+    const onNext = (e: Event) => {
+      const finished = (e as CustomEvent).detail.step as
+        | "goal"
+        | "body"
+        | "details"
+        | "targets";
+      if (finished === "goal") setStep("body");
+      if (finished === "body") setStep("details");
+      if (finished === "details") setStep("targets");
+      if (finished === "targets") setStep(null);
+    };
+    window.addEventListener("macro:next", onNext as EventListener);
+    return () => window.removeEventListener("macro:next", onNext as EventListener);
+  }, [coachMode]);
+
+  return null;
+}
+```
+
+---
+
+### 3️⃣ Fire the triggers from the user’s actions
+
+In **`MacroCounter.tsx`**, add this helper and attach it to each selection:
+
+```tsx
+const trigger = (step: "goal" | "body" | "details" | "targets") =>
+  window.dispatchEvent(new CustomEvent("macro:next", { detail: { step } }));
+```
+
+Then:
+
+```tsx
+<section id="goal-card" ...>
+  <h3>Choose Your Goal</h3>
+  {["Cut", "Maintain", "Gain"].map((g) => (
+    <button key={g} onClick={() => trigger("goal")} className="btn btn-glass">
+      {g}
+    </button>
+  ))}
+</section>
+
+<section id="bodytype-card" ...>
+  <h3>What's Your Body Type?</h3>
+  {["Ectomorph", "Mesomorph", "Endomorph"].map((b) => (
+    <button key={b} onClick={() => trigger("body")} className="btn btn-glass">
+      {b}
+    </button>
+  ))}
+</section>
+
+<section id="details-card" ...>
+  <h3>Your Details</h3>
+  {/* age/height/weight inputs */}
+  <button onClick={() => trigger("details")} className="btn btn-glass mt-3">
+    Save Details
+  </button>
+</section>
+
+<button
+  id="macro-targets-btn"
+  onClick={() => trigger("targets")}
+  className="btn btn-primary"
+>
+  Set Macro Targets
+</button>
+```
+
+---
+
+### 🔁 What happens now
+
+1. **Page load →** `step = "goal"` → orange border flashes on **Choose Your Goal**.
+2. **User picks a goal →** `trigger("goal")` fires → Goal stops flashing, **Body Type** card immediately starts flashing.
+3. **User picks a body type →** `trigger("body")` fires → Body Type stops, **Details** card flashes.
+4. **User saves details →** `trigger("details")` fires → Details stops, **Set Macro Targets** button flashes.
+5. **User presses Set Macros →** `trigger("targets")` fires → Flash stops; you can now route to Biometrics.
+
+Every step automatically hands off to the next one, so the highlight *flows all the way through* without you clicking anything extra.
+
+---
+
+Once you confirm this is flashing and sequencing correctly, I’ll wire the **“Set Macro Targets” → Biometrics guided transition** so the next page lights up automatically.
