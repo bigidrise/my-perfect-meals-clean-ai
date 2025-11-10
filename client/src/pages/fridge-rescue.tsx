@@ -138,6 +138,7 @@ interface MealData {
 const FridgeRescuePage = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Check if user has access to Fridge Rescue feature
   const userPlan = getCurrentUserPlan();
@@ -479,9 +480,18 @@ const FridgeRescuePage = () => {
         </button>
 
         <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 mb-8 mt-12">
-          <h1 className="text-2xl font-bold mb-4 text-white">
-            🧊 Fridge Rescue
-          </h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-white">
+              🧊 Fridge Rescue
+            </h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold"
+              aria-label="How to use Fridge Rescue"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-white text-sm">
             Don't know what to cook? Tell us what's in your fridge, and we'll
             help you make a meal fast.
@@ -809,6 +819,38 @@ const FridgeRescuePage = () => {
           </div>
         )}
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h2>
+            <div className="space-y-3 text-white/90 text-sm mb-6">
+              <p>
+                <strong>1. Enter Your Ingredients:</strong> List what you have in your fridge, separated by commas.
+              </p>
+              <p>
+                <strong>2. Generate Meals:</strong> Click the button to create 3 delicious, healthy meals using your ingredients.
+              </p>
+              <p>
+                <strong>3. Choose Your Meal:</strong> Browse the generated recipes with full nutrition info and cooking instructions.
+              </p>
+              <p>
+                <strong>4. Log to Macros:</strong> Track your meal directly to your daily macro counter.
+              </p>
+              <p className="text-lime-400 font-medium mt-4">
+                💡 Tip: The more specific you are with ingredients, the better your meal suggestions will be!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            >
+              Got It!
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
     </PhaseGate>
   );
