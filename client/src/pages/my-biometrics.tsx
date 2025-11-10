@@ -793,9 +793,30 @@ export default function MyBiometrics() {
       <div className="max-w-6xl mx-auto space-y-6 pt-14">
         {/* Header */}
         <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center relative">
             <CardTitle className="text-2xl font-bold text-white">📊 My Biometrics</CardTitle>
             <p className="text-white/90 text-sm mt-2">Track macros, calories, and weight</p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+                  title="Biometrics info"
+                >
+                  ?
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-lime-300">About My Biometrics</p>
+                  <p className="text-sm text-white/90">
+                    Track your daily macros (protein, carbs, fat, calories), weight, and water intake. Your data is stored locally and syncs with the Macro Calculator.
+                  </p>
+                  <p className="text-sm text-white/90">
+                    Use the "Add" button to log meals manually, or tap "Log from Photo" to use AI to estimate nutrition from a food picture.
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
             <div className="mt-3 flex justify-center hidden">
               <Button onClick={exportCSV} className="bg-orange-600 hover:bg-orange-700 text-white border border-white/20">Export CSV</Button>
             </div>

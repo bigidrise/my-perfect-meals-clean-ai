@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import MacroCalculatorGuidedTour from "@/components/guided/MacroCalculatorGuidedTour";
 import {
   Activity,
@@ -304,12 +305,33 @@ export default function MacroCounter() {
 
       <div className="max-w-5xl mx-auto space-y-6 pt-14">
         <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center relative">
             <CardTitle className="text-2xl font-bold text-white">Macro Calculator</CardTitle>
             <p className="text-white/90 text-sm mt-2">
               Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
               <b>gain</b>.
             </p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+                  title="Macro Calculator info"
+                >
+                  ?
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-lime-300">About Macro Calculator</p>
+                  <p className="text-sm text-white/90">
+                    The Macro Calculator helps you determine your personalized calorie and macro targets based on your goal (cut, maintain, or gain), body type, activity level, and biometric data.
+                  </p>
+                  <p className="text-sm text-white/90">
+                    Use the "Set Macro Targets" button to save your calculated targets to My Biometrics for daily tracking.
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
           </CardHeader>
         </Card>
 

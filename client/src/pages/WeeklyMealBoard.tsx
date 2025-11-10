@@ -19,7 +19,7 @@ import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
 import { todayISOInTZ } from "@/utils/midnight";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info } from "lucide-react";
+import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info, Calendar } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -517,7 +517,7 @@ export default function WeeklyMealBoard() {
     const ok = pct >= 90 && pct <= 110; // within ±10% looks "green"
     return (
       <span className={`text-xs px-2 py-1 rounded-xl border ${
-        ok ? "border-emerald-500/40 text-emerald-300 bg-emerald-500/10"
+        ok ? "border-lime-500/40 text-lime-300 bg-lime-500/10"
            : "border-amber-500/40 text-amber-300 bg-amber-500/10"
       }`}>
         {label}: {value} / {target}
@@ -1270,7 +1270,7 @@ export default function WeeklyMealBoard() {
                     }
                     return [...board.lists.breakfast, ...board.lists.lunch, ...board.lists.dinner, ...board.lists.snacks]
                       .reduce((sum, meal) => sum + (meal.nutrition?.carbs ?? 0), 0);
-                  })())}g
+                  })())}
                 </div>
                 <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Carbs</div>
               </div>
