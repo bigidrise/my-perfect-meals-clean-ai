@@ -708,19 +708,19 @@
 }
 
 /* Guided Tour Animations */
-@keyframes pulseBorderOrange {
+@keyframes pulseBorderGreen {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 122, 0, 0.7);
-    border-color: rgba(255, 122, 0, 0.4);
+    box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7);
+    border-color: rgba(132, 204, 22, 0.4);
   }
   50% {
-    box-shadow: 0 0 12px 6px rgba(255, 122, 0, 0.45);
-    border-color: rgba(255, 122, 0, 0.9);
+    box-shadow: 0 0 12px 6px rgba(132, 204, 22, 0.45);
+    border-color: rgba(132, 204, 22, 0.9);
   }
 }
 
 .flash-border {
-  animation: pulseBorderOrange 1.3s ease-in-out infinite;
-  border: 2px solid rgba(255, 122, 0, 0.9) !important;
+  animation: pulseBorderGreen 1.3s ease-in-out infinite;
+  border: 2px solid rgba(132, 204, 22, 0.9) !important;
   border-radius: 1rem;
 }
