@@ -566,7 +566,7 @@ export default function MacroCounter() {
                       toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
                       advance("sync-weight");
                     }}
-                    className="w-full bg-emerald-600 border border-emerald-500 text-white hover:bg-emerald-700 hover:border-emerald-600 font-semibold mt-4"
+                    className="w-full bg-lime-500 border border-lime-400 text-white hover:bg-lime-600 hover:border-lime-500 font-semibold mt-4"
                     data-testid="button-sync-weight"
                   >
                     <Scale className="h-4 w-4 mr-2" />
@@ -621,7 +621,7 @@ export default function MacroCounter() {
                   });
                   setLocation("/my-biometrics");
                 }}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-200"
+                className="bg-lime-500 hover:bg-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200"
               >
                 <Target className="h-5 w-5 mr-2" /> Set Macro Targets
               </Button>
