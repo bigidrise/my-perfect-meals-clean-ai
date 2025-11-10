@@ -185,6 +185,7 @@ export default function RestaurantGuidePage() {
   const [restaurantInput, setRestaurantInput] = useState("");
   const [matchedCuisine, setMatchedCuisine] = useState<string | null>(null);
   const [generatedMeals, setGeneratedMeals] = useState<any[]>([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const { toast } = useToast();
 
   // 🔋 Progress bar state (real-time ticker like HolidayFeast)
@@ -359,9 +360,18 @@ export default function RestaurantGuidePage() {
           </div>
 
         <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
-          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
-          Restaurant Guide
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">
+              Restaurant Guide
+            </h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold"
+              aria-label="How to use Restaurant Guide"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-sm sm:text-lg text-white/80">
             Get healthy ordering tips for any restaurant
           </p>
@@ -670,6 +680,39 @@ export default function RestaurantGuidePage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h2>
+            <div className="space-y-3 text-white/90 text-sm mb-6">
+              <div>
+                <strong className="text-orange-400">Find Meals Near Me:</strong>
+                <p className="mt-1">Search for healthy meals at nearby restaurants by entering what you're craving and your ZIP code.</p>
+              </div>
+              <div>
+                <strong className="text-orange-400">Restaurant Meal Generator:</strong>
+                <ol className="list-decimal list-inside mt-1 space-y-1">
+                  <li>Type a restaurant name or cuisine type</li>
+                  <li>Click "Get 2 Options" to generate AI-powered meal recommendations</li>
+                  <li>Review nutrition info, medical badges, and ordering tips</li>
+                  <li>Get customized modifications for healthier choices</li>
+                </ol>
+              </div>
+              <p className="text-lime-400 font-medium mt-4">
+                💡 Tip: Generation takes 60-90 seconds. Your results are automatically saved on this page!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            >
+              Got It!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
     </motion.div>
     </PhaseGate>
