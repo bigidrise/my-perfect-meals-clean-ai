@@ -104,13 +104,13 @@ export default function DashboardNew() {
       className="min-h-screen bg-black"
     >
       {/* Fixed My Hub - Top Right */}
-      <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <ProfileSheet>
           <button
-            className="p-1 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+            className="p-2 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-black/70 hover:border-orange-500/30 transition-all"
             data-testid="button-my-hub"
           >
-            <Grid className="h-6 w-6 text-white" />
+            <Grid className="h-6 w-6 text-orange-400" />
           </button>
         </ProfileSheet>
       </div>
