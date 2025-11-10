@@ -15,11 +15,11 @@ import { useEffect, useState } from "react";
 
 export default function MacroCalculatorGuidedTour() {
   const coachMode = localStorage.getItem("coachMode") === "guided";
-  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(
+  const [step, setStep] = useState<"goal" | "body" | "details" | "sync-weight" | "calc" | null>(
     coachMode ? "goal" : null
   );
 
-  // Apply/remove orange flash to current step
+  // Apply/remove lime flash to current step
   useEffect(() => {
     if (!coachMode || !step) return;
     
@@ -27,6 +27,7 @@ export default function MacroCalculatorGuidedTour() {
       goal: "goal-card",
       body: "bodytype-card",
       details: "details-card",
+      "sync-weight": "sync-weight-button",
       calc: "calc-button",
     } as const;
 
@@ -51,7 +52,8 @@ export default function MacroCalculatorGuidedTour() {
       
       if (completedStep === "goal") setStep("body");
       else if (completedStep === "body-type") setStep("details");
-      else if (completedStep === "details") setStep("calc");
+      else if (completedStep === "details") setStep("sync-weight");
+      else if (completedStep === "sync-weight") setStep("calc");
       else if (completedStep === "calc") setStep(null);
     };
     

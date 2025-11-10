@@ -499,29 +499,6 @@ export default function MacroCounter() {
                       </div>
                     </>
                   )}
-                  <div className="col-span-3">
-                    <ReadOnlyNote>
-                      <strong>Finish Your Macro Setup First:</strong> Changing your weight automatically recalculates your targets. Complete all settings below, then click <strong>Set Macro Targets</strong>. After that, you can sync your weight to Biometrics.
-                    </ReadOnlyNote>
-                  </div>
-                  <div className="col-span-3 mt-3">
-                    <Button
-                      onClick={() => {
-                        const weight = units === "imperial" ? weightLbs : weightKg;
-                        if (!weight || weight <= 0) {
-                          toast({ title: "Enter weight first", description: "Please enter a valid weight before syncing.", variant: "destructive" });
-                          return;
-                        }
-                        localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
-                        toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
-                      }}
-                      className="w-full bg-orange-600 border border-orange-500 text-white hover:bg-orange-700 hover:border-orange-600 animate-pulse font-semibold"
-                      data-testid="button-sync-weight"
-                    >
-                      <Scale className="h-4 w-4 mr-2" />
-                      Sync Weight (After Setting Targets)
-                    </Button>
-                  </div>
                 </div>
               </div>
 
@@ -532,9 +509,9 @@ export default function MacroCounter() {
                   onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
                     setActivity(v);
                     advance("details");
-                    // Auto-scroll to Set Macro Targets button after activity is selected
+                    // Auto-scroll to Sync Weight button after activity is selected
                     setTimeout(() => {
-                      const button = document.getElementById("calc-button");
+                      const button = document.getElementById("sync-weight-button");
                       if (button) {
                         button.scrollIntoView({ behavior: "smooth", block: "center" });
                       }
@@ -557,9 +534,9 @@ export default function MacroCounter() {
                       onClick={() => {
                         setActivity(k);
                         advance("details");
-                        // Auto-scroll to Set Macro Targets button on every click
+                        // Auto-scroll to Sync Weight button on every click
                         setTimeout(() => {
-                          const button = document.getElementById("calc-button");
+                          const button = document.getElementById("sync-weight-button");
                           if (button) {
                             button.scrollIntoView({ behavior: "smooth", block: "center" });
                           }
@@ -575,6 +552,27 @@ export default function MacroCounter() {
                   ))}
                 </RadioGroup>
 
+                {/* Sync Weight Button - appears after activity is selected */}
+                {activity && (
+                  <Button
+                    id="sync-weight-button"
+                    onClick={() => {
+                      const weight = units === "imperial" ? weightLbs : weightKg;
+                      if (!weight || weight <= 0) {
+                        toast({ title: "Enter weight first", description: "Please enter a valid weight before syncing.", variant: "destructive" });
+                        return;
+                      }
+                      localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
+                      toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
+                      advance("sync-weight");
+                    }}
+                    className="w-full bg-emerald-600 border border-emerald-500 text-white hover:bg-emerald-700 hover:border-emerald-600 font-semibold mt-4"
+                    data-testid="button-sync-weight"
+                  >
+                    <Scale className="h-4 w-4 mr-2" />
+                    Sync Weight
+                  </Button>
+                )}
               </div>
             </div>
           </CardContent>
@@ -623,7 +621,7 @@ export default function MacroCounter() {
                   });
                   setLocation("/my-biometrics");
                 }}
-                className={`bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 ${activity ? "animate-pulse" : ""}`}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-200"
               >
                 <Target className="h-5 w-5 mr-2" /> Set Macro Targets
               </Button>
