@@ -70,19 +70,13 @@ export default function CravingCreatorLanding() {
               <Brain className="h-6 w-6 text-orange-400" />
               <h1 className="text-xl font-bold text-white">Craving Creator Hub</h1>
             </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-orange-400 hover:bg-white/10">
-                  <Info className="h-5 w-5" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 bg-black/80 border border-white/10 text-white backdrop-blur-md">
-                <h3 className="font-bold mb-2">Craving Creator Hub</h3>
-                <p className="text-sm">
-                  This is where you can create custom meals based on your cravings or choose from our healthy premade options. Both methods can help you achieve your macro goals and add ingredients directly to your shopping list.
-                </p>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => {/* Info modal trigger - implement if needed */}}
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
+              aria-label="How to use"
+            >
+              ?
+            </button>
           </div>
         </div>
       </div>
