@@ -7,38 +7,27 @@ import { useEffect, useState } from "react";
  * Guides users through the macro calculator workflow in sequence:
  * 1. Choose Goal
  * 2. Select Body Type
- * 3. Fill in Details
+ * 3. Fill in Details (Activity Level)
  * 4. Calculate Macros
  * 
- * Each step automatically advances to the next when completed.
+ * Each step automatically highlights and advances when completed.
  */
 
 export default function MacroCalculatorGuidedTour() {
   const coachMode = localStorage.getItem("coachMode") === "guided";
-  const [step, setStep] = useState<"goal" | "body" | "details" | "calc" | null>(() => {
+  const [step, setStep] = useState<"goal" | "body" | "activity" | "calc" | null>(() => {
     if (!coachMode) return null;
-    // Hydrate from localStorage to maintain state across reloads
-    const saved = localStorage.getItem("macro:currentStep") as "goal" | "body" | "details" | "calc" | null;
-    return saved || "goal";
+    return "goal";
   });
 
-  // Share current step via localStorage so MacroCounter can show fingers
-  useEffect(() => {
-    if (coachMode && step) {
-      localStorage.setItem("macro:currentStep", step);
-    } else {
-      localStorage.removeItem("macro:currentStep");
-    }
-  }, [step, coachMode]);
-
-  // Apply/remove orange flash to current step
+  // Apply lime green flash to current step
   useEffect(() => {
     if (!coachMode || !step) return;
     
     const map = {
       goal: "goal-card",
       body: "bodytype-card",
-      details: "details-card",
+      activity: "details-card",
       calc: "calc-button",
     } as const;
 
@@ -54,22 +43,59 @@ export default function MacroCalculatorGuidedTour() {
     };
   }, [step, coachMode]);
 
-  // Listen for completion events and advance to next step
+  // Watch for user interactions to advance steps
   useEffect(() => {
-    if (!coachMode) return;
+    if (!coachMode || !step) return;
 
-    const handleNext = (e: Event) => {
-      const { step: completedStep } = (e as CustomEvent).detail;
-      
-      if (completedStep === "goal") setStep("body");
-      else if (completedStep === "body-type") setStep("details");
-      else if (completedStep === "activity") setStep("calc");
-      else if (completedStep === "calc") setStep(null);
-    };
-    
-    window.addEventListener("macro:nextStep", handleNext as EventListener);
-    return () => window.removeEventListener("macro:nextStep", handleNext as EventListener);
-  }, [coachMode]);
+    // Goal selection - watch for radio change
+    if (step === "goal") {
+      const goalRadios = document.querySelectorAll('[name="goal"]');
+      const handleGoalSelect = () => {
+        setTimeout(() => setStep("body"), 500);
+      };
+      goalRadios.forEach(radio => radio.addEventListener("change", handleGoalSelect));
+      return () => {
+        goalRadios.forEach(radio => radio.removeEventListener("change", handleGoalSelect));
+      };
+    }
+
+    // Body type selection
+    if (step === "body") {
+      const bodyRadios = document.querySelectorAll('[name="bodyType"]');
+      const handleBodySelect = () => {
+        setTimeout(() => setStep("activity"), 500);
+      };
+      bodyRadios.forEach(radio => radio.addEventListener("change", handleBodySelect));
+      return () => {
+        bodyRadios.forEach(radio => radio.removeEventListener("change", handleBodySelect));
+      };
+    }
+
+    // Activity level selection
+    if (step === "activity") {
+      const activityRadios = document.querySelectorAll('[name="activity"]');
+      const handleActivitySelect = () => {
+        setTimeout(() => setStep("calc"), 500);
+      };
+      activityRadios.forEach(radio => radio.addEventListener("change", handleActivitySelect));
+      return () => {
+        activityRadios.forEach(radio => radio.removeEventListener("change", handleActivitySelect));
+      };
+    }
+
+    // Calculate button
+    if (step === "calc") {
+      const calcButton = document.getElementById("calc-button");
+      const handleCalc = () => {
+        setStep(null);
+        localStorage.removeItem("macro:currentStep");
+      };
+      if (calcButton) {
+        calcButton.addEventListener("click", handleCalc);
+        return () => calcButton.removeEventListener("click", handleCalc);
+      }
+    }
+  }, [step, coachMode]);
 
   if (!coachMode) return null;
   return null;

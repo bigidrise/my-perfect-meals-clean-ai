@@ -707,7 +707,7 @@
   }
 }
 
-/* Guided Tour Animations */
+/* Guided Tour Animations - Lime Green */
 @keyframes pulseBorderGreen {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7);

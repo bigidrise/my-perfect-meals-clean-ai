@@ -173,40 +173,9 @@ function BodyTypeGuide() {
   );
 }
 
-// Advance the guided tour to the next step
-const advance = (step: string) => {
-  const coachMode = localStorage.getItem("coachMode") === "guided";
-  if (!coachMode) return;
-  
-  window.dispatchEvent(
-    new CustomEvent("macro:nextStep", { detail: { step } })
-  );
-};
-
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
-  // Track guided tour step for showing fingers
-  const [tourStep, setTourStep] = useState<string | null>(
-    localStorage.getItem("coachMode") === "guided" 
-      ? localStorage.getItem("macro:currentStep") || "goal"
-      : null
-  );
-  
-  useEffect(() => {
-    const handleStepChange = (e: Event) => {
-      const detail = (e as CustomEvent).detail;
-      // Map the completion events to the NEXT step that should be highlighted
-      if (detail.step === "goal") setTourStep("body");
-      else if (detail.step === "body-type") setTourStep("details");
-      else if (detail.step === "activity") setTourStep("calc");
-      else if (detail.step === "calc") setTourStep(null);
-    };
-    
-    window.addEventListener("macro:nextStep", handleStepChange);
-    return () => window.removeEventListener("macro:nextStep", handleStepChange);
-  }, []);
 
   // Load calculator settings from localStorage
   const loadCalculatorSettings = () => {
@@ -275,7 +244,7 @@ export default function MacroCounter() {
   const results = useMemo(() => {
     // Don't calculate until activity is selected
     if (!activity) return null;
-    
+
     const bmr = mifflin({ sex, kg, cm, age });
     const tdee = Math.round(bmr * ACTIVITY_FACTORS[activity as keyof typeof ACTIVITY_FACTORS]);
     const target = goalAdjust(tdee, goal);
@@ -325,11 +294,10 @@ export default function MacroCounter() {
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
-                {tourStep === "goal" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
               </h3>
               <RadioGroup
                 value={goal}
-                onValueChange={(v: Goal) => {setGoal(v); advance("goal");}}
+                onValueChange={(v: Goal) => setGoal(v)}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -341,8 +309,7 @@ export default function MacroCounter() {
                     key={g.v}
                     htmlFor={g.v}
                     onClick={() => {
-                      setGoal(g.v as Goal); 
-                      advance("goal");
+                      setGoal(g.v as Goal);
                       // Auto-scroll to body type card on every click
                       setTimeout(() => {
                         const bodyCard = document.getElementById("bodytype-card");
@@ -365,12 +332,11 @@ export default function MacroCounter() {
             <CardContent className="p-5">
               <h3 className="text-lg font-semibold flex items-center">
                 <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
-                {tourStep === "body" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
               </h3>
               <BodyTypeGuide />
               <RadioGroup
                 value={bodyType}
-                onValueChange={(v: BodyType) => {setBodyType(v); advance("body-type");}}
+                onValueChange={(v: BodyType) => setBodyType(v)}
                 className="mt-3 grid grid-cols-3 gap-3"
               >
                 {[
@@ -383,7 +349,6 @@ export default function MacroCounter() {
                     htmlFor={b.v}
                     onClick={() => {
                       setBodyType(b.v as BodyType);
-                      advance("body-type");
                       // Auto-scroll to details card on every click
                       setTimeout(() => {
                         const detailsCard = document.getElementById("details-card");
@@ -408,14 +373,12 @@ export default function MacroCounter() {
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
               <Target className="h-5 w-5 mr-2 text-purple-300" /> Activity Level
-              {tourStep === "details" && <span className="ml-2 text-3xl animate-bounce">👉</span>}
             </h3>
             <div className="mt-4">
               <RadioGroup
                 value={activity}
                 onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
                   setActivity(v);
-                  advance("activity");
                   setTimeout(() => {
                     const button = document.getElementById("calc-button");
                     if (button) {
@@ -439,7 +402,6 @@ export default function MacroCounter() {
                     htmlFor={`act-${k}`}
                     onClick={() => {
                       setActivity(k);
-                      advance("activity");
                       setTimeout(() => {
                         const button = document.getElementById("calc-button");
                         if (button) {
@@ -617,11 +579,9 @@ export default function MacroCounter() {
 
             {/* Save Targets */}
             <div className="flex justify-center items-center gap-2">
-              {tourStep === "calc" && <span className="text-3xl animate-bounce">👉</span>}
               <Button
                 id="calc-button"
                 onClick={() => {
-                  advance("calc");
                   setMacroTargets({
                     calories: results.target,
                     protein_g: results.macros.protein.g,

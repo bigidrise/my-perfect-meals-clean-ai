@@ -35,6 +35,7 @@ import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -133,26 +134,24 @@ export default function WeeklyMealBoard() {
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
 
-  // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [hasSeenInfo, setHasSeenInfo] = useState(false);
-  const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
+  // Guided Tour state - removing tourStep and related functions
+  // const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
 
   // Daily Totals Info state (appears after first meal is created)
   const [showDailyTotalsInfo, setShowDailyTotalsInfo] = useState(false);
   const [hasSeenDailyTotalsInfo, setHasSeenDailyTotalsInfo] = useState(false);
 
-  // Load/save tour progress from localStorage
+  // Load/save tour progress from localStorage - removing tour progress
   useEffect(() => {
     const infoSeen = localStorage.getItem("weekly-meal-board-info-seen");
     if (infoSeen === "true") {
-      setHasSeenInfo(true);
+      // setHasSeenInfo(true);
     }
-    
-    const saved = localStorage.getItem("weekly-meal-board-tour-step");
-    if (saved && saved !== "complete") {
-      setTourStep(saved as "breakfast" | "lunch" | "dinner" | "snacks" | "complete");
-    }
+
+    // const saved = localStorage.getItem("weekly-meal-board-tour-step");
+    // if (saved && saved !== "complete") {
+    //   setTourStep(saved as "breakfast" | "lunch" | "dinner" | "snacks" | "complete");
+    // }
 
     const dailyTotalsInfoSeen = localStorage.getItem("weekly-meal-board-daily-totals-info-seen");
     if (dailyTotalsInfoSeen === "true") {
@@ -160,24 +159,25 @@ export default function WeeklyMealBoard() {
     }
   }, []);
 
-  // Handle info modal close - start the tour
+  // Handle info modal close - start the tour - removing tour start logic
   const handleInfoModalClose = useCallback(() => {
     setShowInfoModal(false);
-    if (!hasSeenInfo) {
-      setHasSeenInfo(true);
-      localStorage.setItem("weekly-meal-board-info-seen", "true");
-    }
-  }, [hasSeenInfo]);
+    // if (!hasSeenInfo) {
+    //   setHasSeenInfo(true);
+    //   localStorage.setItem("weekly-meal-board-info-seen", "true");
+    // }
+  }, []);
 
-  const advanceTourStep = useCallback(() => {
-    const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
-    const currentIndex = sequence.indexOf(tourStep);
-    if (currentIndex < sequence.length - 1) {
-      const nextStep = sequence[currentIndex + 1];
-      setTourStep(nextStep);
-      localStorage.setItem("weekly-meal-board-tour-step", nextStep);
-    }
-  }, [tourStep]);
+  // Remove advanceTourStep function
+  // const advanceTourStep = useCallback(() => {
+  //   const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
+  //   const currentIndex = sequence.indexOf(tourStep);
+  //   if (currentIndex < sequence.length - 1) {
+  //     const nextStep = sequence[currentIndex + 1];
+  //     setTourStep(nextStep);
+  //     localStorage.setItem("weekly-meal-board-tour-step", nextStep);
+  //   }
+  // }, [tourStep]);
 
   // 🔋 AI Meal Creator localStorage persistence (copy Fridge Rescue pattern)
   const AI_MEALS_CACHE_KEY = "ai-meal-creator-cached-meals";
@@ -469,18 +469,18 @@ export default function WeeklyMealBoard() {
       dinner: "dinner",
       snacks: "snack1"
     };
-    window.dispatchEvent(
-      new CustomEvent("meal:saved", { detail: { mealId: mealIdMap[aiMealSlot] || "snack1" } })
-    );
+    // window.dispatchEvent(
+    //   new CustomEvent("meal:saved", { detail: { mealId: mealIdMap[aiMealSlot] || "snack1" } })
+    // );
 
     toast({
       title: "AI Meal Created!",
       description: `${generatedMeal.name} saved to your ${slotLabel.toLowerCase()}`,
     });
 
-    // Advance guided tour to next step
-    advanceTourStep();
-  }, [board, activeDayISO, aiMealSlot, toast, advanceTourStep]);
+    // Advance guided tour to next step - removed
+    // advanceTourStep();
+  }, [board, activeDayISO, aiMealSlot, toast]); // Removed advanceTourStep from dependencies
 
   const profile = useOnboardingProfile();
   const targets = computeTargetsFromOnboarding(profile);
@@ -1270,7 +1270,7 @@ export default function WeeklyMealBoard() {
                     }
                     return [...board.lists.breakfast, ...board.lists.lunch, ...board.lists.dinner, ...board.lists.snacks]
                       .reduce((sum, meal) => sum + (meal.nutrition?.carbs ?? 0), 0);
-                  })())}g
+                  })())}
                 </div>
                 <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Carbs</div>
               </div>
