@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
  * 4. Calculate Macros
  * 
  * Each step automatically highlights and advances when completed.
+ * 
+ * Uses localStorage polling since React RadioGroup doesn't emit DOM events.
  */
 
 export default function MacroCalculatorGuidedTour() {
@@ -43,57 +45,42 @@ export default function MacroCalculatorGuidedTour() {
     };
   }, [step, coachMode]);
 
-  // Watch for user interactions to advance steps
+  // Poll localStorage for changes (since React components don't emit DOM events)
   useEffect(() => {
     if (!coachMode || !step) return;
 
-    // Goal selection - watch for radio change
-    if (step === "goal") {
-      const goalRadios = document.querySelectorAll('[name="goal"]');
-      const handleGoalSelect = () => {
-        setTimeout(() => setStep("body"), 500);
-      };
-      goalRadios.forEach(radio => radio.addEventListener("change", handleGoalSelect));
-      return () => {
-        goalRadios.forEach(radio => radio.removeEventListener("change", handleGoalSelect));
-      };
-    }
-
-    // Body type selection
-    if (step === "body") {
-      const bodyRadios = document.querySelectorAll('[name="bodyType"]');
-      const handleBodySelect = () => {
-        setTimeout(() => setStep("activity"), 500);
-      };
-      bodyRadios.forEach(radio => radio.addEventListener("change", handleBodySelect));
-      return () => {
-        bodyRadios.forEach(radio => radio.removeEventListener("change", handleBodySelect));
-      };
-    }
-
-    // Activity level selection
-    if (step === "activity") {
-      const activityRadios = document.querySelectorAll('[name="activity"]');
-      const handleActivitySelect = () => {
-        setTimeout(() => setStep("calc"), 500);
-      };
-      activityRadios.forEach(radio => radio.addEventListener("change", handleActivitySelect));
-      return () => {
-        activityRadios.forEach(radio => radio.removeEventListener("change", handleActivitySelect));
-      };
-    }
-
-    // Calculate button
-    if (step === "calc") {
-      const calcButton = document.getElementById("calc-button");
-      const handleCalc = () => {
-        setStep(null);
-        localStorage.removeItem("macro:currentStep");
-      };
-      if (calcButton) {
-        calcButton.addEventListener("click", handleCalc);
-        return () => calcButton.removeEventListener("click", handleCalc);
+    const interval = setInterval(() => {
+      try {
+        const settings = JSON.parse(localStorage.getItem("macro-settings") || "{}");
+        
+        // Check if current step is complete and advance
+        if (step === "goal" && settings.goal) {
+          setStep("body");
+        } else if (step === "body" && settings.bodyType) {
+          setStep("activity");
+        } else if (step === "activity" && settings.activity) {
+          setStep("calc");
+        }
+      } catch (e) {
+        // Ignore parse errors
       }
+    }, 200); // Poll every 200ms
+
+    return () => clearInterval(interval);
+  }, [step, coachMode]);
+
+  // Listen for calc button click
+  useEffect(() => {
+    if (!coachMode || step !== "calc") return;
+
+    const calcButton = document.getElementById("calc-button");
+    const handleCalc = () => {
+      setStep(null);
+    };
+    
+    if (calcButton) {
+      calcButton.addEventListener("click", handleCalc);
+      return () => calcButton.removeEventListener("click", handleCalc);
     }
   }, [step, coachMode]);
 

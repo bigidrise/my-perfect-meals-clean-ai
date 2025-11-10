@@ -319,7 +319,7 @@ export default function MacroCounter() {
                     htmlFor={g.v}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
-                    <RadioGroupItem id={g.v} value={g.v} className="sr-only" name="goal" />
+                    <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
                     {g.label}
                   </Label>
                 ))}
@@ -357,7 +357,7 @@ export default function MacroCounter() {
                     htmlFor={b.v}
                     className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
                   >
-                    <RadioGroupItem id={b.v} value={b.v} className="sr-only" name="bodyType" />
+                    <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
                     {b.label}
                   </Label>
                 ))}
@@ -402,7 +402,7 @@ export default function MacroCounter() {
                       activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
                     }`}
                   >
-                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" name="activity" />
+                    <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
                     {label}
                   </Label>
                 ))}
