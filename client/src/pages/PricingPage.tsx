@@ -135,7 +135,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="relative min-h-screen py-6 md:py-12 bg-gradient-to-br from-neutral-900 via-black to-black text-white">
+    <div className="relative min-h-screen py-6 md:py-12 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white">
       {/* Back Arrow - Top Left */}
       <button
         onClick={handleBackNavigation}

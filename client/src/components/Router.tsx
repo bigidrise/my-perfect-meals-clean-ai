@@ -183,8 +183,8 @@ export default function Router() {
         <Route path="/tutorials" component={TutorialHub} />
         <Route path="/learn" component={Learn} />
         <Route path="/get-inspiration" component={GetInspiration} />
-        <Route path="/profile" component={ProfileNew} />
         <Route path="/privacy" component={PrivacySecurity} />
+        {/* Profile functionality in My Hub (ProfileSheet) - no separate /profile page needed */}
         {/* Settings functionality now in My Hub (ProfileSheet) */}
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
 
