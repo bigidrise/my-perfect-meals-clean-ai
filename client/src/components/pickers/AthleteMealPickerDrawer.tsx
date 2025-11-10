@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -102,53 +103,46 @@ export function AthleteMealPickerDrawer({
   if (!open || !list) return null;
 
   return (
-    <Drawer open={open} onOpenChange={(v) => !v && onClose()}>
-      <DrawerContent className="bg-zinc-900/95 border-zinc-800 text-white max-h-[75vh] sm:max-h-[90vh] rounded-t-2xl overflow-hidden flex flex-col">
-        {/* Sticky header with safe-area padding */}
-        <div className="sticky top-0 z-10 backdrop-blur bg-zinc-900/90 border-b border-zinc-800 pt-2 px-3 sm:px-4 pb-2">
-          <DrawerTitle className="text-sm sm:text-base font-semibold">
-            Add to {list}
-          </DrawerTitle>
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="bg-gradient-to-b from-lime-950/95 via-zinc-900/95 to-black/95 border-lime-500/30 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-white text-xl">
+            🏆 Competition Prep Meals - Add to {list}
+          </DialogTitle>
+        </DialogHeader>
 
-          <div className="mt-2 flex flex-col sm:flex-row gap-2">
+        <div className="space-y-4">
+          {/* Category Selector */}
+          <div className="bg-black/30 p-4 rounded-lg border border-lime-500/20">
+            <label className="text-white/80 text-sm mb-2 block">Select Protein Category:</label>
             <Select
               value={category}
               onValueChange={(val) =>
                 setCategory(val as AthleteMeal["category"])
               }
             >
-              <SelectTrigger className="w-full bg-black/60 border-purple-500 border text-white h-9 text-xs shadow-lg shadow-purple-500/30">
+              <SelectTrigger className="w-full bg-lime-900/60 border-lime-500/50 text-white h-10 text-sm flash-border">
                 <SelectValue>
                   {CATEGORY_OPTIONS.find((opt) => opt.value === category)
                     ?.label ?? "Select Category"}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-black/95 border-purple-500/30 text-white">
+              <SelectContent className="bg-zinc-900/95 border-lime-500/30 text-white">
                 {CATEGORY_OPTIONS.map((option) => (
                   <SelectItem
                     key={option.value}
                     value={option.value}
-                    className="text-white hover:bg-purple-500/20 focus:bg-purple-500/30 cursor-pointer"
+                    className="text-white hover:bg-lime-500/20 focus:bg-lime-500/30 cursor-pointer"
                   >
                     {option.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={onClose}
-              className="text-white/80 hover:bg-white/10 rounded-2xl text-xs sm:text-sm px-2 sm:px-3 w-full sm:w-auto"
-            >
-              Close
-            </Button>
           </div>
-        </div>
 
-        {/* Scrollable meal grid */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="px-3 sm:px-4 py-2 sm:py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+          {/* Meal Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {filteredMeals.map((am: AthleteMeal) => (
               <button
                 key={am.id}
@@ -156,47 +150,47 @@ export function AthleteMealPickerDrawer({
                   const mealToAdd = convertAthleteMealToMeal(am);
                   onPick(mealToAdd);
                 }}
-                className="w-full text-left rounded-2xl border border-purple-500/30 bg-black/50 hover:bg-black/70 p-3 transition-all"
+                className="w-full text-left rounded-xl border border-lime-500/30 bg-black/50 hover:bg-lime-900/30 p-4 transition-all hover:border-lime-400/50"
               >
-                <div className="flex items-start justify-between mb-1">
-                  <div className="text-white/90 font-medium text-xs flex-1 leading-tight">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="text-white/90 font-medium text-sm flex-1 leading-tight">
                     {am.title.includes('(') ? (
                       <>
                         {am.title.split('(')[0].trim()}
                         <br />
-                        ({am.title.split('(')[1]}
+                        <span className="text-xs text-white/70">({am.title.split('(')[1]}</span>
                       </>
                     ) : (
                       am.title
                     )}
                   </div>
                   {am.includeCarbs ? (
-                    <Badge className="bg-emerald-600/80 text-white text-[10px] ml-1 px-1.5 py-0 shrink-0">
+                    <Badge className="bg-lime-600/80 text-white text-[10px] ml-2 px-2 py-0.5 shrink-0">
                       Carbs
                     </Badge>
                   ) : (
-                    <Badge className="bg-purple-600/80 text-white text-[10px] ml-1 px-1.5 py-0 shrink-0">
+                    <Badge className="bg-orange-600/80 text-white text-[10px] ml-2 px-2 py-0.5 shrink-0">
                       P+V
                     </Badge>
                   )}
                 </div>
 
-                <div className="text-white/70 text-[10px] mb-0.5 leading-tight">
+                <div className="text-white/70 text-xs mb-1 leading-tight">
                   {am.protein_source} ({am.protein_oz}oz)
                   {am.carb_source && ` • ${am.carb_source} (${am.carb_g}g)`}
                 </div>
 
-                <div className="text-white/60 text-[10px] leading-tight">
+                <div className="text-lime-300/80 text-xs font-semibold leading-tight">
                   {am.macros.kcal} kcal · P{am.macros.protein} · C
                   {am.macros.starchyCarbs + am.macros.fibrousCarbs} · F{am.macros.fat}
                 </div>
 
                 {am.tags?.length ? (
-                  <div className="mt-1 flex flex-wrap gap-0.5">
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {am.tags.slice(0, 2).map((tag: string) => (
                       <span
                         key={tag}
-                        className="text-[9px] bg-purple-600/20 text-purple-300 px-1.5 py-0.5 rounded-full leading-none"
+                        className="text-[9px] bg-lime-600/20 text-lime-300 px-1.5 py-0.5 rounded-full leading-none"
                       >
                         {tag.replace(/_/g, " ")}
                       </span>
@@ -206,8 +200,14 @@ export function AthleteMealPickerDrawer({
               </button>
             ))}
           </div>
+
+          {/* Info Note */}
+          <div className="bg-lime-900/20 border border-lime-500/30 rounded-lg p-3 text-xs text-white/70">
+            <p className="mb-1"><span className="font-semibold text-lime-300">Competition Prep Meals:</span> Pre-designed athlete meals optimized for lean muscle building and performance.</p>
+            <p className="text-white/60">Click any meal to add it to your board. Macros are calculated and ready to track.</p>
+          </div>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }
