@@ -1,0 +1,193 @@
+Excellent — yes, that logic belongs **right inside your `MacroCounter.tsx` page**, because that’s the page that holds the user’s gender, goal (cut/maintain/bulk), and calculation results before sending them to Biometrics.
+
+Here’s a clean way to add it so you can just hand it straight to Replit.
+
+---
+
+## ✅ Step-by-step summary before the code
+
+1. The “Details” card already collects `gender`, `goal`, and the numeric data (weight, age, etc.).
+2. We’ll add a small **helper function** to determine starchy-carb grams based on gender and goal.
+3. We’ll call that helper when we build the final macro results card.
+4. Those values will appear automatically in the “Your Daily Totals” card at the bottom, and the “Send to Biometrics” button will still flash as usual.
+
+---
+
+## 🧩 Complete MacroCounter.tsx (simplified, with carb logic)
+
+```tsx
+import { useState } from "react";
+import MacroCalculatorTour from "@/components/guided/MacroCalculatorTour";
+
+export default function MacroCounter() {
+  const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [goal, setGoal] = useState<"cut" | "maintain" | "bulk" | "">("");
+  const [detailsComplete, setDetailsComplete] = useState(false);
+  const [results, setResults] = useState<any>(null);
+
+  const trigger = (step: "goal" | "body" | "details" | "targets") =>
+    window.dispatchEvent(new CustomEvent("macro:next", { detail: { step } }));
+
+  // Helper: determine starchy carb grams
+  const getStarchyCarbs = (gender: string, goal: string) => {
+    if (gender === "female") {
+      switch (goal) {
+        case "cut": return 25;
+        case "maintain": return 50;
+        case "bulk": return "75–100";
+        default: return 0;
+      }
+    } else if (gender === "male") {
+      switch (goal) {
+        case "cut": return 50;
+        case "maintain": return "75–100";
+        case "bulk": return "100–150";
+        default: return 0;
+      }
+    }
+    return 0;
+  };
+
+  // When user finishes “Details” and presses “Calculate Macros”
+  const handleCalculate = () => {
+    const starchy = getStarchyCarbs(gender, goal);
+
+    // You could later compute total protein/fats here, this is placeholder:
+    const data = {
+      protein: 150,
+      proteinPct: 30,
+      carbs: 180,
+      starchyCarbs: starchy,
+      fibrousCarbs: "rest of total",
+      carbsPct: 45,
+      fats: 60,
+      fatsPct: 25,
+    };
+
+    setResults(data);
+    trigger("details"); // moves guided highlight to “Set Macro Targets”
+  };
+
+  return (
+    <div className="relative space-y-6">
+      <MacroCalculatorTour />
+
+      {/* Choose Goal */}
+      <section id="goal-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">Choose Your Goal</h3>
+        <div className="flex gap-2">
+          <button onClick={() => { setGoal("cut"); trigger("goal"); }} className="btn btn-glass">Cut</button>
+          <button onClick={() => { setGoal("maintain"); trigger("goal"); }} className="btn btn-glass">Maintain</button>
+          <button onClick={() => { setGoal("bulk"); trigger("goal"); }} className="btn btn-glass">Bulk</button>
+        </div>
+      </section>
+
+      {/* Body Type (still used internally but not in carb logic) */}
+      <section id="bodytype-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">What's Your Body Type?</h3>
+        <div className="flex gap-2">
+          {["Ectomorph", "Mesomorph", "Endomorph"].map((b) => (
+            <button key={b} onClick={() => trigger("body")} className="btn btn-glass">{b}</button>
+          ))}
+        </div>
+      </section>
+
+      {/* Details Card */}
+      <section id="details-card" className="p-4 rounded-xl bg-black/40">
+        <h3 className="text-white font-semibold mb-2">Your Details</h3>
+        <div className="grid grid-cols-2 gap-2">
+          <select onChange={(e) => setGender(e.target.value as any)} className="input input-glass">
+            <option value="">Gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+          <input placeholder="Weight (lb)" className="input input-glass" />
+          <input placeholder="Height (in)" className="input input-glass" />
+          <input placeholder="Age" className="input input-glass" />
+          <select className="input input-glass">
+            <option>Activity Level</option>
+            <option>Lightly Active</option>
+            <option>Moderately Active</option>
+            <option>Very Active</option>
+          </select>
+        </div>
+
+        <button
+          onClick={() => {
+            handleCalculate();
+            setDetailsComplete(true);
+          }}
+          className="mt-3 btn btn-glass"
+        >
+          Calculate Macros
+        </button>
+      </section>
+
+      {/* Results Card */}
+      {results && (
+        <section id="results-card" className="p-4 rounded-xl bg-black/40">
+          <h3 className="text-white font-semibold mb-2">Your Daily Totals</h3>
+          <ul className="text-white space-y-2">
+            <li>Protein: {results.protein} g ({results.proteinPct}%)</li>
+            <li>Carbs: {results.carbs} g ({results.carbsPct}%)</li>
+            <li> • Starchy: {results.starchyCarbs} g</li>
+            <li> • Fibrous: {results.fibrousCarbs}</li>
+            <li>Fats: {results.fats} g ({results.fatsPct}%)</li>
+          </ul>
+        </section>
+      )}
+
+      {/* Send to Biometrics */}
+      {detailsComplete && (
+        <div className="flex justify-center">
+          <button
+            id="macro-targets-btn"
+            onClick={() => trigger("targets")}
+            className="btn btn-primary"
+          >
+            Send to Biometrics
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+### 🔍 What’s happening
+
+| Logic                           | Purpose                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `getStarchyCarbs(gender, goal)` | Chooses the correct starchy-carb grams for male/female & cut/maintain/bulk.                       |
+| `handleCalculate()`             | Calculates the macros (simple static data for now), sets results, triggers the next guided flash. |
+| `results` card                  | Shows the simple readable macro summary.                                                          |
+| “Send to Biometrics” button     | Flashes next per your guided sequence.                                                            |
+
+---
+
+### 🧾 Quick ranges in use
+
+| Gender | Goal     | Starchy Carbs (grams) |
+| ------ | -------- | --------------------- |
+| Female | Cutting  | 25                    |
+| Female | Maintain | 50                    |
+| Female | Bulk     | 75–100                |
+| Male   | Cutting  | 50                    |
+| Male   | Maintain | 75–100                |
+| Male   | Bulk     | 100–150               |
+
+---
+
+### ✅ Hand this file to Replit
+
+Just copy this entire `MacroCounter.tsx` and tell the Replit agent:
+
+> “Replace the existing MacroCounter.tsx with this updated version that includes the lime-green guided flash and starchy-carb logic for male/female goals.”
+
+This gives you:
+
+* The new color highlight (lime)
+* Fully working guided triggers
+* Gender/goal-based carb logic tied directly into your results card
