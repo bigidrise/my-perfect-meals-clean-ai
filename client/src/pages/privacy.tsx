@@ -11,12 +11,12 @@ export default function PrivacySecurity() {
       <header className="space-y-6">
         <Button
           variant="ghost"
-          onClick={() => setLocation("/dashboard")}
+          onClick={() => setLocation("/profile-sheet")}
           className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
           data-testid="button-back"
         >
           <ArrowLeft className="h-5 w-5 mr-3" />
-          Back to Dashboard
+          Back to Profile
         </Button>
 
         <div className="flex items-center gap-4">
