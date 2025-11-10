@@ -185,7 +185,7 @@ export default function Router() {
         <Route path="/get-inspiration" component={GetInspiration} />
         <Route path="/profile" component={ProfileNew} />
         <Route path="/privacy" component={PrivacySecurity} />
-        <Route path="/settings" component={Settings} />
+        {/* Settings functionality now in My Hub (ProfileSheet) */}
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
 
         {/* DELETED: MealPlanning, LowGlycemicCarbPage, AiMealCreatorPage, MealPlanningHubRevised routes */}
