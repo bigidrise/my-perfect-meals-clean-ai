@@ -35,20 +35,20 @@ export default function PrivacySecurity() {
           <p className="text-sm text-white/80 mb-3">
             Control your stored data in My Perfect Meals.
           </p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
               data-testid="button-export-data"
             >
-              <Download className="h-4 w-4 mr-2" /> Export My Data
+              <Download className="h-5 w-5 mr-3" /> Export My Data
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
               data-testid="button-clear-data"
             >
-              <Trash2 className="h-4 w-4 mr-2" /> Clear Saved Macros & Meals
+              <Trash2 className="h-5 w-5 mr-3" /> Clear Saved Macros & Meals
             </Button>
           </div>
         </div>
@@ -58,20 +58,20 @@ export default function PrivacySecurity() {
           <p className="text-sm text-white/80 mb-3">
             Manage login methods and secure your account.
           </p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
               data-testid="button-change-password"
             >
-              <Lock className="h-4 w-4 mr-2" /> Change Password
+              <Lock className="h-5 w-5 mr-3" /> Change Password
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-4 px-5 h-auto"
               data-testid="button-manage-accounts"
             >
-              <Eye className="h-4 w-4 mr-2" /> Manage Linked Accounts
+              <Eye className="h-5 w-5 mr-3" /> Manage Linked Accounts
             </Button>
           </div>
         </div>
