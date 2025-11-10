@@ -24,15 +24,13 @@ export default function HealthBadgesPopover({
     <div className={className}>
       <Popover>
         <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-auto p-1 text-white/70 hover:text-white hover:bg-white/10 gap-1.5"
+          <button
+            className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
             data-testid="button-medical-badges"
+            title={label}
           >
-            <CircleHelp className="h-4 w-4" />
-            <span className="text-xs">{label}</span>
-          </Button>
+            ?
+          </button>
         </PopoverTrigger>
         <PopoverContent
           align={align}

@@ -45,11 +45,11 @@ export default function MedicalInfoBubble({ badges, description }: MedicalInfoBu
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="group flex items-center justify-center w-7 h-7 rounded-full bg-purple-500/20 border border-purple-400/30 hover:bg-purple-500/30 hover:border-purple-400/50 transition-all duration-200"
+        className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
         aria-label="View health and medical tags"
         data-testid="button-medical-info"
       >
-        <HeartPulse className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+        ?
       </button>
 
       {/* Popover */}
