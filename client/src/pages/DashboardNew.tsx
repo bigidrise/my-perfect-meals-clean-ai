@@ -11,6 +11,7 @@ import {
   User,
   TrendingUp,
   Flame,
+  Grid,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
@@ -102,14 +103,14 @@ export default function DashboardNew() {
       transition={{ duration: 0.4 }}
       className="min-h-screen bg-black"
     >
-      {/* Fixed Profile Avatar - Top Right */}
+      {/* Fixed My Hub - Top Right */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
         <ProfileSheet>
           <button
             className="p-1 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-            data-testid="button-profile-avatar"
+            data-testid="button-my-hub"
           >
-            <User className="h-6 w-6 text-white" />
+            <Grid className="h-6 w-6 text-white" />
           </button>
         </ProfileSheet>
       </div>

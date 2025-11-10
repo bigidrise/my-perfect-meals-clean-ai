@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Video,
   RotateCcw,
+  Grid,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,6 +41,14 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
 
   const userName = fullUserData?.name || "User";
   const userEmail = fullUserData?.email || "user@example.com";
+  
+  // Get user initials for avatar
+  const userInitials = userName
+    .split(" ")
+    .map(word => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   const handleLogout = async () => {
     await logout();
@@ -97,17 +106,17 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="bg-gradient-to-br from-black/95 via-orange-900/40 to-black/95 border-l border-white/10 backdrop-blur-xl">
         <SheetHeader>
-          <SheetTitle className="text-white">Profile & Settings</SheetTitle>
+          <SheetTitle className="text-white">My Hub</SheetTitle>
           <SheetDescription className="text-white/70">
-            Manage your account and preferences
+            Your personal space
           </SheetDescription>
         </SheetHeader>
 
         {/* User Info Section */}
         <div className="mt-6 p-4 bg-black/30 backdrop-blur-sm border border-white/10 rounded-xl">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 shadow-lg">
-              <User className="h-6 w-6 text-white" />
+            <div className="h-12 w-12 rounded-full bg-orange-600/80 border-2 border-orange-400/30 flex items-center justify-center text-white font-semibold text-lg shadow-lg">
+              {userInitials || "?"}
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-white font-semibold truncate">{userName}</h3>
