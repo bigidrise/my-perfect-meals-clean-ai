@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ interface AlcoholFeature {
 
 export default function AlcoholHubLanding() {
   const [, setLocation] = useLocation();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     document.title = "Alcohol Hub | My Perfect Meals";
@@ -117,6 +118,13 @@ export default function AlcoholHubLanding() {
               <Wine className="h-6 w-6 text-orange-400" />
               <h1 className="text-xl font-bold text-white">Alcohol Hub</h1>
             </div>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              aria-label="How to use Alcohol Hub"
+            >
+              ?
+            </button>
           </div>
         </div>
       </div>
@@ -171,6 +179,35 @@ export default function AlcoholHubLanding() {
           </div>
         </div>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+          <Card className="max-w-lg w-full bg-black/90 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.3)]" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold text-white">How to Use Alcohol Hub</h2>
+                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-orange-400">✕</Button>
+              </div>
+              <div className="space-y-4 text-white/90">
+                <p>Welcome to the Alcohol Hub! This feature helps you make informed decisions about alcohol consumption while maintaining your health goals.</p>
+                <div>
+                  <h3 className="font-semibold text-orange-400 mb-2">Available Tools:</h3>
+                  <ul className="list-disc list-inside space-y-2 ml-2">
+                    <li><strong>Lean & Social:</strong> Find diet-friendly drink options that won't derail your progress</li>
+                    <li><strong>Mocktails:</strong> Explore delicious alcohol-free alternatives</li>
+                    <li><strong>Meal Pairing:</strong> Get meal recommendations based on your drink selection</li>
+                    <li><strong>Wine/Beer/Bourbon Pairing:</strong> Find the perfect drink to complement your meal</li>
+                    <li><strong>Alcohol Log:</strong> Track your intake to stay mindful and informed</li>
+                    <li><strong>Weaning Off Tool:</strong> Gradually reduce consumption at your own pace</li>
+                  </ul>
+                </div>
+                <p className="text-sm text-white/70 italic">Remember: These tools are for informational purposes. Always drink responsibly and consult healthcare professionals for personalized advice.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </motion.div>
   );
 }

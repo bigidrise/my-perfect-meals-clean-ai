@@ -35,6 +35,7 @@ export default function BourbonSpiritsPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<BourbonRecommendation | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Form state
   const [mealType, setMealType] = useState("");
@@ -145,9 +146,18 @@ export default function BourbonSpiritsPage() {
           >
             <span className="text-2xl leading-none">🥃</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
-            Bourbon &amp; Spirits Pairing
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              Bourbon &amp; Spirits Pairing
+            </h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              aria-label="How to use Bourbon & Spirits Pairing"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-md text-white/90 max-w-2xl mx-auto">
             Get expert master distiller recommendations for premium bourbon and
             spirits with your meals.
@@ -380,6 +390,34 @@ export default function BourbonSpiritsPage() {
           </Card>
         )}
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+          <Card className="max-w-lg w-full bg-black/90 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.3)]" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold text-white">How to Use Bourbon & Spirits</h2>
+                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-amber-400">✕</Button>
+              </div>
+              <div className="space-y-4 text-white/90">
+                <p>Get master distiller recommendations for premium bourbon and spirits perfectly paired with your meals or occasions.</p>
+                <div>
+                  <h3 className="font-semibold text-amber-400 mb-2">How It Works:</h3>
+                  <ol className="list-decimal list-inside space-y-2 ml-2">
+                    <li>Select your meal type (main course, dessert, cigar pairing, etc.)</li>
+                    <li>Add cuisine style and main ingredient details</li>
+                    <li>Choose your occasion and price range</li>
+                    <li>Add preferences for proof, age, or flavor profile</li>
+                    <li>Click "Get Spirit Pairing" for expert recommendations</li>
+                  </ol>
+                </div>
+                <p className="text-sm text-amber-300">💡 Tip: Our recommendations include serving suggestions and glassware for the authentic experience!</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Back to Top Button */}
       {showBackToTop && (

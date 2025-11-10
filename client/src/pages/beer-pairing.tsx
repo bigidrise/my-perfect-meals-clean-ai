@@ -64,6 +64,7 @@ const priceRanges = ["$", "$$", "$$$"] as const;
 export default function BeerPairingMode() {
   const [, setLocation] = useLocation();
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const [mealType, setMealType] = useState<string>("Burger");
   const [cuisine, setCuisine] = useState<string>("American");
@@ -165,7 +166,16 @@ export default function BeerPairingMode() {
           <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
             <span className="text-2xl">🍺</span>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Beer Pairing Mode</h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h1 className="text-2xl font-bold text-white">Beer Pairing Mode</h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              aria-label="How to use Beer Pairing"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-sm text-white/90">
             Find the best beer styles and specific picks to match your meal, taste, and ABV preferences.
           </p>
@@ -420,6 +430,34 @@ export default function BeerPairingMode() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        )}
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+            <Card className="max-w-lg w-full bg-black/90 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.3)]" onClick={(e) => e.stopPropagation()}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="text-2xl font-bold text-white">How to Use Beer Pairing</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-orange-400">✕</Button>
+                </div>
+                <div className="space-y-4 text-white/90">
+                  <p>Find the perfect beer styles and specific recommendations to match your meal, taste preferences, and ABV range.</p>
+                  <div>
+                    <h3 className="font-semibold text-orange-400 mb-2">How It Works:</h3>
+                    <ol className="list-decimal list-inside space-y-2 ml-2">
+                      <li>Tell us about your meal (type, cuisine, main ingredient)</li>
+                      <li>Set your occasion and price range</li>
+                      <li>Choose your flavor bias (balanced, hoppy, malty, or sour)</li>
+                      <li>Set your preferred ABV range using the sliders</li>
+                      <li>Click "Get Beer Pairings" for expert recommendations</li>
+                    </ol>
+                  </div>
+                  <p className="text-sm text-orange-300">💡 Tip: Check the "calorie conscious" option for lower-calorie beer styles!</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 

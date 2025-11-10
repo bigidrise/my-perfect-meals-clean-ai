@@ -27,6 +27,7 @@ interface CheckIn {
 
 const WeaningOffTool = () => {
   const [, setLocation] = useLocation();
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const [step, setStep] = useState<"setup" | "plan" | "tracking">("setup");
   const [drinksPerDay, setDrinksPerDay] = useState(3);
   const [daysPerWeek, setDaysPerWeek] = useState(5);
@@ -171,6 +172,13 @@ const WeaningOffTool = () => {
               <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
                 <TrendingDown className="h-8 w-8 text-teal-400" />
                 Weaning Off Tool
+                <button
+                  onClick={() => setShowInfoModal(true)}
+                  className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+                  aria-label="How to use Weaning Off Tool"
+                >
+                  ?
+                </button>
               </CardTitle>
               <p className="text-sm text-white/90 mt-2">
                 Taper gently at your pace — zero judgment, just support
@@ -480,6 +488,34 @@ const WeaningOffTool = () => {
             >
               Start Over With New Plan
             </Button>
+          </div>
+        )}
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+            <Card className="max-w-lg w-full bg-black/90 border border-teal-400/70 shadow-[0_0_30px_rgba(20,184,166,0.3)]" onClick={(e) => e.stopPropagation()}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="text-2xl font-bold text-white">How to Use Weaning Off Tool</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-teal-400">✕</Button>
+                </div>
+                <div className="space-y-4 text-white/90">
+                  <p>Gradually reduce your alcohol intake at your own pace with a personalized, judgment-free tapering plan.</p>
+                  <div>
+                    <h3 className="font-semibold text-teal-400 mb-2">How It Works:</h3>
+                    <ol className="list-decimal list-inside space-y-2 ml-2">
+                      <li>Enter your current drinking baseline (drinks per day and days per week)</li>
+                      <li>Choose your reduction pace: gentle (10%), standard (20%), or custom</li>
+                      <li>Generate your personalized weekly reduction plan</li>
+                      <li>Check in each week to track progress or pause if needed</li>
+                      <li>View your full schedule and celebrate milestones</li>
+                    </ol>
+                  </div>
+                  <p className="text-sm text-teal-300">⚠️ Medical Note: If you drink heavily, consult a healthcare provider before tapering to avoid withdrawal risks.</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>

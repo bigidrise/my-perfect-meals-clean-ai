@@ -68,6 +68,7 @@ const save = (rows: AlcoholEntry[]) => {
 // ---- PAGE ---------------------------------------------------------------
 export default function AlcoholLogPage() {
   const [, setLocation] = useLocation();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // form
   const [type, setType] = useState<DrinkType>("Wine");
@@ -190,6 +191,13 @@ export default function AlcoholLogPage() {
               <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
                 <Wine className="h-6 w-6 text-rose-400" />
                 Alcohol Log
+                <button
+                  onClick={() => setShowInfoModal(true)}
+                  className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+                  aria-label="How to use Alcohol Log"
+                >
+                  ?
+                </button>
               </CardTitle>
               <p className="text-sm text-white/90 mt-2">
                 Voluntary logging. Simple charts. Alcohol calories/carbs are informational and do <strong>not</strong> reduce your food targets.
@@ -384,6 +392,34 @@ export default function AlcoholLogPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+            <Card className="max-w-lg w-full bg-black/90 border border-rose-400/70 shadow-[0_0_30px_rgba(244,63,94,0.3)]" onClick={(e) => e.stopPropagation()}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="text-2xl font-bold text-white">How to Use Alcohol Log</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-rose-400">✕</Button>
+                </div>
+                <div className="space-y-4 text-white/90">
+                  <p>Track your alcohol intake with simple, judgment-free logging. All data stays on your device.</p>
+                  <div>
+                    <h3 className="font-semibold text-rose-400 mb-2">How It Works:</h3>
+                    <ol className="list-decimal list-inside space-y-2 ml-2">
+                      <li>Select drink type and enter the ounces consumed</li>
+                      <li>Choose the date and optionally add context notes</li>
+                      <li>Click "Save Entry" to log the drink</li>
+                      <li>View your intake trends over 7, 30, or 90 days</li>
+                      <li>Review calories and carbs to stay informed</li>
+                    </ol>
+                  </div>
+                  <p className="text-sm text-rose-300">💡 Important: Alcohol calories are informational only and do NOT reduce your food macro targets.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );

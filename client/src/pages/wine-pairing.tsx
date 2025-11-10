@@ -41,6 +41,7 @@ export default function WinePairingPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<WinePairingResult | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Form state
   const [mealType, setMealType] = useState("");
@@ -147,9 +148,18 @@ export default function WinePairingPage() {
 
         {/* Glass Title Card */}
         <div className="bg-black/20 backdrop-blur-lg border border-purple-400/70 shadow-[0_0_30px_rgba(168,85,247,0.15)] rounded-2xl p-8 text-center mb-12 mt-14">
-          <h1 className="text-2xl font-bold text-white mb-4">
-            🍷 Wine Pairing AI
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <h1 className="text-2xl font-bold text-white">
+              🍷 Wine Pairing AI
+            </h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              aria-label="How to use Wine Pairing"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-sm text-white/80 max-w-2xl mx-auto">
             Get expert sommelier recommendations for the perfect wine pairing with your meals.
           </p>
@@ -346,6 +356,34 @@ export default function WinePairingPage() {
           </div>
         )}
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+          <Card className="max-w-lg w-full bg-black/90 border border-purple-400/70 shadow-[0_0_30px_rgba(168,85,247,0.3)]" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold text-white">How to Use Wine Pairing</h2>
+                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-purple-400">✕</Button>
+              </div>
+              <div className="space-y-4 text-white/90">
+                <p>Get expert sommelier recommendations for the perfect wine to complement your meal.</p>
+                <div>
+                  <h3 className="font-semibold text-purple-400 mb-2">How It Works:</h3>
+                  <ol className="list-decimal list-inside space-y-2 ml-2">
+                    <li>Select your meal type (appetizer, main course, dessert, etc.)</li>
+                    <li>Optionally add cuisine style and main ingredient</li>
+                    <li>Choose your occasion and price range</li>
+                    <li>Click "Get Wine Pairing" for personalized recommendations</li>
+                    <li>View detailed wine info including serving temperature and alternatives</li>
+                  </ol>
+                </div>
+                <p className="text-sm text-purple-300">💡 Tip: Include your preferences in the additional notes for more tailored suggestions!</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Back to Top Button */}
       {showBackToTop && (
