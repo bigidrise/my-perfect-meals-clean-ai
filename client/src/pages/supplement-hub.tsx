@@ -113,7 +113,7 @@ export default function SupplementHub() {
         {/* Header */}
         <header className="mb-6">
           <button
-            onClick={() => setLocation("/supplement-hub-landing")}
+            onClick={() => setLocation("/procare-cover")}
             className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/30 backdrop-blur-lg border border-white/20 hover:bg-black/40 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
           >
             <ArrowLeft className="h-4 w-4" />

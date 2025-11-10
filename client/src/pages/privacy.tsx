@@ -1,4 +1,4 @@
-import { Shield, Trash2, Download, Eye, Lock, ArrowLeft } from "lucide-react";
+import { Shield, Trash2, Download, Eye, Lock, ArrowLeft, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import SafePageContainer from "@/components/SafePageContainer";
@@ -15,8 +15,8 @@ export default function PrivacySecurity() {
           className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
           data-testid="button-back"
         >
-          <ArrowLeft className="h-5 w-5 mr-3" />
-          Back to Dashboard
+          <Home className="h-5 w-5 mr-3" />
+        
         </Button>
 
         <div className="flex items-center gap-4">

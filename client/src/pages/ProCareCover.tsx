@@ -39,7 +39,7 @@ export default function ProCareCover() {
       title: "Supplement Hub",
       description: "Evidence-based supplement guidance and trusted partners",
       icon: Crown,
-      route: "/supplement-hub-landing",
+      route: "/supplement-hub",
       testId: "card-supplement-hub",
     },
   ];

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { PlayCircle, ArrowLeft } from "lucide-react";
+import { PlayCircle, ArrowLeft, Home } from "lucide-react";
 
 type Tutorial = {
   id: string;
@@ -126,15 +126,15 @@ export default function TutorialHub() {
             className="inline-flex items-center justify-center gap-2 rounded-xl font-medium px-4 py-2 text-sm text-white bg-black/30 hover:bg-black/50 border border-white/20 backdrop-blur-sm transition-colors shadow-lg"
             data-testid="link-back-dashboard"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Dashboard
+            <Home className="h-4 w-4" />
+            
           </Link>
         </div>
 
         {/* Header card - matching green dashboard style */}
-        <header className="bg-gradient-to-br from-black via-black-500 to-black border border-emerald-300/30 text-white rounded-2xl shadow-xl p-6 mt-4">
+        <header className="bg-gradient-to-br from-black via-black-500 to-black border border-emerald-300/30 text-white rounded-2xl shadow-xl p-6 mt-12">
           <div className="text-center">
-            <h1 className="text-3xl font-extrabold">📚 Tutorial Hub</h1>
+            <h1 className="text-2xl font-bold">📚 Tutorial Hub</h1>
             <p className="text-white/95 mt-2 text-sm">
               How-to videos for using your My Perfect Meals app
             </p>

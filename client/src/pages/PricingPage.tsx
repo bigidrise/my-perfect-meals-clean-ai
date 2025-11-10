@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ArrowLeft, ChevronDown, ChevronUp, Home } from "lucide-react";
 import AffiliateOnPricing from "@/components/AffiliateOnPricing";
 import { PLAN_SKUS, getPlansByGroup } from "@/data/planSkus";
 import { startCheckout } from "@/lib/checkout";
@@ -144,7 +144,7 @@ export default function PricingPage() {
                    shadow-lg hover:bg-black/70 transition-all duration-200"
         data-testid="button-back-navigation"
       >
-        <ArrowLeft className="h-4 w-4 text-white" /> Dashboard
+        <Home className="h-4 w-4 text-white" />
       </button>
       
       <div className="container max-w-6xl mx-auto px-4">
