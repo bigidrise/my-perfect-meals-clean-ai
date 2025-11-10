@@ -12,7 +12,8 @@ export default function PrivacySecurity() {
         <Button
           variant="ghost"
           onClick={() => setLocation("/profile")}
-          className="text-white hover:text-white hover:bg-white/10 -ml-2"
+          className="text-white bg-white/10 active:bg-white/20 -ml-2"
+          data-testid="button-back"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Profile
@@ -34,10 +35,18 @@ export default function PrivacySecurity() {
             Control your stored data in My Perfect Meals.
           </p>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" className="justify-start border-white/20 text-white hover:bg-white/10">
+            <Button 
+              variant="outline" 
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              data-testid="button-export-data"
+            >
               <Download className="h-4 w-4 mr-2" /> Export My Data
             </Button>
-            <Button variant="outline" className="justify-start border-white/20 text-white hover:bg-white/10">
+            <Button 
+              variant="outline" 
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              data-testid="button-clear-data"
+            >
               <Trash2 className="h-4 w-4 mr-2" /> Clear Saved Macros & Meals
             </Button>
           </div>
@@ -49,10 +58,18 @@ export default function PrivacySecurity() {
             Manage login methods and secure your account.
           </p>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" className="justify-start border-white/20 text-white hover:bg-white/10">
+            <Button 
+              variant="outline" 
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              data-testid="button-change-password"
+            >
               <Lock className="h-4 w-4 mr-2" /> Change Password
             </Button>
-            <Button variant="outline" className="justify-start border-white/20 text-white hover:bg-white/10">
+            <Button 
+              variant="outline" 
+              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20"
+              data-testid="button-manage-accounts"
+            >
               <Eye className="h-4 w-4 mr-2" /> Manage Linked Accounts
             </Button>
           </div>
