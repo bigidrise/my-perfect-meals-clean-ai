@@ -183,6 +183,21 @@ const advance = (step: string) => {
   );
 };
 
+// Gender-based starchy carb logic
+const getStarchyCarbs = (sex: Sex, goal: Goal) => {
+  if (sex === "female") {
+    if (goal === "loss") return 25;
+    if (goal === "maint") return 50;
+    if (goal === "gain") return 75;
+  }
+  if (sex === "male") {
+    if (goal === "loss") return 50;
+    if (goal === "maint") return 75;
+    if (goal === "gain") return 100;
+  }
+  return 25;
+};
+
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -572,17 +587,19 @@ export default function MacroCounter() {
             <Card className="bg-zinc-900/80 border border-white/30 text-white">
               <CardContent className="p-5">
                 <h3 className="text-lg font-semibold flex items-center mb-4">
-                  <Scale className="h-5 w-5 mr-2 text-indigo-300" /> Your Baseline
+                  <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
                 </h3>
-                <div className="grid md:grid-cols-4 gap-3">
-                  <Stat label="BMR" value={results.bmr} suffix="kcal" />
-                  <Stat label="TDEE" value={results.tdee} suffix="kcal" />
-                  <Stat label="Target kcal" value={results.target} suffix="kcal" />
-                  <Stat
-                    label="Protein / Carbs / Fat"
-                    value={results.macros.protein.g}
-                    sub={`${results.macros.carbs.g}g C / ${results.macros.fat.g}g F`}
+                <div className="space-y-3">
+                  <MacroRow label="Protein" grams={results.macros.protein.g} />
+                  <MacroRow 
+                    label="Carbs - Starchy" 
+                    grams={getStarchyCarbs(sex, goal)} 
                   />
+                  <MacroRow 
+                    label="Carbs - Fibrous" 
+                    grams={results.macros.carbs.g - getStarchyCarbs(sex, goal)} 
+                  />
+                  <MacroRow label="Fats" grams={results.macros.fat.g} />
                 </div>
               </CardContent>
             </Card>
@@ -619,24 +636,11 @@ export default function MacroCounter() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  suffix,
-  sub,
-}: {
-  label: string;
-  value: number;
-  suffix?: string;
-  sub?: string;
-}) {
+function MacroRow({ label, grams }: { label: string; grams: number }) {
   return (
-    <div className="rounded-xl border border-white/30 bg-black/70 p-3 text-white">
-      <div className="text-[11px] uppercase tracking-wide">{label}</div>
-      <div className="mt-1 text-sm font-semibold">
-        {Math.round(value)} {suffix || ""}
-      </div>
-      {sub && <div className="text-xs">{sub}</div>}
+    <div className="flex justify-between items-center rounded-xl border border-white/20 bg-black/40 p-4">
+      <div className="text-sm font-semibold text-white/90">{label}</div>
+      <div className="text-lg font-bold text-white">{Math.round(grams)} grams</div>
     </div>
   );
 }
