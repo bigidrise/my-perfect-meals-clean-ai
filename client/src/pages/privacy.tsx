@@ -2,12 +2,13 @@
 import { Shield, Trash2, Download, Eye, Lock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import SafePageContainer from "@/components/SafePageContainer";
 
 export default function PrivacySecurity() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-6">
+    <SafePageContainer className="p-6 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-6">
       <header className="space-y-4">
         <Button
           variant="ghost"
@@ -88,6 +89,6 @@ export default function PrivacySecurity() {
           </a>
         </div>
       </section>
-    </div>
+    </SafePageContainer>
   );
 }
