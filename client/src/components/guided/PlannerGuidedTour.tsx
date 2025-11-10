@@ -21,7 +21,7 @@ export default function PlannerGuidedTour() {
       {/* Flashing question mark icon */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-[60] bg-orange-500/20 hover:bg-orange-500/30 text-white rounded-full w-10 h-10 flex items-center justify-center border border-orange-500/40 backdrop-blur-sm flash-orange"
+        className="fixed top-4 right-4 z-[60] bg-orange-500/20 hover:bg-orange-500/30 text-white rounded-xl w-10 h-10 flex items-center justify-center border border-orange-500/40 backdrop-blur-sm flash-orange"
         title="Open guided overview"
       >
         ?
