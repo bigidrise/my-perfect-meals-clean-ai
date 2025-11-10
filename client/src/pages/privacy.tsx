@@ -1,4 +1,3 @@
-
 import { Shield, Trash2, Download, Eye, Lock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -19,7 +18,7 @@ export default function PrivacySecurity() {
           <ArrowLeft className="h-5 w-5 mr-3" />
           Back to Profile
         </Button>
-        
+
         <div className="flex items-center gap-4">
           <Shield className="h-7 w-7 text-lime-400" />
           <div>
@@ -36,16 +35,16 @@ export default function PrivacySecurity() {
             Control your stored data in My Perfect Meals.
           </p>
           <div className="flex flex-col gap-4">
-            <Button 
-              variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
+            <Button
+              variant="outline"
+              className="justify-start border-white/20 bg-white/10 text-white hover:bg-gradient-to-r hover:from-black/60 hover:via-orange-500/30 hover:to-black/60 active:bg-orange-500/40 py-5 px-6 h-auto text-base"
               data-testid="button-export-data"
             >
               <Download className="h-5 w-5 mr-4" /> Export My Data
             </Button>
-            <Button 
-              variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
+            <Button
+              variant="outline"
+              className="justify-start border-white/20 bg-white/10 text-white hover:bg-gradient-to-r hover:from-black/60 hover:via-orange-500/30 hover:to-black/60 active:bg-orange-500/40 py-5 px-6 h-auto text-base"
               data-testid="button-clear-data"
             >
               <Trash2 className="h-5 w-5 mr-4" /> Clear Saved Macros & Meals
@@ -59,16 +58,16 @@ export default function PrivacySecurity() {
             Manage login methods and secure your account.
           </p>
           <div className="flex flex-col gap-4">
-            <Button 
-              variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
+            <Button
+              variant="outline"
+              className="justify-start border-white/20 bg-white/10 text-white hover:bg-gradient-to-r hover:from-black/60 hover:via-orange-500/30 hover:to-black/60 active:bg-orange-500/40 py-5 px-6 h-auto text-base"
               data-testid="button-change-password"
             >
               <Lock className="h-5 w-5 mr-4" /> Change Password
             </Button>
-            <Button 
-              variant="outline" 
-              className="justify-start border-white/20 bg-white/10 text-white active:bg-white/20 py-5 px-6 h-auto text-base"
+            <Button
+              variant="outline"
+              className="justify-start border-white/20 bg-white/10 text-white hover:bg-gradient-to-r hover:from-black/60 hover:via-orange-500/30 hover:to-black/60 active:bg-orange-500/40 py-5 px-6 h-auto text-base"
               data-testid="button-manage-accounts"
             >
               <Eye className="h-5 w-5 mr-4" /> Manage Linked Accounts

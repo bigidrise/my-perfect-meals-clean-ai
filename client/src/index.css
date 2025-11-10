@@ -379,6 +379,11 @@
     padding-bottom: var(--safe-bottom-total);
   }
 
+  /* Generous bottom nav spacing - use on pages with bottom nav */
+  .pb-safe-nav-generous {
+    padding-bottom: calc(var(--bottom-nav-height) + 120px);
+  }
+
   /* Bottom positioning for shopping banner */
   .bottom-shopping-banner {
     bottom: var(--bottom-nav-height);
