@@ -107,7 +107,7 @@ function loadCravingCache(): CachedCravingState | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.JSON.parse(raw);
     // Minimal sanity checks
     if (!parsed?.generatedMeal?.id) return null;
     return parsed as CachedCravingState;
@@ -150,7 +150,7 @@ export default function CravingCreator() {
   // 🔋 Progress bar state (real-time ticker like Restaurant Guide)
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
-  const [showCravingInfoModal, setShowCravingInfoModal] = useState(false);
+  const [showCravingInfoModal, setShowCravingInfoModal] = useState(false); // ENHANCEMENT: Modal to explain input
   // Development user ID - consistent across app
   const userId = DEV_USER_ID;
 
@@ -401,7 +401,7 @@ export default function CravingCreator() {
 
   return (
     <PhaseGate phase="PHASE_1_CORE" feature="craving-creator">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -489,15 +489,15 @@ export default function CravingCreator() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                
-                
+
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-medium text-white">
                       What are you craving?
                     </label>
                     <button
-                      onClick={() => setShowCravingInfoModal(true)}
+                      onClick={() => setShowCravingInfoModal(true)} // Open modal on click
                       className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
                       aria-label="How to use Craving Creator"
                     >
@@ -639,6 +639,15 @@ export default function CravingCreator() {
                   </div>
                 )}
 
+                {!replaceId && (
+                  <p className="text-white/80 text-sm mt-2 text-center">
+                    ⏱️ Generation takes 15-30 seconds - our AI analyzes your
+                    health profile, checks ingredient safety, calculates
+                    nutrition, and creates personalized recipes with medical
+                    compliance
+                  </p>
+                )}
+
                 {isGenerating ? (
                   <div className="w-full" aria-live="polite">
                     <div className="flex items-center justify-center gap-2 text-orange-600 mb-4">
@@ -674,15 +683,6 @@ export default function CravingCreator() {
                   >
                     Create My Craving
                   </GlassButton>
-                )}
-
-                {!replaceId && (
-                  <p className="text-white/80 text-sm mt-2 text-center">
-                    ⏱️ Generation takes 15-30 seconds - our AI analyzes your
-                    health profile, checks ingredient safety, calculates
-                    nutrition, and creates personalized recipes with medical
-                    compliance
-                  </p>
                 )}
               </CardContent>
             </Card>
@@ -737,9 +737,9 @@ export default function CravingCreator() {
                         <div className="text-xs text-yellow-700 text-center">
                           <strong>Total nutrition below is for {servings} servings.</strong>
                           <br />
-                          Per serving: {Math.round((meal.nutrition?.calories || meal.calories || 0) / servings)} cal | 
-                          {' '}{Math.round((meal.nutrition?.protein || meal.protein || 0) / servings)}g protein | 
-                          {' '}{Math.round((meal.nutrition?.carbs || meal.carbs || 0) / servings)}g carbs | 
+                          Per serving: {Math.round((meal.nutrition?.calories || meal.calories || 0) / servings)} cal |
+                          {' '}{Math.round((meal.nutrition?.protein || meal.protein || 0) / servings)}g protein |
+                          {' '}{Math.round((meal.nutrition?.carbs || meal.carbs || 0) / servings)}g carbs |
                           {' '}{Math.round((meal.nutrition?.fat || meal.fat || 0) / servings)}g fat
                         </div>
                       </div>
@@ -930,51 +930,59 @@ export default function CravingCreator() {
         />
       )}
 
-      {/* Craving Creator Info Modal */}
+      {/* Craving Info Modal */}
       {showCravingInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-zinc-900/95 border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Craving Creator</h3>
-            
-            <div className="space-y-4 text-white/90 text-sm">
-              <div>
-                <p className="font-semibold text-white mb-1">📝 Describe Your Craving</p>
-                <p className="text-white/70">
-                  Be specific! Tell us exactly what you want. For example: "I want something lowfat, strawberry, with graham cracker crust, my equal sweetener, and non-dairy"
-                </p>
-              </div>
-
-              <div>
-                <p className="font-semibold text-white mb-1">🎯 The More Details, The Better</p>
-                <p className="text-white/70">
-                  You have 200 characters to describe your perfect craving. Include flavors, textures, dietary needs, and specific ingredients you want.
-                </p>
-              </div>
-
-              <div>
-                <p className="font-semibold text-white mb-1">⚡ AI-Powered Generation</p>
-                <p className="text-white/70">
-                  Our AI analyzes your health profile, checks ingredient safety, calculates nutrition, and creates a personalized recipe in 15-30 seconds.
-                </p>
-              </div>
-
-              <div>
-                <p className="font-semibold text-white mb-1">👨‍👩‍👧‍👦 Serving Size</p>
-                <p className="text-white/70">
-                  Choose 1-10 servings. Ingredients and nutrition will be scaled automatically for your needs.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowCravingInfoModal(false)}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+          <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl max-w-md w-full mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-white text-xl font-bold mb-2">
+                How to Describe Your Craving
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-white/90 mb-4 text-sm">
+                To get the best results, be as specific as possible! Think about:
+              </p>
+              <ul className="list-disc list-inside text-white/80 text-sm space-y-2">
+                <li>
+                  <strong>Flavor Profile:</strong> Sweet, savory, spicy, sour,
+                  bitter, umami.
+                </li>
+                <li>
+                  <strong>Texture:</strong> Creamy, crunchy, chewy, smooth,
+                  fluffy, crispy.
+                </li>
+                <li>
+                  <strong>Key Ingredients:</strong> e.g., "strawberry," "chocolate,"
+                  "chicken," "broccoli."
+                </li>
+                <li>
+                  <strong>Dietary Needs/Preferences:</strong> e.g., "low-fat,"
+                  "vegan," "gluten-free," "no nuts."
+                </li>
+                <li>
+                  <strong>Meal Type:</strong> Snack, breakfast, lunch, dinner,
+                  dessert.
+                </li>
+                <li>
+                  <strong>Cooking Style:</strong> Baked, fried, grilled, raw,
+                  stir-fried.
+                </li>
+              </ul>
+              <p className="text-white/90 mt-4 text-sm">
+                <strong>Example:</strong> "I want a creamy, low-sugar, vegan
+                chocolate avocado mousse with a hint of raspberry."
+              </p>
+            </CardContent>
+            <CardFooter className="flex justify-end pt-4">
+              <GlassButton onClick={() => setShowCravingInfoModal(false)} className="text-sm px-4 py-1">
+                Got It!
+              </GlassButton>
+            </CardFooter>
+          </Card>
         </div>
       )}
+
     </motion.div>
     </PhaseGate>
   );
