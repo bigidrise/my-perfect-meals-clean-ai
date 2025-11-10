@@ -13,7 +13,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import {
   GlassButton,
 } from "@/components/glass";
@@ -932,54 +932,37 @@ export default function CravingCreator() {
 
       {/* Craving Info Modal */}
       {showCravingInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
-          <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl max-w-md w-full mx-auto p-6">
-            <CardHeader>
-              <CardTitle className="text-white text-xl font-bold mb-2">
-                How to Describe Your Craving
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-white/90 mb-4 text-sm">
-                To get the best results, be as specific as possible! Think about:
-              </p>
-              <ul className="list-disc list-inside text-white/80 text-sm space-y-2">
-                <li>
-                  <strong>Flavor Profile:</strong> Sweet, savory, spicy, sour,
-                  bitter, umami.
-                </li>
-                <li>
-                  <strong>Texture:</strong> Creamy, crunchy, chewy, smooth,
-                  fluffy, crispy.
-                </li>
-                <li>
-                  <strong>Key Ingredients:</strong> e.g., "strawberry," "chocolate,"
-                  "chicken," "broccoli."
-                </li>
-                <li>
-                  <strong>Dietary Needs/Preferences:</strong> e.g., "low-fat,"
-                  "vegan," "gluten-free," "no nuts."
-                </li>
-                <li>
-                  <strong>Meal Type:</strong> Snack, breakfast, lunch, dinner,
-                  dessert.
-                </li>
-                <li>
-                  <strong>Cooking Style:</strong> Baked, fried, grilled, raw,
-                  stir-fried.
-                </li>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Describe Your Craving</h3>
+
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>To get the best results, be as specific as possible! Think about:</p>
+
+              <ul className="space-y-2 text-white/80 text-sm">
+                <li><strong className="text-white">Flavor Profile:</strong> Sweet, savory, spicy, sour, bitter, umami</li>
+                <li><strong className="text-white">Texture:</strong> Creamy, crunchy, chewy, smooth, fluffy, crispy</li>
+                <li><strong className="text-white">Key Ingredients:</strong> e.g., "strawberry," "chocolate," "chicken," "broccoli"</li>
+                <li><strong className="text-white">Dietary Needs:</strong> e.g., "low-fat," "vegan," "gluten-free," "no nuts"</li>
+                <li><strong className="text-white">Meal Type:</strong> Snack, breakfast, lunch, dinner, dessert</li>
+                <li><strong className="text-white">Cooking Style:</strong> Baked, fried, grilled, raw, stir-fried</li>
               </ul>
-              <p className="text-white/90 mt-4 text-sm">
-                <strong>Example:</strong> "I want a creamy, low-sugar, vegan
-                chocolate avocado mousse with a hint of raspberry."
-              </p>
-            </CardContent>
-            <CardFooter className="flex justify-end pt-4">
-              <GlassButton onClick={() => setShowCravingInfoModal(false)} className="text-sm px-4 py-1">
-                Got It!
-              </GlassButton>
-            </CardFooter>
-          </Card>
+
+              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                <p className="font-semibold text-white mb-1">Example:</p>
+                <p className="text-white/70 italic">
+                  "I want something lowfat, strawberry, with graham cracker crust, my equal sweetener, and non-dairy"
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowCravingInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
         </div>
       )}
 
