@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PlusCircle, RotateCcw, Home, Activity, Scale, Stethoscope, BarChart3, Target, ArrowLeft, Info } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -801,26 +802,35 @@ export default function MyBiometrics() {
           </CardHeader>
         </Card>
 
-        {/* Weight Sync Alert Banner */}
-        {pendingWeightSync && (
-          <div className="rounded-2xl p-[1px] bg-gradient-to-r from-orange-500/50 via-orange-500/40 to-orange-500/50 animate-pulse">
-            <div className="rounded-2xl bg-orange-900/20 backdrop-blur-lg px-4 py-3 border border-orange-500/30">
-              <div className="flex items-start gap-3">
-                <Scale className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-orange-300 font-semibold text-sm mb-1">Your Macro Targets Are Active and Live</div>
-                  <div className="text-white/80 text-sm">
-                    Your macro targets are set in today's macros. Scroll down to save your weight. Upon click, you will be sent to build your plan.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* MACROS */}
         <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-          <CardHeader><CardTitle className="text-white text-lg flex items-center gap-2"><BarChart3 className="h-5 w-5"/> Today's Macros</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-white text-lg flex items-center gap-2">
+              <BarChart3 className="h-5 w-5"/> 
+              Today's Macros
+              {pendingWeightSync && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+                      title="Macro targets info"
+                    >
+                      ?
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
+                    <div className="space-y-2">
+                      <p className="text-sm font-semibold text-lime-300">Your Macro Targets Are Set</p>
+                      <p className="text-sm text-white/90">
+                        Your macro targets are now active in today's macros. Navigate to the Body Stats card below, save your weight, and you will be sent to the plan builder.
+                      </p>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
+            </CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
 
               {/* Macro Targets Progress */}
