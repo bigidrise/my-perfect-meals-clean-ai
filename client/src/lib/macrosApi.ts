@@ -35,12 +35,21 @@ export async function addBulkMacros(entries: MacroEntry[]): Promise<{ success: b
 
 export async function logMacrosToBiometrics(macros: MacroEntry): Promise<{ success: boolean; message?: string }> {
   try {
-    const response = await fetch('/api/biometrics/macros', {
+    const response = await fetch('/api/biometrics/log', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(macros),
+      body: JSON.stringify({
+        date_iso: macros.date || new Date().toISOString(),
+        meal_type: macros.mealType || 'lunch',
+        calories_kcal: macros.calories,
+        protein_g: macros.protein,
+        carbs_g: macros.carbs,
+        fat_g: macros.fat,
+        source: 'macro-counter',
+        title: 'Meal from Macro Counter'
+      }),
     });
 
     if (!response.ok) {
