@@ -182,30 +182,33 @@ export default function AlcoholHubLanding() {
 
       {/* Info Modal */}
       {showInfoModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
-          <Card className="max-w-lg w-full bg-black/90 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.3)]" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-white">How to Use Alcohol Hub</h2>
-                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-orange-400">✕</Button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Alcohol Hub</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Welcome to the Alcohol Hub! This feature helps you make informed decisions about alcohol consumption while maintaining your health goals.</p>
+              <div>
+                <h4 className="font-semibold text-lime-400 mb-2">Available Tools:</h4>
+                <ul className="list-disc list-inside space-y-2 ml-2">
+                  <li><strong>Lean & Social:</strong> Find diet-friendly drink options that won't derail your progress</li>
+                  <li><strong>Mocktails:</strong> Explore delicious alcohol-free alternatives</li>
+                  <li><strong>Meal Pairing:</strong> Get meal recommendations based on your drink selection</li>
+                  <li><strong>Wine/Beer/Bourbon Pairing:</strong> Find the perfect drink to complement your meal</li>
+                  <li><strong>Alcohol Log:</strong> Track your intake to stay mindful and informed</li>
+                  <li><strong>Weaning Off Tool:</strong> Gradually reduce consumption at your own pace</li>
+                </ul>
               </div>
-              <div className="space-y-4 text-white/90">
-                <p>Welcome to the Alcohol Hub! This feature helps you make informed decisions about alcohol consumption while maintaining your health goals.</p>
-                <div>
-                  <h3 className="font-semibold text-orange-400 mb-2">Available Tools:</h3>
-                  <ul className="list-disc list-inside space-y-2 ml-2">
-                    <li><strong>Lean & Social:</strong> Find diet-friendly drink options that won't derail your progress</li>
-                    <li><strong>Mocktails:</strong> Explore delicious alcohol-free alternatives</li>
-                    <li><strong>Meal Pairing:</strong> Get meal recommendations based on your drink selection</li>
-                    <li><strong>Wine/Beer/Bourbon Pairing:</strong> Find the perfect drink to complement your meal</li>
-                    <li><strong>Alcohol Log:</strong> Track your intake to stay mindful and informed</li>
-                    <li><strong>Weaning Off Tool:</strong> Gradually reduce consumption at your own pace</li>
-                  </ul>
-                </div>
-                <p className="text-sm text-white/70 italic">Remember: These tools are for informational purposes. Always drink responsibly and consult healthcare professionals for personalized advice.</p>
-              </div>
-            </CardContent>
-          </Card>
+              <p className="text-sm text-lime-300 italic">Remember: These tools are for informational purposes. Always drink responsibly and consult healthcare professionals for personalized advice.</p>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
         </div>
       )}
     </motion.div>
