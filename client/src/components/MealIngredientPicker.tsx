@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -567,6 +567,9 @@ export default function MealIngredientPicker({
       {/* Info Modal - How to Use */}
       <Dialog open={showInfoModal} onOpenChange={(isOpen) => !isOpen && handleInfoModalClose()}>
         <DialogContent className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md">
+          <DialogDescription className="sr-only">
+            Instructions for using the AI Meal Creator feature
+          </DialogDescription>
           <button
             type="button"
             onClick={handleInfoModalClose}
