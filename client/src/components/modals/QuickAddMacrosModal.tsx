@@ -332,3 +332,6 @@ export default function QuickAddMacrosModal({
     </Dialog>
   );
 }
+
+// Named export for compatibility
+export { QuickAddMacrosModal };
