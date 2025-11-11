@@ -1,0 +1,32 @@
+I'm still getting the same refresh page, not going to the biometrics, but this is the log reading I'm getting. 
+2025-11-11 16:31:46.892 UTC [76] LOG:  checkpoint starting: time
+87b16157-c11e-4d19-b073-7e81487d7658 GET /version.json?t=1762878698602 200 1ms
+Starting Container
+2025-11-11 16:31:55.983 UTC [76] LOG:  checkpoint complete: wrote 91 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=9.033 s, sync=0.008 s, total=9.091 s; sync files=37, longest=0.007 s, average=0.001 s; distance=588 kB, estimate=1067 kB; lsn=0/214B638, redo lsn=0/214B5E0
+🔧 registerRoutes called - starting route registration
+✅ Routes registered successfully
+📁 Serving static files from: /app/client/dist
+🚀 Production server running on port 8080
+📍 Environment: production
+🔗 Database: Connected
+✅ Resend email service initialized
+Stopping Container
+2cae22dd-79b6-4d52-9ebf-21e4b8b70819 GET /api/users/1 304 10ms
+a211efc4-7cc0-4b0f-ab87-527d9148ce5d GET /version.json?t=1762878731513 200 22ms
+5ea3a293-e7e2-4595-a435-7493af94e8b5 GET /version.json?cache=1762878759312 200 8ms
+7ce1e5d3-d831-46ad-a7ad-8914a82fe646 GET /my-biometrics 200 3ms
+56e3de36-12ff-4744-b6bf-8e7a09fa37f8 GET /version.json?t=1762878761188 200 2ms
+aa4f7676-b9ea-4371-84b9-cae526713126 GET /my-biometrics 200 2ms
+1faeaad9-d54b-4a93-bc36-6fecd2778776 GET /version.json?t=1762878761557 200 2ms
+9350606e-30cc-4863-8dc6-c0064b8b1fa1 GET /my-biometrics 200 3ms
+ca2d18b7-51e3-4ba4-906c-0f00ae027dc9 GET /version.json?t=1762878761970 200 4ms
+2aa63833-775d-4c65-8fb6-4e118ccc5d8c GET /version.json?cache=1762878787858 200 2ms
+ecfc8158-ca6e-404d-8df7-7d2da8d6a3ef GET / 200 6ms
+597b9951-e317-4aed-b243-3b9cd2597a45 GET /version.json?t=1762878789429 200 3ms
+4b334656-c292-4fa9-a9d0-fb5a1567be78 GET /api/users/1 304 1ms
+e435c28b-d7af-4ab2-a072-56567ab38393 GET /my-biometrics 200 1ms
+91e58aff-c582-4129-a312-a640821b10f3 GET /version.json?t=1762878800664 200 7ms
+dc1f209e-06eb-48b0-8556-cb87fbc62ad1 GET /my-biometrics 200 3ms
+5ffc0b63-83c3-4938-82ea-a4a16697789a GET /version.json?t=1762878801592 200 2ms
+be408c0e-adda-4b9a-88b1-46919497040d GET /my-biometrics 200 8ms
+3d425a70-fd2d-45ae-afc3-2056ce14c906 GET /version.json?t=1762878801926 200 2ms
