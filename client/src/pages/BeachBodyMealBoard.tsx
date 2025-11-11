@@ -1,0 +1,1539 @@
+
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useLocation, useRoute } from "wouter";
+import { MealCard, Meal } from "@/components/MealCard";
+import {
+  type WeekBoard,
+  weekDates,
+  getDayLists,
+  setDayLists,
+  cloneDayLists,
+  putWeekBoard,
+  getWeekBoardByDate,
+} from "@/lib/boardApi";
+import { ManualMealModal } from "@/components/pickers/ManualMealModal";
+import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
+import { AddSnackModal } from "@/components/AddSnackModal";
+import MealIngredientPicker from "@/components/MealIngredientPicker";
+import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
+import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
+import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import { normalizeIngredients } from "@/utils/ingredientParser";
+import { addItems } from "@/stores/shoppingListStore";
+import { useToast } from "@/hooks/use-toast";
+import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
+import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
+import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
+import { v4 as uuidv4 } from "uuid";
+import {
+  Plus,
+  Check,
+  Sparkles,
+  BarChart3,
+  ShoppingCart,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Info,
+} from "lucide-react";
+import { FEATURES } from "@/utils/features";
+import { DayWeekToggle } from "@/components/DayWeekToggle";
+import { DayChips } from "@/components/DayChips";
+import { DuplicateDayModal } from "@/components/DuplicateDayModal";
+import { DuplicateWeekModal } from "@/components/DuplicateWeekModal";
+import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
+import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import MacroFixCoach, { MacroKind } from "@/components/MacroFixCoach";
+import { QuickAddMacrosModal } from "@/components/modals/QuickAddMacrosModal";
+import { computeTargetsFromOnboarding } from "@/lib/targets";
+import { useTodayMacros } from "@/hooks/useTodayMacros";
+import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
+
+// Helper function to create new snacks
+function makeNewSnack(nextIndex: number): Meal {
+  return {
+    id: `snk-${Date.now()}`,
+    title: "Snack",
+    servings: 1,
+    ingredients: [],
+    instructions: [],
+    nutrition: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  };
+}
+
+// Week navigation utilities
+function addDaysISO(iso: string, days: number): string {
+  const d = new Date(iso + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+function formatWeekLabel(weekStartISO: string): string {
+  const start = new Date(weekStartISO + "T00:00:00Z");
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 6);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  return `${fmt(start)}–${fmt(end)}`;
+}
+
+// Meal Slots
+const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
+  ["breakfast","Meal 1"],
+  ["lunch","Meal 2"],
+  ["dinner","Meal 3"],
+  ["snacks","Meal 4"]
+];
+
+export default function BeachBodyMealBoard() {
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  // Get current user ID
+  const getCurrentUserId = () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        return user.id;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const clientId = getCurrentUserId();
+
+  // Board loading
+  const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
+  const {
+    board: hookBoard,
+    loading: hookLoading,
+    error,
+    save: saveToHook,
+  } = useWeeklyBoard(clientId, weekStartISO);
+
+  const [board, setBoard] = React.useState<WeekBoard | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
+  const [justSaved, setJustSaved] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hookBoard) {
+      setBoard(hookBoard);
+      setLoading(hookLoading);
+    }
+  }, [hookBoard, hookLoading]);
+
+  const saveBoard = React.useCallback(
+    async (updatedBoard: WeekBoard) => {
+      setSaving(true);
+      try {
+        await saveToHook(updatedBoard as any, uuidv4());
+        setJustSaved(true);
+        setTimeout(() => setJustSaved(false), 2000);
+      } catch (err) {
+        console.error("Failed to save board:", err);
+        toast({
+          title: "Save failed",
+          description: "Changes will retry when you're online",
+          variant: "destructive",
+        });
+      } finally {
+        setSaving(false);
+      }
+    },
+    [saveToHook, toast],
+  );
+
+  const [pickerOpen, setPickerOpen] = React.useState(false);
+  const [pickerList, setPickerList] = React.useState<"breakfast" | "lunch" | "dinner" | "snacks" | null>(null);
+  const [manualModalOpen, setManualModalOpen] = React.useState(false);
+  const [manualModalList, setManualModalList] = React.useState<"breakfast" | "lunch" | "dinner" | "snacks" | null>(null);
+  const [showSnackModal, setShowSnackModal] = React.useState(false);
+  const [showOverview, setShowOverview] = React.useState(false);
+
+  // AI Meal Creator modal state
+  const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
+  const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
+
+  // Guided Tour state
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [hasSeenInfo, setHasSeenInfo] = useState(false);
+  const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
+
+  // Daily Totals Info state
+  const [showDailyTotalsInfo, setShowDailyTotalsInfo] = useState(false);
+  const [hasSeenDailyTotalsInfo, setHasSeenDailyTotalsInfo] = useState(false);
+
+  // Day/Week planning state
+  const [planningMode, setPlanningMode] = React.useState<"day" | "week">("day");
+  const [activeDayISO, setActiveDayISO] = React.useState<string>("");
+
+  const [showDuplicateDayModal, setShowDuplicateDayModal] = React.useState(false);
+  const [showDuplicateWeekModal, setShowDuplicateWeekModal] = React.useState(false);
+
+  // Shopping list modal state
+  const [shoppingListModal, setShoppingListModal] = useState<{
+    isOpen: boolean;
+    meal: any | null;
+  }>({ isOpen: false, meal: null });
+
+  // Macro Fix Coach state
+  const [fixOpen, setFixOpen] = useState(false);
+  const [fixKind, setFixKind] = useState<MacroKind>("protein");
+
+  const HELP_TEXT = "Focus on protein and carbs here. Calories and fats aren't the priority on this board. Fix any shortages below. You can add items to breakfast, lunch, or dinner — or use quick add.";
+
+  // AI Meals cache
+  const AI_MEALS_CACHE_KEY = "ai-beach-body-meal-creator-cached-meals";
+
+  interface CachedAIMeals {
+    meals: Meal[];
+    dayISO: string;
+    slot: "breakfast" | "lunch" | "dinner" | "snacks";
+    generatedAtISO: string;
+  }
+
+  function saveAIMealsCache(meals: Meal[], dayISO: string, slot: "breakfast" | "lunch" | "dinner" | "snacks") {
+    try {
+      const state: CachedAIMeals = {
+        meals,
+        dayISO,
+        slot,
+        generatedAtISO: new Date().toISOString(),
+      };
+      localStorage.setItem(AI_MEALS_CACHE_KEY, JSON.stringify(state));
+    } catch {}
+  }
+
+  function loadAIMealsCache(): CachedAIMeals | null {
+    try {
+      const raw = localStorage.getItem(AI_MEALS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed?.meals?.length) return null;
+      return parsed as CachedAIMeals;
+    } catch {
+      return null;
+    }
+  }
+
+  function clearAIMealsCache() {
+    try {
+      localStorage.removeItem(AI_MEALS_CACHE_KEY);
+    } catch {}
+  }
+
+  const weekDatesList = useMemo(() => {
+    return weekStartISO ? weekDates(weekStartISO) : [];
+  }, [weekStartISO]);
+
+  useEffect(() => {
+    if (weekDatesList.length > 0 && !activeDayISO) {
+      setActiveDayISO(weekDatesList[0]);
+    }
+  }, [weekDatesList, activeDayISO]);
+
+  useEffect(() => {
+    if (!board || !activeDayISO) return;
+
+    const cached = loadAIMealsCache();
+    if (cached && cached.dayISO === activeDayISO && cached.meals.length > 0) {
+      const dayLists = getDayLists(board, activeDayISO);
+      const targetSlot = cached.slot || "breakfast";
+      const existingSlotMeals = dayLists[targetSlot].filter(m => !m.id.startsWith('ai-meal-'));
+      const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
+      const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
+      const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+
+      setBoard(updatedBoard);
+    }
+  }, [board, activeDayISO]);
+
+  useEffect(() => {
+    const infoSeen = localStorage.getItem("beach-body-board-info-seen");
+    if (infoSeen === "true") {
+      setHasSeenInfo(true);
+    }
+    
+    const dailyTotalsInfoSeen = localStorage.getItem("beach-body-board-daily-totals-info-seen");
+    if (dailyTotalsInfoSeen === "true") {
+      setHasSeenDailyTotalsInfo(true);
+    }
+
+    const savedStep = localStorage.getItem("beach-body-board-tour-step");
+    if (savedStep === "breakfast" || savedStep === "lunch" || savedStep === "dinner" || savedStep === "snacks" || savedStep === "complete") {
+      setTourStep(savedStep);
+    }
+  }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    setHasSeenInfo(true);
+    localStorage.setItem("beach-body-board-info-seen", "true");
+  };
+
+  useEffect(() => {
+    if (!board) return;
+
+    const lists = planningMode === 'day' && activeDayISO
+      ? getDayLists(board, activeDayISO)
+      : board.lists;
+
+    if (tourStep === "breakfast" && lists.breakfast.length > 0) {
+      setTourStep("lunch");
+      localStorage.setItem("beach-body-board-tour-step", "lunch");
+      
+      if (!hasSeenDailyTotalsInfo) {
+        setShowDailyTotalsInfo(true);
+      }
+    } else if (tourStep === "lunch" && lists.lunch.length > 0) {
+      setTourStep("dinner");
+      localStorage.setItem("beach-body-board-tour-step", "dinner");
+    } else if (tourStep === "dinner" && lists.dinner.length > 0) {
+      setTourStep("snacks");
+      localStorage.setItem("beach-body-board-tour-step", "snacks");
+    } else if (tourStep === "snacks" && lists.snacks.length > 0) {
+      setTourStep("complete");
+      localStorage.setItem("beach-body-board-tour-step", "complete");
+    }
+  }, [board, tourStep, planningMode, activeDayISO, hasSeenDailyTotalsInfo]);
+
+  const handleDuplicateDay = useCallback(
+    async (targetDates: string[]) => {
+      if (!board || !activeDayISO) return;
+
+      const sourceLists = getDayLists(board, activeDayISO);
+      const clonedLists = cloneDayLists(sourceLists);
+
+      let updatedBoard = board;
+      targetDates.forEach((dateISO) => {
+        updatedBoard = setDayLists(updatedBoard, dateISO, clonedLists);
+      });
+
+      try {
+        await saveBoard(updatedBoard);
+        toast({
+          title: "Day duplicated",
+          description: `Copied to ${targetDates.length} day(s)`,
+        });
+      } catch (error) {
+        console.error("Failed to duplicate day:", error);
+        toast({
+          title: "Failed to duplicate",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    },
+    [board, activeDayISO, saveBoard, toast],
+  );
+
+  const handleDuplicateWeek = useCallback(
+    async (targetWeekStartISO: string) => {
+      if (!board) return;
+
+      const clonedBoard = {
+        ...board,
+        id: `week-${targetWeekStartISO}`,
+        days: board.days
+          ? Object.fromEntries(
+              Object.entries(board.days).map(([oldDateISO, lists]) => {
+                const dayIndex = weekDatesList.indexOf(oldDateISO);
+                const targetWeekDates = weekDates(targetWeekStartISO);
+                const newDateISO = targetWeekDates[dayIndex] || oldDateISO;
+                return [newDateISO, cloneDayLists(lists)];
+              }),
+            )
+          : undefined,
+      };
+
+      try {
+        await putWeekBoard(targetWeekStartISO, clonedBoard);
+        setWeekStartISO(targetWeekStartISO);
+        toast({
+          title: "Week duplicated",
+          description: `Copied to week of ${targetWeekStartISO}`,
+        });
+      } catch (error) {
+        console.error("Failed to duplicate week:", error);
+        toast({
+          title: "Failed to duplicate",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    },
+    [board, weekDatesList, toast],
+  );
+
+  const handleAddToShoppingList = useCallback(() => {
+    if (!board) {
+      toast({
+        title: "No meals found",
+        description: "Add meals to your board before creating a shopping list.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let allMeals: Meal[] = [];
+    if (
+      FEATURES.dayPlanning === "alpha" &&
+      planningMode === "day" &&
+      activeDayISO
+    ) {
+      const dayLists = getDayLists(board, activeDayISO);
+      allMeals = [
+        ...dayLists.breakfast,
+        ...dayLists.lunch,
+        ...dayLists.dinner,
+        ...dayLists.snacks,
+      ];
+    } else {
+      allMeals = [
+        ...board.lists.breakfast,
+        ...board.lists.lunch,
+        ...board.lists.dinner,
+        ...board.lists.snacks,
+      ];
+    }
+
+    if (allMeals.length === 0) {
+      toast({
+        title: "No meals found",
+        description: "Add meals to your board before creating a shopping list.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const ingredients = allMeals.flatMap((meal) =>
+      normalizeIngredients(meal.ingredients || []),
+    );
+
+    const items = ingredients.map((i) => ({
+      name: i.name,
+      qty:
+        typeof i.qty === "number"
+          ? i.qty
+          : i.qty
+            ? parseFloat(String(i.qty))
+            : undefined,
+      unit: i.unit,
+      note:
+        planningMode === "day" && activeDayISO
+          ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Beach Body Plan`
+          : `Beach Body Meal Plan (${formatWeekLabel(weekStartISO)})`,
+    }));
+
+    addItems(items);
+
+    toast({
+      title: "Added to Shopping List",
+      description: `${ingredients.length} items added to your master list`,
+    });
+  }, [board, planningMode, activeDayISO, weekStartISO, toast]);
+
+  const handleAddEntireWeekToShoppingList = useCallback(() => {
+    if (!board) {
+      toast({
+        title: "No meals found",
+        description: "Add meals to your board before creating a shopping list.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let allMeals: Meal[] = [];
+    weekDatesList.forEach((dateISO) => {
+      const dayLists = getDayLists(board, dateISO);
+      allMeals.push(
+        ...dayLists.breakfast,
+        ...dayLists.lunch,
+        ...dayLists.dinner,
+        ...dayLists.snacks,
+      );
+    });
+
+    if (allMeals.length === 0) {
+      toast({
+        title: "No meals found",
+        description: "Add meals to your week before creating a shopping list.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const ingredients = allMeals.flatMap((meal) =>
+      normalizeIngredients(meal.ingredients || []),
+    );
+
+    const items = ingredients.map((i) => ({
+      name: i.name,
+      qty:
+        typeof i.qty === "number"
+          ? i.qty
+          : i.qty
+            ? parseFloat(String(i.qty))
+            : undefined,
+      unit: i.unit,
+      note: `Beach Body Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
+    }));
+
+    addItems(items);
+
+    toast({
+      title: "Added to Shopping List",
+      description: `${ingredients.length} items from entire week added to your master list`,
+    });
+  }, [board, weekStartISO, weekDatesList, toast]);
+
+  const handleAIMealGenerated = useCallback(async (generatedMeal: any) => {
+    if (!activeDayISO) return;
+
+    const transformedMeal: Meal = {
+      id: `ai-meal-${Date.now()}`,
+      name: generatedMeal.name,
+      title: generatedMeal.name,
+      description: generatedMeal.description,
+      ingredients: generatedMeal.ingredients || [],
+      instructions: generatedMeal.instructions || '',
+      servings: 1,
+      imageUrl: generatedMeal.imageUrl,
+      cookingTime: generatedMeal.cookingTime,
+      difficulty: generatedMeal.difficulty,
+      medicalBadges: generatedMeal.medicalBadges || [],
+      nutrition: {
+        calories: generatedMeal.calories || 0,
+        protein: generatedMeal.protein || 0,
+        carbs: generatedMeal.carbs || 0,
+        fat: generatedMeal.fat || 0,
+      },
+    };
+
+    const newMeals = [transformedMeal];
+    saveAIMealsCache(newMeals, activeDayISO, aiMealSlot);
+
+    if (board) {
+      const dayLists = getDayLists(board, activeDayISO);
+      const existingSlotMeals = dayLists[aiMealSlot].filter(m => !m.id.startsWith('ai-meal-'));
+      const updatedSlotMeals = [...existingSlotMeals, ...newMeals];
+      const updatedDayLists = { ...dayLists, [aiMealSlot]: updatedSlotMeals };
+      const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+
+      try {
+        await saveBoard(updatedBoard);
+        toast({
+          title: "AI Meal Added!",
+          description: `${generatedMeal.name} added to ${lists.find(l => l[0] === aiMealSlot)?.[1]}`,
+        });
+      } catch (error) {
+        console.error("Failed to save AI meal:", error);
+        toast({
+          title: "Failed to save",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    }
+  }, [activeDayISO, aiMealSlot, board, saveBoard, toast]);
+
+  const onAddSnack = useCallback(() => setShowSnackModal(true), []);
+
+  const onSaveSnack = useCallback(
+    async (p: {
+      title: string;
+      brand?: string;
+      servingDesc?: string;
+      servings: number;
+      calories: number;
+      protein?: number;
+      carbs?: number;
+      fat?: number;
+      includeInShoppingList: boolean;
+    }) => {
+      if (!board) return;
+
+      const currentSnacks =
+        FEATURES.dayPlanning === "alpha" &&
+        planningMode === "day" &&
+        activeDayISO
+          ? (getDayLists(board, activeDayISO).snacks ?? [])
+          : (board.lists.snacks ?? []);
+
+      const nextIndex =
+        currentSnacks.length > 0
+          ? Math.max(...currentSnacks.map((s: any) => s?.orderIndex ?? 0)) + 1
+          : 0;
+
+      const newSnack: Meal = {
+        id: `snk-${Date.now()}`,
+        title: p.title,
+        name: `Snack ${nextIndex + 1}`,
+        servings: p.servings,
+        ingredients: [],
+        instructions: [],
+        nutrition: {
+          calories: p.calories,
+          protein: p.protein ?? 0,
+          carbs: p.carbs ?? 0,
+          fat: p.fat ?? 0,
+        },
+        orderIndex: nextIndex,
+        entryType: "quick" as const,
+        brand: p.brand,
+        servingDesc: p.servingDesc,
+        includeInShoppingList: p.includeInShoppingList === true,
+      } as any;
+
+      try {
+        if (
+          FEATURES.dayPlanning === "alpha" &&
+          planningMode === "day" &&
+          activeDayISO
+        ) {
+          const dayLists = getDayLists(board, activeDayISO);
+          const updatedDay = {
+            ...dayLists,
+            snacks: [...(dayLists.snacks ?? []), newSnack],
+          };
+          const updatedBoard = setDayLists(board, activeDayISO, updatedDay);
+          const { week } = await putWeekBoard(weekStartISO, updatedBoard);
+          setBoard(week);
+        } else {
+          const snacks = board.lists.snacks ?? [];
+          const updated: WeekBoard = {
+            ...board,
+            lists: { ...board.lists, snacks: [...snacks, newSnack] },
+          };
+          setBoard(updated);
+          await putWeekBoard(weekStartISO, updated);
+        }
+
+        try {
+          window.dispatchEvent(
+            new CustomEvent("board:updated", { detail: { weekStartISO } }),
+          );
+          window.dispatchEvent(new Event("macros:updated"));
+        } catch {}
+      } catch (e) {
+        console.error("Failed to save snack:", e);
+        try {
+          const { week } = await getWeekBoardByDate(weekStartISO);
+          setBoard(week);
+        } catch {}
+      }
+    },
+    [board, weekStartISO, planningMode, activeDayISO],
+  );
+
+  const gotoWeek = useCallback(
+    async (targetISO: string) => {
+      setLoading(true);
+      try {
+        const { weekStartISO: ws, week } = await getWeekBoardByDate(targetISO);
+        setWeekStartISO(ws);
+        setBoard(week);
+      } catch (error) {
+        console.error("Failed to load week:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setLoading, setWeekStartISO, setBoard],
+  );
+
+  const onPrevWeek = useCallback(() => {
+    if (!weekStartISO) return;
+    const d = new Date(weekStartISO + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() - 7);
+    const prevISO = d.toISOString().slice(0, 10);
+    gotoWeek(prevISO);
+  }, [weekStartISO, gotoWeek]);
+
+  const onNextWeek = useCallback(() => {
+    if (!weekStartISO) return;
+    const d = new Date(weekStartISO + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() + 7);
+    const nextISO = d.toISOString().slice(0, 10);
+    gotoWeek(nextISO);
+  }, [weekStartISO, gotoWeek]);
+
+  async function quickAdd(list: "breakfast"|"lunch"|"dinner"|"snacks", meal: Meal) {
+    if (!board) return;
+
+    try {
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          [list]: [...dayLists[list as keyof typeof dayLists], meal]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            [list]: [...board.lists[list], meal]
+          },
+          version: board.version + 1,
+          meta: {
+            ...board.meta,
+            lastUpdatedAt: new Date().toISOString()
+          }
+        };
+        setBoard(updatedBoard);
+        await saveBoard(updatedBoard);
+      }
+
+      try {
+        window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
+        window.dispatchEvent(new Event("macros:updated"));
+      } catch { }
+
+    } catch (error) {
+      console.error("Failed to add meal:", error);
+    }
+  }
+
+  function openPicker(list: "breakfast"|"lunch"|"dinner"|"snacks") {
+    setPickerList(list);
+    setPickerOpen(true);
+  }
+
+  function openManualModal(list: "breakfast"|"lunch"|"dinner"|"snacks") {
+    setManualModalList(list);
+    setManualModalOpen(true);
+  }
+
+  function openMacroFix(kind: MacroKind) {
+    setFixKind(kind);
+    setFixOpen(true);
+  }
+
+  // Get profile and targets for Macro Fix Coach
+  const profile = useOnboardingProfile();
+  const targets = useMemo(() => computeTargetsFromOnboarding(profile), [profile]);
+  const macroData = useTodayMacros();
+  
+  const totals = useMemo(() => {
+    if (!board) return { calories: 0, protein: 0, carbs: 0, fat: 0, fibrous: 0, starchy: 0 };
+
+    let allMeals: Meal[] = [];
+    if (FEATURES.dayPlanning === "alpha" && planningMode === "day" && activeDayISO) {
+      const dayLists = getDayLists(board, activeDayISO);
+      allMeals = [
+        ...dayLists.breakfast,
+        ...dayLists.lunch,
+        ...dayLists.dinner,
+        ...dayLists.snacks,
+      ];
+    } else {
+      allMeals = [
+        ...board.lists.breakfast,
+        ...board.lists.lunch,
+        ...board.lists.dinner,
+        ...board.lists.snacks,
+      ];
+    }
+
+    return {
+      calories: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.calories ?? 0), 0)),
+      protein: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.protein ?? 0), 0)),
+      carbs: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.carbs ?? 0), 0)),
+      fat: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.fat ?? 0), 0)),
+      fibrous: macroData.fibrous || 0,
+      starchy: macroData.starchy || 0,
+    };
+  }, [board, planningMode, activeDayISO, macroData]);
+
+  React.useEffect(() => {
+    if (error) {
+      toast({
+        title: "Connection Issue",
+        description:
+          "Showing cached meal plan. Changes will sync when you're back online.",
+        variant: "default",
+        duration: 5000,
+      });
+    }
+  }, [error, toast]);
+
+  if (loading && !board) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-2xl h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading Beach Body Meal Board...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!board) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 flex items-center justify-center">
+        <div className="text-white text-center">
+          <p>Failed to load board</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentLists =
+    FEATURES.dayPlanning === "alpha" && planningMode === "day" && activeDayISO
+      ? getDayLists(board, activeDayISO)
+      : board.lists;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-6"
+    >
+      <DailyMealProgressBar />
+      
+      <Button
+        size="sm"
+        onClick={() => setLocation("/planner")}
+        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+        data-testid="button-back-planner"
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Back
+      </Button>
+
+      <div className="bg-black/40 backdrop-blur-xl border-b border-white/20 shadow-2xl">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-center">
+            <div className="bg-black/60 backdrop-blur-none border border-white/20 rounded-2xl px-6 py-3 flex items-center gap-3">
+              <h1 className="text-xl font-bold text-white">
+                Beach Body / Hard Body Meal Board
+              </h1>
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+                aria-label="How to use Beach Body Meal Board"
+              >
+                ?
+              </button>
+
+              <div className="flex gap-2">
+                {saving && (
+                  <span className="text-sm text-white/60">Saving...</span>
+                )}
+                {justSaved && (
+                  <span className="text-sm text-emerald-400 flex items-center gap-1">
+                    <Check className="h-4 w-4" /> Saved
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between">
+            <Button
+              size="sm"
+              onClick={onPrevWeek}
+              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
+              data-testid="button-prev-week"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Prev Week
+            </Button>
+
+            <div className="text-center">
+              <div className="text-lg font-semibold text-white">
+                {formatWeekLabel(weekStartISO)}
+              </div>
+              <div className="text-xs text-white">
+                Week of {weekStartISO}
+              </div>
+            </div>
+
+            <Button
+              size="sm"
+              onClick={onNextWeek}
+              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
+              data-testid="button-next-week"
+            >
+              Next Week
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {FEATURES.dayPlanning === "alpha" && (
+            <>
+              <div className="mt-4 flex justify-center">
+                <DayWeekToggle
+                  mode={planningMode}
+                  onModeChange={setPlanningMode}
+                />
+              </div>
+
+              {planningMode === "day" && (
+                <div className="mt-4">
+                  <DayChips
+                    weekDates={weekDatesList}
+                    activeDayISO={activeDayISO}
+                    onDayChange={setActiveDayISO}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          <div className="mt-4 flex flex-wrap gap-2 justify-center">
+            <Button
+              size="sm"
+              onClick={() => setShowOverview(true)}
+              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
+              data-testid="button-overview"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Week Overview
+            </Button>
+
+            {FEATURES.dayPlanning === "alpha" && planningMode === "day" && (
+              <Button
+                size="sm"
+                onClick={() => setShowDuplicateDayModal(true)}
+                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
+                data-testid="button-duplicate-day"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Duplicate Day
+              </Button>
+            )}
+
+            {FEATURES.dayPlanning === "alpha" && (
+              <Button
+                size="sm"
+                onClick={() => setShowDuplicateWeekModal(true)}
+                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
+                data-testid="button-duplicate-week"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Duplicate Week
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-[1600px] mx-auto px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-6">
+        {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board ? (
+          (() => {
+            const dayLists = getDayLists(board, activeDayISO);
+            return lists.map(([key, label]) => (
+              <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-white/90 text-lg font-medium">{label}</h2>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                      onClick={() => {
+                        setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                        setAiMealModalOpen(true);
+                      }}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Create with AI
+                    </Button>
+
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-white/80 hover:bg-white/10"
+                      onClick={() => openManualModal(key)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+
+                    {key === "snacks" && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/70 hover:bg-white/10 text-xs font-medium"
+                        onClick={onAddSnack}
+                      >
+                        Add Snack
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {dayLists[key as keyof typeof dayLists].map((meal: Meal, idx: number) => (
+                    <MealCard
+                      key={meal.id}
+                      date={activeDayISO}
+                      slot={key}
+                      meal={meal}
+                      onUpdated={(m) => {
+                        if (m === null) {
+                          if (meal.id.startsWith('ai-meal-')) {
+                            clearAIMealsCache();
+                          }
+
+                          const updatedDayLists = {
+                            ...dayLists,
+                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) =>
+                              existingMeal.id !== meal.id
+                            )
+                          };
+                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                          saveBoard(updatedBoard)
+                            .catch((err) => {
+                              console.error("Delete failed:", err);
+                            });
+                        } else {
+                          const updatedDayLists = {
+                            ...dayLists,
+                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) =>
+                              i === idx ? m : existingMeal
+                            )
+                          };
+                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                          saveBoard(updatedBoard);
+                        }
+                      }}
+                    />
+                  ))}
+                  {dayLists[key as keyof typeof dayLists].length === 0 && (
+                    <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                      <p className="mb-2">No {label.toLowerCase()} meals yet</p>
+                      <p className="text-xs text-white/40">Use "+" to add meals</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            ));
+          })()
+        ) : (
+          lists.map(([key, label]) => (
+          <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-white/90 text-lg font-medium">{label}</h2>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                  onClick={() => {
+                    setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                    setAiMealModalOpen(true);
+                  }}
+                >
+                  <Sparkles className="h-3 w-3" />
+                  Create with AI
+                </Button>
+
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="text-white/80 hover:bg-white/10"
+                  onClick={() => openManualModal(key)}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+
+                {key === "snacks" && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-white/70 hover:bg-white/10 text-xs font-medium"
+                    onClick={onAddSnack}
+                  >
+                    Add Snack
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {board.lists[key].map((meal: Meal, idx: number) => (
+                <MealCard
+                  key={meal.id}
+                  date={"board"}
+                  slot={key}
+                  meal={meal}
+                  onUpdated={(m) => {
+                    if (m === null) {
+                      if (!board) return;
+                      const updatedBoard = {
+                        ...board,
+                        lists: {
+                          ...board.lists,
+                          [key]: board.lists[key].filter((item: Meal) => item.id !== meal.id)
+                        },
+                        version: board.version + 1,
+                        meta: {
+                          ...board.meta,
+                          lastUpdatedAt: new Date().toISOString()
+                        }
+                      };
+                      setBoard(updatedBoard);
+                      saveBoard(updatedBoard).catch((err) => {
+                        console.error("Delete failed:", err);
+                      });
+                    } else {
+                      const updatedBoard = {
+                        ...board,
+                        lists: {
+                          ...board.lists,
+                          [key]: board.lists[key].map((item: Meal, i: number) => i === idx ? m : item)
+                        },
+                        version: board.version + 1
+                      };
+                      setBoard(updatedBoard);
+                      saveBoard(updatedBoard).catch(console.error);
+                    }
+                  }}
+                />
+              ))}
+              {board.lists[key].length === 0 && (
+                <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                  <p className="mb-2">No {label.toLowerCase()} meals yet</p>
+                  <p className="text-xs text-white/40">Use "+" to add meals</p>
+                </div>
+              )}
+            </div>
+          </section>
+          ))
+        )}
+
+          <div className="col-span-full">
+            <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/95 backdrop-blur-lg p-6">
+              <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
+                {planningMode === "day" && activeDayISO
+                  ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Totals`
+                  : "Daily Totals"}
+                {(() => {
+                  const hasMeals = board && (
+                    (planningMode === 'day' && activeDayISO
+                      ? (() => {
+                          const dayLists = getDayLists(board, activeDayISO);
+                          return dayLists.breakfast.length > 0 || dayLists.lunch.length > 0 || dayLists.dinner.length > 0 || dayLists.snacks.length > 0;
+                        })()
+                      : board.lists.breakfast.length > 0 || board.lists.lunch.length > 0 || board.lists.dinner.length > 0 || board.lists.snacks.length > 0)
+                  );
+
+                  if (hasMeals) {
+                    return (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setShowDailyTotalsInfo(true)}
+                        className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                          !hasSeenDailyTotalsInfo ? 'flash-border' : ''
+                        }`}
+                        aria-label="Next Steps Info"
+                      >
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    );
+                  }
+                  return null;
+                })()}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-xl font-semi-bold text-white">
+                    {totals.calories}
+                  </div>
+                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
+                    Calories
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-semi-bold text-white">
+                    {totals.protein}g
+                  </div>
+                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
+                    Protein
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-semi-bold text-white">
+                    {totals.carbs}g
+                  </div>
+                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
+                    Carbs
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-semi-bold text-white">
+                    {totals.fat}g
+                  </div>
+                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
+                    Fat
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {board &&
+            FEATURES.dayPlanning === "alpha" &&
+            planningMode === "day" &&
+            activeDayISO && (
+              <div className="col-span-full">
+                <MacroBridgeFooter
+                  items={(() => {
+                    const dayLists = getDayLists(board, activeDayISO);
+                    return [
+                      ...dayLists.breakfast.map((m) => ({
+                        protein: m.nutrition?.protein || 0,
+                        carbs: m.nutrition?.carbs || 0,
+                        fat: m.nutrition?.fat || 0,
+                        calories: m.nutrition?.calories || 0,
+                      })),
+                      ...dayLists.lunch.map((m) => ({
+                        protein: m.nutrition?.protein || 0,
+                        carbs: m.nutrition?.carbs || 0,
+                        fat: m.nutrition?.fat || 0,
+                        calories: m.nutrition?.calories || 0,
+                      })),
+                      ...dayLists.dinner.map((m) => ({
+                        protein: m.nutrition?.protein || 0,
+                        carbs: m.nutrition?.carbs || 0,
+                        fat: m.nutrition?.fat || 0,
+                        calories: m.nutrition?.calories || 0,
+                      })),
+                      ...dayLists.snacks.map((m) => ({
+                        protein: m.nutrition?.protein || 0,
+                        carbs: m.nutrition?.carbs || 0,
+                        fat: m.nutrition?.fat || 0,
+                        calories: m.nutrition?.calories || 0,
+                      })),
+                    ];
+                  })()}
+                  dateISO={activeDayISO}
+                  variant="day"
+                  source="beach-body-meal-board"
+                />
+              </div>
+            )}
+
+          <div className="col-span-full">
+            <MacroFixCoach
+              totals={totals}
+              targets={{
+                protein: targets.protein || 0,
+                starchy: targets.starchy || 0,
+                fibrous: targets.fibrous || 0,
+              }}
+              onFix={openMacroFix}
+              onHelp={() => alert(HELP_TEXT)}
+            />
+          </div>
+      </div>
+
+      <AthleteMealPickerDrawer
+        open={pickerOpen}
+        list={pickerList}
+        onClose={() => {
+          setPickerOpen(false);
+          setPickerList(null);
+        }}
+        onPick={(meal) => {
+          if (pickerList) {
+            quickAdd(pickerList, meal);
+          }
+          setPickerOpen(false);
+          setPickerList(null);
+        }}
+      />
+
+      <ManualMealModal
+        open={manualModalOpen}
+        onClose={() => {
+          setManualModalOpen(false);
+          setManualModalList(null);
+        }}
+        onSave={(meal) => {
+          if (manualModalList) {
+            quickAdd(manualModalList, meal);
+          }
+          setManualModalOpen(false);
+          setManualModalList(null);
+        }}
+      />
+
+      <AddSnackModal
+        open={showSnackModal}
+        onClose={() => setShowSnackModal(false)}
+        onSave={onSaveSnack}
+      />
+
+      <WeeklyOverviewModal
+        open={showOverview}
+        onClose={() => setShowOverview(false)}
+        weekStartISO={weekStartISO}
+        board={board}
+        onJumpToDay={undefined}
+      />
+
+      {FEATURES.dayPlanning === "alpha" && (
+        <DuplicateDayModal
+          isOpen={showDuplicateDayModal}
+          onClose={() => setShowDuplicateDayModal(false)}
+          onConfirm={handleDuplicateDay}
+          sourceDateISO={activeDayISO}
+          availableDates={weekDatesList.filter((date) => date !== activeDayISO)}
+        />
+      )}
+
+      {FEATURES.dayPlanning === "alpha" && (
+        <DuplicateWeekModal
+          isOpen={showDuplicateWeekModal}
+          onClose={() => setShowDuplicateWeekModal(false)}
+          onConfirm={handleDuplicateWeek}
+          sourceWeekStartISO={weekStartISO}
+        />
+      )}
+
+      <ShoppingListPreviewModal
+        isOpen={shoppingListModal.isOpen}
+        onClose={() => setShoppingListModal({ isOpen: false, meal: null })}
+        meal={shoppingListModal.meal}
+      />
+
+      <MealIngredientPicker
+        open={aiMealModalOpen}
+        onOpenChange={setAiMealModalOpen}
+        onMealGenerated={handleAIMealGenerated}
+        mealSlot={aiMealSlot}
+      />
+
+      <QuickAddMacrosModal
+        open={fixOpen}
+        onOpenChange={setFixOpen}
+        defaultKind={fixKind}
+        source="beach-body-board"
+        onSaved={() => {
+          window.dispatchEvent(new Event("macros:updated"));
+        }}
+      />
+
+      {board && (() => {
+          const currentBoard = board;
+
+          const allMeals =
+            planningMode === "day" && activeDayISO
+              ? (() => {
+                  const dayLists = getDayLists(currentBoard, activeDayISO);
+                  return [
+                    ...dayLists.breakfast,
+                    ...dayLists.lunch,
+                    ...dayLists.dinner,
+                    ...dayLists.snacks,
+                  ];
+                })()
+              : [
+                  ...currentBoard.lists.breakfast,
+                  ...currentBoard.lists.lunch,
+                  ...currentBoard.lists.dinner,
+                  ...currentBoard.lists.snacks,
+                ];
+
+          const ingredients = allMeals.flatMap((meal) =>
+            normalizeIngredients(meal.ingredients || []),
+          );
+
+          if (ingredients.length === 0) return null;
+
+          if (
+            FEATURES.dayPlanning === "alpha" &&
+            planningMode === "day" &&
+            activeDayISO
+          ) {
+            const dayName = new Date(
+              activeDayISO + "T00:00:00Z",
+            ).toLocaleDateString(undefined, { weekday: "long" });
+
+            return (
+              <div className="fixed bottom-0 left-0 right-0 pb-4 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl">
+                <div className="container mx-auto px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-white text-sm font-semibold">
+                      Shopping List Ready - {ingredients.length} ingredients
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => {
+                          handleAddToShoppingList();
+                          setTimeout(
+                            () =>
+                              setLocation(
+                                "/shopping-list-v2?from=beach-body-meal-board",
+                              ),
+                            100,
+                          );
+                        }}
+                        className="flex-1 min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"
+                        data-testid="button-send-day-shopping"
+                      >
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        Send {dayName}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          handleAddEntireWeekToShoppingList();
+                          setTimeout(
+                            () =>
+                              setLocation(
+                                "/shopping-list-v2?from=beach-body-meal-board",
+                              ),
+                            100,
+                          );
+                        }}
+                        className="flex-1 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white border border-white/30"
+                        data-testid="button-send-week-shopping"
+                      >
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        Send Entire Week
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <ShoppingAggregateBar
+              ingredients={ingredients}
+              source="Beach Body Meal Board"
+              sourceSlug="beach-body-meal-board"
+            />
+          );
+        })()}
+
+      <Dialog open={showInfoModal} onOpenChange={(open) => {
+        if (!open) {
+          handleInfoModalClose();
+        } else {
+          setShowInfoModal(true);
+        }
+      }}>
+        <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
+              How to Use Beach Body / Hard Body Board
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-white/90">
+            <p>
+              The Beach Body / Hard Body Board helps you build lifestyle-focused meal plans with simplified macro tracking.
+            </p>
+            <div>
+              <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
+              <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
+                <li>Start with Meal 1 (breakfast) and work through each meal section</li>
+                <li>Click "Create with AI" to generate meals based on your preferences</li>
+                <li>Choose Day or Week mode to plan one day at a time or your entire week</li>
+                <li>Use the duplicate feature to copy successful days across your week</li>
+                <li>Delete any meal with the trash icon if you want to try something different</li>
+                <li>Use the Macro Fix Coach at the bottom to fill any protein or carb gaps</li>
+              </ul>
+            </div>
+            <p className="text-emerald-400 font-medium">
+              💡 Tip: Focus on hitting your protein and carb targets. The Macro Fix Coach will help you add quick items to meet your goals!
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowInfoModal(false)}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
+          >
+            Got It!
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {
+        if (!open) {
+          setShowDailyTotalsInfo(false);
+          setHasSeenDailyTotalsInfo(true);
+          localStorage.setItem("beach-body-board-daily-totals-info-seen", "true");
+        }
+      }}>
+        <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-white text-xl flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-orange-400" />
+              Next Steps - Track Your Progress!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-white/90 text-sm space-y-4">
+            <p className="text-base font-semibold text-orange-300">
+              Great job creating your meals! Here's what to do next:
+            </p>
+
+            <div className="space-y-3">
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-orange-400" />
+                  Option 1: Track Your Macros
+                </p>
+                <p className="text-white/70 text-xs">
+                  Send your day to the Macro Calculator to ensure you're hitting your nutrition targets.
+                  Look for the "Send to Macros" button below.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1">
+                  Option 2: Plan Your Week
+                </p>
+                <p className="text-white/70 text-xs">
+                  Use the Day/Week toggle at the top to switch between planning a single day or your entire week.
+                  You can duplicate days or create each day individually.
+                </p>
+              </div>
+
+              <div className="bg-orange-900/30 p-3 rounded-lg border border-orange-400/30">
+                <p className="font-semibold text-orange-200 mb-1">
+                  💡 Pro Tip: Macro Tracking
+                </p>
+                <p className="text-orange-100/80 text-xs">
+                  Send just ONE day to macros at a time (not the whole week). 
+                  This way, if you change meals on other days, you won't have outdated data.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4 text-emerald-400" />
+                  Shopping List Ready
+                </p>
+                <p className="text-white/70 text-xs">
+                  You CAN send your entire week to the shopping list! 
+                  This consolidates all ingredients for easy grocery shopping.
+                  Click "Send Entire Week" at the bottom.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-white/60 text-center pt-2 border-t border-white/10">
+              Next: Check out the Shopping List to learn how to use it effectively!
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </motion.div>
+  );
+}

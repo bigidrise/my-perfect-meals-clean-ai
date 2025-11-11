@@ -8,9 +8,10 @@ import { FEATURES } from "@/utils/features";
 import ComingSoon from "@/pages/ComingSoon";
 
 // Plan Builder Pages
-// DELETED: PlanBuilderTurbo, PlanBuilderHub, CompetitionBeachbodyBoard, AthleteBoard
+// DELETED: PlanBuilderTurbo, PlanBuilderHub, CompetitionBeachbodyBoard
 import Planner from "@/pages/Planner";
 import WeeklyMealBoard from "@/pages/WeeklyMealBoard";
+import BeachBodyMealBoard from "@/pages/BeachBodyMealBoard";
 import MacroCounter from "@/pages/MacroCounter";
 // DELETED: AdultBeverageHubPage
 import EmotionAIHub from "@/pages/EmotionAIHub";
@@ -148,6 +149,7 @@ export default function Router() {
     '/weekly-meal-board',
     '/weekly',
     '/athlete-board',
+    '/beach-body-meal-board',
     '/craving-creator',
     '/craving-presets',
     '/glp1-meal-builder',
@@ -253,6 +255,7 @@ export default function Router() {
         {/* DELETED: PlanBuilderTurbo, ProteinPlannerPage, PlanBuilderHub, CompetitionBeachbodyBoard routes */}
         <Route path="/planner" component={Planner} />
         <Route path="/weekly-meal-board" component={WeeklyMealBoard} />
+        <Route path="/beach-body-meal-board" component={BeachBodyMealBoard} />
 
         {/* Legacy redirects - redirect Classic Builder to Weekly Meal Board */}
         <Route path="/plan-builder/classic" component={WeeklyMealBoard} />
