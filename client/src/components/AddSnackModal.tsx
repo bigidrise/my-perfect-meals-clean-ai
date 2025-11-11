@@ -1,4 +1,11 @@
 import { useState } from "react";
+import OpenAI from "openai";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { X, Camera } from "lucide-react";
 
 type SnackPayload = {
   title: string;
@@ -30,6 +37,79 @@ export function AddSnackModal({
   const [carbs, setCarbs] = useState<number | undefined>(undefined);
   const [fat, setFat] = useState<number | undefined>(undefined);
   const [include, setInclude] = useState<boolean>(false);
+  const { toast } = useToast();
+
+  const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
+  const handlePhotoLog = async () => {
+    try {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.capture = "environment" as any;
+      input.click();
+
+      input.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        toast({
+          title: "Analyzing snack photo...",
+          description: "AI is reading the nutrition label.",
+        });
+
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          try {
+            const imageDataUrl = reader.result as string;
+            const response = await openai.chat.completions.create({
+              model: "gpt-4o-mini",
+              messages: [
+                {
+                  role: "system",
+                  content: "You are a nutrition AI. Respond ONLY in JSON format with keys: name, calories, protein, carbs, fat (numbers).",
+                },
+                {
+                  role: "user",
+                  content: [
+                    { type: "text", text: "Identify this snack and estimate: name, calories, protein (g), carbs (g), fat (g). Return only JSON." },
+                    { type: "image_url", image_url: { url: imageDataUrl } },
+                  ],
+                },
+              ],
+              response_format: { type: "json_object" },
+            });
+
+            const parsed = JSON.parse(response.choices[0].message.content || "{}");
+
+            setTitle(parsed.name || "");
+            setCalories(parseFloat(String(parsed.calories || 0)));
+            setProtein(String(parsed.protein || "") === "" ? undefined : parseFloat(String(parsed.protein || "")));
+            setCarbs(String(parsed.carbs || "") === "" ? undefined : parseFloat(String(parsed.carbs || "")));
+            setFat(String(parsed.fat || "") === "" ? undefined : parseFloat(String(parsed.fat || "")));
+
+            toast({
+              title: "✅ Snack Analyzed",
+              description: "Review the nutrition values and add to your plan.",
+            });
+          } catch (err) {
+            console.error("AI analysis failed:", err);
+            toast({
+              title: "Error",
+              description: "Could not analyze photo. Please try again.",
+              variant: "destructive",
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      };
+    } catch (err) {
+      console.error("Photo upload failed:", err);
+    }
+  };
 
   const calcFromMacros =
     (protein ?? 0) * 4 + (carbs ?? 0) * 4 + (fat ?? 0) * 9;
@@ -71,139 +151,154 @@ export function AddSnackModal({
             </div>
           </div>
 
-          <div className="p-4 space-y-4">
-            {/* Name field */}
-            <div className="space-y-2">
-              <label className="text-sm text-white/90 font-medium">Name</label>
-              <input 
-                className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                placeholder="Granola bar, Apple, Chips"
-                value={title} 
-                onChange={e => setTitle(e.target.value)} 
-              />
-            </div>
+          <DialogContent className="bg-black/90 text-white border-white/20">
+            <DialogHeader>
+              <DialogTitle className="text-white">Add Custom Snack</DialogTitle>
+            </DialogHeader>
 
-            {/* Brand and Serving Description */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Brand (optional)</label>
-                <input 
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  placeholder="Quest" 
-                  value={brand} 
-                  onChange={e => setBrand(e.target.value)} 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Serving description</label>
-                <input 
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  placeholder="1 bar (40g)"
-                  value={servingDesc} 
-                  onChange={e => setServingDesc(e.target.value)} 
-                />
-              </div>
-            </div>
+            {/* Photo Log Button */}
+            <Button
+              onClick={handlePhotoLog}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              <Camera className="h-4 w-4 mr-2" />
+              📸 Log from Photo
+            </Button>
 
-            {/* Nutrition Grid */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="space-y-4 mt-4">
+              {/* Name field */}
               <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Servings</label>
+                <label className="text-sm text-white/90 font-medium">Name</label>
                 <input 
-                  type="number" 
-                  min={0.25} 
-                  step={0.25}
                   className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  value={servings} 
-                  onChange={e => setServings(parseFloat(e.target.value) || 0)} 
+                  placeholder="Granola bar, Apple, Chips"
+                  value={title} 
+                  onChange={e => setTitle(e.target.value)} 
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Calories</label>
-                <input 
-                  type="number" 
-                  min={0} 
-                  step={1}
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  value={calories} 
-                  onChange={e => setCalories(parseFloat(e.target.value) || 0)} 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Protein (g)</label>
-                <input 
-                  type="number" 
-                  min={0} 
-                  step={1}
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  value={protein ?? ''} 
-                  onChange={e => setProtein(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Carbs (g)</label>
-                <input 
-                  type="number" 
-                  min={0} 
-                  step={1}
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  value={carbs ?? ''} 
-                  onChange={e => setCarbs(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
-                />
-              </div>
-            </div>
 
-            {/* Fat and Macro Calculator */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-sm text-white/90 font-medium">Fat (g)</label>
+              {/* Brand and Serving Description */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Brand (optional)</label>
+                  <input 
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    placeholder="Quest" 
+                    value={brand} 
+                    onChange={e => setBrand(e.target.value)} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Serving description</label>
+                  <input 
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    placeholder="1 bar (40g)"
+                    value={servingDesc} 
+                    onChange={e => setServingDesc(e.target.value)} 
+                  />
+                </div>
+              </div>
+
+              {/* Nutrition Grid */}
+              <div className="grid grid-cols-4 gap-3">
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Servings</label>
+                  <input 
+                    type="number" 
+                    min={0.25} 
+                    step={0.25}
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    value={servings} 
+                    onChange={e => setServings(parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Calories</label>
+                  <input 
+                    type="number" 
+                    min={0} 
+                    step={1}
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    value={calories} 
+                    onChange={e => setCalories(parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Protein (g)</label>
+                  <input 
+                    type="number" 
+                    min={0} 
+                    step={1}
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    value={protein ?? ''} 
+                    onChange={e => setProtein(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Carbs (g)</label>
+                  <input 
+                    type="number" 
+                    min={0} 
+                    step={1}
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    value={carbs ?? ''} 
+                    onChange={e => setCarbs(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+              </div>
+
+              {/* Fat and Macro Calculator */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="text-sm text-white/90 font-medium">Fat (g)</label>
+                  <input 
+                    type="number" 
+                    min={0} 
+                    step={1}
+                    className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+                    value={fat ?? ''} 
+                    onChange={e => setFat(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+                <div className="text-xs text-white/60 self-end pb-2">
+                  {protein != null || carbs != null || fat != null
+                    ? `Macro kcal ≈ ${Math.round(calcFromMacros)}`
+                    : 'Enter any macros (optional)'}
+                </div>
+              </div>
+
+              {/* Shopping List Checkbox */}
+              <div className="flex items-center gap-2 py-2">
                 <input 
-                  type="number" 
-                  min={0} 
-                  step={1}
-                  className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-md px-3 py-2 text-sm text-white/95 placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  value={fat ?? ''} 
-                  onChange={e => setFat(e.target.value === '' ? undefined : parseFloat(e.target.value) || 0)} 
+                  id="inc-list" 
+                  type="checkbox" 
+                  className="h-4 w-4 text-purple-400 bg-zinc-800/50 border-zinc-700/50 rounded focus:ring-purple-400/20"
+                  checked={include} 
+                  onChange={e => setInclude(e.target.checked)} 
                 />
+                <label htmlFor="inc-list" className="text-sm text-white/90">
+                  Add to shopping list (off by default)
+                </label>
               </div>
-              <div className="text-xs text-white/60 self-end pb-2">
-                {protein != null || carbs != null || fat != null
-                  ? `Macro kcal ≈ ${Math.round(calcFromMacros)}`
-                  : 'Enter any macros (optional)'}
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-2 pt-2">
+                <button 
+                  className="rounded-md px-4 py-2 border border-white/20 text-white/80 hover:bg-white/10 transition-colors text-sm" 
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="rounded-md px-4 py-2 border border-purple-400/50 bg-purple-600/20 text-purple-100 hover:bg-purple-600/30 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-purple-600/20"
+                  disabled={!canSave} 
+                  onClick={handleSave}
+                >
+                  Save Snack
+                </button>
               </div>
             </div>
-
-            {/* Shopping List Checkbox */}
-            <div className="flex items-center gap-2 py-2">
-              <input 
-                id="inc-list" 
-                type="checkbox" 
-                className="h-4 w-4 text-purple-400 bg-zinc-800/50 border-zinc-700/50 rounded focus:ring-purple-400/20"
-                checked={include} 
-                onChange={e => setInclude(e.target.checked)} 
-              />
-              <label htmlFor="inc-list" className="text-sm text-white/90">
-                Add to shopping list (off by default)
-              </label>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-2 pt-2">
-              <button 
-                className="rounded-md px-4 py-2 border border-white/20 text-white/80 hover:bg-white/10 transition-colors text-sm" 
-                onClick={onClose}
-              >
-                Cancel
-              </button>
-              <button 
-                className="rounded-md px-4 py-2 border border-purple-400/50 bg-purple-600/20 text-purple-100 hover:bg-purple-600/30 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-purple-600/20"
-                disabled={!canSave} 
-                onClick={handleSave}
-              >
-                Save Snack
-              </button>
-            </div>
-          </div>
+          </DialogContent>
         </div>
       </div>
     </div>

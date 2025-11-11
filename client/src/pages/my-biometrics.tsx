@@ -108,6 +108,31 @@ export default function MyBiometrics() {
 
   const [p,setP]=useState(""); const [c,setC]=useState(""); const [f,setF]=useState(""); const [k,setK]=useState("");
 
+  // Check URL params for pre-filled values from photo log
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const urlP = params.get("p");
+    const urlC = params.get("c");
+    const urlF = params.get("f");
+    const urlK = params.get("k");
+    
+    if (urlP) setP(urlP);
+    if (urlC) setC(urlC);
+    if (urlF) setF(urlF);
+    if (urlK) setK(urlK);
+    
+    // Clear URL params after reading
+    if (urlP || urlC || urlF || urlK) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("p");
+      url.searchParams.delete("c");
+      url.searchParams.delete("f");
+      url.searchParams.delete("k");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
+
   // Profile selection for top-off adds
   type Profile = 'pure'|'chicken'|'turkey'|'whey'|'rice'|'oats'|'oil'|'fish'|'veggies'|'beef';
   const [selectedProfile, setSelectedProfile] = useState<Profile>('whey');
