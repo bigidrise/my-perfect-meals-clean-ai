@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Sparkles, Info } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -310,16 +310,13 @@ export default function MealIngredientPicker({
       <DialogContent className="max-w-2xl h-[90vh] sm:h-auto sm:max-h-[80vh] bg-gradient-to-b from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] border border-white/10 p-4 flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-white flex items-center gap-2 text-xl">
-            <Button
-              size="sm"
-              variant="ghost"
+            <button
               onClick={() => setShowInfoModal(true)}
-              className="h-6 w-6 p-0 text-white/90 hover:text-white hover:bg-white/10 flash-border"
-              style={{ borderRadius: '0.25rem' }}
-              aria-label="How to use"
+              className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use AI Meal Creator"
             >
-              <Info className="h-4 w-4" />
-            </Button>
+              ?
+            </button>
             AI Meal Creator - Pick Your Ingredients
           </DialogTitle>
         </DialogHeader>
@@ -566,47 +563,50 @@ export default function MealIngredientPicker({
       </DialogContent>
 
       {/* Info Modal - How to Use */}
-      <Dialog open={showInfoModal} onOpenChange={(open) => {
-        if (!open) {
-          handleInfoModalClose();
-        } else {
-          setShowInfoModal(true);
-        }
-      }}>
-        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-white text-lg">How to Use AI Meal Creator</DialogTitle>
-          </DialogHeader>
-          <div className="text-white/80 text-sm space-y-3">
-            <p className="font-semibold text-white">
-              1. Pick your protein first<span className="text-orange-400">*</span>
-            </p>
-            <p className="ml-4 text-white/70 text-xs">
-              Select at least one protein source to start building your meal
-            </p>
-            
-            <p className="font-semibold text-white">
-              2. Add starches, vegetables, and fats
-            </p>
-            <p className="ml-4 text-white/70 text-xs">
-              Choose from the category tabs to customize your meal
-            </p>
-            
-            <p className="font-semibold text-white">
-              3. Generate your meal
-            </p>
-            <p className="ml-4 text-white/70 text-xs">
-              AI will create a delicious recipe with your selected ingredients
-            </p>
-            
-            <div className="pt-2 mt-2 border-t border-white/10">
-              <p className="text-xs text-orange-300 font-medium">
-                💡 Tip: Use "Set Macro Targets" for precise meal portion sizes
-              </p>
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use AI Meal Creator</h3>
+
+            <div className="space-y-4 text-white/90 text-sm">
+              <div>
+                <strong className="text-lime-400">1. Pick your protein first</strong><span className="text-orange-400">*</span>
+                <p className="mt-1 text-white/70 text-xs">
+                  Select at least one protein source to start building your meal
+                </p>
+              </div>
+
+              <div>
+                <strong className="text-lime-400">2. Add starches, vegetables, and fats</strong>
+                <p className="mt-1 text-white/70 text-xs">
+                  Choose from the category tabs to customize your meal
+                </p>
+              </div>
+
+              <div>
+                <strong className="text-lime-400">3. Generate your meal</strong>
+                <p className="mt-1 text-white/70 text-xs">
+                  AI will create a delicious recipe with your selected ingredients
+                </p>
+              </div>
+
+              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                <p className="font-semibold text-white mb-1">💡 Tip:</p>
+                <p className="text-white/70">
+                  Use "Set Macro Targets" for precise meal portion sizes
+                </p>
+              </div>
             </div>
+
+            <button
+              onClick={handleInfoModalClose}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </Dialog>
   );
 }
