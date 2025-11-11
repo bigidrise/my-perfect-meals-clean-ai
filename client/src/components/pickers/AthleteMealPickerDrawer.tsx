@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,8 @@ import {
   getAthleteMealsByCategory,
   type AthleteMeal,
 } from "@/data/athleteMeals";
+import { Info } from "lucide-react"; // Assuming Info icon is imported
+import { Target } from "lucide-react"; // Assuming Target icon is imported
 
 // 🔄 Convert AthleteMeal to standard Meal
 function convertAthleteMealToMeal(athleteMeal: AthleteMeal): Meal {
@@ -99,6 +100,10 @@ export function AthleteMealPickerDrawer({
   const filteredMeals = React.useMemo(() => {
     return getAthleteMealsByCategory(category);
   }, [category]);
+
+  // State for the info modal, assuming it's defined elsewhere or not needed for this specific change
+  // const [showInfoModal, setShowInfoModal] = React.useState(false);
+
 
   if (!open || !list) return null;
 
