@@ -235,6 +235,7 @@ export default function MacroCounter() {
   const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg ?? 1.8);
   const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct ?? 0.3);
   const [sugarCapMode, setSugarCapMode] = useState<"AHA" | "DGA">(savedSettings?.sugarCapMode ?? "AHA");
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change
@@ -311,27 +312,13 @@ export default function MacroCounter() {
               Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
               <b>gain</b>.
             </p>
-            <Popover>
-              <PopoverTrigger asChild>
-                <button
-                  className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-                  title="Macro Calculator info"
-                >
-                  ?
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-lime-300">About Macro Calculator</p>
-                  <p className="text-sm text-white/90">
-                    The Macro Calculator helps you determine your personalized calorie and macro targets based on your goal (cut, maintain, or gain), body type, activity level, and biometric data.
-                  </p>
-                  <p className="text-sm text-white/90">
-                    Use the "Set Macro Targets" button to save your calculated targets to My Biometrics for daily tracking.
-                  </p>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              title="Macro Calculator info"
+            >
+              ?
+            </button>
           </CardHeader>
         </Card>
 
@@ -651,6 +638,31 @@ export default function MacroCounter() {
           </>
         )}
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">About Macro Calculator</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>
+                The Macro Calculator helps you determine your personalized calorie and macro targets based on your goal (cut, maintain, or gain), body type, activity level, and biometric data.
+              </p>
+              <p className="text-white/80">
+                Use the "Set Macro Targets" button to save your calculated targets to My Biometrics for daily tracking.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
     </>
   );

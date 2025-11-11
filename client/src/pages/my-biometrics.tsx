@@ -411,6 +411,8 @@ export default function MyBiometrics() {
   const [openPaste, setOpenPaste] = useState(false);
   const [pasteText, setPasteText] = useState("");
   const [showPersistentInfoModal, setShowPersistentInfoModal] = useState(false);
+  const [showBiometricsInfoModal, setShowBiometricsInfoModal] = useState(false);
+  const [showTodaysMacrosInfoModal, setShowTodaysMacrosInfoModal] = useState(false);
 
   function parsePaste(text: string){
     // Clean mobile clipboard gibberish (URL-encoded, HTML entities, extra whitespace)
@@ -797,27 +799,13 @@ export default function MyBiometrics() {
           <CardHeader className="text-center relative">
             <CardTitle className="text-2xl font-bold text-white">📊 My Biometrics</CardTitle>
             <p className="text-white/90 text-sm mt-2">Track macros, calories, and weight</p>
-            <Popover>
-              <PopoverTrigger asChild>
-                <button
-                  className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-                  title="Biometrics info"
-                >
-                  ?
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-lime-300">About My Biometrics</p>
-                  <p className="text-sm text-white/90">
-                    Track your daily macros (protein, carbs, fat, calories), weight, and water intake. Your data is stored locally and syncs with the Macro Calculator.
-                  </p>
-                  <p className="text-sm text-white/90">
-                    Use the "Add" button to log meals manually, or tap "Log from Photo" to use AI to estimate nutrition from a food picture.
-                  </p>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setShowBiometricsInfoModal(true)}
+              className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              title="Biometrics info"
+            >
+              ?
+            </button>
             <div className="mt-3 flex justify-center hidden">
               <Button onClick={exportCSV} className="bg-orange-600 hover:bg-orange-700 text-white border border-white/20">Export CSV</Button>
             </div>
@@ -832,24 +820,13 @@ export default function MyBiometrics() {
               <BarChart3 className="h-5 w-5"/> 
               Today's Macros
               {pendingWeightSync && (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-                      title="Macro targets info"
-                    >
-                      ?
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="bg-black/95 backdrop-blur-lg border border-lime-500/30 text-white max-w-sm">
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-lime-300">Your Macro Targets Are Set</p>
-                      <p className="text-sm text-white/90">
-                        Your macro targets are now active in today's macros. Navigate to the Body Stats card below, save your weight, and you will be sent to the plan builder.
-                      </p>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <button
+                  onClick={() => setShowTodaysMacrosInfoModal(true)}
+                  className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+                  title="Macro targets info"
+                >
+                  ?
+                </button>
               )}
             </CardTitle>
           </CardHeader>
@@ -1189,6 +1166,53 @@ export default function MyBiometrics() {
 
             <button
               onClick={() => setShowPersistentInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Biometrics Info Modal */}
+      {showBiometricsInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">About My Biometrics</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>
+                Track your daily macros (protein, carbs, fat, calories), weight, and water intake. Your data is stored locally and syncs with the Macro Calculator.
+              </p>
+              <p className="text-white/80">
+                Use the "Add" button to log meals manually, or tap "Log from Photo" to use AI to estimate nutrition from a food picture.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowBiometricsInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Today's Macros Info Modal */}
+      {showTodaysMacrosInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">Your Macro Targets Are Set</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>
+                Your macro targets are now active in today's macros. Navigate to the Body Stats card below, save your weight, and you will be sent to the plan builder.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowTodaysMacrosInfoModal(false)}
               className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               Got it!
