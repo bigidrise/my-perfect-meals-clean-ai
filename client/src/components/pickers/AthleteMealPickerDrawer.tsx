@@ -88,6 +88,7 @@ export function AthleteMealPickerDrawer({
 }) {
   const [category, setCategory] =
     React.useState<AthleteMeal["category"]>(DEFAULT_CATEGORY);
+  const [showInfoModal, setShowInfoModal] = React.useState(false);
 
   // Reset category when drawer opens
   React.useEffect(() => {
@@ -108,11 +109,21 @@ export function AthleteMealPickerDrawer({
   if (!open || !list) return null;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="bg-black/90 border border-white/20 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-white text-xl">
+          <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
             🏆 Competition Prep Meals - Add to {list}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowInfoModal(true)}
+              className="h-12 w-12 p-0 bg-lime-900/80 text-white/90 hover:text-white hover:bg-lime-800 rounded-xl flash-border"
+              aria-label="How to use"
+            >
+              <Info className="h-7 w-7" />
+            </Button>
           </DialogTitle>
         </DialogHeader>
 
@@ -227,5 +238,41 @@ export function AthleteMealPickerDrawer({
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Info Modal */}
+    <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
+      <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
+            <Target className="h-6 w-6 text-emerald-400" />
+            How to Use Competition Prep Meals
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 text-white/90">
+          <p>
+            Pre-designed athlete meals optimized for lean muscle building and performance.
+          </p>
+          <div>
+            <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
+            <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
+              <li>Select your protein category (Chicken, Red Meat, Fish, Eggs)</li>
+              <li>Meals are tagged with "Carbs" or "P+V" (Protein + Veggies)</li>
+              <li>Click any meal to add it to your board instantly</li>
+              <li>All macros are pre-calculated and ready to track</li>
+            </ul>
+          </div>
+          <p className="text-emerald-400 font-medium text-sm">
+            💡 Tip: Choose meals based on your daily carb targets - use "Carbs" meals when you need energy, and "P+V" meals for lower-carb days!
+          </p>
+        </div>
+        <Button
+          onClick={() => setShowInfoModal(false)}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
+        >
+          Got It!
+        </Button>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
