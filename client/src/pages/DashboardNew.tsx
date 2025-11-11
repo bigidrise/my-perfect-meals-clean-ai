@@ -49,75 +49,9 @@ export default function DashboardNew() {
     dangerouslyAllowBrowser: true,
   });
 
-  // Handler for logging food via photo analysis
-  const handlePhotoLog = async () => {
-    try {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.capture = "environment" as any; // Use camera directly
-      input.click();
-
-      input.onchange = async (e) => {
-        const file = (e.target as HTMLInputElement).files?.[0];
-        if (!file) return;
-
-        toast({
-          title: "Analyzing photo...",
-          description: "AI is estimating nutrition values.",
-        });
-
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          try {
-            const imageDataUrl = reader.result as string;
-            const response = await openai.chat.completions.create({
-              model: "gpt-4o-mini", // Using a cost-effective model
-              messages: [
-                {
-                  role: "system",
-                  content: "You are a nutrition AI. Respond ONLY in JSON format with keys: calories, protein, carbs, fat (all numbers).",
-                },
-                {
-                  role: "user",
-                  content: [
-                    { type: "text", text: "Estimate calories, protein (g), carbs (g), fat (g) in this meal. Return only JSON." },
-                    { type: "image_url", image_url: { url: imageDataUrl } },
-                  ],
-                },
-              ],
-              response_format: { type: "json_object" },
-            });
-
-            const parsed = JSON.parse(response.choices[0].message.content || "{}");
-            const { calories, protein, carbs, fat } = parsed;
-
-            // Navigate to biometrics with pre-filled data
-            setLocation(`/my-biometrics?p=${protein || 0}&c=${carbs || 0}&f=${fat || 0}&k=${calories || 0}`);
-
-            toast({
-              title: "✅ Photo Analyzed",
-              description: `${Math.round(calories || 0)} kcal detected. Review and add to your log.`,
-            });
-          } catch (err) {
-            console.error("AI analysis failed:", err);
-            toast({
-              title: "Error",
-              description: "Could not analyze photo. Please try again.",
-              variant: "destructive",
-            });
-          }
-        };
-        reader.readAsDataURL(file);
-      };
-    } catch (err) {
-      console.error("Photo upload failed:", err);
-      toast({
-        title: "Upload Error",
-        description: "Failed to initiate photo upload.",
-        variant: "destructive",
-      });
-    }
+  // Handler for navigating to biometrics for photo logging
+  const handlePhotoLog = () => {
+    setLocation("/my-biometrics");
   };
 
 

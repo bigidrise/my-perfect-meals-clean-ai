@@ -295,12 +295,24 @@ export default function MyBiometrics() {
       input.type = "file";
       input.accept = "image/*";
       input.capture = "environment" as any;
-      input.click();
-
+      
+      // Add the input to the DOM temporarily (helps with mobile reliability)
+      input.style.display = "none";
+      document.body.appendChild(input);
+      
       input.onchange = async (e) => {
         const file = (e.target as HTMLInputElement).files?.[0];
-        if (!file) return;
+        
+        // Clean up the input element
+        document.body.removeChild(input);
+        
+        if (!file) {
+          console.log("No file selected");
+          return;
+        }
 
+        console.log("File selected, starting analysis:", file.name);
+        
         toast({
           title: "Analyzing photo...",
           description: "Please wait while AI estimates the nutrition values.",
@@ -308,9 +320,24 @@ export default function MyBiometrics() {
 
         // Convert image to base64
         const reader = new FileReader();
+        reader.onerror = () => {
+          console.error("FileReader error");
+          toast({
+            title: "Error",
+            description: "Could not read the image file.",
+            variant: "destructive",
+          });
+        };
+        
         reader.onloadend = async () => {
           try {
             const imageDataUrl = reader.result as string;
+            
+            if (!imageDataUrl) {
+              throw new Error("Failed to convert image to data URL");
+            }
+
+            console.log("Image converted, sending to AI...");
 
             // Send to GPT-4o Vision
             const response = await openai.chat.completions.create({
@@ -335,6 +362,8 @@ export default function MyBiometrics() {
             const parsed = JSON.parse(response.choices[0].message.content || "{}");
             const { calories, protein, carbs, fat } = parsed;
 
+            console.log("AI analysis complete:", parsed);
+
             // Auto-fill Biometrics input boxes
             setP(String(protein || ""));
             setC(String(carbs || ""));
@@ -354,8 +383,12 @@ export default function MyBiometrics() {
             });
           }
         };
+        
         reader.readAsDataURL(file);
       };
+      
+      // Trigger the file picker
+      input.click();
     } catch (err) {
       console.error("Photo upload failed:", err);
       toast({
