@@ -505,7 +505,7 @@ export default function RestaurantGuidePage() {
             {generatedMeals.length > 0 && (
               <div className="space-y-6 mb-6">
                 <h2 className="text-xl font-bold text-white mb-4">
-                  🍽️ Recommended Meals at {restaurantInput}:
+                  🍽️ Recommended Meals at {restaurantInput.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}:
                 </h2>
                 <div className="grid gap-4">
                   {generatedMeals.map((meal, index) => (
