@@ -413,22 +413,23 @@ export default function RestaurantGuidePage() {
           </CardHeader>
           <CardContent className="p-6">
             <p className="mb-4 text-sm text-white/90">
-              Type the name of a restaurant or cuisine to get healthy ordering
-              tips that work with your goals.
+              Tell us <strong>what you're craving</strong> (e.g., chicken, salmon, pasta) and
+              <strong> where you're eating</strong> (e.g., Cheesecake Factory, P.F. Chang's). We'll recommend
+              <em>real menu picks</em> with healthier ways to order.
             </p>
 
             <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
               <p className="text-sm text-blue-200">
                 <Clock className="inline h-4 w-4 mr-1" />
-                <strong>Generation Time:</strong>  AI searching for Meal recommendations can take 60-90 seconds
-                  to generate. Please be patient.
+                <strong>Generation Time:</strong> AI is reviewing popular dishes and healthier order tips.
+                This can take 60–90 seconds. Your results will auto-save here.
               </p>
             </div>
 
             <div className="space-y-3 mb-6">
               <div className="relative">
                 <Input
-                  placeholder="e.g. chicken, pasta, salmon"
+                  placeholder="e.g. chicken, salmon, pasta"
                   value={cravingInput}
                   onChange={(e) => setCravingInput(e.target.value)}
                   className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
@@ -446,7 +447,7 @@ export default function RestaurantGuidePage() {
               </div>
               <div className="relative">
                 <Input
-                  placeholder="e.g. Olive Garden, Panda Express, Chipotle"
+                  placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
                   value={restaurantInput}
                   onChange={(e) => setRestaurantInput(e.target.value)}
                   className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
@@ -470,10 +471,10 @@ export default function RestaurantGuidePage() {
                 {generateMealsMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="h-4 w-4 animate-spin" />
-                    Generating 2 Options...
+                    Finding Dishes...
                   </div>
                 ) : (
-                  "Get 2 Options"
+                  "Find Dishes"
                 )}
               </Button>
             </div>
@@ -616,7 +617,7 @@ export default function RestaurantGuidePage() {
                 {/* Animated Progress Bar */}
                 <div className="max-w-md mx-auto mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/80">AI Analysis Progress</span>
+                    <span className="text-sm text-white/80">Smart Guide Progress</span>
                     <span className="text-sm text-white/80">{Math.round(progress)}%</span>
                   </div>
                   <Progress 
@@ -662,11 +663,10 @@ export default function RestaurantGuidePage() {
               <div className="text-center py-8">
                 <div className="text-6xl mb-4">🔍</div>
                 <p className="text-white mb-2">
-                  Try typing a restaurant name or cuisine type above
+                  Enter a <strong>craving</strong> (e.g., "chicken") and a <strong>restaurant</strong> (e.g., "Cheesecake Factory") above.
                 </p>
                 <p className="text-sm text-white">
-                  Supported cuisines: Mexican, Italian, American, Mediterranean,
-                  Chinese, Indian, Japanese
+                  Tip: You'll get specific dish ideas plus healthy order tweaks.
                 </p>
               </div>
             )}
@@ -684,6 +684,7 @@ export default function RestaurantGuidePage() {
                       setMatchedCuisine(cuisine);
                       generateMealsMutation.mutate({
                         restaurantName: `${cuisine} Restaurant`,
+                        craving: "",
                         cuisine: cuisine,
                       });
                     }}
@@ -702,23 +703,36 @@ export default function RestaurantGuidePage() {
       {showInfoModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h2>
+            <h2 className="text-xl font-bold text-white mb-4">How to Use Smart Restaurant Guide</h2>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <div>
-                <strong className="text-lime-400">Find Meals Near Me:</strong>
-                <p className="mt-1">Search for healthy meals at nearby restaurants by entering what you're craving and your ZIP code.</p>
+                <strong className="text-lime-400">What it does:</strong>
+                <p className="mt-1">
+                  Tell us what you're craving and where you're going. We'll suggest real menu picks and
+                  healthy ways to order them (lighter sauce, swaps, sides) to fit your goals.
+                </p>
               </div>
+
               <div>
-                <strong className="text-lime-400">Restaurant Meal Generator:</strong>
+                <strong className="text-lime-400">How to use:</strong>
                 <ol className="list-decimal list-inside mt-1 space-y-1">
-                  <li>Type a restaurant name or cuisine type</li>
-                  <li>Click "Get 2 Options" to generate AI-powered meal recommendations</li>
-                  <li>Review nutrition info, medical badges, and ordering tips</li>
-                  <li>Get customized modifications for healthier choices</li>
+                  <li>In <em>Craving</em>, type a food (e.g., "chicken," "salmon," "pasta").</li>
+                  <li>In <em>Restaurant</em>, type where you're going (e.g., "P.F. Chang's").</li>
+                  <li>Tap <em>Find Dishes</em> to get 2–3 smart picks with healthier order tips.</li>
+                  <li>Review nutrition estimates, medical badges, and "Ask For" modifications.</li>
                 </ol>
               </div>
+
+              <div>
+                <strong className="text-lime-400">Examples:</strong>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li><em>Craving:</em> chicken · <em>Restaurant:</em> P.F. Chang's → "Chang's Spicy Chicken (light sauce)"</li>
+                  <li><em>Craving:</em> salmon · <em>Restaurant:</em> Cheesecake Factory → "SkinnyLicious® Grilled Salmon"</li>
+                </ul>
+              </div>
+
               <p className="text-lime-400 font-medium mt-4">
-                💡 Tip: Generation takes 60-90 seconds. Your results are automatically saved on this page!
+                ⏱️ Generation takes 60–90 seconds. Your results auto-save on this page.
               </p>
             </div>
             <button
