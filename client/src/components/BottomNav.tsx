@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { Home, ShoppingCart, Sparkles, Crown } from "lucide-react";
+import { Home, CalendarDays, Sparkles, Crown } from "lucide-react";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
@@ -12,10 +12,10 @@ export default function BottomNav() {
       path: "/dashboard",
     },
     {
-      id: "shopping",
-      label: "Shopping",
-      icon: ShoppingCart,
-      path: "/shopping-list-v2",
+      id: "planner",
+      label: "Planner",
+      icon: CalendarDays,
+      path: "/planner",
     },
     {
       id: "lifestyle",

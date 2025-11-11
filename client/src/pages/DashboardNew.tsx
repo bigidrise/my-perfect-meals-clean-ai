@@ -173,11 +173,41 @@ export default function DashboardNew() {
           </div>
         </motion.div>
 
-        {/* Barcode Scanner Quick Access Card */}
+        {/* Shopping List Quick Access Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
+          className="mb-4"
+        >
+          <Card
+            className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-emerald-500/50 rounded-xl group"
+            onClick={() => setLocation("/shopping-list-v2")}
+            data-testid="card-shopping-list"
+          >
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 border border-emerald-500/30 group-hover:from-emerald-500/30 group-hover:to-emerald-700/30 transition-all">
+                  <ShoppingCart className="h-6 w-6 text-emerald-500" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-white text-lg">
+                    🛒 Shopping List
+                  </CardTitle>
+                  <CardDescription className="text-white/70 text-sm mt-1">
+                    View your master grocery list
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        {/* Barcode Scanner Quick Access Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.5 }}
           className="mb-4"
         >
           <Card
