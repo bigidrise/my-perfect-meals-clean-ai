@@ -919,15 +919,13 @@ export default function WeeklyMealBoard() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">Weekly Meal Board</h1>
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={() => setShowInfoModal(true)}
-                  className="h-4 w-4 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-xl flash-border"
-                  aria-label="How to use"
+                  className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+                  aria-label="How to use Weekly Meal Board"
                 >
-                  <Info className="h-4 w-4" />
-                </Button>
+                  ?
+                </button>
                 {FEATURES.explainMode === 'alpha' && (
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}

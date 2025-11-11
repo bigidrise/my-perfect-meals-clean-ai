@@ -919,15 +919,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <h1 className="text-xl font-bold text-white">
                 Competition + Beachbody Meal Board
               </h1>
-              <Button
-                size="sm"
-                variant="ghost"
+              <button
                 onClick={() => setShowInfoModal(true)}
-                className="h-12 w-12 p-0 bg-lime-900/80 text-white/90 hover:text-white hover:bg-lime-800 rounded-full flash-border"
-                aria-label="How to use"
+                className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+                aria-label="How to use Athlete Meal Board"
               >
-                <Info className="h-7 w-7" />
-              </Button>
+                ?
+              </button>
 
               <div className="flex gap-2">
                 {saving && (

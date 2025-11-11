@@ -174,11 +174,11 @@ export default function ShoppingListMasterView() {
                 <Popover>
                   <PopoverTrigger asChild>
                     <button 
-                      className="flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-900/90 transition-all duration-200 animate-pulse hover:animate-none shadow-lg"
+                      className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white text-sm font-bold flash-border"
                       aria-label="How to use shopping list"
                       data-testid="shopping-list-info-button"
                     >
-                      <Info className="h-7 w-7 text-orange-300" />
+                      ?
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
