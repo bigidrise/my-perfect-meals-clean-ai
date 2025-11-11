@@ -1,3 +1,4 @@
+
 // Temporary stub for macrosApi
 // This module provides API functions for logging macros
 
@@ -11,13 +12,17 @@ interface MacroEntry {
   mealType?: string;
 }
 
+// Use dynamic base URL so it works on Replit (localhost) and Railway (production)
+const API_BASE = typeof window !== "undefined" ? window.location.origin : "";
+
 export async function addBulkMacros(entries: MacroEntry[]): Promise<{ success: boolean; message?: string }> {
   try {
-    const response = await fetch('/api/macros/bulk', {
+    const response = await fetch(`${API_BASE}/api/macros/bulk`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ entries }),
     });
 
@@ -35,8 +40,23 @@ export async function addBulkMacros(entries: MacroEntry[]): Promise<{ success: b
 
 export async function logMacrosToBiometrics(macros: MacroEntry): Promise<{ success: boolean; message?: string }> {
   try {
-    // Use window.location.origin to ensure absolute URL works on Railway
-    const apiUrl = `${window.location.origin}/api/biometrics/log`;
+    console.log('🔵 Attempting to log macros to biometrics:', macros);
+    
+    const apiUrl = `${API_BASE}/api/biometrics/log`;
+    console.log('🔵 API URL:', apiUrl);
+    
+    const payload = {
+      date_iso: macros.date || new Date().toISOString(),
+      meal_type: macros.mealType || 'lunch',
+      calories_kcal: macros.calories,
+      protein_g: macros.protein,
+      carbs_g: macros.carbs,
+      fat_g: macros.fat,
+      source: 'macro-counter',
+      title: 'Meal from Macro Counter'
+    };
+    
+    console.log('🔵 Payload:', payload);
     
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -44,23 +64,19 @@ export async function logMacrosToBiometrics(macros: MacroEntry): Promise<{ succe
         'Content-Type': 'application/json',
       },
       credentials: 'include', // Important for Railway authentication
-      body: JSON.stringify({
-        date_iso: macros.date || new Date().toISOString(),
-        meal_type: macros.mealType || 'lunch',
-        calories_kcal: macros.calories,
-        protein_g: macros.protein,
-        carbs_g: macros.carbs,
-        fat_g: macros.fat,
-        source: 'macro-counter',
-        title: 'Meal from Macro Counter'
-      }),
+      body: JSON.stringify(payload),
     });
 
+    console.log('🔵 Response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Failed to log macros to biometrics: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('❌ Biometrics log failed:', errorText);
+      throw new Error(`Biometrics API failed: ${response.statusText}`);
     }
 
     const data = await response.json();
+    console.log('✅ Biometrics log successful:', data);
     return { success: true, ...data };
   } catch (error) {
     console.error('❌ Error logging macros to biometrics:', error);
