@@ -187,7 +187,8 @@ export default function RestaurantGuidePage() {
   const [restaurantInput, setRestaurantInput] = useState("");
   const [matchedCuisine, setMatchedCuisine] = useState<string | null>(null);
   const [generatedMeals, setGeneratedMeals] = useState<any[]>([]);
-  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showFindMealsInfo, setShowFindMealsInfo] = useState(false);
+  const [showSmartGuideInfo, setShowSmartGuideInfo] = useState(false);
   const { toast } = useToast();
 
   // 🔋 Progress bar state (real-time ticker like HolidayFeast)
@@ -359,18 +360,9 @@ export default function RestaurantGuidePage() {
           </div>
 
         <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <h1 className="text-2xl sm:text-4xl font-bold text-white">
-              Restaurant Guide
-            </h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-              aria-label="How to use Restaurant Guide"
-            >
-              ?
-            </button>
-          </div>
+          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+            Restaurant Guide
+          </h1>
           <p className="text-sm sm:text-lg text-white/80">
             Get healthy ordering tips for any restaurant
           </p>
@@ -379,9 +371,18 @@ export default function RestaurantGuidePage() {
         {/* Find Meals Near Me Card - MOVED TO TOP */}
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <MapPin className="h-5 w-5" />
-              Find Meals Near Me
+            <CardTitle className="flex items-center justify-between text-lg text-white">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Find Meals Near Me
+              </div>
+              <button
+                onClick={() => setShowFindMealsInfo(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+                aria-label="How to use Find Meals Near Me"
+              >
+                ?
+              </button>
             </CardTitle>
             <CardDescription className="text-sm text-white/80">
               Search for meals you're craving at nearby restaurants by ZIP code
@@ -403,9 +404,18 @@ export default function RestaurantGuidePage() {
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <Sparkles className="h-5 w-5" />
-              Smart Restaurant Guide
+            <CardTitle className="flex items-center justify-between text-lg text-white">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Smart Restaurant Guide
+              </div>
+              <button
+                onClick={() => setShowSmartGuideInfo(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+                aria-label="How to use Smart Restaurant Guide"
+              >
+                ?
+              </button>
             </CardTitle>
             <CardDescription className="text-white/80">
               Pick your craving and restaurant to get AI-powered healthy choices.
@@ -699,8 +709,53 @@ export default function RestaurantGuidePage() {
         </Card>
       </div>
 
-      {/* Info Modal */}
-      {showInfoModal && (
+      {/* Find Meals Near Me Info Modal */}
+      {showFindMealsInfo && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h2>
+            <div className="space-y-3 text-white/90 text-sm mb-6">
+              <div>
+                <strong className="text-lime-400">What it does:</strong>
+                <p className="mt-1">
+                  Search for restaurants near you by ZIP code that serve the meal you're craving. We'll show you healthy options with nutrition info and ordering tips.
+                </p>
+              </div>
+
+              <div>
+                <strong className="text-lime-400">How to use:</strong>
+                <ol className="list-decimal list-inside mt-1 space-y-1">
+                  <li>Enter what you're craving (e.g., "chicken," "salmon," "tacos")</li>
+                  <li>Enter your ZIP code to find nearby restaurants</li>
+                  <li>Tap <em>Find Meals Near Me</em> to search</li>
+                  <li>Browse results with real restaurant names, locations, and healthy meal recommendations</li>
+                </ol>
+              </div>
+
+              <div>
+                <strong className="text-lime-400">Examples:</strong>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li><em>Craving:</em> chicken · <em>ZIP:</em> 90210 → Find chicken dishes at restaurants near you</li>
+                  <li><em>Craving:</em> salad · <em>ZIP:</em> 10001 → Discover healthy salad options nearby</li>
+                </ul>
+              </div>
+
+              <p className="text-lime-400 font-medium mt-4">
+                📍 Uses your location to find real restaurants with healthy options that match your goals.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowFindMealsInfo(false)}
+              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Smart Restaurant Guide Info Modal */}
+      {showSmartGuideInfo && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
             <h2 className="text-xl font-bold text-white mb-4">How to Use Smart Restaurant Guide</h2>
@@ -736,7 +791,7 @@ export default function RestaurantGuidePage() {
               </p>
             </div>
             <button
-              onClick={() => setShowInfoModal(false)}
+              onClick={() => setShowSmartGuideInfo(false)}
               className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
             >
               Got it!
