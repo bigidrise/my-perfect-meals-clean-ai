@@ -565,59 +565,58 @@ export default function MealIngredientPicker({
       </Dialog>
 
       {/* Info Modal - How to Use */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl relative">
-            <button
-              type="button"
-              onClick={handleInfoModalClose}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Close"
-            >
-              ✕
-            </button>
-            <h3 className="text-xl font-bold text-white mb-4 pr-8">How to Use AI Meal Creator</h3>
+      <Dialog open={showInfoModal} onOpenChange={(isOpen) => !isOpen && handleInfoModalClose()}>
+        <DialogContent className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md">
+          <button
+            type="button"
+            onClick={handleInfoModalClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors z-10"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <h3 className="text-xl font-bold text-white mb-4 pr-8">How to Use AI Meal Creator</h3>
 
-            <div className="space-y-4 text-white/90 text-sm">
-              <div>
-                <strong className="text-lime-400">1. Pick your protein first</strong><span className="text-orange-400">*</span>
-                <p className="mt-1 text-white/70 text-xs">
-                  Select at least one protein source to start building your meal
-                </p>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">2. Add starches, vegetables, and fats</strong>
-                <p className="mt-1 text-white/70 text-xs">
-                  Choose from the category tabs to customize your meal
-                </p>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">3. Generate your meal</strong>
-                <p className="mt-1 text-white/70 text-xs">
-                  AI will create a delicious recipe with your selected ingredients
-                </p>
-              </div>
-
-              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
-                <p className="font-semibold text-white mb-1">💡 Tip:</p>
-                <p className="text-white/70">
-                  Use "Set Macro Targets" for precise meal portion sizes
-                </p>
-              </div>
+          <div className="space-y-4 text-white/90 text-sm">
+            <div>
+              <strong className="text-lime-400">1. Pick your protein first</strong><span className="text-orange-400">*</span>
+              <p className="mt-1 text-white/70 text-xs">
+                Select at least one protein source to start building your meal
+              </p>
             </div>
 
-            <button
-              type="button"
-              onClick={handleInfoModalClose}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors cursor-pointer"
-            >
-              Got it!
-            </button>
+            <div>
+              <strong className="text-lime-400">2. Add starches, vegetables, and fats</strong>
+              <p className="mt-1 text-white/70 text-xs">
+                Choose from the category tabs to customize your meal
+              </p>
+            </div>
+
+            <div>
+              <strong className="text-lime-400">3. Generate your meal</strong>
+              <p className="mt-1 text-white/70 text-xs">
+                AI will create a delicious recipe with your selected ingredients
+              </p>
+            </div>
+
+            <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+              <p className="font-semibold text-white mb-1">💡 Tip:</p>
+              <p className="text-white/70">
+                Use "Set Macro Targets" for precise meal portion sizes
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+
+          <button
+            type="button"
+            onClick={handleInfoModalClose}
+            className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors cursor-pointer"
+            data-testid="button-info-modal-close"
+          >
+            Got it!
+          </button>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
