@@ -104,7 +104,7 @@ export function AthleteMealPickerDrawer({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="bg-gradient-to-b from-lime-950/95 via-zinc-900/95 to-black/95 border-lime-500/30 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-white text-xl">
             🏆 Competition Prep Meals - Add to {list}
@@ -113,7 +113,7 @@ export function AthleteMealPickerDrawer({
 
         <div className="space-y-4">
           {/* Category Selector */}
-          <div className="bg-black/30 p-4 rounded-lg border border-lime-500/20">
+          <div className="bg-black/30 p-4 rounded-lg border border-white/10">
             <label className="text-white/80 text-sm mb-2 block">Select Protein Category:</label>
             <Select
               value={category}
@@ -121,18 +121,18 @@ export function AthleteMealPickerDrawer({
                 setCategory(val as AthleteMeal["category"])
               }
             >
-              <SelectTrigger className="w-full bg-lime-900/60 border-lime-500/50 text-white h-10 text-sm flash-border">
+              <SelectTrigger className="w-full bg-black/60 border-white/20 text-white h-10 text-sm">
                 <SelectValue>
                   {CATEGORY_OPTIONS.find((opt) => opt.value === category)
                     ?.label ?? "Select Category"}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900/95 border-lime-500/30 text-white">
+              <SelectContent className="bg-zinc-900/95 border-white/20 text-white">
                 {CATEGORY_OPTIONS.map((option) => (
                   <SelectItem
                     key={option.value}
                     value={option.value}
-                    className="text-white hover:bg-lime-500/20 focus:bg-lime-500/30 cursor-pointer"
+                    className="text-white hover:bg-white/10 focus:bg-white/20 cursor-pointer"
                   >
                     {option.label}
                   </SelectItem>
@@ -150,7 +150,7 @@ export function AthleteMealPickerDrawer({
                   const mealToAdd = convertAthleteMealToMeal(am);
                   onPick(mealToAdd);
                 }}
-                className="w-full text-left rounded-xl border border-lime-500/30 bg-black/50 hover:bg-lime-900/30 p-4 transition-all hover:border-lime-400/50"
+                className="w-full text-left rounded-xl border border-white/20 bg-black/50 hover:bg-white/10 p-4 transition-all"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="text-white/90 font-medium text-sm flex-1 leading-tight">
@@ -165,7 +165,7 @@ export function AthleteMealPickerDrawer({
                     )}
                   </div>
                   {am.includeCarbs ? (
-                    <Badge className="bg-lime-600/80 text-white text-[10px] ml-2 px-2 py-0.5 shrink-0">
+                    <Badge className="bg-green-600/80 text-white text-[10px] ml-2 px-2 py-0.5 shrink-0">
                       Carbs
                     </Badge>
                   ) : (
@@ -180,7 +180,7 @@ export function AthleteMealPickerDrawer({
                   {am.carb_source && ` • ${am.carb_source} (${am.carb_g}g)`}
                 </div>
 
-                <div className="text-lime-300/80 text-xs font-semibold leading-tight">
+                <div className="text-white/90 text-xs font-semibold leading-tight">
                   {am.macros.kcal} kcal · P{am.macros.protein} · C
                   {am.macros.starchyCarbs + am.macros.fibrousCarbs} · F{am.macros.fat}
                 </div>
@@ -190,7 +190,7 @@ export function AthleteMealPickerDrawer({
                     {am.tags.slice(0, 2).map((tag: string) => (
                       <span
                         key={tag}
-                        className="text-[9px] bg-lime-600/20 text-lime-300 px-1.5 py-0.5 rounded-full leading-none"
+                        className="text-[9px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-full leading-none"
                       >
                         {tag.replace(/_/g, " ")}
                       </span>
@@ -202,8 +202,8 @@ export function AthleteMealPickerDrawer({
           </div>
 
           {/* Info Note */}
-          <div className="bg-lime-900/20 border border-lime-500/30 rounded-lg p-3 text-xs text-white/70">
-            <p className="mb-1"><span className="font-semibold text-lime-300">Competition Prep Meals:</span> Pre-designed athlete meals optimized for lean muscle building and performance.</p>
+          <div className="bg-black/30 border border-white/10 rounded-lg p-3 text-xs text-white/70">
+            <p className="mb-1"><span className="font-semibold text-white/90">Competition Prep Meals:</span> Pre-designed athlete meals optimized for lean muscle building and performance.</p>
             <p className="text-white/60">Click any meal to add it to your board. Macros are calculated and ready to track.</p>
           </div>
         </div>
