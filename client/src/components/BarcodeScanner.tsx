@@ -73,7 +73,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
 
     // Prevent scanning too frequently
     const now = Date.now();
-    if (now - lastScanTime.current < 500) {
+    if (now - lastScanTime.current < 300) {
       animationFrameRef.current = requestAnimationFrame(scanBarcode);
       return;
     }
@@ -82,7 +82,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
       if (supportsNativeBarcodeDetector) {
         // Use native BarcodeDetector API (Chrome, Edge)
         const barcodeDetector = new (window as any).BarcodeDetector({
-          formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39', 'code_93', 'codabar', 'itf']
+          formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39']
         });
 
         const barcodes = await barcodeDetector.detect(videoRef.current);
@@ -99,7 +99,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         await scanWithZXing();
       }
     } catch (err) {
-      // Silent - scanning continuously
+      console.log('Scan attempt error:', err);
     }
 
     animationFrameRef.current = requestAnimationFrame(scanBarcode);
@@ -110,12 +110,13 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
 
     const canvas = canvasRef.current;
     const video = videoRef.current;
+    
+    // Set canvas size to match video
+    if (canvas.width !== video.videoWidth) canvas.width = video.videoWidth;
+    if (canvas.height !== video.videoHeight) canvas.height = video.videoHeight;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // Set canvas size to video size
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
 
     // Draw current video frame to canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -125,7 +126,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
       const { BrowserMultiFormatReader } = await import('@zxing/browser');
       const codeReader = new BrowserMultiFormatReader();
       
-      const result = await codeReader.decodeFromImageElement(video);
+      // Try to decode from the canvas
+      const result = await codeReader.decodeFromCanvas(canvas);
       if (result) {
         const barcode = result.getText();
         console.log('📱 Barcode detected (ZXing):', barcode);
@@ -134,7 +136,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         handleBarcodeDetected(barcode);
       }
     } catch (err) {
-      // No barcode found in this frame
+      // No barcode found in this frame - this is normal, keep scanning
     }
   };
 

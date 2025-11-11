@@ -256,7 +256,8 @@ export default function ShoppingListMasterView() {
               className="bg-orange-600/20 border border-orange-400/30 text-orange-200 hover:bg-orange-600/30"
               data-testid="button-scan-barcode"
             >
-              <Camera className="h-4 w-4" />
+              <Camera className="h-4 w-4 mr-2" />
+              Barcode Scanner
             </Button>
           </div>
 
