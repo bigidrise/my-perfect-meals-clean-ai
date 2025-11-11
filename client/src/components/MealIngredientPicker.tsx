@@ -306,20 +306,21 @@ export default function MealIngredientPicker({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl h-[90vh] sm:h-auto sm:max-h-[80vh] bg-gradient-to-b from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] border border-white/10 p-4 flex flex-col">
-        <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="text-white flex items-center gap-2 text-xl">
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
-              aria-label="How to use AI Meal Creator"
-            >
-              ?
-            </button>
-            AI Meal Creator - Pick Your Ingredients
-          </DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-2xl h-[90vh] sm:h-auto sm:max-h-[80vh] bg-gradient-to-b from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] border border-white/10 p-4 flex flex-col">
+          <DialogHeader className="flex-shrink-0">
+            <DialogTitle className="text-white flex items-center gap-2 text-xl">
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+                aria-label="How to use AI Meal Creator"
+              >
+                ?
+              </button>
+              AI Meal Creator - Pick Your Ingredients
+            </DialogTitle>
+          </DialogHeader>
 
         {/* Category Tabs - Fixed */}
         <div className="flex gap-1 mb-3 flex-shrink-0">
@@ -561,6 +562,7 @@ export default function MealIngredientPicker({
           )}
         </div>
       </DialogContent>
+      </Dialog>
 
       {/* Info Modal - How to Use */}
       {showInfoModal && (
@@ -607,6 +609,6 @@ export default function MealIngredientPicker({
           </div>
         </div>
       )}
-    </Dialog>
+    </>
   );
 }
