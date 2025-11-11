@@ -1737,20 +1737,38 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           setShowInfoModal(true);
         }
       }}>
-        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
+        <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-white text-lg">How to Use Athlete Board</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
+              <Target className="h-6 w-6 text-emerald-400" />
+              How to Use Athlete Board
+            </DialogTitle>
           </DialogHeader>
-          <div className="text-white/80 text-sm space-y-2">
-            <p>Create your day or week by starting with Meal 1 (breakfast).</p>
-            <p className="text-xs text-white/60">
-              Click the "Create with AI" button on each meal section to build your plan. 
-              You can create one day and duplicate it across the week, or create each day individually.
+          <div className="space-y-4 text-white/90">
+            <p>
+              The Athlete Board helps you build competition-ready meal plans with precise macro tracking for peak performance.
             </p>
-            <p className="text-xs text-white/60 mt-3">
-              If you change your mind about a meal, just hit the <span className="font-semibold text-white/80">trash can</span> to delete it and create a new one.
+            <div>
+              <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
+              <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
+                <li>Start with Meal 1 (breakfast) and work through each meal section</li>
+                <li>Click "Create with AI" to generate meals based on your coach's macro targets</li>
+                <li>Choose Day or Week mode to plan one day at a time or your entire week</li>
+                <li>Use the duplicate feature to copy successful days across your week</li>
+                <li>Delete any meal with the trash icon if you want to try something different</li>
+                <li>Send your plan to Biometrics to track your daily macro progress</li>
+              </ul>
+            </div>
+            <p className="text-emerald-400 font-medium">
+              💡 Tip: Your coach has set specific macro targets for you. Use "Set Macros to Biometrics" to sync them and track your daily progress!
             </p>
           </div>
+          <Button
+            onClick={() => setShowInfoModal(false)}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
+          >
+            Got It!
+          </Button>
         </DialogContent>
       </Dialog>
 

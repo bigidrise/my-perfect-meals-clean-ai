@@ -202,9 +202,22 @@ export function AthleteMealPickerDrawer({
           </div>
 
           {/* Info Note */}
-          <div className="bg-black/30 border border-white/10 rounded-lg p-3 text-xs text-white/70">
-            <p className="mb-1"><span className="font-semibold text-white/90">Competition Prep Meals:</span> Pre-designed athlete meals optimized for lean muscle building and performance.</p>
-            <p className="text-white/60">Click any meal to add it to your board. Macros are calculated and ready to track.</p>
+          <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-lg p-4">
+            <div className="flex items-start gap-2 mb-2">
+              <Target className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-emerald-400 mb-1">Competition Prep Meals</p>
+                <p className="text-white/80 text-xs mb-2">
+                  Pre-designed athlete meals optimized for lean muscle building and performance.
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-xs text-white/70 ml-2">
+                  <li>Select your protein category (Chicken, Red Meat, Fish, Eggs)</li>
+                  <li>Meals are tagged with "Carbs" or "P+V" (Protein + Veggies)</li>
+                  <li>Click any meal to add it to your board instantly</li>
+                  <li>All macros are pre-calculated and ready to track</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>
