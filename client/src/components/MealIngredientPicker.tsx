@@ -602,7 +602,7 @@ export default function MealIngredientPicker({
 
             <button
               type="button"
-              onClick={() => setShowInfoModal(false)}
+              onClick={handleInfoModalClose}
               className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors cursor-pointer"
             >
               Got it!
