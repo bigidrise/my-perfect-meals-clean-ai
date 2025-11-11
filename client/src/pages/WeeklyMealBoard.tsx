@@ -1031,15 +1031,15 @@ export default function WeeklyMealBoard() {
                       <Plus className="h-4 w-4" />
                     </Button>
 
-                    {/* Special Add Snack button for snacks section only */}
+                    {/* Special Log Snack button for snacks section only - navigates to Biometrics photo log */}
                     {key === "snacks" && (
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/70 hover:bg-white/10 text-xs font-medium"
-                        onClick={onAddSnack}
+                        onClick={() => setLocation("/my-biometrics")}
                       >
-                        Add Snack
+                        📸 Log Snack
                       </Button>
                     )}
                   </div>
