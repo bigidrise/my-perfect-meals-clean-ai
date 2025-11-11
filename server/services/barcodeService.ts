@@ -138,7 +138,11 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
     // Try OpenFoodFacts API first (free, no API key needed)
     try {
       console.log(`🔍 Trying OpenFoodFacts...`);
-      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${sanitized}.json`);
+      const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${sanitized}.json`, {
+        headers: {
+          'User-Agent': 'MacroCalculator/1.0 (macro-calculator@replit.com)'
+        }
+      });
       
       if (response.ok) {
         const data = await response.json();
