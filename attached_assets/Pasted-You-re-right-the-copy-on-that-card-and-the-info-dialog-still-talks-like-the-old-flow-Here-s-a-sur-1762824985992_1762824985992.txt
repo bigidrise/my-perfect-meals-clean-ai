@@ -1,0 +1,214 @@
+You’re right—the copy on that card and the info dialog still talks like the old flow. Here’s a **surgical copy-only update pack** that keeps the layout/styles 100% identical and just fixes the wording so it matches **Smart Restaurant Guide (craving + restaurant)**. Hand this to the Replit agent exactly as-is.
+
+---
+
+# Copy updates (no layout changes)
+
+## 1) Section subtitle under the title
+
+**Find & replace the `<CardDescription>` right under the Sparkles icon card title.**
+
+**Replace with:**
+
+```jsx
+<CardDescription className="text-white/80">
+  Pick your craving and restaurant to get AI-powered healthy choices.
+</CardDescription>
+```
+
+---
+
+## 2) Intro paragraph above inputs
+
+**Find this block inside the Smart Restaurant Guide card:**
+
+```jsx
+<p className="mb-4 text-sm text-white/90">
+  Type the name of a restaurant or cuisine to get healthy ordering
+  tips that work with your goals.
+</p>
+```
+
+**Replace with:**
+
+```jsx
+<p className="mb-4 text-sm text-white/90">
+  Tell us <strong>what you want</strong> (e.g., “chicken,” “salmon,” “pasta”) and
+  <strong> where you’re going</strong> (e.g., “Cheesecake Factory,” “P.F. Chang’s”). We’ll recommend
+  <em>real menu picks</em> with healthier ways to order.
+</p>
+```
+
+---
+
+## 3) “Generation Time” helper box copy
+
+**Find the blue/clock paragraph inside the black/20 box:**
+
+```jsx
+<strong>Generation Time:</strong>  AI searching for Meal recommendations can take 60-90 seconds
+    to generate. Please be patient.
+```
+
+**Replace with:**
+
+```jsx
+<strong>Generation Time:</strong> AI is reviewing popular dishes and healthier order tips.
+This can take 60–90 seconds. Your results will auto-save here.
+```
+
+---
+
+## 4) Input placeholders (text only)
+
+* **Craving input** (the new one you added):
+
+  ```jsx
+  placeholder="e.g. chicken, salmon, pasta"
+  ```
+* **Restaurant input** (the existing one):
+  **Find:**
+
+  ```jsx
+  placeholder="e.g. Olive Garden, Panda Express, Chipotle"
+  ```
+
+  **Replace with:**
+
+  ```jsx
+  placeholder="e.g. Cheesecake Factory, P.F. Chang’s, Chipotle"
+  ```
+
+(Styling/structure stays the same—only the placeholder strings change.)
+
+---
+
+## 5) Primary button label and loading text
+
+**Find the button that currently says “Get 2 Options” and the pending state “Generating 2 Options...”**
+
+**Replace labels only (keep classes/structure):**
+
+* Idle: `Find Dishes`
+* Pending: `Finding Dishes...`
+
+Example:
+
+```jsx
+{generateMealsMutation.isPending ? (
+  <div className="flex items-center justify-center gap-2">
+    <Sparkles className="h-4 w-4 animate-spin" />
+    Finding Dishes...
+  </div>
+) : (
+  "Find Dishes"
+)}
+```
+
+---
+
+## 6) Empty-state helper text
+
+**Find this block:**
+
+```jsx
+<p className="text-white mb-2">
+  Try typing a restaurant name or cuisine type above
+</p>
+<p className="text-sm text-white">
+  Supported cuisines: Mexican, Italian, American, Mediterranean,
+  Chinese, Indian, Japanese
+</p>
+```
+
+**Replace with:**
+
+```jsx
+<p className="text-white mb-2">
+  Enter a <strong>craving</strong> (e.g., “chicken”) and a <strong>restaurant</strong> (e.g., “Cheesecake Factory”) above.
+</p>
+<p className="text-sm text-white">
+  Tip: You’ll get specific dish ideas plus healthy order tweaks.
+</p>
+```
+
+---
+
+## 7) Info dialog (“?” button) content
+
+**Find the modal content and replace only the strings (keep structure/classes).**
+
+### Replace the “How to Use Restaurant Guide” body with this:
+
+```jsx
+<h2 className="text-xl font-bold text-white mb-4">How to Use Smart Restaurant Guide</h2>
+<div className="space-y-3 text-white/90 text-sm mb-6">
+  <div>
+    <strong className="text-lime-400">What it does:</strong>
+    <p className="mt-1">
+      Tell us what you’re craving and where you’re going. We’ll suggest real menu picks and
+      healthy ways to order them (lighter sauce, swaps, sides) to fit your goals.
+    </p>
+  </div>
+
+  <div>
+    <strong className="text-lime-400">How to use:</strong>
+    <ol className="list-decimal list-inside mt-1 space-y-1">
+      <li>In <em>Craving</em>, type a food (e.g., “chicken,” “salmon,” “pasta”).</li>
+      <li>In <em>Restaurant</em>, type where you’re going (e.g., “P.F. Chang’s”).</li>
+      <li>Tap <em>Find Dishes</em> to get 2–3 smart picks with healthier order tips.</li>
+      <li>Review nutrition estimates, medical badges, and “Ask For” modifications.</li>
+    </ol>
+  </div>
+
+  <div>
+    <strong className="text-lime-400">Examples:</strong>
+    <ul className="list-disc list-inside mt-1 space-y-1">
+      <li><em>Craving:</em> chicken · <em>Restaurant:</em> P.F. Chang’s → “Chang’s Spicy Chicken (light sauce)”</li>
+      <li><em>Craving:</em> salmon · <em>Restaurant:</em> Cheesecake Factory → “SkinnyLicious® Grilled Salmon”</li>
+    </ul>
+  </div>
+
+  <p className="text-lime-400 font-medium mt-4">
+    ⏱️ Generation takes 60–90 seconds. Your results auto-save on this page.
+  </p>
+</div>
+```
+
+*(Keep the same close button and container classes—this is content-only.)*
+
+---
+
+## 8) Section header text (you already renamed the title)
+
+Double-check both strings are updated:
+
+* **Title:** `Smart Restaurant Guide`
+* **Subtitle (CardDescription):** `Pick your craving and restaurant to get AI-powered healthy choices.`
+
+---
+
+## 9) Progress area labels
+
+**Find the “AI Analysis Progress” label above the `<Progress>` bar.**
+You can leave it, or (copy-only) make it align with the new flow:
+
+**Replace with:**
+
+```jsx
+<span className="text-sm text-white/80">Smart Guide Progress</span>
+```
+
+*(Optional; if you prefer zero churn, skip this step.)*
+
+---
+
+### Summary for the agent
+
+* **No layout or class changes.**
+* **Only text nodes/strings** in the Smart Restaurant Guide card and its info modal.
+* Keep the existing progress bar, caching, badges, and loading visuals intact.
+* Button text updated to “Find Dishes” / “Finding Dishes...”.
+* Empty-state and helper copy now instruct users to enter both a craving and a restaurant.
+
+If you want, I can also hand you a **single ready-to-paste diff** against `client/src/pages/restaurant-guide.tsx` with just these text edits.
