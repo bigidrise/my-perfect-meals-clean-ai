@@ -567,8 +567,16 @@ export default function MealIngredientPicker({
       {/* Info Modal - How to Use */}
       {showInfoModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use AI Meal Creator</h3>
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl relative">
+            <button
+              type="button"
+              onClick={handleInfoModalClose}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-bold text-white mb-4 pr-8">How to Use AI Meal Creator</h3>
 
             <div className="space-y-4 text-white/90 text-sm">
               <div>
