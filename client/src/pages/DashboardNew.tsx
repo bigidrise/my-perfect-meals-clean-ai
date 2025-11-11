@@ -5,14 +5,12 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Calculator,
-  ShoppingCart,
   Lightbulb,
   Activity,
   User,
   TrendingUp,
   Flame,
   Grid,
-  Camera,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
@@ -233,9 +231,6 @@ export default function DashboardNew() {
           >
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-700/20 border border-orange-500/30 group-hover:from-orange-500/30 group-hover:to-orange-700/30 transition-all">
-                  <Camera className="h-6 w-6 text-orange-500" />
-                </div>
                 <div className="flex-1">
                   <CardTitle className="text-white text-lg">
                     📸 Log from Photo
