@@ -404,8 +404,7 @@ export default function MacroCounter() {
           </Card>
         </div>
 
-        {/* Inputs - Only show after activity level is selected */}
-        {activity && (
+        {/* Inputs - Always show */}
         <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
           <CardContent className="p-5">
             <h3 className="text-lg font-semibold flex items-center">
@@ -586,7 +585,6 @@ export default function MacroCounter() {
             </div>
           </CardContent>
         </Card>
-        )}
 
         {/* Results - Only show when activity is selected */}
         {results && (
