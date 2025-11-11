@@ -109,6 +109,14 @@ These systems are PERMANENTLY LOCKED and PROTECTED. The user has explicitly dema
 
 ---
 
+## 6. 🔒 MACRO CALCULATOR SYSTEM
+**File: LOCKED_MACRO_CALCULATOR_SYSTEM.md**
+- ✅ Macro Calculator Page (`client/src/pages/MacroCounter.tsx`) - Critical rendering rules enforced ✅
+- ✅ Render Guards: Goal Card, Body Type Card, Details Card MUST always render
+- ✅ Lockdown Doc: `MACRO_CALCULATOR_LOCKDOWN.md`
+
+---
+
 ## ⚠️ ENFORCEMENT RULES
 
 ### ABSOLUTELY FORBIDDEN:
@@ -118,6 +126,7 @@ These systems are PERMANENTLY LOCKED and PROTECTED. The user has explicitly dema
 4. **Modifying blood sugar system** - User threatened consequences
 5. **Breaking meal logging persistence** - Complex system working perfectly
 6. **Changing voice command processing** - Full flow now functional
+7. **Conditionally rendering Macro Calculator cards** - Must always render
 
 ### MODIFICATION POLICY:
 - **NEVER modify locked files without explicit user permission**
@@ -132,6 +141,7 @@ These systems are PERMANENTLY LOCKED and PROTECTED. The user has explicitly dema
 ✅ Meal logging with persistence confirmed
 ✅ Blood sugar input system operational
 ✅ Avatar system with proper timers working
+✅ Macro Calculator rendering confirmed
 
 ---
 
@@ -151,6 +161,9 @@ These systems are PERMANENTLY LOCKED and PROTECTED. The user has explicitly dema
 - Blood glucose input field and validation
 - Meal logging forms and journal views
 - Chef avatar with inactivity timer
+- Macro Calculator Goal Card
+- Macro Calculator Body Type Card
+- Macro Calculator Details Card
 
 ---
 

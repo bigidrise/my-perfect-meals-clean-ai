@@ -322,7 +322,7 @@ export default function MacroCounter() {
           </CardHeader>
         </Card>
 
-        {/* Goal & Body Type */}
+        {/* ⚠️ RENDER GUARD: Goal & Body Type cards MUST ALWAYS render */}
         <div className="grid md:grid-cols-2 gap-4">
           <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
             <CardContent className="p-5">
@@ -404,6 +404,7 @@ export default function MacroCounter() {
           </Card>
         </div>
 
+        {/* ⚠️ RENDER GUARD: This card MUST ALWAYS render - DO NOT wrap in conditionals */}
         {/* Inputs - Always show */}
         <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
           <CardContent className="p-5">
@@ -578,7 +579,7 @@ export default function MacroCounter() {
                     data-testid="button-sync-weight"
                   >
                     <Scale className="h-4 w-4 mr-2" />
-                    Sync Weight to Biometrics
+                    Sync Weight
                   </Button>
                 )}
               </div>
@@ -591,7 +592,7 @@ export default function MacroCounter() {
           <>
             <Card className="bg-zinc-900/80 border border-white/30 text-white">
               <CardContent className="p-5">
-                <h3 className="text-base font-md flex items-center mb-4">
+                <h3 className="text-lg font-semibold flex items-center mb-4">
                   <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
                 </h3>
                 <div className="space-y-3">
@@ -628,9 +629,9 @@ export default function MacroCounter() {
                   });
                   setLocation("/my-biometrics");
                 }}
-                className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-medium px-8 text-base py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200"
+                className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200"
               >
-                <Target className="h-5 w-5 mr-2" /> Set Targets to Biometrics
+                <Target className="h-5 w-5 mr-2" /> Set Macro Targets
               </Button>
             </div>
           </>
