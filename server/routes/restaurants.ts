@@ -8,6 +8,61 @@ import { eq } from "drizzle-orm";
 
 const router = Router();
 
+// NEW: Smart Restaurant Guide endpoint with craving + restaurant
+// TODO: Backend architect will replace this stub with GPT-5 + Google Places integration
+router.post("/guide", async (req, res) => {
+  try {
+    const { restaurantName, craving, cuisine, userId } = req.body;
+    
+    if (!restaurantName || !craving) {
+      return res.status(400).json({ 
+        error: "Restaurant name and craving are required" 
+      });
+    }
+
+    console.log(`🍽️ Smart Restaurant Guide: ${craving} at ${restaurantName} (${cuisine} cuisine)`);
+    
+    // Fetch user data for health-based personalization
+    let user = undefined;
+    if (userId) {
+      try {
+        const [foundUser] = await db.select().from(users).where(eq(users.id, userId));
+        if (foundUser) {
+          user = foundUser;
+          console.log(`👤 User found with health conditions: ${foundUser.healthConditions?.join(', ') || 'none'}`);
+        }
+      } catch (userError) {
+        console.warn(`⚠️ Could not fetch user ${userId}:`, userError);
+      }
+    }
+    
+    // Use AI generator with craving context
+    const recommendations = await generateRestaurantMealsAI({
+      restaurantName: restaurantName,
+      cuisine: cuisine || "International",
+      cravingContext: craving,
+      user
+    });
+
+    console.log(`✅ Generated ${recommendations.length} craving-specific recommendations`);
+
+    return res.json({
+      recommendations,
+      restaurantName,
+      craving,
+      cuisine,
+      generatedAt: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("Smart Restaurant Guide error:", error);
+    return res.status(500).json({ 
+      error: "Failed to generate restaurant recommendations",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+});
+
 // Restaurant meal generation endpoint - uses AI with fallback
 router.post("/analyze-menu", async (req, res) => {
   try {

@@ -47,6 +47,7 @@ const CACHE_KEY = "restaurantGuide.cache.v1";
 type CachedRestaurantState = {
   restaurantData: any;
   restaurant: string;
+  craving?: string;
   cuisine: string;
   generatedAtISO: string;
 };
@@ -182,6 +183,7 @@ const cuisineKeywords: Record<string, string> = {
 
 export default function RestaurantGuidePage() {
   const [, setLocation] = useLocation();
+  const [cravingInput, setCravingInput] = useState("");
   const [restaurantInput, setRestaurantInput] = useState("");
   const [matchedCuisine, setMatchedCuisine] = useState<string | null>(null);
   const [generatedMeals, setGeneratedMeals] = useState<any[]>([]);
@@ -198,6 +200,7 @@ export default function RestaurantGuidePage() {
     if (cached?.restaurantData?.meals?.length) {
       setGeneratedMeals(cached.restaurantData.meals);
       setRestaurantInput(cached.restaurant || "");
+      setCravingInput(cached.craving || "");
       setMatchedCuisine(cached.cuisine || null);
       toast({
         title: "🔄 Restaurant Guide Restored",
@@ -212,11 +215,12 @@ export default function RestaurantGuidePage() {
       saveRestaurantCache({
         restaurantData: { meals: generatedMeals },
         restaurant: restaurantInput,
+        craving: cravingInput,
         cuisine: matchedCuisine || "",
         generatedAtISO: new Date().toISOString(),
       });
     }
-  }, [generatedMeals, restaurantInput, matchedCuisine]);
+  }, [generatedMeals, restaurantInput, cravingInput, matchedCuisine]);
 
   const startProgressTicker = () => {
     if (tickerRef.current) return;
@@ -242,12 +246,13 @@ export default function RestaurantGuidePage() {
 
   // Restaurant meal generation mutation
   const generateMealsMutation = useMutation({
-    mutationFn: async (params: { restaurantName: string; cuisine: string }) => {
-      return apiRequest("/api/restaurants/analyze-menu", {
+    mutationFn: async (params: { restaurantName: string; craving: string; cuisine: string }) => {
+      return apiRequest("/api/restaurants/guide", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           restaurantName: params.restaurantName,
+          craving: params.craving,
           cuisine: params.cuisine,
           userId: localStorage.getItem("userId") || "1",
         }),
@@ -287,10 +292,10 @@ export default function RestaurantGuidePage() {
   });
 
   const handleSearch = () => {
-    if (!restaurantInput.trim()) {
+    if (!cravingInput.trim() || !restaurantInput.trim()) {
       toast({
-        title: "Please enter a restaurant name",
-        description: "Type a restaurant or cuisine to get started.",
+        title: "Missing Information",
+        description: "Please enter both a food craving and a restaurant name.",
         variant: "destructive",
       });
       return;
@@ -310,18 +315,12 @@ export default function RestaurantGuidePage() {
 
     setMatchedCuisine(match || null);
 
-    // Generate meals if cuisine is matched
-    if (match) {
-      generateMealsMutation.mutate({
-        restaurantName: restaurantInput,
-        cuisine: match,
-      });
-    } else {
-      generateMealsMutation.mutate({
-        restaurantName: restaurantInput,
-        cuisine: "American",
-      });
-    }
+    // Generate meals with both craving and restaurant
+    generateMealsMutation.mutate({
+      restaurantName: restaurantInput,
+      craving: cravingInput,
+      cuisine: match || "American",
+    });
   };
 
   const handleGoBack = () => {
@@ -406,10 +405,10 @@ export default function RestaurantGuidePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-white">
               <Sparkles className="h-5 w-5" />
-              Restaurant Meal Generator
+              Smart Restaurant Guide
             </CardTitle>
             <CardDescription className="text-white/80">
-              Find your restaurant by food type or restaurant name
+              Pick your craving and restaurant to get AI-powered healthy choices.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
@@ -427,6 +426,24 @@ export default function RestaurantGuidePage() {
             </div>
 
             <div className="space-y-3 mb-6">
+              <div className="relative">
+                <Input
+                  placeholder="e.g. chicken, pasta, salmon"
+                  value={cravingInput}
+                  onChange={(e) => setCravingInput(e.target.value)}
+                  className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                />
+                {cravingInput && (
+                  <button
+                    onClick={() => setCravingInput("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
               <div className="relative">
                 <Input
                   placeholder="e.g. Olive Garden, Panda Express, Chipotle"
