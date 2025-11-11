@@ -35,11 +35,15 @@ export async function addBulkMacros(entries: MacroEntry[]): Promise<{ success: b
 
 export async function logMacrosToBiometrics(macros: MacroEntry): Promise<{ success: boolean; message?: string }> {
   try {
-    const response = await fetch('/api/biometrics/log', {
+    // Use window.location.origin to ensure absolute URL works on Railway
+    const apiUrl = `${window.location.origin}/api/biometrics/log`;
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Important for Railway authentication
       body: JSON.stringify({
         date_iso: macros.date || new Date().toISOString(),
         meal_type: macros.mealType || 'lunch',
