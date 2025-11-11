@@ -566,14 +566,7 @@ export default function MealIngredientPicker({
 
       {/* Info Modal - How to Use */}
       {showInfoModal && (
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              handleInfoModalClose();
-            }
-          }}
-        >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
             <h3 className="text-xl font-bold text-white mb-4">How to Use AI Meal Creator</h3>
 
@@ -609,12 +602,8 @@ export default function MealIngredientPicker({
 
             <button
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleInfoModalClose();
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors cursor-pointer"
             >
               Got it!
             </button>
