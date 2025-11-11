@@ -37,6 +37,7 @@ export default function FixedMenuPicker({
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<FixedMeal[]>([]);
   const [error, setError] = useState<string | undefined>();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   if (!open) return null;
 
@@ -103,13 +104,22 @@ export default function FixedMenuPicker({
           <div className="font-semibold text-gray-900 dark:text-white">
             Fixed Menu — Choose 2–6 Meals
           </div>
-          <button 
-            onClick={onClose} 
-            aria-label="Close"
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use Fixed Menu Picker"
+            >
+              ?
+            </button>
+            <button 
+              onClick={onClose} 
+              aria-label="Close"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
         
         <div className="p-4 space-y-4 overflow-y-auto">
@@ -181,6 +191,40 @@ export default function FixedMenuPicker({
           </div>
         </div>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Fixed Menu Picker</h3>
+
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Create a rotating menu of 2-6 meals that will cycle throughout your week.</p>
+
+              <ul className="space-y-2 text-white/80 text-sm">
+                <li><strong className="text-white">Add meals:</strong> Click "Add Meal" to generate meals using AI</li>
+                <li><strong className="text-white">Minimum 2, Maximum 6:</strong> Pick between 2-6 meals for variety</li>
+                <li><strong className="text-white">Remove meals:</strong> Use the trash icon on any meal to remove it</li>
+                <li><strong className="text-white">Automatic rotation:</strong> Your meals will cycle across all days in your plan</li>
+              </ul>
+
+              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                <p className="font-semibold text-white mb-1">💡 Tip:</p>
+                <p className="text-white/70">
+                  Fixed menus are perfect for meal prep! Choose your favorite meals and we'll rotate them for you.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              got it!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

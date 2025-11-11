@@ -38,6 +38,7 @@ export function MealPickerDrawer({
 }){
   const [loading, setLoading] = React.useState<"cafeteria"|null>(null);
   const [templates, setTemplates] = React.useState<Meal[]>([]);
+  const [showInfoModal, setShowInfoModal] = React.useState(false);
   const profile = useOnboardingProfile();
 
   // Cafeteria generation with safe fallback and deep clone
@@ -83,7 +84,16 @@ export function MealPickerDrawer({
       <DrawerContent className="bg-zinc-900/95 border-zinc-800 text-white max-h-[75vh] sm:max-h-[90vh] rounded-t-2xl overflow-hidden flex flex-col">
         {/* Sticky header with iOS safe-area padding */}
         <div className="sticky top-0 z-10 backdrop-blur bg-zinc-900/90 border-b border-zinc-800 pt-2 sm:pt-[calc(env(safe-area-inset-top,0px)+12px)] px-3 sm:px-4 pb-2 sm:pb-3">
-          <DrawerTitle className="text-sm sm:text-base font-semibold">Add to {list}</DrawerTitle>
+          <div className="flex items-center justify-between">
+            <DrawerTitle className="text-sm sm:text-base font-semibold">Add to {list}</DrawerTitle>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use Meal Picker"
+            >
+              ?
+            </button>
+          </div>
 
           <div className="mt-1.5 sm:mt-3 flex flex-col sm:flex-row gap-1.5 sm:gap-2">
             <div className="flex gap-1.5 sm:gap-2">
@@ -138,5 +148,39 @@ export function MealPickerDrawer({
         </div>
       </DrawerContent>
     </Drawer>
+
+    {/* Info Modal */}
+    {showInfoModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+          <h3 className="text-xl font-bold text-white mb-4">How to Use Meal Picker</h3>
+
+          <div className="space-y-4 text-white/90 text-sm">
+            <p>Quick and easy way to add pre-made meals to your plan.</p>
+
+            <ul className="space-y-2 text-white/80 text-sm">
+              <li><strong className="text-white">Browse meals:</strong> Scroll through our curated meal templates</li>
+              <li><strong className="text-white">Cafeteria option:</strong> Click "Cafeteria" for a quick random meal suggestion</li>
+              <li><strong className="text-white">Click to add:</strong> Tap any meal card to add it instantly to your {list} slot</li>
+              <li><strong className="text-white">Personalized:</strong> Meals are filtered based on your allergies and preferences</li>
+            </ul>
+
+            <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+              <p className="font-semibold text-white mb-1">💡 Tip:</p>
+              <p className="text-white/70">
+                Use the Cafeteria button when you want a quick healthy suggestion without browsing!
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowInfoModal(false)}
+            className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+          >
+            got it!
+          </button>
+        </div>
+      </div>
+    )}
   );
 }

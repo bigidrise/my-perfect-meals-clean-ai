@@ -38,6 +38,7 @@ export default function CravingPicker({
   const [loading, setLoading] = useState(false);
   const [meal, setMeal] = useState<PickerMeal | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => { 
     if (open) { 
@@ -105,13 +106,22 @@ export default function CravingPicker({
           <div className="font-semibold text-gray-900 dark:text-white">
             Craving Picker — {slotLabel}
           </div>
-          <button 
-            onClick={onClose} 
-            aria-label="Close"
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-          >
-            <X className="w-5 h-5"/>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use Craving Picker"
+            >
+              ?
+            </button>
+            <button 
+              onClick={onClose} 
+              aria-label="Close"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <X className="w-5 h-5"/>
+            </button>
+          </div>
         </div>
 
         <div className="p-4 space-y-4 overflow-y-auto">
@@ -161,6 +171,40 @@ export default function CravingPicker({
           )}
         </div>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Craving Picker</h3>
+
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Generate AI-powered meals instantly for any meal slot in your plan.</p>
+
+              <ul className="space-y-2 text-white/80 text-sm">
+                <li><strong className="text-white">Generate meal:</strong> Click "Generate" to create a custom {slotLabel} option</li>
+                <li><strong className="text-white">Review details:</strong> Check ingredients, macros, and instructions</li>
+                <li><strong className="text-white">Try different:</strong> Not satisfied? Click "Different Option" for a new suggestion</li>
+                <li><strong className="text-white">Add to plan:</strong> Click "Use This Meal" when you find one you like</li>
+              </ul>
+
+              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                <p className="font-semibold text-white mb-1">💡 Tip:</p>
+                <p className="text-white/70">
+                  Each meal is personalized based on your dietary preferences and restrictions!
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              got it!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
