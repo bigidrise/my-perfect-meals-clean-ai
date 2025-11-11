@@ -570,15 +570,7 @@ export default function MealIngredientPicker({
           <DialogDescription className="sr-only">
             Instructions for using the AI Meal Creator feature
           </DialogDescription>
-          <button
-            type="button"
-            onClick={handleInfoModalClose}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors z-10"
-            aria-label="Close"
-          >
-            ✕
-          </button>
-          <h3 className="text-xl font-bold text-white mb-4 pr-8">How to Use AI Meal Creator</h3>
+          <h3 className="text-xl font-bold text-white mb-4">How to Use AI Meal Creator</h3>
 
           <div className="space-y-4 text-white/90 text-sm">
             <div>
