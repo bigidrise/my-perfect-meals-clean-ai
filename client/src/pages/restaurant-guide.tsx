@@ -437,41 +437,53 @@ export default function RestaurantGuidePage() {
             </div>
 
             <div className="space-y-3 mb-6">
-              <div className="relative">
-                <Input
-                  placeholder="e.g. chicken, salmon, pasta"
-                  value={cravingInput}
-                  onChange={(e) => setCravingInput(e.target.value)}
-                  className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                />
-                {cravingInput && (
-                  <button
-                    onClick={() => setCravingInput("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
-                    type="button"
-                  >
-                    ✕
-                  </button>
-                )}
+              <div>
+                <label htmlFor="craving-input" className="block text-sm font-semibold text-white mb-2">
+                  What dish are you craving?
+                </label>
+                <div className="relative">
+                  <Input
+                    id="craving-input"
+                    placeholder="e.g. chicken, salmon, pasta"
+                    value={cravingInput}
+                    onChange={(e) => setCravingInput(e.target.value)}
+                    className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
+                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  />
+                  {cravingInput && (
+                    <button
+                      onClick={() => setCravingInput("")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
+                      type="button"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="relative">
-                <Input
-                  placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
-                  value={restaurantInput}
-                  onChange={(e) => setRestaurantInput(e.target.value)}
-                  className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                />
-                {restaurantInput && (
-                  <button
-                    onClick={() => setRestaurantInput("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
-                    type="button"
-                  >
-                    ✕
-                  </button>
-                )}
+              <div>
+                <label htmlFor="restaurant-input" className="block text-sm font-semibold text-white mb-2">
+                  Where are you eating?
+                </label>
+                <div className="relative">
+                  <Input
+                    id="restaurant-input"
+                    placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
+                    value={restaurantInput}
+                    onChange={(e) => setRestaurantInput(e.target.value)}
+                    className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
+                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  />
+                  {restaurantInput && (
+                    <button
+                      onClick={() => setRestaurantInput("")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
+                      type="button"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
               <Button
                 onClick={handleSearch}
