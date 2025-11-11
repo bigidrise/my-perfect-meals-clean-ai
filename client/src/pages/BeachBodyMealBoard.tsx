@@ -48,7 +48,7 @@ import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MacroFixCoach, { MacroKind } from "@/components/MacroFixCoach";
-import { QuickAddMacrosModal } from "@/components/modals/QuickAddMacrosModal";
+import QuickAddMacrosModal from "@/components/modals/QuickAddMacrosModal";
 import { computeTargetsFromOnboarding } from "@/lib/targets";
 import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
