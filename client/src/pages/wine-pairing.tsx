@@ -359,29 +359,32 @@ export default function WinePairingPage() {
 
       {/* Info Modal */}
       {showInfoModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
-          <Card className="max-w-lg w-full bg-black/90 border border-purple-400/70 shadow-[0_0_30px_rgba(168,85,247,0.3)]" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-white">How to Use Wine Pairing</h2>
-                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-purple-400">✕</Button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Wine Pairing</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Get expert sommelier recommendations for the perfect wine to complement your meal.</p>
+              <div>
+                <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
+                <ol className="list-decimal list-inside space-y-2 ml-2">
+                  <li>Select your meal type (appetizer, main course, dessert, etc.)</li>
+                  <li>Optionally add cuisine style and main ingredient</li>
+                  <li>Choose your occasion and price range</li>
+                  <li>Click "Get Wine Pairing" for personalized recommendations</li>
+                  <li>View detailed wine info including serving temperature and alternatives</li>
+                </ol>
               </div>
-              <div className="space-y-4 text-white/90">
-                <p>Get expert sommelier recommendations for the perfect wine to complement your meal.</p>
-                <div>
-                  <h3 className="font-semibold text-purple-400 mb-2">How It Works:</h3>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Select your meal type (appetizer, main course, dessert, etc.)</li>
-                    <li>Optionally add cuisine style and main ingredient</li>
-                    <li>Choose your occasion and price range</li>
-                    <li>Click "Get Wine Pairing" for personalized recommendations</li>
-                    <li>View detailed wine info including serving temperature and alternatives</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-purple-300">💡 Tip: Include your preferences in the additional notes for more tailored suggestions!</p>
-              </div>
-            </CardContent>
-          </Card>
+              <p className="text-sm text-lime-300">💡 Tip: Include your preferences in the additional notes for more tailored suggestions!</p>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
         </div>
       )}
 

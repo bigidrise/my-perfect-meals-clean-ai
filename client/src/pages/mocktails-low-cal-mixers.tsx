@@ -200,28 +200,31 @@ export default function MocktailsLowCalMixersPage() {
 
         {/* Info Modal */}
         {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
-            <Card className="max-w-lg w-full bg-black/90 border border-emerald-400/70 shadow-[0_0_30px_rgba(16,185,129,0.3)]" onClick={(e) => e.stopPropagation()}>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-2xl font-bold text-white">How to Use Mocktails</h2>
-                  <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-emerald-400">✕</Button>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">How to Use Mocktails</h3>
+              
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>Discover delicious alcohol-free drinks that are perfect for any occasion while keeping your nutrition on track.</p>
+                <div>
+                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
+                  <ol className="list-decimal list-inside space-y-2 ml-2">
+                    <li>Browse mocktails with full nutritional information</li>
+                    <li>Tap any card to view complete recipe and instructions</li>
+                    <li>Check the benefits section for health highlights</li>
+                    <li>Add ingredients to shopping list for easy preparation</li>
+                  </ol>
                 </div>
-                <div className="space-y-4 text-white/90">
-                  <p>Discover delicious alcohol-free drinks that are perfect for any occasion while keeping your nutrition on track.</p>
-                  <div>
-                    <h3 className="font-semibold text-emerald-400 mb-2">How It Works:</h3>
-                    <ol className="list-decimal list-inside space-y-2 ml-2">
-                      <li>Browse mocktails with full nutritional information</li>
-                      <li>Tap any card to view complete recipe and instructions</li>
-                      <li>Check the benefits section for health highlights</li>
-                      <li>Add ingredients to shopping list for easy preparation</li>
-                    </ol>
-                  </div>
-                  <p className="text-sm text-emerald-300">💡 Tip: These mocktails use natural ingredients and minimal added sugars for guilt-free enjoyment!</p>
-                </div>
-              </CardContent>
-            </Card>
+                <p className="text-sm text-lime-300">💡 Tip: These mocktails use natural ingredients and minimal added sugars for guilt-free enjoyment!</p>
+              </div>
+
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
           </div>
         )}
       </div>

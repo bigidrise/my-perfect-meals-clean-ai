@@ -688,11 +688,11 @@ export default function RestaurantGuidePage() {
             <h2 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h2>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <div>
-                <strong className="text-orange-400">Find Meals Near Me:</strong>
+                <strong className="text-lime-400">Find Meals Near Me:</strong>
                 <p className="mt-1">Search for healthy meals at nearby restaurants by entering what you're craving and your ZIP code.</p>
               </div>
               <div>
-                <strong className="text-orange-400">Restaurant Meal Generator:</strong>
+                <strong className="text-lime-400">Restaurant Meal Generator:</strong>
                 <ol className="list-decimal list-inside mt-1 space-y-1">
                   <li>Type a restaurant name or cuisine type</li>
                   <li>Click "Get 2 Options" to generate AI-powered meal recommendations</li>
@@ -706,9 +706,9 @@ export default function RestaurantGuidePage() {
             </div>
             <button
               onClick={() => setShowInfoModal(false)}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
             >
-              Got It!
+              Got it!
             </button>
           </div>
         </div>

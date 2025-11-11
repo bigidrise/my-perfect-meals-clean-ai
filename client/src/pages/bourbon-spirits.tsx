@@ -393,29 +393,32 @@ export default function BourbonSpiritsPage() {
 
       {/* Info Modal */}
       {showInfoModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
-          <Card className="max-w-lg w-full bg-black/90 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.3)]" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-white">How to Use Bourbon & Spirits</h2>
-                <Button variant="ghost" size="sm" onClick={() => setShowInfoModal(false)} className="text-white hover:text-amber-400">✕</Button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Bourbon & Spirits</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Get master distiller recommendations for premium bourbon and spirits perfectly paired with your meals or occasions.</p>
+              <div>
+                <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
+                <ol className="list-decimal list-inside space-y-2 ml-2">
+                  <li>Select your meal type (main course, dessert, cigar pairing, etc.)</li>
+                  <li>Add cuisine style and main ingredient details</li>
+                  <li>Choose your occasion and price range</li>
+                  <li>Add preferences for proof, age, or flavor profile</li>
+                  <li>Click "Get Spirit Pairing" for expert recommendations</li>
+                </ol>
               </div>
-              <div className="space-y-4 text-white/90">
-                <p>Get master distiller recommendations for premium bourbon and spirits perfectly paired with your meals or occasions.</p>
-                <div>
-                  <h3 className="font-semibold text-amber-400 mb-2">How It Works:</h3>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Select your meal type (main course, dessert, cigar pairing, etc.)</li>
-                    <li>Add cuisine style and main ingredient details</li>
-                    <li>Choose your occasion and price range</li>
-                    <li>Add preferences for proof, age, or flavor profile</li>
-                    <li>Click "Get Spirit Pairing" for expert recommendations</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-amber-300">💡 Tip: Our recommendations include serving suggestions and glassware for the authentic experience!</p>
-              </div>
-            </CardContent>
-          </Card>
+              <p className="text-sm text-lime-300">💡 Tip: Our recommendations include serving suggestions and glassware for the authentic experience!</p>
+            </div>
+
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
         </div>
       )}
 
