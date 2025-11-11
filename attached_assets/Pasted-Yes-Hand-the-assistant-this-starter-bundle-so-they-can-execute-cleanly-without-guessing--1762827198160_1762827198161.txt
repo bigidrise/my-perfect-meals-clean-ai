@@ -1,0 +1,205 @@
+Yes. Hand the assistant this **starter bundle** so they can execute cleanly without guessing:
+
+---
+
+## 1) Exact filenames & route to use
+
+* **Duplicate from:** `client/src/pages/pro/AthleteBoard.tsx`
+* **New file:** `client/src/pages/BeachBodyMealBoard.tsx`
+* **New route:** `/beach-body-meal-board`
+
+**Router.tsx – add**
+
+```tsx
+import BeachBodyMealBoard from "@/pages/BeachBodyMealBoard";
+// ...
+<Route path="/beach-body-meal-board" component={BeachBodyMealBoard} />
+```
+
+**Planner.tsx – point the “Meal Board” button (the non-ProCare one)**
+
+```tsx
+// onClick / setLocation target:
+setLocation("/beach-body-meal-board");
+```
+
+---
+
+## 2) What to remove in the new board (only)
+
+In `BeachBodyMealBoard.tsx`, **delete the top macro/targets header block** that exists for the pro board. Typical markers to search:
+
+* Container with text like **“Targets”**, **“Set Macros”**, **“Coach/Trainer”**, or a top summary grid of macros.
+* Any controls that let a user set grams/targets at the top.
+
+Leave **all meal cards, AI buttons, snack modal, shopping logic, day/week toggle** intact.
+
+---
+
+## 3) Bottom “Macro Fix Coach” component hookup
+
+**Create:** `client/src/components/MacroFixCoach.tsx` (if not already created)
+
+```tsx
+import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Dumbbell, Leaf, Wheat } from "lucide-react";
+
+export type MacroKind = "protein" | "fibrous" | "starchy";
+
+export default function MacroFixCoach({
+  totals,
+  targets,
+  onFix,
+  onHelp,
+}: {
+  totals: { protein:number; carbs:number; fat:number; calories:number; fibrous?:number; starchy?:number };
+  targets: { protein:number; fibrous:number; starchy:number };
+  onFix: (kind: MacroKind) => void;
+  onHelp: () => void;
+}) {
+  const deficit = useMemo(() => ({
+    protein: Math.max((targets?.protein ?? 0) - (totals?.protein ?? 0), 0),
+    starchy: Math.max((targets?.starchy ?? 0) - (totals?.starchy ?? 0), 0),
+    fibrous: Math.max((targets?.fibrous ?? 0) - (totals?.fibrous ?? 0), 0),
+  }), [totals, targets]);
+
+  const show = deficit.protein > 0 || deficit.starchy > 0 || deficit.fibrous > 0;
+  if (!show) return null;
+
+  return (
+    <div className="mt-8 border border-lime-500/30 bg-black/40 backdrop-blur p-5 rounded-2xl">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-white text-lg font-semibold">Macro Fix Coach</h3>
+        <button
+          aria-label="Help"
+          className="w-7 h-7 rounded-lg border border-white/20 text-white/90 hover:bg-white/10"
+          onClick={onHelp}
+        >?</button>
+      </div>
+
+      {deficit.protein > 0 && (
+        <p className="text-lime-300 text-sm mb-1">You’re short <b>{deficit.protein} g</b> of protein.</p>
+      )}
+      {deficit.starchy > 0 && (
+        <p className="text-lime-300 text-sm mb-1">You’re short <b>{deficit.starchy} g</b> of starchy carbs.</p>
+      )}
+      {deficit.fibrous > 0 && (
+        <p className="text-lime-300 text-sm mb-1">You’re short <b>{deficit.fibrous} g</b> of fibrous carbs.</p>
+      )}
+
+      <div className="flex flex-wrap gap-2 mt-3">
+        {deficit.protein > 0 && (
+          <Button variant="outline" onClick={() => onFix("protein")} className="flex items-center gap-2">
+            <Dumbbell className="h-4 w-4" /> Add Protein
+          </Button>
+        )}
+        {deficit.fibrous > 0 && (
+          <Button variant="outline" onClick={() => onFix("fibrous")} className="flex items-center gap-2">
+            <Leaf className="h-4 w-4" /> Add Fibrous Carb
+          </Button>
+        )}
+        {deficit.starchy > 0 && (
+          <Button variant="outline" onClick={() => onFix("starchy")} className="flex items-center gap-2">
+            <Wheat className="h-4 w-4" /> Add Starchy Carb
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+**In `BeachBodyMealBoard.tsx`** (bottom, under “Daily Totals”), wire it up:
+
+```tsx
+import MacroFixCoach, { MacroKind } from "@/components/MacroFixCoach";
+import { QuickAddMacrosModal } from "@/components/modals/QuickAddMacrosModal"; // already exists in repo
+
+// state
+const [fixOpen, setFixOpen] = useState(false);
+const [fixKind, setFixKind] = useState<MacroKind>("protein");
+
+// help text (exact copy so nobody “freestyles”)
+const HELP_TEXT = "Focus on protein and carbs here. Calories and fats aren’t the priority on this board. Fix any shortages below. You can add items to breakfast, lunch, or dinner — or use quick add.";
+
+function openMacroFix(kind: MacroKind) {
+  setFixKind(kind);
+  setFixOpen(true);
+}
+
+<MacroFixCoach
+  totals={totals /* your existing calculated totals */}
+  targets={{
+    protein: targets.protein,                 // existing computeTargetsFromOnboarding output
+    starchy: targets.starchy ?? 0,            // ensure keys exist
+    fibrous: targets.fibrous ?? 0,
+  }}
+  onFix={openMacroFix}
+  onHelp={() => alert(HELP_TEXT)}
+/>
+
+{/* Reuse the exact Biometrics quick-add modal so amounts auto-calc (e.g., “50g from chicken”) */}
+<QuickAddMacrosModal
+  open={fixOpen}
+  onOpenChange={setFixOpen}
+  defaultKind={fixKind}              // "protein" | "fibrous" | "starchy"
+  source="beach-body-board"          // helps analytics/debug
+  onSaved={() => {
+    // refresh totals/macros so the coach re-evaluates
+    window.dispatchEvent(new Event("macros:updated"));
+  }}
+/>
+```
+
+> If `QuickAddMacrosModal` expects slightly different prop names, keep the intent: **use the same Biometrics modal** instead of duplicating math. Bind the kind (“protein/fibrous/starchy”), and trigger your existing refresh event afterward.
+
+---
+
+## 4) Make sure totals & targets are available
+
+You already compute both in your boards. If not, import what you use today:
+
+```tsx
+import { computeTargetsFromOnboarding } from "@/lib/targets";
+import { useTodayMacros } from "@/hooks/useTodayMacros";
+
+const profile = useOnboardingProfile?.();               // if available
+const targets = computeTargetsFromOnboarding(profile);  // has protein/fibrous/starchy
+const macroData = useTodayMacros();
+const totals = {
+  calories: macroData.kcal || 0,
+  protein: macroData.protein || 0,
+  carbs: macroData.carbs || 0,
+  fat: macroData.fat || 0,
+  fibrous: macroData.fibrous || 0,   // if tracked separately
+  starchy: macroData.starchy || 0,   // if tracked separately
+};
+```
+
+If you don’t have `fibrous/starchy` separated in `useTodayMacros`, compute them from your meal items at render-time (you already do similar in the Weekly board totals).
+
+---
+
+## 5) Hard “don’t touch” constraints (repeat to the assistant)
+
+* **Do not** alter colors, gradients, icons, shadows, sizes.
+* **Do not** modify the original Athlete board or ProCare routes.
+* **Do not** write new macro math. **Reuse** the Biometrics quick-add logic/modal.
+* Commit after each step.
+
+---
+
+## 6) Minimum QA checks
+
+* Planner → **/beach-body-meal-board** opens the new board.
+* ProCare → Athlete board unchanged.
+* No macro header at the top on the new board.
+* After picking meals, **Macro Fix Coach** shows only if short on protein/carb (fibrous/starchy).
+* “?” shows the **exact** help text above.
+* “Add Protein/Fibrous/Starchy” opens the **existing** quick-add modal; choosing “50g from chicken” auto-calculates amounts (no manual math).
+* Totals update; the coach hides once targets are met.
+
+---
+
+That’s everything they need to start and finish this without touching your original board or your brand styling.
