@@ -204,6 +204,14 @@ router.post('/log', async (req, res) => {
 
     console.log("📝 POST /api/biometrics/log", { userId, body: req.body });
 
+    // Validate required fields
+    if (!calories_kcal && !protein_g && !carbs_g && !fat_g) {
+      return res.status(400).json({ 
+        error: 'At least one macro value is required',
+        detail: 'Please provide calories, protein, carbs, or fat'
+      });
+    }
+
     // Import and use the existing food logs system
     const { foodLogs } = await import('../../shared/schema');
 
@@ -234,10 +242,12 @@ router.post('/log', async (req, res) => {
     });
 
   } catch (error: any) {
-    console.error('Biometrics log error:', error);
-    res.status(400).json({ 
-      error: 'Invalid biometrics log payload', 
-      detail: error?.message 
+    console.error('❌ Biometrics log error:', error);
+    console.error('Error stack:', error?.stack);
+    res.status(500).json({ 
+      error: 'Failed to log macros', 
+      detail: error?.message || 'Unknown error',
+      timestamp: new Date().toISOString()
     });
   }
 });

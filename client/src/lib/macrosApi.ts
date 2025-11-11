@@ -50,7 +50,18 @@ export async function logMacrosToBiometrics(macros: MacroEntry): Promise<{ succe
     const data = await response.json();
     return { success: true, ...data };
   } catch (error) {
-    console.error('Error logging macros to biometrics:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+    console.error('❌ Error logging macros to biometrics:', error);
+    
+    // Log the full error details for debugging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+    
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Failed to send macros to biometrics. Please try again.',
+      timestamp: new Date().toISOString()
+    };
   }
 }

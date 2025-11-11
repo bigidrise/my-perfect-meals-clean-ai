@@ -4,20 +4,27 @@
  */
 
 export function resolveApiBase(): string {
-  // Priority 1: Explicit environment variable
-  const envBase = import.meta.env.VITE_API_BASE;
-  if (envBase) {
-    return envBase.replace(/\/+$/, ""); // Remove trailing slashes
+  // Production Railway deployment
+  if (window.location.hostname.includes('railway.app')) {
+    console.log('🚂 Railway deployment detected, using origin:', window.location.origin);
+    return window.location.origin;
   }
 
-  // Priority 2: Global window.__API_BASE__ (if set by build)
-  const windowBase = (window as any).__API_BASE__;
-  if (windowBase) {
-    return windowBase.replace(/\/+$/, "");
+  // Local development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('💻 Local development detected');
+    return 'http://localhost:5000';
   }
 
-  // Priority 3: Same-origin (default for reverse proxy setups)
-  return "";
+  // Replit deployment
+  if (window.location.hostname.includes('replit.dev') || window.location.hostname.includes('repl.co')) {
+    console.log('🔧 Replit deployment detected, using origin:', window.location.origin);
+    return window.location.origin;
+  }
+
+  // Fallback to current origin
+  console.log('🌐 Using default origin:', window.location.origin);
+  return window.location.origin;
 }
 
 /**
