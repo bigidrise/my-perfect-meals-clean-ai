@@ -57,18 +57,21 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
       "barcode-scanner",
       {
         fps: 10,
-        qrbox: { width: 280, height: 120 },
+        qrbox: { width: 250, height: 150 },
         formatsToSupport: [
-          Html5QrcodeSupportedFormats.EAN_13,
-          Html5QrcodeSupportedFormats.EAN_8,
-          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_A,      // Most common US
+          Html5QrcodeSupportedFormats.EAN_13,     // International
+          Html5QrcodeSupportedFormats.EAN_8,      // Small packages
+          Html5QrcodeSupportedFormats.CODE_128,   // Store items
           Html5QrcodeSupportedFormats.UPC_E,
-          Html5QrcodeSupportedFormats.CODE_128,
-          Html5QrcodeSupportedFormats.CODE_39,
-          Html5QrcodeSupportedFormats.QR_CODE
+          Html5QrcodeSupportedFormats.CODE_39
         ],
-        rememberLastUsedCamera: true,
+        rememberLastUsedCamera: false, // Always use rear camera
         showTorchButtonIfSupported: true,
+        aspectRatio: 1.7777778, // 16:9 for better barcode scanning
+        videoConstraints: {
+          facingMode: "environment" // Force rear camera
+        }
       },
       false // verbose logging
     );
@@ -253,16 +256,22 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
             </div>
           )}
 
+          {/* Scanning Tips */}
+          {scanning && (
+            <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+              <div className="text-sm text-blue-200 space-y-2">
+                <div className="font-semibold mb-2">📱 Scanning Tips:</div>
+                <div>• Hold phone 4-6 inches from barcode</div>
+                <div>• Make sure barcode is well-lit</div>
+                <div>• Keep phone steady</div>
+                <div>• Line up barcode in the box</div>
+              </div>
+            </div>
+          )}
+
           {/* Supported Formats */}
           <div className="text-center text-xs text-gray-400">
-            <div className="mb-2">Supported formats:</div>
-            <div className="flex flex-wrap justify-center gap-1">
-              {['UPC-A', 'UPC-E', 'EAN-13', 'EAN-8', 'Code 128', 'Code 39', 'QR Code'].map(format => (
-                <Badge key={format} variant="outline" className="text-gray-400 border-gray-600">
-                  {format}
-                </Badge>
-              ))}
-            </div>
+            <div className="mb-2">Works with grocery barcodes (UPC, EAN)</div>
           </div>
         </CardContent>
       </Card>
