@@ -80,6 +80,7 @@ export function MealPickerDrawer({
   if (!open || !list) return null;
 
   return (
+    <>
     <Drawer open={open} onOpenChange={(v)=>!v && onClose()}>
       <DrawerContent className="bg-zinc-900/95 border-zinc-800 text-white max-h-[75vh] sm:max-h-[90vh] rounded-t-2xl overflow-hidden flex flex-col">
         {/* Sticky header with iOS safe-area padding */}
@@ -182,5 +183,6 @@ export function MealPickerDrawer({
         </div>
       </div>
     )}
+    </>
   );
 }
