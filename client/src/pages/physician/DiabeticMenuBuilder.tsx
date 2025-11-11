@@ -1488,29 +1488,34 @@ export default function DiabeticMenuBuilder() {
       })()}
 
       {/* Info Modal - How to Use */}
-      <Dialog open={showInfoModal} onOpenChange={(open) => {
-        if (!open) {
-          handleInfoModalClose();
-        } else {
-          setShowInfoModal(true);
-        }
-      }}>
-        <DialogContent className="bg-zinc-900/95 border-white/20 text-white max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-white text-lg">How to Use Diabetic Menu Builder</DialogTitle>
-          </DialogHeader>
-          <div className="text-white/80 text-sm space-y-2">
-            <p>Create your day or week by starting with breakfast.</p>
-            <p className="text-xs text-white/60">
-              Click the "Create with AI" button on each meal section to build your plan. 
-              You can create one day and duplicate it across the week, or create each day individually.
-            </p>
-            <p className="text-xs text-white/60 mt-3">
-              If you change your mind about a meal, just hit the <span className="font-semibold text-white/80">trash can</span> to delete it and create a new one.
-            </p>
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Diabetic Menu Builder</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Create your day or week by starting with breakfast.</p>
+              <p className="text-white/80">
+                Click the "Create with AI" button on each meal section to build your plan. 
+                You can create one day and duplicate it across the week, or create each day individually.
+              </p>
+              <p className="text-white/80">
+                If you change your mind about a meal, just hit the <span className="font-semibold text-white">trash can</span> to delete it and create a new one.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowInfoModal(false);
+                handleInfoModalClose();
+              }}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
 
       {/* Daily Totals Info Modal - Next Steps After First Meal */}
       <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {

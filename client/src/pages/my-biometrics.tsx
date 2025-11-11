@@ -410,6 +410,7 @@ export default function MyBiometrics() {
   // Paste support (works with labels or just numbers: "30 40 10 370")
   const [openPaste, setOpenPaste] = useState(false);
   const [pasteText, setPasteText] = useState("");
+  const [showPersistentInfoModal, setShowPersistentInfoModal] = useState(false);
 
   function parsePaste(text: string){
     // Clean mobile clipboard gibberish (URL-encoded, HTML entities, extra whitespace)
@@ -862,68 +863,17 @@ export default function MyBiometrics() {
                       <Target className="h-4 w-4" />
                       Macro Targets Active
                     </div>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-orange-600/20 text-orange-200 border-orange-400/30 hover:bg-orange-600/30 hover:border-orange-400/50 h-auto py-1 px-3 rounded-full text-xs flex items-center gap-1"
-                          data-testid="button-persistent-explanation"
-                        >
-                          <Info className="h-3 w-3" />
-                          <span>Persistent</span>
-                          <span className="text-orange-300/70 text-[10px]">(tap)</span>
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-black/90 backdrop-blur-lg border border-white/20 text-white max-w-md">
-                        <DialogHeader>
-                          <DialogTitle className="text-white flex items-center gap-2">
-                            <Info className="h-5 w-5 text-orange-400" />
-                            What Does "Persistent" Mean?
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 pt-4">
-                          <p className="text-white/90 text-sm leading-relaxed">
-                            <strong className="text-orange-300">Persistent</strong> means these macro targets stay the same every day until you change them.
-                          </p>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Unlike your daily macro tracking (which resets each day), your <strong>macro targets</strong> remain constant. They don't change automatically.
-                          </p>
-                          <div className="rounded-lg border border-orange-400/30 bg-orange-900/20 p-3">
-                            <p className="text-orange-200 text-sm">
-                              💡 <strong>Example:</strong> If your target is 2000 calories today, it will still be 2000 calories tomorrow, next week, and next month—unless you update it.
-                            </p>
-                          </div>
-                          <p className="text-white/70 text-xs mb-4">
-                            {targetSource === 'pro' 
-                              ? `These targets were set by ${proName}. They'll stay active until ${proName} changes them.`
-                              : "You can change your macro targets anytime from:"}
-                          </p>
-
-                          {targetSource !== 'pro' && (
-                            <div className="grid grid-cols-2 gap-3">
-                              <Button
-                                onClick={() => setLocation("/macro-calculator")}
-                                className="bg-orange-600/20 text-orange-200 border border-orange-400/30 hover:bg-orange-600/30 hover:border-orange-400/50 h-auto py-2 text-xs"
-                                data-testid="button-go-macro-calculator"
-                              >
-                                Macro Calculator
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  const userId = localStorage.getItem('userId') || '1';
-                                  setLocation(`/athlete-meal-board/${userId}`);
-                                }}
-                                className="bg-orange-600/20 text-orange-200 border border-orange-400/30 hover:bg-orange-600/30 hover:border-orange-400/50 h-auto py-2 text-xs"
-                                data-testid="button-go-athlete-board"
-                              >
-                                Athlete Board
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowPersistentInfoModal(true)}
+                      className="bg-orange-600/20 text-orange-200 border-orange-400/30 hover:bg-orange-600/30 hover:border-orange-400/50 h-auto py-1 px-3 rounded-full text-xs flex items-center gap-1"
+                      data-testid="button-persistent-explanation"
+                    >
+                      <Info className="h-3 w-3" />
+                      <span>Persistent</span>
+                      <span className="text-orange-300/70 text-[10px]">(tap)</span>
+                    </Button>
                   </div>
 
                   {/* Pro-set badge (if targets are set by professional) */}
@@ -1208,6 +1158,44 @@ export default function MyBiometrics() {
         </div>
 
       </div>
+
+      {/* Persistent Info Modal */}
+      {showPersistentInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">What Does "Persistent" Mean?</h3>
+            
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>
+                <strong className="text-orange-300">Persistent</strong> means these macro targets stay the same every day until you change them.
+              </p>
+              <p className="text-white/80">
+                Unlike your daily macro tracking (which resets each day), your <strong>macro targets</strong> remain constant. They don't change automatically.
+              </p>
+              
+              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                <p className="font-semibold text-white mb-1">💡 Example:</p>
+                <p className="text-white/70">
+                  If your target is 2000 calories today, it will still be 2000 calories tomorrow, next week, and next month—unless you update it.
+                </p>
+              </div>
+
+              <p className="text-white/70 text-sm">
+                {targetSource === 'pro' 
+                  ? `These targets were set by ${proName}. They'll stay active until ${proName} changes them.`
+                  : "You can change your macro targets anytime from Macro Calculator or Athlete Board."}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowPersistentInfoModal(false)}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }
