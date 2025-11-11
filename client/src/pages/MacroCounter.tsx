@@ -231,7 +231,7 @@ export default function MacroCounter() {
   const [heightCm, setHeightCm] = useState<number>(savedSettings?.heightCm ?? 170);
   const [weightKg, setWeightKg] = useState<number>(savedSettings?.weightKg ?? 72.5);
   const [activity, setActivity] =
-    useState<keyof typeof ACTIVITY_FACTORS | "">(savedSettings?.activity ?? "");
+    useState<keyof typeof ACTIVITY_FACTORS | "">(savedSettings?.activity ?? "sedentary");
   const [proteinPerKg, setProteinPerKg] = useState<number>(savedSettings?.proteinPerKg ?? 1.8);
   const [fatPct, setFatPct] = useState<number>(savedSettings?.fatPct ?? 0.3);
   const [sugarCapMode, setSugarCapMode] = useState<"AHA" | "DGA">(savedSettings?.sugarCapMode ?? "AHA");
