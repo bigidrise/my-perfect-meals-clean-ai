@@ -1,5 +1,4 @@
 import { db } from "../db";
-import { eq, and } from "@shared/schema";
 
 // Mock food database - in production this would be a real database or API
 const MOCK_FOOD_DATABASE = {
@@ -122,15 +121,16 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
   try {
     // First check our mock database
     const normalizedBarcode = barcode.replace(/^0+/, ''); // Remove leading zeros
-    const mockFood = MOCK_FOOD_DATABASE[barcode] || MOCK_FOOD_DATABASE[normalizedBarcode];
+    const mockFood = MOCK_FOOD_DATABASE[barcode as keyof typeof MOCK_FOOD_DATABASE] || MOCK_FOOD_DATABASE[normalizedBarcode as keyof typeof MOCK_FOOD_DATABASE];
     
     if (mockFood) {
       console.log(`✅ Found in mock database: ${mockFood.name}`);
       return mockFood;
     }
 
-    // Try OpenFoodFacts API
+    // Try OpenFoodFacts API first (free, no API key needed)
     try {
+      console.log(`🔍 Trying OpenFoodFacts...`);
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
       
       if (response.ok) {
@@ -173,14 +173,53 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
       console.warn("OpenFoodFacts API error:", error);
     }
 
+    // Fallback to UPCitemdb API (free trial, 100 requests/day, no API key needed)
+    try {
+      console.log(`🔍 Trying UPCitemdb...`);
+      const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.code === "OK" && data.items && data.items.length > 0) {
+          const item = data.items[0];
+          
+          // UPCitemdb doesn't always have nutrition data, so we provide defaults
+          const servingSize = 100;
+          const food: FoodData = {
+            id: `upc_${barcode}`,
+            barcode: barcode,
+            name: item.title || 'Unknown Product',
+            brand: item.brand,
+            servingSizes: [
+              { label: `${servingSize}g`, grams: servingSize }
+            ],
+            nutrPerServing: {
+              kcal: 0,
+              protein_g: 0,
+              carbs_g: 0,
+              fat_g: 0
+            },
+            verified: false,
+            source: 'upcitemdb'
+          };
+          
+          console.log(`✅ Found on UPCitemdb: ${food.name} (no nutrition data - user can add manually)`);
+          return food;
+        }
+      }
+    } catch (error) {
+      console.warn("UPCitemdb API error:", error);
+    }
+
     // Check database for user-added foods
     // TODO: Add database lookup when schema is available
     
-    console.log(`❌ Product not found: ${barcode}`);
+    console.log(`❌ Product not found in any database: ${barcode}`);
     return null;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Barcode lookup error:", error);
-    throw new Error(`Failed to lookup barcode: ${error.message}`);
+    throw new Error(`Failed to lookup barcode: ${error?.message || error}`);
   }
 }
 
@@ -233,9 +272,9 @@ export async function logFood(params: LogFoodParams) {
       entry,
       totals
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error logging food:", error);
-    throw new Error(`Failed to log food: ${error.message}`);
+    throw new Error(`Failed to log food: ${error?.message || error}`);
   }
 }
 
@@ -262,9 +301,9 @@ export async function addNewFood(params: AddNewFoodParams): Promise<FoodData> {
     console.log(`✅ New food added:`, food);
     
     return food;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding new food:", error);
-    throw new Error(`Failed to add new food: ${error.message}`);
+    throw new Error(`Failed to add new food: ${error?.message || error}`);
   }
 }
 
@@ -287,9 +326,9 @@ export async function getDayTotals(userId: string, dateLocal: string) {
 
     console.log(`📊 Day totals:`, totals);
     return totals;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error getting day totals:", error);
-    throw new Error(`Failed to get day totals: ${error.message}`);
+    throw new Error(`Failed to get day totals: ${error?.message || error}`);
   }
 }
 
@@ -309,8 +348,8 @@ export async function searchFoods(query: string, limit: number = 10): Promise<Fo
     
     console.log(`🔍 Found ${mockResults.length} results for "${query}"`);
     return mockResults.slice(0, limit);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error searching foods:", error);
-    throw new Error(`Failed to search foods: ${error.message}`);
+    throw new Error(`Failed to search foods: ${error?.message || error}`);
   }
 }

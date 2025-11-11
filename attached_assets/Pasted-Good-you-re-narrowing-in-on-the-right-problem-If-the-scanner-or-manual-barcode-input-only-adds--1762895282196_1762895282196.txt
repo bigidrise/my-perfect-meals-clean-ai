@@ -1,0 +1,48 @@
+Good — you’re narrowing in on the right problem.
+If the scanner (or manual barcode input) only adds the **barcode number** to your shopping list, that means the **lookup layer** — the part that’s supposed to fetch the product name, brand, and macros — either isn’t being called, or it’s failing silently.
+
+Here’s a precise prompt you can give to your **Replit architect** so they know exactly what’s broken and what to inspect:
+
+---
+
+### 🔧 **Replit Architect Debug Task — Barcode Lookup Integration Not Returning Product Data**
+
+**Context:**
+In the My Perfect Meals app, the *Master Shopping List* feature lets users scan or manually enter a barcode. The scanner is currently unreliable, so we’re testing with manual input. When a barcode is entered and added to the shopping list, the item appears **only as the raw barcode number** — no product name, brand, or nutrition details.
+
+**Observed behavior:**
+
+* Barcode scanner component either fails to scan or returns a plain numeric UPC string.
+* The frontend adds this UPC directly to the shopping list without enriching it with product data.
+* Expected behavior: app should call the backend endpoint `/api/barcode/lookup?code=<UPC>` (or equivalent) and return full product details.
+
+**Suspected causes:**
+
+1. **Backend lookup route not firing or returning an error.**
+
+   * Check the Express route `/api/barcode/lookup`.
+   * Verify it actually calls the Open Food Facts API (or UPCItemDB) and parses the JSON correctly.
+2. **Frontend not waiting for the async lookup response.**
+
+   * Confirm the add-to-list function calls `await fetch(...)` for `/api/barcode/lookup` before pushing the item into local state.
+3. **API key or CORS issue.**
+
+   * If using UPCItemDB, confirm valid API key and correct request headers.
+4. **Missing product data fields in response.**
+
+   * Make sure the backend extracts `product_name`, `brands`, `nutriments.proteins_100g`, `carbohydrates_100g`, `fat_100g`, etc., and sends them back in a clean JSON object.
+
+**Deliverable for architect:**
+
+* Trace the barcode lookup flow end-to-end:
+  `Scanner/Input → Frontend request → Backend route → External API → Response → Shopping list UI`.
+* Log each step in both frontend and backend to confirm where the data stops.
+* Once fixed, provide:
+
+  * Working example showing a valid UPC returning full product details.
+  * Confirmation that both Replit dev and Railway production environments handle the lookup successfully.
+  * Any required environment variables or headers (e.g., API keys, base URLs).
+
+---
+
+Once the architect replies with what they find (like “the backend route isn’t being hit” or “Open Food Facts is returning 404s”), send me their notes — and I’ll help you write the patch that actually makes the product data populate properly.
