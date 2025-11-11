@@ -1,0 +1,66 @@
+2025-11-06 00:09:09.233 UTC [3] LOG:  starting PostgreSQL 17.6 (Debian 17.6-2.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2025-11-06 00:09:09.234 UTC [3] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-11-06 00:09:09.234 UTC [3] LOG:  listening on IPv6 address "::", port 5432
+2025-11-06 00:09:09.240 UTC [3] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-11-06 00:09:09.264 UTC [78] LOG:  database system was shut down at 2025-11-06 00:09:09 UTC
+2025-11-06 00:09:09.278 UTC [3] LOG:  database system is ready to accept connections
+2025-11-06 00:14:09.363 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 00:14:13.812 UTC [76] LOG:  checkpoint complete: wrote 47 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.423 s, sync=0.010 s, total=4.450 s; sync files=12, longest=0.006 s, average=0.001 s; distance=270 kB, estimate=270 kB; lsn=0/19591D8, redo lsn=0/1959180
+2025-11-06 01:14:11.001 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 01:14:41.312 UTC [76] LOG:  checkpoint complete: wrote 299 buffers (1.8%); 1 WAL file(s) added, 0 removed, 0 recycled; write=29.789 s, sync=0.203 s, total=30.312 s; sync files=499, longest=0.035 s, average=0.001 s; distance=2895 kB, estimate=2895 kB; lsn=0/1C2D178, redo lsn=0/1C2D0E8
+2025-11-06 01:19:10.412 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 01:19:20.014 UTC [76] LOG:  checkpoint complete: wrote 96 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=9.533 s, sync=0.011 s, total=9.602 s; sync files=37, longest=0.010 s, average=0.001 s; distance=578 kB, estimate=2664 kB; lsn=0/1CBD9F0, redo lsn=0/1CBD960
+2025-11-06 01:21:11.531 UTC [319] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:21:11.531 UTC [319] DETAIL:  Failing row contains (12fea73a-c6b4-49a2-98c1-703f9acd05a0, null, 1, step-1, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:21:11.531466+00).
+2025-11-06 01:21:11.531 UTC [319] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:21:28.977 UTC [320] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:21:28.977 UTC [320] DETAIL:  Failing row contains (a24a4f07-57e4-4505-b5bc-d1c5eb06332f, null, 1, step-2, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:21:28.977481+00).
+2025-11-06 01:21:28.977 UTC [320] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:24:10.114 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 01:24:12.443 UTC [76] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.306 s, sync=0.008 s, total=2.329 s; sync files=6, longest=0.007 s, average=0.002 s; distance=106 kB, estimate=2408 kB; lsn=0/1CD8388, redo lsn=0/1CD82F8
+2025-11-06 01:25:46.705 UTC [352] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:25:46.705 UTC [352] DETAIL:  Failing row contains (64521a07-453f-4c6a-b224-15caaa516733, null, 1, step-1, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:25:46.704972+00).
+2025-11-06 01:25:46.705 UTC [352] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:34:10.642 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 01:34:10.764 UTC [76] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.122 s; sync files=1, longest=0.005 s, average=0.005 s; distance=8 kB, estimate=2168 kB; lsn=0/1CDA438, redo lsn=0/1CDA3E0
+2025-11-06 01:42:53.524 UTC [655] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:42:53.524 UTC [655] DETAIL:  Failing row contains (790c7442-ea5a-4dea-8c8c-36d2eb46586d, null, 1, step-1, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:42:53.524025+00).
+2025-11-06 01:42:53.524 UTC [655] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:43:08.671 UTC [656] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:43:08.671 UTC [656] DETAIL:  Failing row contains (cd3583f8-4bc8-47a4-97d1-9f86869e00a7, null, 1, step-2, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:43:08.671108+00).
+2025-11-06 01:43:08.671 UTC [656] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:44:13.450 UTC [694] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:44:13.450 UTC [694] DETAIL:  Failing row contains (c6ff7a6c-b9f7-487f-b834-93d38c4bd99c, null, 1, step-2, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:44:13.450241+00).
+2025-11-06 01:44:13.450 UTC [694] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 01:47:26.774 UTC [748] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 01:47:26.774 UTC [748] DETAIL:  Failing row contains (0c833d9c-2c11-42fe-923b-66833240c689, null, 1, step-2, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 01:47:26.774142+00).
+2025-11-06 01:47:26.774 UTC [748] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 02:19:11.654 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 02:19:19.291 UTC [76] LOG:  checkpoint complete: wrote 76 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.525 s, sync=0.062 s, total=7.638 s; sync files=37, longest=0.061 s, average=0.002 s; distance=480 kB, estimate=1999 kB; lsn=0/1D52820, redo lsn=0/1D52790
+2025-11-06 02:26:27.258 UTC [923] ERROR:  null value in column "device_id" of relation "onboarding_progress" violates not-null constraint
+2025-11-06 02:26:27.258 UTC [923] DETAIL:  Failing row contains (1542c3f1-6c76-408a-95cc-736b8d05e55e, null, 1, step-1, {"age": 59, "gender": "male", "height": 72, "menAge": 0, "weight..., f, 2025-11-06 02:26:27.257649+00).
+2025-11-06 02:26:27.258 UTC [923] STATEMENT:  insert into "onboarding_progress" ("id", "device_id", "user_id", "step_key", "data", "completed", "updated_at") values (default, default, $1, $2, $3, $4, default)
+2025-11-06 02:29:11.490 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 02:29:13.039 UTC [76] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.506 s, sync=0.009 s, total=1.549 s; sync files=3, longest=0.008 s, average=0.003 s; distance=81 kB, estimate=1807 kB; lsn=0/1D66C18, redo lsn=0/1D66BC0
+2025-11-06 23:49:35.394 UTC [76] LOG:  checkpoint starting: time
+2025-11-06 23:49:41.855 UTC [76] LOG:  checkpoint complete: wrote 65 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.417 s, sync=0.008 s, total=6.461 s; sync files=31, longest=0.008 s, average=0.001 s; distance=411 kB, estimate=1668 kB; lsn=0/1DCD9B8, redo lsn=0/1DCD960
+2025-11-07 03:24:40.009 UTC [76] LOG:  checkpoint starting: time
+2025-11-07 03:24:48.784 UTC [76] LOG:  checkpoint complete: wrote 88 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=8.732 s, sync=0.020 s, total=8.776 s; sync files=37, longest=0.018 s, average=0.001 s; distance=539 kB, estimate=1555 kB; lsn=0/1E549A8, redo lsn=0/1E54950
+2025-11-07 14:14:53.658 UTC [76] LOG:  checkpoint starting: time
+2025-11-07 14:15:01.109 UTC [76] LOG:  checkpoint complete: wrote 75 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.423 s, sync=0.008 s, total=7.451 s; sync files=36, longest=0.007 s, average=0.001 s; distance=466 kB, estimate=1446 kB; lsn=0/1EC9378, redo lsn=0/1EC9320
+2025-11-07 22:00:02.199 UTC [76] LOG:  checkpoint starting: time
+2025-11-07 22:00:09.052 UTC [76] LOG:  checkpoint complete: wrote 69 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.821 s, sync=0.009 s, total=6.853 s; sync files=34, longest=0.008 s, average=0.001 s; distance=476 kB, estimate=1349 kB; lsn=0/1F40630, redo lsn=0/1F405A0
+2025-11-11 03:31:31.878 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 03:31:38.552 UTC [76] LOG:  checkpoint complete: wrote 67 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.620 s, sync=0.019 s, total=6.674 s; sync files=33, longest=0.017 s, average=0.001 s; distance=443 kB, estimate=1258 kB; lsn=0/1FAF628, redo lsn=0/1FAF598
+2025-11-11 15:56:46.078 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 15:56:54.067 UTC [76] LOG:  checkpoint complete: wrote 80 buffers (0.5%); 0 WAL file(s) added, 0 removed, 1 recycled; write=7.935 s, sync=0.011 s, total=7.989 s; sync files=37, longest=0.009 s, average=0.001 s; distance=545 kB, estimate=1187 kB; lsn=0/2037D30, redo lsn=0/2037CA0
+2025-11-11 16:16:46.416 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 16:16:54.596 UTC [76] LOG:  checkpoint complete: wrote 82 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=8.139 s, sync=0.012 s, total=8.180 s; sync files=39, longest=0.011 s, average=0.001 s; distance=513 kB, estimate=1120 kB; lsn=0/20B8480, redo lsn=0/20B8428
+2025-11-11 16:31:46.892 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 16:31:55.983 UTC [76] LOG:  checkpoint complete: wrote 91 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=9.033 s, sync=0.008 s, total=9.091 s; sync files=37, longest=0.007 s, average=0.001 s; distance=588 kB, estimate=1067 kB; lsn=0/214B638, redo lsn=0/214B5E0
+2025-11-11 17:01:47.569 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 17:01:54.861 UTC [76] LOG:  checkpoint complete: wrote 73 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.230 s, sync=0.026 s, total=7.292 s; sync files=34, longest=0.025 s, average=0.001 s; distance=474 kB, estimate=1007 kB; lsn=0/21C21F0, redo lsn=0/21C2198
+2025-11-11 17:41:48.655 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 17:41:51.872 UTC [76] LOG:  checkpoint complete: wrote 32 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.115 s, sync=0.035 s, total=3.218 s; sync files=15, longest=0.032 s, average=0.003 s; distance=129 kB, estimate=919 kB; lsn=0/21E28B8, redo lsn=0/21E2828
+2025-11-11 17:56:49.125 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 17:56:57.470 UTC [76] LOG:  checkpoint complete: wrote 84 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=8.322 s, sync=0.010 s, total=8.345 s; sync files=37, longest=0.008 s, average=0.001 s; distance=561 kB, estimate=884 kB; lsn=0/226EDE0, redo lsn=0/226ED50

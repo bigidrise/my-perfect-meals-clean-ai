@@ -619,15 +619,6 @@ export default function MacroCounter() {
                 id="calc-button"
                 disabled={isSaving}
                 onClick={async () => {
-                  if (!user?.id) {
-                    toast({
-                      title: "Authentication Required",
-                      description: "Please sign in to save your macro targets.",
-                      variant: "destructive",
-                    });
-                    return;
-                  }
-
                   advance("calc");
                   setIsSaving(true);
 
@@ -637,18 +628,18 @@ export default function MacroCounter() {
                       protein_g: results.macros.protein.g,
                       carbs_g: results.macros.carbs.g,
                       fat_g: results.macros.fat.g,
-                    }, user.id);
+                    }, user?.id);
 
                     toast({
                       title: "Macro Targets Set!",
-                      description: "Your targets have been saved to your profile.",
+                      description: "Your targets have been saved.",
                     });
                     setLocation("/my-biometrics");
                   } catch (error) {
                     console.error("Failed to save macro targets:", error);
                     toast({
                       title: "Save Failed",
-                      description: error instanceof Error ? error.message : "Failed to save your macro targets. Please try again.",
+                      description: "Failed to save your macro targets. Please try again.",
                       variant: "destructive",
                     });
                   } finally {
