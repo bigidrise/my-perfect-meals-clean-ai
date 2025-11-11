@@ -1,0 +1,78 @@
+Perfect. Here’s your **exact Replit agent prompt** — written clean, clear, and developer-direct so it executes precisely what you want without design drift or confusion.
+
+---
+
+### 🧠 Replit Agent Prompt
+
+**Title:**
+Implement Beach Body / Hard Body Weekly Meal Board with Macro Fix Coach (for non-trainer users)
+
+**Prompt:**
+We’re creating a *simplified version* of the Weekly Meal Board specifically for regular users — not trainers, coaches, or physicians.
+This new version will be named something like **BeachBodyMealBoard.tsx** or **HardBodyMealBoard.tsx**, whichever matches our app naming convention.
+
+Do **not** change any styling, color gradients, backgrounds, or component layouts except what’s specifically described below. The design and colors must stay **exactly** the same as the current WeeklyMealBoard.tsx.
+
+---
+
+### 🎯 Goal
+
+Create a simplified “Beach Body / Hard Body Meal Board” where:
+
+1. Users are not setting macros manually at the top.
+2. All macro logic and guidance are handled automatically **at the bottom of the board**, before they send anything to Biometrics.
+3. This version focuses on lifestyle users who just want to get lean, eat right, and prep meals — not on coaches or pros.
+
+---
+
+### 🧩 Implementation Steps
+
+1. **Duplicate the existing WeeklyMealBoard.tsx** file.
+
+   * Rename it to **BeachBodyMealBoard.tsx** (or **HardBodyMealBoard.tsx**, depending on folder naming).
+   * Keep every import, gradient, and layout identical.
+   * Do **not** modify the design, hover colors, or card structure.
+
+2. **Remove the top macro-setting section.**
+
+   * The section that displays “Macros / Targets / Set Macros” at the top should be completely removed.
+   * This board does not allow manual macro entry.
+   * The board should now start directly with the main head card and then meal cards.
+
+3. **Add a new section at the bottom** called **Macro Fix Coach**.
+
+   * Use the new component `MacroFixCoach.tsx` (already provided).
+   * It should appear below the “Daily Totals” summary.
+   * This section automatically shows if the user is short on protein, fibrous carbs, or starchy carbs.
+   * Calories and fats are not emphasized — we only guide them to fix protein and carb deficits.
+   * It must include the usual small **question mark (?) icon** button that explains:
+
+     > “You don’t need to worry about calories or fats. Focus on making sure your proteins and carbs are correct before continuing. You can add foods or vegetables to balance your day.”
+   * This help text should appear in a small modal or tooltip identical in style to the other “?” popups throughout the app.
+
+4. **Link the Fix buttons to the existing Biometrics logic.**
+
+   * When a user selects “Add Protein” or “Add Fibrous Carb,” reuse the same macro-addition system from the Biometrics page.
+   * Example: if they choose 50g of protein from chicken, it automatically calculates how much chicken they need (the same logic currently used on Biometrics).
+   * This must be automatic — the math happens instantly without re-entry.
+
+5. **Do not alter saving, day/week toggles, AI meal creation, or shopping list logic.**
+
+   * Everything else remains identical to WeeklyMealBoard.
+   * Only the top macros are removed and the new bottom “Macro Fix Coach” section is added.
+
+---
+
+### ✅ Acceptance Criteria
+
+* [ ] Page loads identically in appearance to WeeklyMealBoard, minus the top macros section.
+* [ ] “Macro Fix Coach” appears only when totals show deficits in protein or carbs.
+* [ ] “?” info button shows the instructional text described above.
+* [ ] Fix buttons open the same auto-calculation modal logic from Biometrics (no duplicate math).
+* [ ] All colors, shadows, borders, and gradients remain unchanged.
+* [ ] No new hover colors are introduced.
+* [ ] All saves, AI meal generation, and shopping list features still function exactly as before.
+
+---
+
+Would you like me to include the exact **help text** for that “?” info popup so the agent doesn’t improvise it? I can write it word-for-word so it matches the tone used elsewhere in the app.
