@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Pill, GraduationCap } from "lucide-react";
+import { ArrowLeft, Pill, GraduationCap, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SupplementFeature {
