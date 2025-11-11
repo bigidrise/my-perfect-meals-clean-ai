@@ -12,12 +12,13 @@ import {
   TrendingUp,
   Flame,
   Grid,
+  Camera,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import BarcodeScanner from "@/components/BarcodeScanner";
 import OpenAI from "openai"; // Import OpenAI
-import { useUser } from "@/hooks/useUser"; // Assuming useUser hook exists
-import { useToast } from "@/components/ui/use-toast"; // Assuming useToast hook exists
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface FeatureCard {
   title: string;
@@ -37,8 +38,8 @@ const todayMacros = {
 
 export default function DashboardNew() {
   const [, setLocation] = useLocation();
-  const { user } = useUser(); // Assuming useUser hook provides user object
-  const { toast } = useToast(); // Assuming useToast hook provides toast object
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [showScanner, setShowScanner] = useState(false);
   const [isGuidedMode, setIsGuidedMode] = useState(false);
 
