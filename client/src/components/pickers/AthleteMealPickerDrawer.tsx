@@ -14,8 +14,7 @@ import {
   getAthleteMealsByCategory,
   type AthleteMeal,
 } from "@/data/athleteMeals";
-import { Info } from "lucide-react"; // Assuming Info icon is imported
-import { Target } from "lucide-react"; // Assuming Target icon is imported
+import { Target } from "lucide-react";
 
 // 🔄 Convert AthleteMeal to standard Meal
 function convertAthleteMealToMeal(athleteMeal: AthleteMeal): Meal {
@@ -115,15 +114,13 @@ export function AthleteMealPickerDrawer({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
             🏆 Competition Prep Meals - Add to {list}
-            <Button
-              size="sm"
-              variant="ghost"
+            <button
               onClick={() => setShowInfoModal(true)}
-              className="h-12 w-12 p-0 bg-lime-900/80 text-white/90 hover:text-white hover:bg-lime-800 rounded-xl flash-border"
-              aria-label="How to use"
+              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              aria-label="How to use Competition Prep Meals"
             >
-              <Info className="h-7 w-7" />
-            </Button>
+              ?
+            </button>
           </DialogTitle>
         </DialogHeader>
 
@@ -240,39 +237,41 @@ export function AthleteMealPickerDrawer({
     </Dialog>
 
     {/* Info Modal */}
-    <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
-      <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-            <Target className="h-6 w-6 text-emerald-400" />
-            How to Use Competition Prep Meals
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 text-white/90">
-          <p>
-            Pre-designed athlete meals optimized for lean muscle building and performance.
-          </p>
-          <div>
-            <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
-            <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-              <li>Select your protein category (Chicken, Red Meat, Fish, Eggs)</li>
-              <li>Meals are tagged with "Carbs" or "P+V" (Protein + Veggies)</li>
-              <li>Click any meal to add it to your board instantly</li>
-              <li>All macros are pre-calculated and ready to track</li>
-            </ul>
+    {showInfoModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+          <h3 className="text-xl font-bold text-white mb-4">How to Use Competition Prep Meals</h3>
+
+          <div className="space-y-4 text-white/90 text-sm">
+            <p>Pre-designed athlete meals optimized for lean muscle building and performance.</p>
+
+            <div>
+              <h4 className="font-semibold text-white mb-2">Steps:</h4>
+              <ul className="space-y-2 text-white/80 text-sm">
+                <li><strong className="text-white">Select your protein category</strong> (Chicken, Red Meat, Fish, Eggs)</li>
+                <li><strong className="text-white">Meals are tagged</strong> with "Carbs" or "P+V" (Protein + Veggies)</li>
+                <li><strong className="text-white">Click any meal</strong> to add it to your board instantly</li>
+                <li><strong className="text-white">All macros</strong> are pre-calculated and ready to track</li>
+              </ul>
+            </div>
+
+            <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+              <p className="font-semibold text-white mb-1">💡 Tip:</p>
+              <p className="text-white/70">
+                Choose meals based on your daily carb targets - use "Carbs" meals when you need energy, and "P+V" meals for lower-carb days!
+              </p>
+            </div>
           </div>
-          <p className="text-emerald-400 font-medium text-sm">
-            💡 Tip: Choose meals based on your daily carb targets - use "Carbs" meals when you need energy, and "P+V" meals for lower-carb days!
-          </p>
+
+          <button
+            onClick={() => setShowInfoModal(false)}
+            className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+          >
+            got it!
+          </button>
         </div>
-        <Button
-          onClick={() => setShowInfoModal(false)}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
-        >
-          Got It!
-        </Button>
-      </DialogContent>
-    </Dialog>
+      </div>
+    )}
     </>
   );
 }
