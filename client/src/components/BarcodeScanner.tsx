@@ -30,7 +30,7 @@ interface Food {
 }
 
 interface BarcodeScannerProps {
-  onFoodFound: (food: Food) => void;
+  onItemScanned: (barcode: string, productName: string) => void;
   onClose: () => void;
   isLoading?: boolean;
 }
@@ -41,6 +41,13 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const [cameraPermission, setCameraPermission] = useState<'pending' | 'granted' | 'denied'>('pending');
   const scannerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-start scanner on mount
+  useEffect(() => {
+    if (cameraPermission === 'granted' && !scanning) {
+      setScanning(true);
+    }
+  }, [cameraPermission]);
 
   // Initialize scanner
   useEffect(() => {
@@ -74,27 +81,32 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
         // Normalize barcode (remove spaces, leading zeros)
         const normalizedBarcode = decodedText.replace(/\s+/g, '').replace(/^0+/, '');
         
-        // Look up the barcode
+        // Look up the barcode to get product name
         const response = await fetch(`/api/barcode/${encodeURIComponent(normalizedBarcode)}`);
+        
+        let productName = "Unknown Product";
         
         if (response.ok) {
           const food = await response.json();
-          console.log("✅ Food found:", food);
-          
-          // Stop scanner and pass food data
-          html5QrCodeScanner.clear();
-          setScanning(false);
-          onFoodFound(food);
-        } else if (response.status === 404) {
-          const errorData = await response.json();
-          setError(`Product not found in database: ${decodedText}`);
-          console.log("❌ Product not found:", errorData);
+          productName = food.brand ? `${food.brand} ${food.name}` : food.name;
+          console.log("✅ Product found:", productName);
         } else {
-          throw new Error(`Server error: ${response.status}`);
+          // Even if not found in database, still add with barcode
+          console.log("⚠️ Product not in database, adding with barcode only");
+          productName = `Product ${normalizedBarcode}`;
         }
+        
+        // Stop scanner and add to shopping list
+        html5QrCodeScanner.clear();
+        setScanning(false);
+        onItemScanned(normalizedBarcode, productName);
       } catch (err) {
-        console.error("❌ Barcode lookup failed:", err);
-        setError(`Failed to lookup barcode: ${err.message}`);
+        console.error("❌ Barcode scan error:", err);
+        // Still add to list even on error
+        const productName = `Product ${decodedText}`;
+        html5QrCodeScanner.clear();
+        setScanning(false);
+        onItemScanned(decodedText, productName);
       }
     };
 
@@ -205,18 +217,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onClose, i
             </div>
           )}
 
-          {/* Scanner UI */}
-          {cameraPermission === 'granted' && !scanning && (
-            <div className="text-center space-y-4">
-              <div className="text-gray-300">
-                Point your camera at a product barcode to scan it
-              </div>
-              <Button onClick={startScanning} className="bg-blue-600 hover:bg-blue-700">
-                <Camera className="h-4 w-4 mr-2" />
-                Start Scanning
-              </Button>
-            </div>
-          )}
+          {/* Scanner auto-starts when ready */}
 
           {/* Active Scanner */}
           {scanning && (

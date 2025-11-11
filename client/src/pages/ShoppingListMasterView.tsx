@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Trash2, X, Camera } from "lucide-react";
 import { useLocation } from "wouter";
 import TrashButton from "@/components/ui/TrashButton";
 import { readList, setItems, toggleChecked, deleteItems, updateItem, clearAll, clearChecked, ShopItem, readOptions, writeOptions, setWeekScope } from "@/stores/shoppingListStore";
@@ -13,6 +13,7 @@ import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import BarcodeScanner from "@/components/BarcodeScanner";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
@@ -30,6 +31,25 @@ export default function ShoppingListMasterView() {
   const [opts, setOpts] = useState(() => readOptions());
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [purchasedOpen, setPurchasedOpen] = useState(true);
+  const [scannerOpen, setScannerOpen] = useState(false);
+
+  function handleBarcodeScanned(barcode: string, productName: string) {
+    // Add scanned item to shopping list
+    const store = readList();
+    const merged = [...store.items];
+    merged.push({
+      id: `itm_${Math.random().toString(36).slice(2,10)}${Date.now().toString(36)}`,
+      name: productName,
+      note: `Barcode: ${barcode}`,
+      checked: false
+    });
+    setItems(merged);
+    setScannerOpen(false);
+    toast({ 
+      title: "Item added", 
+      description: `${productName} added to shopping list` 
+    });
+  }
 
   useEffect(() => {
     const onUpd = () => setLocalItems(readList().items);
@@ -230,6 +250,13 @@ export default function ShoppingListMasterView() {
               data-testid="button-quick-add"
             >
               <Plus className="h-4 w-4" />
+            </Button>
+            <Button 
+              onClick={() => setScannerOpen(true)}
+              className="bg-orange-600/20 border border-orange-400/30 text-orange-200 hover:bg-orange-600/30"
+              data-testid="button-scan-barcode"
+            >
+              <Camera className="h-4 w-4" />
             </Button>
           </div>
 
@@ -590,6 +617,14 @@ export default function ShoppingListMasterView() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Barcode Scanner Modal */}
+        {scannerOpen && (
+          <BarcodeScanner
+            onItemScanned={handleBarcodeScanned}
+            onClose={() => setScannerOpen(false)}
+          />
         )}
       </div>
     </motion.div>
