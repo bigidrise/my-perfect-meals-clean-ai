@@ -463,7 +463,7 @@ export default function RestaurantGuidePage() {
               </div>
               <div>
                 <label htmlFor="restaurant-input" className="block text-sm font-semibold text-white mb-2">
-                  Where are you eating?
+                  Where are you eating? <span className="text-white/60">(Specific Restaurant)</span>
                 </label>
                 <div className="relative">
                   <Input
@@ -505,7 +505,7 @@ export default function RestaurantGuidePage() {
             {generatedMeals.length > 0 && (
               <div className="space-y-6 mb-6">
                 <h2 className="text-xl font-bold text-white mb-4">
-                  🍽️ Recommended {matchedCuisine} Meals:
+                  🍽️ Recommended Meals at {restaurantInput}:
                 </h2>
                 <div className="grid gap-4">
                   {generatedMeals.map((meal, index) => (
