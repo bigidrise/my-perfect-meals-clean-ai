@@ -146,6 +146,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
     try {
       const normalizedBarcode = barcode.replace(/\s+/g, '').replace(/^0+/, '');
       
+      console.log(`🔍 Looking up barcode: ${normalizedBarcode}`);
       const response = await fetch(`/api/barcode/${encodeURIComponent(normalizedBarcode)}`);
       
       let productName = "Unknown Product";
@@ -153,14 +154,16 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
       if (response.ok) {
         const food = await response.json();
         productName = food.brand ? `${food.brand} ${food.name}` : food.name;
+        console.log(`✅ Product found: ${productName}`);
       } else {
-        productName = `Product ${normalizedBarcode}`;
+        console.log(`❌ Product not found, using barcode as name`);
+        productName = `Barcode ${normalizedBarcode}`;
       }
       
       onItemScanned(normalizedBarcode, productName);
     } catch (err) {
       console.error('Barcode lookup error:', err);
-      onItemScanned(barcode, `Product ${barcode}`);
+      onItemScanned(barcode, `Barcode ${barcode}`);
     }
   };
 
@@ -222,7 +225,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
               <Button
                 onClick={handleManualSubmit}
                 disabled={!manualBarcode.trim() || isLoading}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+                className="flex-1 bg-orange-600 active:bg-orange-700 text-white"
               >
                 {isLoading ? (
                   <>
@@ -236,7 +239,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
               <Button
                 onClick={() => setManualEntry(false)}
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white bg-white/10 active:bg-white/20"
               >
                 Try Camera
               </Button>
@@ -260,7 +263,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
               variant="ghost"
               size="sm"
               onClick={handleClose}
-              className="text-white hover:bg-white/10"
+              className="text-white active:bg-white/10"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -321,7 +324,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
             {scanning && (
               <Button 
                 onClick={stopCamera}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                className="flex-1 bg-red-600 active:bg-red-700 text-white"
               >
                 Stop Scanning
               </Button>
@@ -330,7 +333,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
             {!scanning && !error && (
               <Button 
                 onClick={startCamera}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+                className="flex-1 bg-orange-600 active:bg-orange-700 text-white"
               >
                 Start Scanning
               </Button>
@@ -339,7 +342,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
             <Button
               onClick={() => setManualEntry(true)}
               variant="outline"
-              className="flex-1 border-white/20 text-white hover:bg-white/10"
+              className="flex-1 border-white/20 text-white bg-white/10 active:bg-white/20"
             >
               Manual Entry
             </Button>
