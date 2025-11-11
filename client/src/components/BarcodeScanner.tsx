@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Loader2, Camera, X } from 'lucide-react';
 
 interface BarcodeScannerProps {
@@ -13,10 +14,13 @@ interface BarcodeScannerProps {
 const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose, isLoading = false }) => {
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [manualEntry, setManualEntry] = useState(false);
+  const [manualBarcode, setManualBarcode] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number>();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
+  const lastScanTime = useRef<number>(0);
 
   // Check if native BarcodeDetector is available
   const supportsNativeBarcodeDetector = 'BarcodeDetector' in window;
@@ -51,12 +55,13 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         // Start scanning after video is ready
         videoRef.current.onloadedmetadata = () => {
           videoRef.current?.play();
-          scanBarcode();
+          setTimeout(() => scanBarcode(), 500); // Give camera time to focus
         };
       }
     } catch (err: any) {
       console.error('Camera error:', err);
-      setError('Unable to access camera. Please allow camera permissions.');
+      setError('Unable to access camera. Please allow camera permissions or use manual entry.');
+      setManualEntry(true);
     }
   };
 
@@ -66,11 +71,18 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
       return;
     }
 
+    // Prevent scanning too frequently
+    const now = Date.now();
+    if (now - lastScanTime.current < 500) {
+      animationFrameRef.current = requestAnimationFrame(scanBarcode);
+      return;
+    }
+
     try {
       if (supportsNativeBarcodeDetector) {
         // Use native BarcodeDetector API (Chrome, Edge)
         const barcodeDetector = new (window as any).BarcodeDetector({
-          formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39']
+          formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39', 'code_93', 'codabar', 'itf']
         });
 
         const barcodes = await barcodeDetector.detect(videoRef.current);
@@ -78,6 +90,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         if (barcodes.length > 0) {
           const barcode = barcodes[0].rawValue;
           console.log('📱 Barcode detected:', barcode);
+          lastScanTime.current = now;
           handleBarcodeDetected(barcode);
           return;
         }
@@ -93,7 +106,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
   };
 
   const scanWithZXing = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current) return;
 
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -107,18 +120,18 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
     // Draw current video frame to canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Get image data
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
     // Dynamically import ZXing
     try {
       const { BrowserMultiFormatReader } = await import('@zxing/browser');
       const codeReader = new BrowserMultiFormatReader();
       
-      const result = await codeReader.decodeFromImageData(imageData);
+      const result = await codeReader.decodeFromImageElement(video);
       if (result) {
-        console.log('📱 Barcode detected (ZXing):', result.getText());
-        handleBarcodeDetected(result.getText());
+        const barcode = result.getText();
+        console.log('📱 Barcode detected (ZXing):', barcode);
+        const now = Date.now();
+        lastScanTime.current = now;
+        handleBarcodeDetected(barcode);
       }
     } catch (err) {
       // No barcode found in this frame
@@ -149,6 +162,12 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
     }
   };
 
+  const handleManualSubmit = () => {
+    if (manualBarcode.trim()) {
+      handleBarcodeDetected(manualBarcode.trim());
+    }
+  };
+
   useEffect(() => {
     // Auto-start camera on mount
     startCamera();
@@ -162,6 +181,69 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
     stopCamera();
     onClose();
   };
+
+  if (manualEntry) {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg bg-black/30 backdrop-blur-lg border-white/20 text-white">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl text-white flex items-center gap-2">
+                <Camera className="h-6 w-6" />
+                Enter Barcode Manually
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClose}
+                className="text-white hover:bg-white/10"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm text-white/80">Barcode Number</label>
+              <Input
+                type="text"
+                value={manualBarcode}
+                onChange={(e) => setManualBarcode(e.target.value)}
+                placeholder="Enter barcode number..."
+                className="bg-white/10 border-white/20 text-white"
+                onKeyPress={(e) => e.key === 'Enter' && handleManualSubmit()}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={handleManualSubmit}
+                disabled={!manualBarcode.trim() || isLoading}
+                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Looking up...
+                  </>
+                ) : (
+                  'Add to List'
+                )}
+              </Button>
+              <Button
+                onClick={() => setManualEntry(false)}
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                Try Camera
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -202,9 +284,6 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
                 </div>
               </div>
             )}
-
-            {/* Hidden canvas for ZXing fallback */}
-            <canvas ref={canvasRef} className="hidden" />
           </div>
 
           {/* Error Display */}
@@ -236,23 +315,33 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
           )}
 
           {/* Controls */}
-          {scanning && (
-            <Button 
-              onClick={stopCamera}
-              className="w-full bg-red-600 hover:bg-red-700 text-white"
-            >
-              Stop Scanning
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {scanning && (
+              <Button 
+                onClick={stopCamera}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+              >
+                Stop Scanning
+              </Button>
+            )}
 
-          {!scanning && !error && (
-            <Button 
-              onClick={startCamera}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+            {!scanning && !error && (
+              <Button 
+                onClick={startCamera}
+                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                Start Scanning
+              </Button>
+            )}
+
+            <Button
+              onClick={() => setManualEntry(true)}
+              variant="outline"
+              className="flex-1 border-white/20 text-white hover:bg-white/10"
             >
-              Start Scanning
+              Manual Entry
             </Button>
-          )}
+          </div>
         </CardContent>
       </Card>
 
