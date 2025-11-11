@@ -1037,43 +1037,11 @@ export default function MyBiometrics() {
                 </div>
               </div>
 
-              {/* Additional Macros instruction note */}
-              {PROFILES_ENABLED && (
-                <div className="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                  <p className="text-xs text-white/90 leading-relaxed text-center">
-                    <strong>Short on Protein or Carbs?</strong> Enter the amount you need to add in <strong>either the Protein field OR the Carbs field</strong> (don't adjust Calories or Fat — leave those blank). 
-                    Then use the <strong>Additional Macros</strong> dropdown to select which food source you're getting it from (chicken, rice, veggies, etc.). 
-                    Press <strong>Add</strong> and the system will automatically fill in all the other macros based on that food type.
-                  </p>
-                </div>
-              )}
-
-              {/* Additional Macros selector */}
-              {PROFILES_ENABLED && (
-                <div className="flex items-center justify-between gap-2 mt-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-white/70 font-medium">Additional Macros:</span>
-                    <Select value={selectedProfile} onValueChange={(v)=>setSelectedProfile(v as Profile)}>
-                      <SelectTrigger className="w-40 bg-white/10 border-white/20 text-white" data-testid="select-source-profile">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="whey">Whey / Isolate</SelectItem>
-                        <SelectItem value="chicken">Chicken (lean)</SelectItem>
-                        <SelectItem value="turkey">Turkey (lean)</SelectItem>
-                        <SelectItem value="fish">White Fish (lean)</SelectItem>
-                        <SelectItem value="beef">Red Meat (beef/steak)</SelectItem>
-                        <SelectItem value="rice">Rice (starchy carb)</SelectItem>
-                        <SelectItem value="oats">Oats (carb+fat tail)</SelectItem>
-                        <SelectItem value="veggies">Fibrous Veggies (carb)</SelectItem>
-                        <SelectItem value="oil">Olive Oil (fat)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              )}
-
               <div className="flex justify-between items-center gap-2 mt-3">
+                {/* TODO: Move Additional Macros feature to Weekly Meal Board and other meal boards (diabetes, GLP-1, etc.) 
+                    - This allows users to top-off macros at the meal board level with food source profiles
+                    - Profile system applies heuristic tails (e.g., chicken adds ~12% fat to protein logged)
+                    - Implementation: Add dropdown + logic to MacroBridgeFooter or similar meal board components */}
                 <Button onClick={addMacros} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-add-macros"><PlusCircle className="h-4 w-4 mr-1"/> Add</Button>
                 <Button onClick={resetToday} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-reset-today"><RotateCcw className="h-4 w-4 mr-1"/> Reset Today</Button>
               </div>
