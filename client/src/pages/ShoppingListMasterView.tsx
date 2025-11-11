@@ -508,15 +508,28 @@ export default function ShoppingListMasterView() {
                           />
                           <Input
                             defaultValue={item.qty ?? ""}
-                            onChange={onInlineEdit(item.id, "qty")}
+                            onBlur={onInlineEdit(item.id, "qty")}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                const val = Number((e.target as HTMLInputElement).value);
+                                updateItem(item.id, { qty: Number.isFinite(val) ? val : undefined });
+                              }
+                            }}
                             className="w-16 bg-black/30 border-white/30 text-white h-8"
                             placeholder="Qty"
+                            data-testid={`input-qty-${item.id}`}
                           />
                           <Input
                             defaultValue={item.unit ?? ""}
-                            onChange={onInlineEdit(item.id, "unit")}
+                            onBlur={onInlineEdit(item.id, "unit")}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item.id, { unit: (e.target as HTMLInputElement).value });
+                              }
+                            }}
                             className="w-20 bg-black/30 border-white/30 text-white h-8"
                             placeholder="Unit"
+                            data-testid={`input-unit-${item.id}`}
                           />
                           <Button
                             size="sm"

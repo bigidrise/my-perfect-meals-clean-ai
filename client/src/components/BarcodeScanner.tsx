@@ -38,6 +38,13 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
 
   const startCamera = async () => {
     try {
+      console.log('📷 Requesting camera access...');
+      
+      // Check if getUserMedia is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported in this browser/environment');
+      }
+      
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: 'environment',
@@ -46,6 +53,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         }
       });
 
+      console.log('✅ Camera access granted');
+      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
@@ -54,13 +63,23 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
         
         // Start scanning after video is ready
         videoRef.current.onloadedmetadata = () => {
+          console.log('📹 Video stream ready');
           videoRef.current?.play();
           setTimeout(() => scanBarcode(), 500); // Give camera time to focus
         };
       }
     } catch (err: any) {
-      console.error('Camera error:', err);
-      setError('Unable to access camera. Please allow camera permissions or use manual entry.');
+      console.error('❌ Camera error:', err);
+      const errorMessage = err.name === 'NotAllowedError' 
+        ? 'Camera permission denied. Please allow camera access in your browser settings, then refresh and try again.'
+        : err.name === 'NotFoundError'
+        ? 'No camera found on this device. Please use manual entry instead.'
+        : err.name === 'NotReadableError'
+        ? 'Camera is already in use by another application. Please close other apps and try again.'
+        : 'Unable to access camera. Please use manual entry or try refreshing the page.';
+      
+      setError(errorMessage);
+      console.log('💡 Switching to manual entry mode');
       setManualEntry(true);
     }
   };
