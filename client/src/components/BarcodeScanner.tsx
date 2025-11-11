@@ -144,7 +144,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onItemScanned, onClose,
     stopCamera();
 
     try {
-      const normalizedBarcode = barcode.replace(/\s+/g, '').replace(/^0+/, '');
+      // Sanitize: remove all non-digit characters (dashes, spaces, letters, etc.)
+      const normalizedBarcode = barcode.replace(/\D/g, '');
       
       console.log(`🔍 Looking up barcode: ${normalizedBarcode}`);
       const response = await fetch(`/api/barcode/${encodeURIComponent(normalizedBarcode)}`);

@@ -119,9 +119,16 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
   console.log(`🔍 Looking up barcode: ${barcode}`);
   
   try {
-    // First check our mock database
-    const normalizedBarcode = barcode.replace(/^0+/, ''); // Remove leading zeros
-    const mockFood = MOCK_FOOD_DATABASE[barcode as keyof typeof MOCK_FOOD_DATABASE] || MOCK_FOOD_DATABASE[normalizedBarcode as keyof typeof MOCK_FOOD_DATABASE];
+    // Sanitize barcode: remove all non-digit characters (dashes, spaces, etc.)
+    const sanitized = barcode.replace(/\D/g, '');
+    console.log(`🧹 Sanitized barcode: ${sanitized}`);
+    
+    // Also try without leading zeros
+    const withoutLeadingZeros = sanitized.replace(/^0+/, '');
+    
+    // First check our mock database with both versions
+    const mockFood = MOCK_FOOD_DATABASE[sanitized as keyof typeof MOCK_FOOD_DATABASE] || 
+                     MOCK_FOOD_DATABASE[withoutLeadingZeros as keyof typeof MOCK_FOOD_DATABASE];
     
     if (mockFood) {
       console.log(`✅ Found in mock database: ${mockFood.name}`);
@@ -131,7 +138,7 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
     // Try OpenFoodFacts API first (free, no API key needed)
     try {
       console.log(`🔍 Trying OpenFoodFacts...`);
-      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${sanitized}.json`);
       
       if (response.ok) {
         const data = await response.json();
@@ -145,8 +152,8 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
           // Convert to per-serving basis (assuming 100g serving by default)
           const servingSize = 100;
           const food: FoodData = {
-            id: `off_${barcode}`,
-            barcode: barcode,
+            id: `off_${sanitized}`,
+            barcode: sanitized,
             name: product.product_name || product.product_name_en || 'Unknown Product',
             brand: product.brands?.split(',')[0]?.trim(),
             servingSizes: [
@@ -176,7 +183,7 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
     // Fallback to UPCitemdb API (free trial, 100 requests/day, no API key needed)
     try {
       console.log(`🔍 Trying UPCitemdb...`);
-      const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
+      const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${sanitized}`);
       
       if (response.ok) {
         const data = await response.json();
@@ -187,8 +194,8 @@ export async function lookupBarcode(barcode: string): Promise<FoodData | null> {
           // UPCitemdb doesn't always have nutrition data, so we provide defaults
           const servingSize = 100;
           const food: FoodData = {
-            id: `upc_${barcode}`,
-            barcode: barcode,
+            id: `upc_${sanitized}`,
+            barcode: sanitized,
             name: item.title || 'Unknown Product',
             brand: item.brand,
             servingSizes: [
