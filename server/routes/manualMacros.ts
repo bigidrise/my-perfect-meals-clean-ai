@@ -1,7 +1,7 @@
 // server/routes/manualMacros.ts
 import express from "express";
 import { db } from "../db";
-import { macroLogs } from "../../shared/schema";
+import { macroLogs, users } from "../../shared/schema";
 import { and, gte, lte, eq, sql } from "drizzle-orm";
 
 const router = express.Router();
@@ -190,6 +190,51 @@ router.get("/users/:userId/macro-logs/daily", async (req, res) => {
   } catch (e: any) {
     console.error("daily error:", e);
     res.status(400).json({ error: e.message || "Failed to load daily." });
+  }
+});
+
+// POST /api/users/:userId/macro-targets - Save user's macro targets
+router.post("/users/:userId/macro-targets", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { calories, protein_g, carbs_g, fat_g } = req.body;
+
+    // Validate inputs
+    if (typeof calories !== 'number' || typeof protein_g !== 'number' || 
+        typeof carbs_g !== 'number' || typeof fat_g !== 'number') {
+      return res.status(400).json({ error: "All macro values must be numbers" });
+    }
+
+    // Update user's macro targets
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        dailyCalorieTarget: calories,
+        dailyProteinTarget: protein_g,
+        dailyCarbsTarget: carbs_g,
+        dailyFatTarget: fat_g,
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log(`✅ Saved macro targets for user ${userId}: ${calories}cal, ${protein_g}p/${carbs_g}c/${fat_g}f`);
+
+    res.json({ 
+      ok: true, 
+      targets: {
+        calories,
+        protein_g,
+        carbs_g,
+        fat_g
+      }
+    });
+  } catch (e: any) {
+    console.error("save macro targets error:", e);
+    res.status(500).json({ error: e.message || "Failed to save macro targets" });
   }
 });
 

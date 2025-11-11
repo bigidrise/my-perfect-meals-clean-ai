@@ -227,6 +227,9 @@ export const users = pgTable("users", {
   bodyType: text("body_type"), // ectomorph, mesomorph, endomorph
   fitnessGoal: text("fitness_goal"), // weight_loss, muscle_gain, maintenance, endurance
   dailyCalorieTarget: integer("daily_calorie_target"),
+  dailyProteinTarget: integer("daily_protein_target"),
+  dailyCarbsTarget: integer("daily_carbs_target"),
+  dailyFatTarget: integer("daily_fat_target"),
   dietaryRestrictions: text("dietary_restrictions").array().default(sql`ARRAY[]::text[]`),
   healthConditions: text("health_conditions").array().default(sql`ARRAY[]::text[]`),
   allergies: text("allergies").array().default(sql`ARRAY[]::text[]`),

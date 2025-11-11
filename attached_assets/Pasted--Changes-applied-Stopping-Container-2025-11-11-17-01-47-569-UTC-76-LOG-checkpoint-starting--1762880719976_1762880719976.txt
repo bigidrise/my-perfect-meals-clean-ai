@@ -1,0 +1,36 @@
+
+[✓] Changes applied
+Stopping Container
+2025-11-11 17:01:47.569 UTC [76] LOG:  checkpoint starting: time
+2025-11-11 17:01:54.861 UTC [76] LOG:  checkpoint complete: wrote 73 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.230 s, sync=0.026 s, total=7.292 s; sync files=34, longest=0.025 s, average=0.001 s; distance=474 kB, estimate=1007 kB; lsn=0/21C21F0, redo lsn=0/21C2198
+Starting Container
+✅ Resend email service initialized
+🔧 registerRoutes called - starting route registration
+✅ Routes registered successfully
+📁 Serving static files from: /app/client/dist
+🚀 Production server running on port 8080
+📍 Environment: production
+🔗 Database: Connected
+c7a8c7cb-c188-49f3-a25f-0cb9dc1dc764 GET /version.json?cache=1762880571722 200 14ms
+e886b16d-7dc9-42fc-9f46-b1e315551d70 GET /version.json?t=1762880571719 200 8ms
+Stopping Container
+0208ccfd-9a46-40e9-b7c4-d2d5aeaf1cb7 GET /my-biometrics 200 4ms
+1763ecb4-0106-433f-b7be-16f392350715 GET /version.json?t=1762880574606 200 1ms
+f7ac2ab7-066b-47c6-b57d-c8365c25a60a GET /sounds/music-loop.mp3 206 61ms
+7c1a0f37-27e1-4762-a334-7cdca8ee5536 GET /site.webmanifest 200 2ms
+658d0ba1-5645-4e57-b54b-18ea4acabd2d GET /sounds/music-loop.mp3 206 81ms
+e0a5e5a7-72fa-4a05-b4b0-cc8399b3fa98 GET /my-biometrics 200 5ms
+f066c371-dd14-4069-bd19-9e27774ba0e6 GET /assets/index-BLDKzi-h.css 200 11ms
+c7723807-79e6-48d6-9ff5-12add3010e9f GET /assets/index-DfScIRv7.js 200 273ms
+e361f6cd-e029-415c-beff-dc4ffe2decde GET /version.json?t=1762880577733 200 2ms
+82d9bf77-2c8c-49e7-b0b8-b5fd0a2cddab GET /icons/icon-192x192.png 200 4ms
+ad6a6962-be87-4b3c-b297-c7ca1aff233b GET /my-biometrics 200 2ms
+6874e742-8e8f-40cf-bd08-67c0b21f7392 GET /version.json?t=1762880581299 200 1ms
+4a50bd79-2ff2-4f98-89d7-814d1ece7dfd GET /my-biometrics 200 2ms
+ceb8de75-fb88-4faa-bd0b-f39268c177af GET /version.json?t=1762880582032 200 2ms
+8ce47809-5f2c-4ff7-9403-357481331f5f GET /my-biometrics 200 3ms
+7ce9a079-fc0d-45de-b154-36507ee05f07 GET /version.json?t=1762880582584 200 1ms
+b778118c-75cf-4891-a6ff-70b7bbf311d4 GET / 200 2ms
+44e4b398-ca04-4108-97c1-dc9184a5ab97 GET /version.json?t=1762880600556 200 1ms
+3af73ff1-047d-4c23-835d-2b014423faa3 GET /api/users/1 304 6ms
+2cb3112c-9d6c-4ca5-add0-57119e7817f9 GET /sounds/music-loop.mp3 206 5ms

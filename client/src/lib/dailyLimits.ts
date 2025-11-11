@@ -17,9 +17,33 @@ const LS_KEY = (userId?: string) => `mpm.dailyLimits.${userId ?? "anon"}`;
 const TARGETS_KEY = (userId?: string) => `mpm.macroTargets.${userId ?? "anon"}`;
 
 // NEW: Persistent macro targets (not date-specific - stays until you change it)
-export function setMacroTargets(targets: MacroTargets, userId?: string) {
+export async function setMacroTargets(targets: MacroTargets, userId?: string): Promise<void> {
+  // Save to localStorage for offline support
   const key = TARGETS_KEY(userId);
   localStorage.setItem(key, JSON.stringify(targets));
+
+  // If we have a userId, also save to the database
+  if (userId) {
+    try {
+      const response = await fetch(`/api/users/${userId}/macro-targets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(targets),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save macro targets');
+      }
+
+      console.log('✅ Macro targets saved to database');
+    } catch (error) {
+      console.error('Failed to save macro targets to database:', error);
+      throw error; // Re-throw to let the caller handle it
+    }
+  } else {
+    throw new Error('User ID is required to save macro targets');
+  }
 }
 
 export function getMacroTargets(userId?: string): MacroTargets | null {

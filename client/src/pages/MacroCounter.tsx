@@ -22,6 +22,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
+import { useAuth } from "@/contexts/AuthContext";
 
 type Goal = "loss" | "maint" | "gain";
 type Sex = "male" | "female";
@@ -202,6 +203,8 @@ const getStarchyCarbs = (sex: Sex, goal: Goal) => {
 export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
 
   // Load calculator settings from localStorage
   const loadCalculatorSettings = () => {
@@ -614,24 +617,48 @@ export default function MacroCounter() {
             <div className="flex justify-center">
               <Button
                 id="calc-button"
-                onClick={() => {
-                  advance("calc");
-                  setMacroTargets({
-                    calories: results.target,
-                    protein_g: results.macros.protein.g,
-                    carbs_g: results.macros.carbs.g,
-                    fat_g: results.macros.fat.g,
-                  });
+                disabled={isSaving}
+                onClick={async () => {
+                  if (!user?.id) {
+                    toast({
+                      title: "Authentication Required",
+                      description: "Please sign in to save your macro targets.",
+                      variant: "destructive",
+                    });
+                    return;
+                  }
 
-                  toast({
-                    title: "Macro Targets Set!",
-                    description: "Your targets have been saved.",
-                  });
-                  setLocation("/my-biometrics");
+                  advance("calc");
+                  setIsSaving(true);
+
+                  try {
+                    await setMacroTargets({
+                      calories: results.target,
+                      protein_g: results.macros.protein.g,
+                      carbs_g: results.macros.carbs.g,
+                      fat_g: results.macros.fat.g,
+                    }, user.id);
+
+                    toast({
+                      title: "Macro Targets Set!",
+                      description: "Your targets have been saved to your profile.",
+                    });
+                    setLocation("/my-biometrics");
+                  } catch (error) {
+                    console.error("Failed to save macro targets:", error);
+                    toast({
+                      title: "Save Failed",
+                      description: error instanceof Error ? error.message : "Failed to save your macro targets. Please try again.",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setIsSaving(false);
+                  }
                 }}
-                className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200"
+                className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Target className="h-5 w-5 mr-2" /> Set Macro Targets
+                <Target className="h-5 w-5 mr-2" /> 
+                {isSaving ? "Saving..." : "Set Macro Targets"}
               </Button>
             </div>
           </>
