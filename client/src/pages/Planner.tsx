@@ -44,7 +44,7 @@ export default function Planner() {
       testId: "card-glp1-hub",
     },
     {
-      title: "Competition & Beachbody",
+      title: "Beach Body / Hard Body",
       description: "Contest prep meal planning with strategic macro timing",
       icon: Trophy,
       route: "/athlete-board",
