@@ -1,3 +1,4 @@
+
 // ⚠️ DEPRECATED: Replaced by DiabeticHub.tsx
 // This file is kept for rollback reference only
 // Last active: 2025-01-22
@@ -40,7 +41,7 @@ export default function DiabeticSupportHub_DEPRECATED() {
           className="flex items-center gap-2 text-white bg-black/20 backdrop-blur-none border border-white/30 hover:bg-black/40 transition-all duration-200 font-medium rounded-xl shadow-2xl"
         >
           <ArrowLeft className="h-4 w-4 text-white" />
-            Planner
+          Planner
         </Button>
       </div>
 
@@ -57,10 +58,16 @@ export default function DiabeticSupportHub_DEPRECATED() {
         </div>
       </div>
 
-      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 md:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 md:p-8 pt-20">
         <div className="max-w-6xl mx-auto">
-          {/* All the rest of your functional content will go here */}
-          {/* This is where the glycemic settings, forms, and other features are */}
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl">
+            <h1 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+              Blood Sugar History & Trends
+            </h1>
+            <p className="text-sm text-white/90 max-w-3xl mx-auto">
+              View your detailed glucose logs and 7-day trends
+            </p>
+          </div>
         </div>
       </div>
     </>
