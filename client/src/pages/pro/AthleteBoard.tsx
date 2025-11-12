@@ -92,13 +92,15 @@ function formatWeekLabel(weekStartISO: string): string {
   return `${fmt(start)}–${fmt(end)}`;
 }
 
-// Athlete Meal Slots - same schema as Weekly Meal Board, different labels
+// Pro Care Meal Slots - 5 meals for competition prep
 const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
   ["breakfast","Meal 1"],
   ["lunch","Meal 2"],
   ["dinner","Meal 3"],
   ["snacks","Meal 4"]
 ];
+
+// Meal 5 will be rendered separately using the snacks slot
 
 interface AthleteBoardProps {
   mode?: "athlete" | "procare";
@@ -1086,7 +1088,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           // DAY MODE: Show only the active day's meals
           (() => {
             const dayLists = getDayLists(board, activeDayISO);
-            return lists.map(([key, label]) => (
+            return (
+              <>
+                {lists.map(([key, label]) => (
               <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
@@ -1179,12 +1183,91 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   )}
                 </div>
               </section>
-            ));
+                ))}
+                
+                {/* Meal 5 - Additional meal slot for Pro Care */}
+                <section key="meal5" className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                        onClick={() => {
+                          setAiMealSlot("snacks");
+                          setAiMealModalOpen(true);
+                        }}
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        Create with AI
+                      </Button>
+
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-white/80 hover:bg-white/10"
+                        onClick={() => openManualModal("snacks")}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {dayLists.snacks.map((meal: Meal, idx: number) => (
+                      <MealCard
+                        key={meal.id}
+                        date={activeDayISO}
+                        slot="snacks"
+                        meal={meal}
+                        onUpdated={(m) => {
+                          if (m === null) {
+                            if (meal.id.startsWith('ai-meal-')) {
+                              console.log("🗑️ Deleting AI meal from localStorage:", meal.name);
+                              clearAIMealsCache();
+                            }
+
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.filter((existingMeal) =>
+                                existingMeal.id !== meal.id
+                              )
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard)
+                              .catch((err) => {
+                                console.error("❌ Delete failed (Day mode):", err);
+                              });
+                          } else {
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.map((existingMeal, i) =>
+                                i === idx ? m : existingMeal
+                              )
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard);
+                          }
+                        }}
+                      />
+                    ))}
+                    {dayLists.snacks.length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                        <p className="mb-2">No Meal 5 yet</p>
+                        <p className="text-xs text-white/40">Use "+" to add meals</p>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              </>
+            );
           })()
         ) : (
           // WEEK MODE: Show traditional week view (legacy lists)
-          lists.map(([key, label]) => (
-          <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+          <>
+            {lists.map(([key, label]) => (
+          <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
@@ -1277,7 +1360,87 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               )}
             </div>
           </section>
-          ))
+            ))}
+            
+            {/* Meal 5 - Additional meal slot for Pro Care */}
+            <section key="meal5" className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                    onClick={() => {
+                      setAiMealSlot("snacks");
+                      setAiMealModalOpen(true);
+                    }}
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    Create with AI
+                  </Button>
+
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="text-white/80 hover:bg-white/10"
+                    onClick={() => openManualModal("snacks")}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {board.lists.snacks.map((meal: Meal, idx: number) => (
+                  <MealCard
+                    key={meal.id}
+                    date={"board"}
+                    slot="snacks"
+                    meal={meal}
+                    onUpdated={(m) => {
+                      if (m === null) {
+                        if (!board) return;
+                        const updatedBoard = {
+                          ...board,
+                          lists: {
+                            ...board.lists,
+                            snacks: board.lists.snacks.filter((item: Meal) => item.id !== meal.id)
+                          },
+                          version: board.version + 1,
+                          meta: {
+                            ...board.meta,
+                            lastUpdatedAt: new Date().toISOString()
+                          }
+                        };
+                        setBoard(updatedBoard);
+                        saveBoard(updatedBoard).catch((err) => {
+                          console.error("❌ Delete failed (Board mode):", err);
+                        });
+                      } else {
+                        const updatedBoard = {
+                          ...board,
+                          lists: {
+                            ...board.lists,
+                            snacks: board.lists.snacks.map((item: Meal, i: number) => i === idx ? m : item)
+                          },
+                          version: board.version + 1
+                        };
+                        setBoard(updatedBoard);
+                        saveBoard(updatedBoard).catch(console.error);
+                      }
+                    }}
+                  />
+                ))}
+                {board.lists.snacks.length === 0 && (
+                  <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                    <p className="mb-2">No Meal 5 yet</p>
+                    <p className="text-xs text-white/40">Use "+" to add meals</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </>
         )}
 
           {/* Daily Totals Summary */}

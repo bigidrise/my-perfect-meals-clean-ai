@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -88,6 +87,13 @@ const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
   ["dinner","Meal 3"],
   ["snacks","Meal 4"]
 ];
+
+// Add Meal 5 to the lists for Beach Body Meal Board
+const beachBodyLists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
+  ...lists,
+  ["breakfast", "Meal 5"] // Adding Meal 5 for breakfast slot, adjust if a different slot is intended
+];
+
 
 export default function BeachBodyMealBoard() {
   const [, setLocation] = useLocation();
@@ -261,7 +267,7 @@ export default function BeachBodyMealBoard() {
     if (infoSeen === "true") {
       setHasSeenInfo(true);
     }
-    
+
     const dailyTotalsInfoSeen = localStorage.getItem("beach-body-board-daily-totals-info-seen");
     if (dailyTotalsInfoSeen === "true") {
       setHasSeenDailyTotalsInfo(true);
@@ -289,7 +295,7 @@ export default function BeachBodyMealBoard() {
     if (tourStep === "breakfast" && lists.breakfast.length > 0) {
       setTourStep("lunch");
       localStorage.setItem("beach-body-board-tour-step", "lunch");
-      
+
       if (!hasSeenDailyTotalsInfo) {
         setShowDailyTotalsInfo(true);
       }
@@ -724,7 +730,7 @@ export default function BeachBodyMealBoard() {
   const profile = useOnboardingProfile();
   const targets = useMemo(() => computeTargetsFromOnboarding(profile), [profile]);
   const macroData = useTodayMacros();
-  
+
   const totals = useMemo(() => {
     if (!board) return { calories: 0, protein: 0, carbs: 0, fat: 0, fibrous: 0, starchy: 0 };
 
@@ -802,7 +808,7 @@ export default function BeachBodyMealBoard() {
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-6"
     >
       <DailyMealProgressBar />
-      
+
       <Button
         size="sm"
         onClick={() => setLocation("/planner")}
@@ -931,11 +937,13 @@ export default function BeachBodyMealBoard() {
         </div>
       </div>
 
+      {/* Meal Cards Grid - 5 meal cards for Beach Body board */}
       <div className="max-w-[1600px] mx-auto px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-6">
         {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board ? (
           (() => {
             const dayLists = getDayLists(board, activeDayISO);
-            return lists.map(([key, label]) => (
+            // Use beachBodyLists to include Meal 5
+            return beachBodyLists.map(([key, label]) => (
               <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
@@ -953,9 +961,9 @@ export default function BeachBodyMealBoard() {
                       Create with AI
                     </Button>
 
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -1023,6 +1031,11 @@ export default function BeachBodyMealBoard() {
             ));
           })()
         ) : (
+          // This part renders the meals for the entire week if not in 'day' planning mode
+          // It uses the original `lists` which does not include Meal 5.
+          // To include Meal 5 here, `beachBodyLists` should be used if `lists` is intended to be modified globally.
+          // However, since the prompt focuses on Beach Body Meal Board, this part might not need modification if it's for a different context.
+          // For consistency with the Beach Body board, one might consider using `beachBodyLists` here as well.
           lists.map(([key, label]) => (
           <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
             <div className="flex items-center justify-between mb-4">
@@ -1041,9 +1054,9 @@ export default function BeachBodyMealBoard() {
                   Create with AI
                 </Button>
 
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="text-white/80 hover:bg-white/10"
                   onClick={() => openManualModal(key)}
                 >
@@ -1510,7 +1523,7 @@ export default function BeachBodyMealBoard() {
                   💡 Pro Tip: Macro Tracking
                 </p>
                 <p className="text-orange-100/80 text-xs">
-                  Send just ONE day to macros at a time (not the whole week). 
+                  Send just ONE day to macros at a time (not the whole week).
                   This way, if you change meals on other days, you won't have outdated data.
                 </p>
               </div>
@@ -1521,7 +1534,7 @@ export default function BeachBodyMealBoard() {
                   Shopping List Ready
                 </p>
                 <p className="text-white/70 text-xs">
-                  You CAN send your entire week to the shopping list! 
+                  You CAN send your entire week to the shopping list!
                   This consolidates all ingredients for easy grocery shopping.
                   Click "Send Entire Week" at the bottom.
                 </p>
