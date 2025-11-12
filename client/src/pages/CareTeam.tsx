@@ -596,7 +596,7 @@ function MemberCard({
         <div className="flex items-center gap-2">
           {member.status === "active" && (
             <Button
-              onClick={() => setLocation("/pro-portal")}
+              onClick={() => setLocation("/pro/clients")}
               className="bg-purple-600 hover:bg-purple-700 text-white"
               data-testid="button-open-pro-portal"
             >

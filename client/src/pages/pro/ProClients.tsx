@@ -46,11 +46,11 @@ export default function ProClients(){
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen p-4 text-white bg-gradient-to-br from-black/60 via-indigo-600 to-black/80"
+      className="min-h-screen p-4 text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
     >
       <div className="max-w-5xl mx-auto space-y-6 pt-2">
         <button
-          onClick={() => setLocation("/pro-portal")}
+          onClick={() => setLocation("/care-team")}
           className="mb-4 w-12 h-12 rounded-2xl bg-black/10 hover:bg-black/20 active:bg-black/20 flex items-center justify-center transition-colors shrink-0 overflow-hidden"
           data-testid="button-back"
         >
