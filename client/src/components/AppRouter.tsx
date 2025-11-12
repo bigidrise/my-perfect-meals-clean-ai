@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import WelcomeGate from "./WelcomeGate";
 import { TourProvider } from "@/contexts/TourContext";
+import DiabeticHub from "@/pages/physician/DiabeticHub";
+import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
+import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
+import PatientAssignmentDashboard from "@/pages/physician/PatientAssignmentDashboard";
+import { Route } from "wouter";
 
 interface AppRouterProps {
   children: React.ReactNode;
@@ -25,14 +30,14 @@ export default function AppRouter({ children }: AppRouterProps) {
         setLocation("/welcome");
         return;
       }
-      
+
       if (!hasChosenCoachMode) {
         // Authenticated but hasn't chosen coach mode → show WelcomeGate
         console.log("✨ Showing WelcomeGate for coach mode selection");
         setShowWelcomeGate(true);
         return;
       }
-      
+
       // Authenticated and has chosen coach mode → go to dashboard
       console.log("🏠 Redirecting to dashboard");
       setLocation("/dashboard");
@@ -67,6 +72,10 @@ export default function AppRouter({ children }: AppRouterProps) {
   return (
     <TourProvider>
       {children}
+      <Route path="/diabetic-hub" component={DiabeticHub} />
+      <Route path="/diabetic-menu-builder" component={DiabeticMenuBuilder} />
+      <Route path="/diabetes-support" component={DiabetesSupportPage} />
+      <Route path="/procare/patient-assignment" component={PatientAssignmentDashboard} />
     </TourProvider>
   );
 }
