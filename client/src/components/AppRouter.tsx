@@ -72,10 +72,6 @@ export default function AppRouter({ children }: AppRouterProps) {
   return (
     <TourProvider>
       {children}
-      <Route path="/diabetic-hub" component={DiabeticHub} />
-      <Route path="/diabetic-menu-builder" component={DiabeticMenuBuilder} />
-      <Route path="/diabetes-support" component={DiabetesSupportPage} />
-      <Route path="/procare/patient-assignment" component={PatientAssignmentDashboard} />
     </TourProvider>
   );
 }
