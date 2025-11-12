@@ -1,92 +1,62 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "./use-toast";
+import type { PatientSummary, GuardrailAuditRow, Guardrails } from "../../../shared/diabetes-schema";
 
-interface Patient {
-  id: string;
-  name: string;
-  email: string;
-  condition: "T2D" | "GLP1" | "CARDIAC";
-  currentPreset?: string;
-  latestGlucose?: number;
-  lastUpdated?: string;
-  guardrails?: {
-    fastingMin: number;
-    fastingMax: number;
-    postMealMax: number;
-    carbLimit: number;
-  };
-  inRange?: boolean;
-}
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
-interface Guardrails {
-  fastingMin: number;
-  fastingMax: number;
-  postMealMax: number;
-  carbLimit: number;
-  fiberMin?: number;
-  giCap?: number;
-  mealFrequency?: number;
-  presetId?: string;
+async function fetchApi(path: string, options?: RequestInit) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
 
 export function usePatients() {
-  return useQuery<Patient[]>({
+  return useQuery({
     queryKey: ["patients"],
-    queryFn: async () => {
-      const res = await fetch("/api/patients", { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch patients");
-      return res.json();
-    },
-    refetchInterval: 30000, // Poll every 30 seconds
+    queryFn: () => fetchApi("/api/patients") as Promise<PatientSummary[]>,
+    staleTime: 30_000,
+    refetchInterval: 30_000,
   });
 }
 
-export function usePatientDetails(patientId: string) {
+export function usePatient(patientId: string) {
   return useQuery({
     queryKey: ["patient", patientId],
-    queryFn: async () => {
-      const res = await fetch(`/api/patients/${patientId}`, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch patient details");
-      return res.json();
-    },
+    queryFn: () => fetchApi(`/api/patients/${patientId}`) as Promise<{
+      profile: { guardrails?: Guardrails | null } | null;
+      guardrails: Guardrails | null;
+      glucose: { value: number; context: string; at: string }[];
+    }>,
     enabled: !!patientId,
   });
 }
 
-export function useUpdateGuardrails() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
+export function useUpdatePatientGuardrails(patientId: string) {
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ patientId, guardrails }: { patientId: string; guardrails: Guardrails }) => {
-      const res = await fetch(`/api/patients/${patientId}/guardrails`, {
+    mutationFn: async (guardrails: Guardrails) => {
+      await fetchApi(`/api/patients/${patientId}/guardrails`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(guardrails),
+        body: JSON.stringify({ guardrails }),
       });
-      if (!res.ok) throw new Error("Failed to update guardrails");
-      return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["patients"] });
-      toast({ title: "Guardrails updated successfully" });
-    },
-    onError: () => {
-      toast({ title: "Failed to update guardrails", variant: "destructive" });
+      qc.invalidateQueries({ queryKey: ["patients"] });
+      qc.invalidateQueries({ queryKey: ["patient", patientId] });
     },
   });
 }
 
-export function useAuditTrail(patientId: string) {
+export function usePatientAudit(patientId: string) {
   return useQuery({
-    queryKey: ["audit", patientId],
-    queryFn: async () => {
-      const res = await fetch(`/api/patients/${patientId}/audit`, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch audit trail");
-      return res.json();
-    },
+    queryKey: ["patient-audit", patientId],
+    queryFn: () => fetchApi(`/api/patients/${patientId}/audit`) as Promise<GuardrailAuditRow[]>,
     enabled: !!patientId,
   });
 }

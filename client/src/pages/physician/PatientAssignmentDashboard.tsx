@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { ArrowLeft, Search, Filter, User, Activity, Clock, Edit2, Eye } from "lucide-react";
+import { ArrowLeft, Search, Filter, User, Activity, Clock, Edit2, Eye, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { DIABETIC_PRESETS } from "@/data/diabeticPresets";
 import { usePatients } from "@/hooks/usePatients";
+import { Card } from "@/components/ui/card";
 
 interface PatientRecord {
   id: string;
@@ -25,6 +25,11 @@ interface PatientRecord {
     postMealMax: number;
     carbLimit: number;
   };
+  // These are added for the new table view
+  inRange: boolean | null;
+  preset?: string;
+  carbLimit?: number;
+  lastUpdatedReadable?: string;
 }
 
 // Mock data - will be replaced with real API calls
@@ -37,7 +42,11 @@ const mockPatients: PatientRecord[] = [
     currentPreset: "standard",
     latestGlucose: 145,
     lastUpdated: "2024-01-15T10:30:00Z",
-    guardrails: { fastingMin: 80, fastingMax: 130, postMealMax: 180, carbLimit: 150 }
+    guardrails: { fastingMin: 80, fastingMax: 130, postMealMax: 180, carbLimit: 150 },
+    inRange: true,
+    preset: "Standard Care",
+    carbLimit: 150,
+    lastUpdatedReadable: "2024-01-15",
   },
   {
     id: "patient-2",
@@ -47,7 +56,11 @@ const mockPatients: PatientRecord[] = [
     currentPreset: "glp1",
     latestGlucose: 115,
     lastUpdated: "2024-01-15T09:15:00Z",
-    guardrails: { fastingMin: 80, fastingMax: 120, postMealMax: 160, carbLimit: 120 }
+    guardrails: { fastingMin: 80, fastingMax: 120, postMealMax: 160, carbLimit: 120 },
+    inRange: true,
+    preset: "GLP-1 Focus",
+    carbLimit: 120,
+    lastUpdatedReadable: "2024-01-15",
   },
   {
     id: "patient-3",
@@ -57,7 +70,11 @@ const mockPatients: PatientRecord[] = [
     currentPreset: "cardiac",
     latestGlucose: 98,
     lastUpdated: "2024-01-14T16:45:00Z",
-    guardrails: { fastingMin: 80, fastingMax: 130, postMealMax: 180, carbLimit: 130 }
+    guardrails: { fastingMin: 80, fastingMax: 130, postMealMax: 180, carbLimit: 130 },
+    inRange: true,
+    preset: "Cardiac Support",
+    carbLimit: 130,
+    lastUpdatedReadable: "2024-01-14",
   }
 ];
 
@@ -65,11 +82,11 @@ export default function PatientAssignmentDashboard() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCondition, setFilterCondition] = useState<string>("all");
   const [filterPreset, setFilterPreset] = useState<string>("all");
-  
+
   const { data: patientsData, isLoading } = usePatients();
   const patients = patientsData || [];
 
@@ -116,7 +133,7 @@ export default function PatientAssignmentDashboard() {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
     return `${Math.floor(diffMins / 1440)}d ago`;
@@ -147,7 +164,7 @@ export default function PatientAssignmentDashboard() {
         <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/10 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto p-4 md:p-8 pb-24 relative z-10">
-          
+
           {/* Header */}
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
@@ -224,100 +241,79 @@ export default function PatientAssignmentDashboard() {
                 <p className="text-white/60 text-sm mt-2">Try adjusting your filters or search query</p>
               </div>
             ) : (
-              filteredPatients.map((patient) => {
-                const glucoseStatus = getGlucoseStatus(patient.latestGlucose);
-                
-                return (
-                  <div
-                    key={patient.id}
-                    className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-6 relative overflow-hidden hover:bg-black/40 transition-all"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-                    
-                    <div className="relative z-10">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        {/* Patient Info */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="w-12 h-12 bg-blue-500/30 rounded-full flex items-center justify-center">
-                              <User className="h-6 w-6 text-white" />
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-semibold text-white">{patient.name}</h3>
-                              <p className="text-sm text-white/70">{patient.email}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            <Badge className="bg-purple-600/40 text-purple-100">
-                              {patient.condition}
-                            </Badge>
-                            <Badge className="bg-blue-600/40 text-blue-100">
-                              {getPresetLabel(patient.currentPreset)}
-                            </Badge>
-                          </div>
-                        </div>
+              <Card className="bg-zinc-900/80 border-white/10 p-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-white">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="text-left p-3">Patient</th>
+                        <th className="text-left p-3">Latest Glucose</th>
+                        <th className="text-left p-3">Status</th>
+                        <th className="text-left p-3">Preset</th>
+                        <th className="text-left p-3">Carb Limit</th>
+                        <th className="text-left p-3">Last Updated</th>
+                        <th className="text-right p-3">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredPatients.map((patient) => {
+                        const glucoseStatus = getGlucoseStatus(patient.latestGlucose);
 
-                        {/* Metrics */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          <div className="text-center">
-                            <div className="text-xs text-white/60 mb-1">Latest Glucose</div>
-                            <div className={`text-lg font-semibold ${
-                              glucoseStatus.color === 'green' ? 'text-green-300' :
-                              glucoseStatus.color === 'yellow' ? 'text-yellow-300' :
-                              glucoseStatus.color === 'red' ? 'text-red-300' : 'text-white/40'
-                            }`}>
-                              {patient.latestGlucose || '--'} mg/dL
-                            </div>
-                            <div className="text-xs text-white/60">{glucoseStatus.text}</div>
-                          </div>
-
-                          <div className="text-center">
-                            <div className="text-xs text-white/60 mb-1">Carb Limit</div>
-                            <div className="text-lg font-semibold text-white">
-                              {patient.guardrails?.carbLimit || '--'}g
-                            </div>
-                          </div>
-
-                          <div className="text-center">
-                            <div className="text-xs text-white/60 mb-1 flex items-center justify-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              Last Update
-                            </div>
-                            <div className="text-sm text-white/80">
-                              {formatTimestamp(patient.lastUpdated)}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={() => {
-                              toast({ title: "View feature coming soon" });
-                            }}
-                            className="bg-blue-500/30 hover:bg-blue-500/50 text-white border border-white/20"
-                            size="sm"
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              toast({ title: "Edit feature coming soon" });
-                            }}
-                            className="bg-orange-500/30 hover:bg-orange-500/50 text-white border border-white/20"
-                            size="sm"
-                          >
-                            <Edit2 className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
+                        return (
+                          <tr key={patient.id} className="border-b border-white/5 hover:bg-white/5">
+                            <td className="p-3">
+                              <div>
+                                <div className="font-medium">{patient.name}</div>
+                                <div className="text-xs text-white/60">{patient.email}</div>
+                              </div>
+                            </td>
+                            <td className="p-3">
+                              {patient.latestGlucose ?? "—"}
+                              {patient.latestGlucose && " mg/dL"}
+                            </td>
+                            <td className="p-3">
+                              {glucoseStatus.text === "No data" ? (
+                                <span className="text-white/40">No data</span>
+                              ) : glucoseStatus.text === "In range" ? (
+                                <span className="text-green-400">✅ In Range</span>
+                              ) : (
+                                <span className="text-red-400">⚠️ Out of Range</span>
+                              )}
+                            </td>
+                            <td className="p-3">{patient.preset ?? "—"}</td>
+                            <td className="p-3">{patient.carbLimit ?? "—"}g</td>
+                            <td className="p-3 text-white/60 text-xs">
+                              {patient.lastUpdatedReadable ? patient.lastUpdatedReadable : "—"}
+                            </td>
+                            <td className="p-3 text-right">
+                              <div className="flex gap-2 justify-end">
+                                <Button
+                                  onClick={() => {
+                                    toast({ title: "View feature coming soon" });
+                                  }}
+                                  className="bg-blue-500/30 hover:bg-blue-500/50 text-white border border-white/20"
+                                  size="sm"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    toast({ title: "History feature coming soon" });
+                                  }}
+                                  className="bg-orange-500/30 hover:bg-orange-500/50 text-white border border-white/20"
+                                  size="sm"
+                                >
+                                  <History className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
             )}
           </div>
 
@@ -329,15 +325,15 @@ export default function PatientAssignmentDashboard() {
             </div>
             <div className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/20 text-center">
               <div className="text-3xl font-bold text-green-300 mb-2">
-                {patients.filter(p => p.latestGlucose && p.latestGlucose >= 70 && p.latestGlucose <= 180).length}
+                {patients.filter(p => p.inRange === true).length}
               </div>
               <div className="text-sm text-white/70">In Range</div>
             </div>
             <div className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/20 text-center">
               <div className="text-3xl font-bold text-yellow-300 mb-2">
-                {patients.filter(p => p.latestGlucose && p.latestGlucose > 180).length}
+                {patients.filter(p => p.inRange === false).length}
               </div>
-              <div className="text-sm text-white/70">High Glucose</div>
+              <div className="text-sm text-white/70">Out of Range</div>
             </div>
             <div className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/20 text-center">
               <div className="text-3xl font-bold text-blue-300 mb-2">

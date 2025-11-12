@@ -1,6 +1,6 @@
 
 import { pgTable, text, timestamp, jsonb, integer } from "drizzle-orm/pg-core";
-import { users } from "./schema";
+import { users } from "../schema";
 
 export const guardrailAuditLog = pgTable("guardrail_audit_log", {
   id: text("id").primaryKey(),

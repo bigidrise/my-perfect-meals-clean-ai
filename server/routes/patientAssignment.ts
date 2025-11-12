@@ -1,260 +1,150 @@
-
 import { Router } from "express";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "../db";
+import { users, diabetesProfile, guardrailAuditLog } from "../db/schema";
 import { z } from "zod";
-import { db } from "@db";
-import { users, diabetesProfile, glucoseLogs, guardrailAuditLog } from "@db/schema";
-import { eq, desc, and } from "drizzle-orm";
+import crypto from "crypto";
 
-const router = Router();
+const r = Router();
 
-// Authorization middleware for healthcare professionals
-const requireHealthcarePro = (req: any, res: any, next: any) => {
-  if (!req.user || !['doctor', 'coach', 'trainer'].includes(req.user.role)) {
-    return res.status(403).json({ error: "Access denied. Healthcare professional role required." });
+function proRole(req: any, res: any, next: any) {
+  const role = req.user?.role;
+  if (!role || !["doctor", "coach", "trainer"].includes(role)) {
+    return res.status(403).json({ error: "Forbidden" });
   }
   next();
-};
+}
 
-router.use(requireHealthcarePro);
+const GuardrailsZ = z.object({
+  fastingMin: z.number().int().optional(),
+  fastingMax: z.number().int().optional(),
+  postMealMax: z.number().int().optional(),
+  carbLimit: z.number().int().optional(),
+  fiberMin: z.number().int().optional(),
+  giCap: z.number().int().optional(),
+  mealFrequency: z.number().int().optional(),
+  presetId: z.string().nullable().optional(),
+}).partial();
 
-// GET /api/patients - Get all patients with summary data
-router.get("/", async (req, res) => {
-  try {
-    const doctorId = req.user.id;
+function computeInRange(glucose: number | null, gr?: any): boolean | null {
+  if (glucose == null) return null;
+  const fmin = gr?.fastingMin ?? 80;
+  const fmax = gr?.fastingMax ?? 120;
+  return glucose >= fmin && glucose <= fmax;
+}
 
-    // Get all patients assigned to this doctor
-    const patients = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-      })
-      .from(users)
-      .where(eq(users.assignedDoctorId, doctorId));
+r.get("/api/patients", proRole, async (req: any, res) => {
+  const doctorId = req.user.id;
 
-    // Fetch diabetes profiles and latest glucose for each patient
-    const enrichedPatients = await Promise.all(
-      patients.map(async (patient) => {
-        const [profile] = await db
-          .select()
-          .from(diabetesProfile)
-          .where(eq(diabetesProfile.userId, patient.id))
-          .limit(1);
+  const rows = await db
+    .select({
+      userId: users.id,
+      name: users.name,
+      email: users.email,
+      guardrails: diabetesProfile.guardrails,
+      lastUpdated: diabetesProfile.updatedAt,
+    })
+    .from(users)
+    .leftJoin(diabetesProfile, eq(diabetesProfile.userId, users.id))
+    .where(eq(users.role, "user"));
 
-        const [latestGlucose] = await db
-          .select()
-          .from(glucoseLogs)
-          .where(eq(glucoseLogs.userId, patient.id))
-          .orderBy(desc(glucoseLogs.recordedAt))
-          .limit(1);
+  const results = rows.map((row) => {
+    const latestGlucose = null;
+    const inRange = computeInRange(latestGlucose, row.guardrails ?? undefined);
+    const carbLimit = row.guardrails?.carbLimit ?? null;
+    const preset = row.guardrails?.presetId ?? null;
 
-        const guardrails = profile?.guardrails as any || null;
-        const glucoseValue = latestGlucose?.valueMgdl || null;
+    return {
+      id: row.userId,
+      name: row.name ?? "Unknown",
+      email: row.email ?? "",
+      condition: "T2D" as const,
+      latestGlucose,
+      inRange,
+      preset,
+      carbLimit,
+      lastUpdated: row.lastUpdated ?? null,
+    };
+  });
 
-        // Determine condition based on profile type
-        let condition = "T2D";
-        if (profile?.type === "TYPE_1") condition = "T1D";
-        if (guardrails?.presetId === "cardiac") condition = "CARDIAC";
-        if (guardrails?.presetId === "glp1") condition = "GLP1";
-
-        // Determine if in range
-        let inRange = false;
-        if (glucoseValue && guardrails) {
-          const { fastingMin = 80, postMealMax = 180 } = guardrails;
-          inRange = glucoseValue >= fastingMin && glucoseValue <= postMealMax;
-        }
-
-        return {
-          id: patient.id,
-          name: patient.name || "Unknown",
-          email: patient.email,
-          condition,
-          currentPreset: guardrails?.presetId || "custom",
-          latestGlucose: glucoseValue,
-          lastUpdated: latestGlucose?.recordedAt || profile?.updatedAt,
-          guardrails: guardrails || {
-            fastingMin: 80,
-            fastingMax: 130,
-            postMealMax: 180,
-            carbLimit: 150,
-          },
-          inRange,
-        };
-      })
-    );
-
-    res.json(enrichedPatients);
-  } catch (error) {
-    console.error("Error fetching patients:", error);
-    res.status(500).json({ error: "Failed to fetch patients" });
-  }
+  res.json(results);
 });
 
-// GET /api/patients/:id - Get full patient details
-router.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const doctorId = req.user.id;
+r.get("/api/patients/:id", proRole, async (req: any, res) => {
+  const patientId = req.params.id;
 
-    // Verify patient is assigned to this doctor
-    const [patient] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, id), eq(users.assignedDoctorId, doctorId)))
-      .limit(1);
+  const profile = await db.query.diabetesProfile.findFirst({
+    where: eq(diabetesProfile.userId, patientId),
+  });
 
-    if (!patient) {
-      return res.status(404).json({ error: "Patient not found or not assigned to you" });
-    }
+  res.json({
+    profile: profile ?? null,
+    guardrails: profile?.guardrails ?? null,
+    glucose: [],
+  });
+});
 
-    const [profile] = await db
-      .select()
-      .from(diabetesProfile)
-      .where(eq(diabetesProfile.userId, id))
-      .limit(1);
+r.put("/api/patients/:id/guardrails", proRole, async (req: any, res) => {
+  const doctorId = req.user.id;
+  const patientId = req.params.id;
 
-    const recentGlucose = await db
-      .select()
-      .from(glucoseLogs)
-      .where(eq(glucoseLogs.userId, id))
-      .orderBy(desc(glucoseLogs.recordedAt))
-      .limit(10);
+  const parsed = GuardrailsZ.safeParse(req.body?.guardrails ?? {});
+  if (!parsed.success) return res.status(400).json(parsed.error.format());
 
-    res.json({
-      id: patient.id,
-      name: patient.name,
-      email: patient.email,
-      profile: profile || null,
-      recentGlucose,
+  const newGR = parsed.data;
+
+  const existing = await db.query.diabetesProfile.findFirst({
+    where: eq(diabetesProfile.userId, patientId),
+  });
+
+  const oldGR = existing?.guardrails ?? null;
+
+  if (!existing) {
+    await db.insert(diabetesProfile).values({
+      userId: patientId,
+      type: "T2D",
+      medications: null,
+      hypoHistory: false,
+      a1cPercent: null,
+      guardrails: newGR,
     });
-  } catch (error) {
-    console.error("Error fetching patient details:", error);
-    res.status(500).json({ error: "Failed to fetch patient details" });
-  }
-});
-
-// PUT /api/patients/:id/guardrails - Update patient guardrails
-const guardrailSchema = z.object({
-  fastingMin: z.number(),
-  fastingMax: z.number(),
-  postMealMax: z.number(),
-  carbLimit: z.number(),
-  fiberMin: z.number().optional(),
-  giCap: z.number().optional(),
-  mealFrequency: z.number().optional(),
-  presetId: z.string().optional(),
-});
-
-router.put("/:id/guardrails", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const doctorId = req.user.id;
-
-    // Verify patient is assigned to this doctor
-    const [patient] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, id), eq(users.assignedDoctorId, doctorId)))
-      .limit(1);
-
-    if (!patient) {
-      return res.status(404).json({ error: "Patient not found or not assigned to you" });
-    }
-
-    const guardrails = guardrailSchema.parse(req.body);
-
-    // Get current profile to log changes
-    const [currentProfile] = await db
-      .select()
-      .from(diabetesProfile)
-      .where(eq(diabetesProfile.userId, id))
-      .limit(1);
-
-    const oldGuardrails = (currentProfile?.guardrails as any) || {};
-
-    // Update the profile
+  } else {
     await db
-      .insert(diabetesProfile)
-      .values({
-        userId: id,
-        type: currentProfile?.type || "TYPE_2",
-        hypoHistory: currentProfile?.hypoHistory || false,
-        guardrails,
-        updatedAt: new Date(),
-      })
-      .onConflictDoUpdate({
-        target: diabetesProfile.userId,
-        set: {
-          guardrails,
-          updatedAt: new Date(),
-        },
-      });
-
-    // Log each changed field
-    const auditEntries = [];
-    for (const [field, newValue] of Object.entries(guardrails)) {
-      const oldValue = oldGuardrails[field];
-      if (oldValue !== newValue) {
-        auditEntries.push({
-          id: `audit-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-          doctorId,
-          patientId: id,
-          field,
-          oldValue: oldValue?.toString() || null,
-          newValue: newValue?.toString() || "",
-          updatedAt: new Date(),
-        });
-      }
-    }
-
-    if (auditEntries.length > 0) {
-      await db.insert(guardrailAuditLog).values(auditEntries);
-    }
-
-    res.json({ success: true, guardrails });
-  } catch (error) {
-    console.error("Error updating guardrails:", error);
-    res.status(500).json({ error: "Failed to update guardrails" });
+      .update(diabetesProfile)
+      .set({ guardrails: newGR })
+      .where(eq(diabetesProfile.userId, patientId));
   }
+
+  await db.insert(guardrailAuditLog).values({
+    id: crypto.randomUUID(),
+    doctorId,
+    patientId,
+    field: "guardrails",
+    oldValue: JSON.stringify(oldGR),
+    newValue: JSON.stringify(newGR),
+  });
+
+  res.json({ ok: true });
 });
 
-// GET /api/patients/:id/audit - Get audit trail
-router.get("/:id/audit", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const doctorId = req.user.id;
+r.get("/api/patients/:id/audit", proRole, async (req: any, res) => {
+  const patientId = req.params.id;
 
-    // Verify patient is assigned to this doctor
-    const [patient] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, id), eq(users.assignedDoctorId, doctorId)))
-      .limit(1);
+  const rows = await db
+    .select({
+      id: guardrailAuditLog.id,
+      doctorId: guardrailAuditLog.doctorId,
+      patientId: guardrailAuditLog.patientId,
+      field: guardrailAuditLog.field,
+      oldValue: guardrailAuditLog.oldValue,
+      newValue: guardrailAuditLog.newValue,
+      updatedAt: guardrailAuditLog.updatedAt,
+    })
+    .from(guardrailAuditLog)
+    .where(eq(guardrailAuditLog.patientId, patientId))
+    .orderBy(desc(guardrailAuditLog.updatedAt));
 
-    if (!patient) {
-      return res.status(404).json({ error: "Patient not found or not assigned to you" });
-    }
-
-    const audit = await db
-      .select({
-        id: guardrailAuditLog.id,
-        field: guardrailAuditLog.field,
-        oldValue: guardrailAuditLog.oldValue,
-        newValue: guardrailAuditLog.newValue,
-        updatedAt: guardrailAuditLog.updatedAt,
-        doctorName: users.name,
-      })
-      .from(guardrailAuditLog)
-      .leftJoin(users, eq(guardrailAuditLog.doctorId, users.id))
-      .where(eq(guardrailAuditLog.patientId, id))
-      .orderBy(desc(guardrailAuditLog.updatedAt));
-
-    res.json(audit);
-  } catch (error) {
-    console.error("Error fetching audit trail:", error);
-    res.status(500).json({ error: "Failed to fetch audit trail" });
-  }
+  res.json(rows);
 });
 
-export default router;
+export default r;

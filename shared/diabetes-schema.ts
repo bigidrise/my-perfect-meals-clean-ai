@@ -41,6 +41,28 @@ export const DEFAULT_GUARDRAILS: Guardrails = {
   mealFrequency: 4,
 };
 
+export type PatientSummary = {
+  id: string;
+  name: string;
+  email: string;
+  condition: "T2D" | "CARDIAC_DIABETIC" | "OTHER";
+  latestGlucose: number | null;
+  inRange: boolean | null;
+  preset: string | null;
+  carbLimit: number | null;
+  lastUpdated: string | null;
+};
+
+export type GuardrailAuditRow = {
+  id: string;
+  doctorId: string;
+  patientId: string;
+  field: string;
+  oldValue: unknown;
+  newValue: unknown;
+  updatedAt: string;
+};
+
 export const diabetesProfile = pgTable("diabetes_profile", {
   userId: uuid("user_id").primaryKey(),
   type: diabetesTypeEnum("type").notNull().default("NONE"),
