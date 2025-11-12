@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
+import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 
 interface AIMealCreatorModalProps {
   open: boolean;
@@ -150,12 +151,38 @@ export default function AIMealCreatorModal({
             >
               Available Ingredients (separated by commas):
             </label>
+            
+            {/* Snack Category Suggestions */}
+            {mealSlot === "snacks" && !isLoading && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {SNACK_CATEGORIES.map((category) => (
+                  <button
+                    key={category.name}
+                    type="button"
+                    onClick={() => {
+                      const categoryItems = category.items.slice(0, 3).join(", ");
+                      setIngredients((prev) =>
+                        prev ? `${prev}, ${categoryItems}` : categoryItems
+                      );
+                    }}
+                    className="px-3 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-400/30 rounded-lg text-xs text-white/90 transition-colors"
+                  >
+                    {category.emoji} {category.name}
+                  </button>
+                ))}
+              </div>
+            )}
+            
             <div className="relative">
               <textarea
                 id="ai-ingredients"
                 value={ingredients}
                 onChange={(e) => setIngredients(e.target.value)}
-                placeholder="e.g., eggs, spinach, cheese, tomatoes, bread"
+                placeholder={
+                  mealSlot === "snacks"
+                    ? "e.g., greek yogurt, berries, almonds, dark chocolate"
+                    : "e.g., eggs, spinach, cheese, tomatoes, bread"
+                }
                 className="w-full p-4 pr-10 border border-white/30 bg-black/30 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder:text-white/50"
                 rows={4}
                 disabled={isLoading}
