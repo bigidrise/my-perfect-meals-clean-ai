@@ -54,7 +54,7 @@ export default function MealIngredientPicker({
   const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats'>('proteins');
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
-  
+
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(() => {
@@ -64,10 +64,10 @@ export default function MealIngredientPicker({
       return false;
     }
   });
-  
+
   // 🎯 Macro Targeting State with localStorage persistence
   const MACRO_TARGETS_CACHE_KEY = `macro-targets-${mealSlot}`;
-  
+
   const [macroTargetingEnabled, setMacroTargetingEnabled] = useState(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -76,7 +76,7 @@ export default function MealIngredientPicker({
       return false;
     }
   });
-  
+
   const [targetProtein, setTargetProtein] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -85,7 +85,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const [targetCarbs, setTargetCarbs] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -94,7 +94,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const [targetFat, setTargetFat] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -103,7 +103,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const { toast } = useToast();
 
   // Handle info modal close - mark as seen
@@ -196,7 +196,7 @@ export default function MealIngredientPicker({
 
     try {
       const allIngredients = [...selectedIngredients];
-      
+
       if (customIngredients.trim()) {
         allIngredients.push(...customIngredients.split(',').map(i => i.trim()).filter(Boolean));
       }
@@ -223,7 +223,7 @@ export default function MealIngredientPicker({
       console.log('🍳 AI Meal Creator received data:', data);
 
       const generatedMeal = data.meals?.[0];
-      
+
       if (!generatedMeal) {
         throw new Error('No meal generated');
       }
@@ -244,7 +244,7 @@ export default function MealIngredientPicker({
       };
 
       onMealGenerated(mealWithImage);
-      
+
       setSelectedIngredients([]);
       setCustomIngredients('');
       setActiveCategory('proteins');
