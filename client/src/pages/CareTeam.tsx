@@ -259,34 +259,37 @@ export default function CareTeamPage() {
               <div className="flex items-center gap-2">
                 <Mail className="h-5 w-5 text-indigo-300" />
                 <h2 className="text-xl font-bold text-white">
-                  Invite by Email
+                  Invite Your Professional
                 </h2>
               </div>
+              <p className="text-white/70 text-sm">
+                Invite your trainer, doctor, or nutritionist to access your meal plan.
+              </p>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-white/80">Professional Role</Label>
+                  <Label className="text-white/80">Their Role</Label>
                   <Select
                     value={role}
                     onValueChange={(v) => setRole(v as Role)}
                   >
                     <SelectTrigger className="bg-black/40 border-white/20 text-white">
-                      <SelectValue placeholder="Choose role" />
+                      <SelectValue placeholder="Select their role" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="trainer">Trainer</SelectItem>
-                      <SelectItem value="doctor">Doctor</SelectItem>
-                      <SelectItem value="nutritionist">Nutritionist</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      <SelectItem value="trainer">Trainer / Coach</SelectItem>
+                      <SelectItem value="doctor">Doctor / Physician</SelectItem>
+                      <SelectItem value="nutritionist">Nutritionist / Dietitian</SelectItem>
+                      <SelectItem value="other">Other Professional</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-white/80">Email</Label>
+                  <Label className="text-white/80">Their Email</Label>
                   <Input
                     value={invEmail}
                     onChange={(e) => setInvEmail(e.target.value)}
-                    placeholder="pro@domain.com"
+                    placeholder="professional@email.com"
                     className="bg-black/40 text-white border-white/20 placeholder:text-white/40"
                     data-testid="input-invite-email"
                   />

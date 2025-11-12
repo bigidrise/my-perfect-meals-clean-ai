@@ -23,22 +23,22 @@ export default function ProClients(){
     const next = [c, ...clients]; setClients(next); proStore.saveClients(next);
     setName(""); setEmail(""); setRole("trainer");
   };
-  
+
   const archiveClient = (id: string) => {
     proStore.archiveClient(id);
     setClients([...proStore.listClients()]);
   };
-  
+
   const restoreClient = (id: string) => {
     proStore.restoreClient(id);
     setClients([...proStore.listClients()]);
   };
-  
+
   const deleteClient = (id: string, name: string) => {
     proStore.deleteClient(id);
     setClients([...proStore.listClients()]);
   };
-  
+
   const go = (id:string)=> setLocation(`/pro/clients/${id}`);
 
   return (
@@ -74,26 +74,16 @@ export default function ProClients(){
         </div>
 
         <Card className="bg-white/5 border border-white/20">
-          <CardHeader><CardTitle className="text-white">Add Client</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-white">Add Client</CardTitle>
+            <p className="text-sm text-white/60 mt-1">Enter your client's information</p>
+          </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Input placeholder="Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
-              <Input placeholder="Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
+              <Input placeholder="Client Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
+              <Input placeholder="Client Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Select value={role} onValueChange={(v) => setRole(v as ProRole)}>
-                <SelectTrigger className="bg-black/30 border-white/30 text-white">
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="trainer">Trainer / Coach</SelectItem>
-                  <SelectItem value="doctor">Doctor / Physician</SelectItem>
-                  <SelectItem value="nurse">Nurse</SelectItem>
-                  <SelectItem value="pa">Physician Assistant</SelectItem>
-                  <SelectItem value="nutritionist">Nutritionist</SelectItem>
-                  <SelectItem value="dietitian">Dietitian</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-end">
               <Button onClick={add} className="bg-white/10 border border-white/20 text-white hover:bg-white/20"><Plus className="h-4 w-4 mr-1" />Add Client</Button>
             </div>
           </CardContent>
