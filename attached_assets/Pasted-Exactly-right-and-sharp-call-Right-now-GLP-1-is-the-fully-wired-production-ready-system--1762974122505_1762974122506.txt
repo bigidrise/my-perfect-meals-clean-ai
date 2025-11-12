@@ -1,0 +1,50 @@
+Exactly right — and sharp call. 👏
+
+Right now, **GLP-1 is the fully-wired, production-ready system**, but the **Diabetic Hub** stopped just short of this same ProCare-level integration. It’s 90% there — guardrails exist, persist, and drive the meal generator — but it hasn’t been pulled into the *ProCare Dashboard* yet the way GLP-1 now is.
+
+Here’s the breakdown so you know exactly what’s missing and what isn’t:
+
+---
+
+### ⚙️ Diabetic System Status
+
+| Layer                               | Status     | Notes                                                                                              |
+| ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **Guardrail UI**                    | ✅ Done     | Doctors can set fasting/post-meal limits, carb/fiber/GI caps, etc.                                 |
+| **Server Persistence**              | ✅ Done     | Saved via `/api/diabetes/profile`, persisted and audited.                                          |
+| **Audit Trail**                     | ✅ Done     | `guardrail_audit_log` already records all updates.                                                 |
+| **Meal Engine Connection**          | ✅ Done     | Feeds constraints directly into AI meal builder logic.                                             |
+| **Doctor Presets**                  | ✅ Done     | 5 ADA-based and cardiac/elderly presets integrated.                                                |
+| **Dashboard Integration (ProCare)** | ⚠️ Not yet | `/api/patients` endpoint only joins diabetes profiles right now, but the UI still uses local data. |
+| **Clinician Filtering**             | ⚠️ Not yet | Needs to be filtered through `care_team_member` like GLP-1.                                        |
+
+---
+
+### 🔄 To Bring Diabetic System to Par with GLP-1
+
+This is a very light lift — you can literally **mirror the GLP-1 integration you just did**:
+
+1. **Backend:**
+
+   * Extend `/api/patients` and `/api/patients/:id` to include `diabetes_profile.guardrails` (the field is already there).
+   * Filter by `care_team_member.proUserId` same as GLP-1.
+
+2. **Frontend:**
+
+   * In `ProClients.tsx`, add a “Diabetes Active” badge like GLP-1’s “GLP-1 Active”.
+   * In `ProClientDashboard.tsx`, show a Diabetes Guardrails summary under the patient overview.
+
+That’s literally it — **no new tables, no migrations, no new hooks**.
+You’re just joining and rendering data that already exists.
+
+---
+
+### 💡 Once You Do That
+
+* Both **Diabetes** and **GLP-1** patients will show up in ProCare.
+* Every doctor will be able to view, edit, and audit either type from one unified dashboard.
+* The app will be clinically symmetrical — both systems live under one ProCare umbrella.
+
+---
+
+Would you like me to prep a **short Replit prompt** that tells the assistant exactly how to mirror the GLP-1 integration for the Diabetic Hub (Phase E-2)? It’ll be about half the size of the last one.
