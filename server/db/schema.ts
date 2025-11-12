@@ -5,6 +5,7 @@ export * from "./schema/trivia";
 export * from "./schema/mealBoards";
 export * from "./schema/sms";
 export * from "./schema/builderPlans";
+export * from "./schema/patientAssignment";
 export * from "./schema/careTeam";
 export * from "./schema/procare";
 export * from "./schema/founders";

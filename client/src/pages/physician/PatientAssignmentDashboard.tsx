@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { DIABETIC_PRESETS } from "@/data/diabeticPresets";
+import { usePatients } from "@/hooks/usePatients";
 
 interface PatientRecord {
   id: string;
@@ -68,7 +69,9 @@ export default function PatientAssignmentDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCondition, setFilterCondition] = useState<string>("all");
   const [filterPreset, setFilterPreset] = useState<string>("all");
-  const [patients] = useState<PatientRecord[]>(mockPatients);
+  
+  const { data: patientsData, isLoading } = usePatients();
+  const patients = patientsData || [];
 
   // Authorization check
   if (user?.role !== 'doctor' && user?.role !== 'coach' && user?.role !== 'trainer') {
@@ -209,7 +212,12 @@ export default function PatientAssignmentDashboard() {
 
           {/* Patient List */}
           <div className="space-y-4">
-            {filteredPatients.length === 0 ? (
+            {isLoading ? (
+              <div className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-12 text-center">
+                <Activity className="h-16 w-16 mx-auto mb-4 text-white/40 animate-pulse" />
+                <p className="text-white/80 text-lg">Loading patients...</p>
+              </div>
+            ) : filteredPatients.length === 0 ? (
               <div className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-12 text-center">
                 <User className="h-16 w-16 mx-auto mb-4 text-white/40" />
                 <p className="text-white/80 text-lg">No patients found</p>
