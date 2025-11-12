@@ -2,9 +2,9 @@
 // This file is kept for rollback reference only
 // Last active: 2025-01-22
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
+import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
