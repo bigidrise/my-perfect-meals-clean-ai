@@ -1,0 +1,165 @@
+Excellent — that gives me exactly the visual language we need to lock in.
+Here’s the **final, Replit-ready design blueprint** for your new **Unified Diabetic Hub page**, aligned pixel-for-pixel with your existing **`DiabetesSupportPage`** black-glass aesthetic, typography, and structure.
+
+---
+
+## ⚠️ NOTE TO REPL.IT ASSISTANT
+
+**Do not write or change any code yet.**
+This is a design and structure guide only — for Coach’s review and sign-off before building.
+All colors, text sizes, and styling should **match the exact look and feel of the current `DiabetesSupportPage`** (black-glass gradient, border transparency, blur intensity, shadows, and font hierarchy).
+
+---
+
+## 🎯 GOAL
+
+Create a **single-page unified Diabetic Hub** (similar to the GLP-1 Hub) that combines:
+
+* Doctor Guardrail configuration
+* Blood Sugar Tracker
+* Glucose Trend visualization
+* Diabetic Meal Board access
+
+No new color palettes, no style experimentation — keep all gradients, transparencies, and shadows exactly as in the current file.
+
+---
+
+## 🧩 STRUCTURE (TOP → BOTTOM)
+
+### 1. **Header Card**
+
+```
+📊 Diabetic Nutrition Hub
+Powered by Emotion AI
+```
+
+* Reuse the same header container and shimmer effect as the Blood Sugar page.
+* Heading: `text-2xl font-semi-bold text-white`
+* Subtext: `text-sm text-white/90`
+* Gradient overlay and border identical to current header.
+
+---
+
+### 2. **Doctor / Coach Guardrail Card**
+
+* **Card title:** 🩺 Doctor Guardrails & Patient Settings
+* **Icon:** Use `Target` or `ShieldCheck` from `lucide-react` inside the same orange-tinted circular icon badge.
+* **Card container:** identical black-glass card with border, blur, and shadow.
+* **Inputs inside (stacked vertically):**
+
+  * Fasting Glucose Range (Min / Max)
+  * Post-Meal Max (mg/dL)
+  * Daily Carb Limit (g)
+  * Fiber Minimum (g)
+  * Glycemic Index Cap (number or slider)
+  * Meal Frequency (dropdown)
+  * “Save Guardrails” button (orange gradient identical to “Log Reading”)
+* **Typography:**
+
+  * Labels → `text-sm text-white font-sm`
+  * Headings → `text-lg font-medium text-white`
+
+> *These guardrails will later connect to doctor presets but for now remain static fields with correct layout.*
+
+---
+
+### 3. **Blood Sugar Tracker Section**
+
+Mirror the look of your **Log Blood Glucose** card exactly:
+
+* **Title:** “Track Your Blood Sugar”
+* **Inputs:**
+
+  * Glucose Reading (same input field)
+  * Three toggle buttons for `Fasting / Pre-Meal / Post-Meal`
+  * Log button same as “Log Reading”
+* **Visual feedback badge:** identical color rules (Green = in range, Red = out of range).
+
+Below this, add a **Mini Trend Chart Placeholder Card:**
+
+* Title: “7-Day Glucose Trend”
+* Background: same amber-tinted card style used in “Target Range.”
+* Space reserved for sparkline graph or bar chart (future).
+* Subtitle text: “You’ve been within your target range X% of the time this week.”
+
+---
+
+### 4. **AI-Driven Meal Generator Card**
+
+* **Card title:** “Generate Your Diabetic Meals”
+* Subtext: “Your meal suggestions will adapt to your latest blood sugar readings and doctor guardrails.”
+* Layout identical to “Meal Recommendations” section on the current Blood Sugar page.
+* Keep three example columns for now (“Low-Carb Options,” “Balanced Meals,” “Snack Ideas”).
+* **Button at bottom:**
+
+  ```
+  Generate Custom Diabetic Meal Plan →
+  ```
+
+  * Uses the exact same style, hover, gradient, and shadow as the one in your current file.
+  * Route to `/diabetic-menu-builder`.
+
+---
+
+### 5. **Daily Summary Footer**
+
+* Small horizontal card (same black-glass style).
+* 3 columns (centered text):
+
+  * **Average Glucose (mg/dL)**
+  * **Meals Generated**
+  * **Carbs Consumed Today**
+* Add a “Rebalance My Day” button below in the same orange-gradient format.
+* Keep typography consistent: titles = `text-sm text-white/80`, values = `text-lg font-medium text-white`.
+
+---
+
+### 6. **Bottom Navigation Prompt**
+
+At the very bottom of the page:
+
+```
+Need to plan your meals? 
+Tap below to open your Diabetic Meal Board.
+```
+
+[ **Open Diabetic Meal Board** ]
+
+* Same layout as the GLP-1 Hub’s final button section.
+* Button uses identical design and routing pattern.
+
+---
+
+## 🧱 LAYOUT & SPACING GUIDELINES
+
+* **Outer container:** `max-w-6xl mx-auto p-4 md:p-8 pb-24 relative z-10`
+* **Card margins:** `mb-8`
+* **Card padding:** `p-8`
+* **Radii:** all `rounded-2xl`
+* **Borders:** `border border-white/20`
+* **Shadows:** `shadow-2xl`
+* **Background overlay gradient:** match from `from-white/5 via-transparent to-white/3`
+
+---
+
+## 🧠 FUNCTIONAL PLANNING NOTES
+
+*No functional changes until design review is complete.*
+When we move to the build phase:
+
+* Guardrail inputs → `doctor_guardrails` table (type: diabetic)
+* Glucose logs → `blood_sugar_log`
+* “Generate Meals” button → triggers mealEngine with diabetic mode
+* Data flow mirrors GLP-1 Hub
+
+---
+
+Once Coach approves this layout, the Replit assistant can:
+
+1. Create `DiabeticHub.tsx`
+2. Use this page as a direct visual reference (copy all Tailwind and overlay structure from `DiabetesSupportPage`)
+3. Replace section content per this blueprint.
+
+---
+
+Would you like me to now create the **React/Tailwind skeleton (no logic)** that visually represents this blueprint — so you can drop it into Replit for preview before wiring any data?

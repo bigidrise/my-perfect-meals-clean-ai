@@ -1,0 +1,105 @@
+Perfect. You’re thinking like a lead engineer now — exactly how I want the handoff structured. Let’s lock these in so there’s zero ambiguity before any code gets written.
+
+---
+
+## 🧭 Routing & Navigation
+
+### ✅ **1. Replace, don’t add**
+
+Yes — **replace the existing `DiabeticSupportHub.tsx`** route target with the new unified page.
+We’re not stacking more files. The existing `/diabetic-hub` route will now point to your new unified layout.
+
+**So:**
+
+* Delete (or archive, temporarily) `DiabeticSupportHub.tsx`
+* Keep the route path `/diabetic-hub`
+* Point it to the new unified file: `DiabeticHub.tsx`
+
+This keeps the URL consistent and avoids touching every button that already links there.
+
+---
+
+### ✅ **2. Button Naming in ProClientDashboard**
+
+Keep the button label as **“Diabetic Hub”** for now.
+When we polish the UI later (phase after unification), we can rebrand it to **“Diabetic Nutrition Hub”** globally — but for now, leave it alone to avoid redundant edits across components.
+
+---
+
+## 🎨 Design Reference
+
+### ✅ **3. Background Gradient**
+
+Use **the exact same gradient** as the current `DiabetesSupportPage`:
+
+```js
+bg-gradient-to-br from-black/60 via-orange-600 to-black/80
+```
+
+That orange hue has become part of the diabetic section’s visual identity — we’re keeping it consistent with the medical color logic across the app:
+
+* Orange = diabetic / glucose
+* Purple = GLP-1
+* Blue = cardiac
+* Green = lifestyle/general
+
+Keep it exactly as-is.
+
+---
+
+### ✅ **4. Doctor Guardrails Card**
+
+For now:
+**Editable inputs + Save button — purely visual.**
+No backend calls, no persistence.
+
+So each field should be interactive (text inputs, dropdowns, etc.) but have no functional effect yet.
+We just want the UI laid out perfectly so when logic gets added later, it’s plug-and-play.
+
+---
+
+## 🧱 Scope Confirmation
+
+Yes — you nailed it.
+
+**Phase A Deliverable:**
+✅ All 6 sections visible:
+
+1. Header
+2. Guardrails
+3. Tracker
+4. 7-Day Trend placeholder
+5. AI Meal Generator
+6. Bottom Navigation
+   ✅ Perfect visual and structural match with `DiabetesSupportPage` aesthetic
+   ✅ Static UI only (no hooks, logic, or storage)
+   ✅ Same black-glass card formatting, same blur levels, same typography (2xl headings, lg titles, sm text)
+   ❌ No real data logic, state, or API calls
+
+---
+
+### ✅ **5. 7-Day Trend Chart**
+
+Keep it **as a placeholder card** styled to match the others.
+
+* Title: “7-Day Glucose Trend”
+* Subtext: “Glucose trend visualization coming soon”
+* Optional: You can add a thin orange/amber shimmer line placeholder if you want to block out chart space, but **no actual chart component yet**.
+* Focus is layout and visual spacing.
+
+---
+
+## 🧾 TL;DR Summary for Repl.it Assistant Notes
+
+* **Route stays:** `/diabetic-hub`
+* **File:** Replace `DiabeticSupportHub.tsx` → new `DiabeticHub.tsx`
+* **Background:** `bg-gradient-to-br from-black/60 via-orange-600 to-black/80`
+* **Guardrail fields:** Editable (visual only)
+* **Chart:** Placeholder only
+* **Buttons:** Keep existing “Diabetic Hub” wording
+* **Scope:** Visual skeleton only (no logic)
+
+---
+
+Once you confirm that Replit has those notes in place, you’re green-lit to start building the skeleton.
+Would you like me to draft the **exact JSX/Tailwind visual skeleton code** next so you can drop it straight in as `DiabeticHub.tsx`?
