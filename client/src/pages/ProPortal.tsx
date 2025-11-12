@@ -5,8 +5,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { proStore, ClientProfile, ProRole } from "@/lib/proData";
+import { proStore, ClientProfile } from "@/lib/proData";
 import { Plus, User2, ArrowRight, ArrowLeft, Archive, RotateCcw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 
@@ -16,13 +15,12 @@ export default function ProClients(){
   const [showArchived, setShowArchived] = useState(false);
   const [name,setName] = useState(""); 
   const [email,setEmail]=useState("");
-  const [role, setRole] = useState<ProRole>("trainer");
 
   const add = () => {
     if (!name.trim()) return;
-    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined, role };
+    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined };
     const next = [c, ...clients]; setClients(next); proStore.saveClients(next);
-    setName(""); setEmail(""); setRole("trainer");
+    setName(""); setEmail("");
   };
 
   const archiveClient = (id: string) => {
@@ -86,23 +84,10 @@ export default function ProClients(){
           <CardHeader><CardTitle className="text-white">Add Client</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Input placeholder="Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
-              <Input placeholder="Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
+              <Input placeholder="Client Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
+              <Input placeholder="Client Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Select value={role} onValueChange={(v) => setRole(v as ProRole)}>
-                <SelectTrigger className="bg-black/30 border-white/30 text-white">
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="trainer">Trainer / Coach</SelectItem>
-                  <SelectItem value="doctor">Doctor / Physician</SelectItem>
-                  <SelectItem value="nurse">Nurse</SelectItem>
-                  <SelectItem value="pa">Physician Assistant</SelectItem>
-                  <SelectItem value="nutritionist">Nutritionist</SelectItem>
-                  <SelectItem value="dietitian">Dietitian</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-end">
               <Button onClick={add} className="bg-white/10 border border-white/20 text-white hover:bg-white/20"><Plus className="h-4 w-4 mr-1" />Add Client</Button>
             </div>
           </CardContent>
