@@ -82,7 +82,7 @@ import ProClientDashboard from "@/pages/pro/ProClientDashboard";
 import AthleteBoard from "@/pages/pro/AthleteBoard";
 
 // Physician Hub Pages
-import DiabeticSupportHub from "@/pages/physician/DiabeticSupportHub";
+import DiabeticHub from "@/pages/physician/DiabeticHub";
 import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
 import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import GLP1Hub from "@/pages/physician/GLP1Hub";
@@ -286,7 +286,7 @@ export default function Router() {
         <Route path="/pro/clients/:id/athlete-board" component={AthleteBoardProCare} />
 
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
-        <Route path="/diabetic-hub" component={DiabeticSupportHub} />
+        <Route path="/diabetic-hub" component={DiabeticHub} />
         <Route path="/diabetes-support" component={DiabetesSupportPage} />
         <Route path="/diabetic-menu-builder" component={DiabeticMenuBuilder} />
         <Route path="/glp1-hub" component={GLP1Hub} />

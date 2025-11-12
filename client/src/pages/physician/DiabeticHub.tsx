@@ -174,7 +174,7 @@ export default function DiabeticHub() {
         <div className="max-w-6xl mx-auto p-4 md:p-8 pb-24 relative z-10">
           
           {/* Header Section */}
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-12 mt-14">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-4">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
             <h1 className="text-2xl md:text-2xl font-semibold text-white mb-4 relative z-10">
               🩺 Diabetic Nutrition Hub
