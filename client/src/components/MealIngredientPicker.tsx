@@ -22,6 +22,11 @@ export default function MealIngredientPicker({
   onMealGenerated,
   mealSlot 
 }: MealIngredientPickerProps) {
+  // Ingredient source based on meal type
+  const ingredientSource = mealSlot === "snacks" 
+    ? { snacks: ALL_SNACK_INGREDIENTS }
+    : mealIngredients;
+  
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats'>('proteins');
   const [customIngredients, setCustomIngredients] = useState('');
@@ -268,11 +273,14 @@ export default function MealIngredientPicker({
     }
   };
 
-  const handleCategorySelect = (category: keyof typeof ingredientSource) => {
-    setActiveCategory(category);
-    setSelectedIngredients(prev => 
-      prev.filter(ing => (ingredientSource[category] as string[]).includes(ing))
-    );
+  const handleCategorySelect = (category: string) => {
+    setActiveCategory(category as any);
+    const categoryItems = ingredientSource[category as keyof typeof ingredientSource];
+    if (Array.isArray(categoryItems)) {
+      setSelectedIngredients(prev => 
+        prev.filter(ing => categoryItems.includes(ing))
+      );
+    }
   };
 
   const getCategoryLabel = (category: string) => {
@@ -305,19 +313,23 @@ export default function MealIngredientPicker({
 
         {/* Category Tabs - Fixed */}
         <div className="flex gap-1 mb-3 flex-shrink-0 overflow-x-auto">
-          {(Object.keys(ingredientSource) as Array<keyof typeof ingredientSource>).map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategorySelect(category)}
-              className={`flex-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
-                activeCategory === category
-                  ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
-                  : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
-              } ${!hasSeenInfo ? 'flash-border' : ''}`}
-            >
-              {getCategoryLabel(category)} ({ingredientSource[category].length})
-            </button>
-          ))}
+          {Object.keys(ingredientSource).map((category) => {
+            const categoryKey = category as keyof typeof ingredientSource;
+            const items = ingredientSource[categoryKey];
+            return (
+              <button
+                key={category}
+                onClick={() => handleCategorySelect(category)}
+                className={`flex-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
+                  activeCategory === category
+                    ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
+                    : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
+                } ${!hasSeenInfo ? 'flash-border' : ''}`}
+              >
+                {getCategoryLabel(category)} ({Array.isArray(items) ? items.length : 0})
+              </button>
+            );
+          })}
         </div>
 
         {/* Scrollable Content Area */}
@@ -441,8 +453,10 @@ export default function MealIngredientPicker({
           {/* Ingredient Grid - Small Checkboxes */}
           <div className="mb-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
-              {activeCategory && (
-                ingredientSource[activeCategory].map((ingredient) => {
+              {activeCategory && (() => {
+                const categoryItems = ingredientSource[activeCategory as keyof typeof ingredientSource];
+                if (!Array.isArray(categoryItems)) return null;
+                return categoryItems.map((ingredient: string) => {
                   const isSelected = selectedIngredients.includes(ingredient);
                   return (
                     <div
@@ -462,8 +476,8 @@ export default function MealIngredientPicker({
                       </span>
                     </div>
                   );
-                })
-              )}
+                });
+              })()}
             </div>
           </div>
 
