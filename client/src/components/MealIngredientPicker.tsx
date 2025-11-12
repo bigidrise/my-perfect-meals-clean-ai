@@ -465,16 +465,16 @@ export default function MealIngredientPicker({
                 return (
                   <div
                     key={ingredient}
-                    className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px]"
+                    onClick={() => toggleIngredient(ingredient)}
+                    className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
                   >
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleIngredient(ingredient)}
-                      className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500"
+                      className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
                     />
                     <span 
-                      className="text-[11px] group-hover:text-emerald-300 transition-colors text-center cursor-pointer"
-                      onClick={() => toggleIngredient(ingredient)}
+                      className="text-[11px] group-hover:text-emerald-300 transition-colors text-center"
                     >
                       {ingredient}
                     </span>
