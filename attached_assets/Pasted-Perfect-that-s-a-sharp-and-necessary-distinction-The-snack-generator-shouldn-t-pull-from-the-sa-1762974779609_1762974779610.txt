@@ -1,0 +1,81 @@
+Perfect — that’s a sharp and necessary distinction. The snack generator *shouldn’t* pull from the same protein-carb-fat pools as meal boards. It needs its own logic layer and its own picker set (fun, sweet, light foods instead of chicken and broccoli).
+
+Here’s exactly how to brief the **Replit Assistant** to get the breakdown we need **before we touch any code**.
+Paste this verbatim into your Replit chat — it tells the agent precisely what to inspect and report back.
+
+---
+
+## 🧠 Replit Assistant Reconnaissance Brief — Snack Picker Analysis
+
+### 🎯 Goal
+
+We need a full understanding of how the **CreateAI meal pickers** and **ingredient boards** currently work so we can design a separate, snack-specific picker system.
+Do **not** make any code changes — this is **inspection only**.
+
+---
+
+### 🔍 Tasks
+
+1. **Locate the Picker Logic**
+
+   * Identify the file(s) controlling AI meal generation and ingredient selection.
+     Look for files like:
+
+     * `client/src/components/pickers/MealPickerDrawer.tsx`
+     * `client/src/hooks/useMealGenerator.ts`
+     * `client/src/services/mealEngineService.ts` or similar.
+   * Explain how the current pickers populate ingredient categories (proteins, carbs, fats, etc.).
+
+2. **Explain the Picker Board UI**
+
+   * Describe how the ingredient boards are rendered:
+
+     * Which components generate the visual ingredient lists?
+     * Where the data comes from (static arrays, JSON, or API).
+     * How the “Create with AI” button pulls from the selected items.
+
+3. **Meal Context Awareness**
+
+   * Verify whether the system knows which meal type is being generated (`breakfast`, `lunch`, `dinner`, `snack`).
+   * If it does, show how it determines that context and whether it affects ingredient selection.
+
+4. **Snack Handling (Current State)**
+
+   * Check if snacks currently use the same picker logic as meals.
+   * Identify whether any condition or variable exists (e.g., `isSnack`, `mealType`) that could be used to load a different picker dataset.
+
+5. **AI Generation Logic**
+
+   * Show where the AI prompt or function constructs the meal request (e.g., “create a high-protein meal with chicken and rice”).
+   * Confirm if we can easily swap the data source when `mealType === "snack"` to call a different ingredient list or model prompt.
+
+6. **Output and Rendering**
+
+   * Identify how the final AI-generated meal or snack is displayed once selected.
+   * Note whether snack cards differ from meal cards in layout, fields, or styling.
+
+---
+
+### 🧩 Deliverables
+
+Provide a clear summary covering:
+
+* File paths for picker and AI logic
+* How ingredients are defined and grouped
+* Whether mealType or snackType context exists
+* How “Create with AI” triggers generation
+* What changes would be needed to give **snacks their own picker set** (e.g., desserts, fruits, fun foods)
+
+---
+
+### ⚠️ Important
+
+* Do **not** modify or refactor any code.
+* Do **not** add or remove files.
+* This task is for **observation and reporting only**.
+
+Once we receive the report, we’ll plan how to introduce a **SnackPickerBoard.tsx** that works like the existing meal picker but with its own ingredient data.
+
+---
+
+Would you like me to generate a **plain-text version** (no formatting) so you can paste it straight into Replit chat?
