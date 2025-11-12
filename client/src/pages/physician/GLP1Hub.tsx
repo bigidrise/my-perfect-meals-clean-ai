@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, ArrowUp, ChevronDown, ChevronUp, Activity } from "lucide-react";
 import {
   LineChart,
@@ -348,16 +349,18 @@ export default function GLP1Hub() {
           {/* Preset Selector */}
           <div className="mb-4">
             <label className="text-white/90 text-sm block mb-1">Quick Start Preset</label>
-            <select
-              value={selectedPreset}
-              onChange={(e) => handlePresetSelect(e.target.value)}
-              className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-            >
-              <option value="">-- Select Preset --</option>
-              {glp1Presets.map(p => (
-                <option key={p.id} value={p.id}>{p.label}</option>
-              ))}
-            </select>
+            <Select value={selectedPreset} onValueChange={handlePresetSelect}>
+              <SelectTrigger className="w-full bg-black/30 border-purple-300/30 text-white [&>span]:text-white">
+                <SelectValue placeholder="Choose a preset or customize below..." />
+              </SelectTrigger>
+              <SelectContent>
+                {glp1Presets.map((preset) => (
+                  <SelectItem key={preset.id} value={preset.id}>
+                    {preset.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {selectedPreset && (
               <p className="text-white/70 text-xs mt-2">
                 {glp1Presets.find(p => p.id === selectedPreset)?.description}
