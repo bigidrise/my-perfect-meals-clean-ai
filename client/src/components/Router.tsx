@@ -278,7 +278,6 @@ export default function Router() {
         {/* ProCare Feature Routes (ProCare Cover → Care Team → Pro Portal → Client Dashboard → Athlete Board) */}
         <Route path="/procare-cover" component={ProCareCover} />
         <Route path="/care-team" component={CareTeam} />
-        <Route path="/pro-portal" component={ProPortal} />
         <Route path="/pro/clients" component={ProClients} />
         <Route path="/pro/clients/:id" component={ProClientDashboard} />
         <Route path="/pro-client-dashboard" component={ProClientDashboard} />
