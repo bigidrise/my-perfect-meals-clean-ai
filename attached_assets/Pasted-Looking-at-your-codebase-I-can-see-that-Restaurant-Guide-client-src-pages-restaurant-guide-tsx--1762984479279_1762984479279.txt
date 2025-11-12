@@ -1,0 +1,46 @@
+Looking at your codebase, I can see that:
+
+Restaurant Guide (client/src/pages/restaurant-guide.tsx) already has persistence implemented via localStorage with the cache key "restaurantGuide.cache.v1". It saves and loads generated meals.
+
+Meal Finder (client/src/pages/MealFinder.tsx) also has persistence implemented via localStorage with the cache key "mealFinder.cache.v1". It saves and restores search results.
+
+Both features are already persisting their data! However, I'll create a prompt for you to give to the Replit Agent to verify and ensure both persistence systems are working correctly:
+
+🔍 Replit Agent Prompt — Verify & Ensure Restaurant Guide Persistence
+Context:
+The Restaurant Guide has two features that generate results:
+
+Smart Restaurant Guide (main feature) - generates meals for a specific restaurant + craving
+Meal Finder (secondary feature) - finds nearby restaurants by ZIP code + craving
+Current State:
+Both features already have localStorage persistence implemented, but we need to verify they're working correctly and ensure results persist across navigation/refresh.
+
+Task:
+Inspect and verify the persistence systems in these two files:
+
+1️⃣ Restaurant Guide (client/src/pages/restaurant-guide.tsx)
+✅ Verify the cache key "restaurantGuide.cache.v1" is saving/loading correctly
+✅ Confirm saveRestaurantCache() is called when meals are generated
+✅ Confirm loadRestaurantCache() runs on component mount and restores meals
+✅ Ensure the cached data includes: restaurantData, restaurant, craving, cuisine, generatedAtISO
+✅ Make sure useEffect with empty dependency array [] loads cache on mount
+✅ Make sure useEffect with [generatedMeals, ...] auto-saves when meals change
+2️⃣ Meal Finder (client/src/pages/MealFinder.tsx)
+✅ Verify the cache key "mealFinder.cache.v1" is saving/loading correctly
+✅ Confirm saveMealFinderCache() is called in the mutation's onSuccess handler
+✅ Confirm loadMealFinderCache() runs on component mount and restores results
+✅ Ensure the cached data includes: results, mealQuery, zipCode, generatedAtISO
+✅ Make sure search inputs are restored when cache is loaded
+Expected Behavior:
+
+User generates meals on Restaurant Guide → leaves page → returns → meals are still visible
+User searches on Meal Finder → leaves page → returns → search results are still visible
+Cache survives page refresh, navigation to other pages, and browser tab switching
+If Issues Are Found:
+
+Fix any missing localStorage.setItem() or localStorage.getItem() calls
+Ensure state is properly restored to React components from cache
+Add console logs for debugging if cache isn't loading
+No New Features Needed:
+Both systems already have persistence code — just verify it works as expected.
+
