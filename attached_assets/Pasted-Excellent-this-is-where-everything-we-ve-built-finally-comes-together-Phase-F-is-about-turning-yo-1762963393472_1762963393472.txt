@@ -1,0 +1,178 @@
+Excellent — this is where everything we’ve built finally comes together.
+Phase F is about turning your **Patient Assignment Dashboard** from a visual demo into a live, data-driven command center for doctors and coaches.
+
+---
+
+## ⚙️ **Phase F: Patient Assignment Dashboard (Production Version)**
+
+### 🎯 **Objective**
+
+Give verified clinicians a single, secure workspace to:
+
+* View all diabetic patients under their care
+* See live glucose trends and current guardrails
+* Apply new presets or custom edits
+* Audit every change for compliance
+* Keep the whole thing synced in real time
+
+---
+
+## 🔹 1. **Data Model & API Layer**
+
+### **Tables**
+
+**`patients`** *(already exists or referenced)*
+Links user accounts to their clinician.
+
+**`diabetes_profile`**
+Now includes `guardrails` JSONB and `last_updated_at`.
+
+**`glucose_logs`**
+Stores recent readings, used for status color coding.
+
+**`guardrail_audit_log`** *(new)*
+| id | doctor_id | patient_id | field | old_value | new_value | updated_at |
+
+---
+
+### **Endpoints**
+
+| Method                             | Route                                                 | Purpose |
+| ---------------------------------- | ----------------------------------------------------- | ------- |
+| `GET /api/patients`                | Returns patient list with summary data                |         |
+| `GET /api/patients/:id`            | Full profile + guardrails + recent glucose logs       |         |
+| `PUT /api/patients/:id/guardrails` | Update a single patient’s guardrails                  |         |
+| `GET /api/patients/:id/audit`      | Retrieve change history                               |         |
+| `GET /api/glucose/live`            | (optional) Polling or websocket feed for new readings |         |
+
+Each response contains:
+
+```json
+{
+  "id": "user123",
+  "name": "Jane Doe",
+  "email": "jane@demo.com",
+  "latestGlucose": 114,
+  "inRange": true,
+  "preset": "Standard Diabetic",
+  "carbLimit": 150,
+  "lastUpdated": "2025-11-12T14:00:00Z"
+}
+```
+
+---
+
+## 🔹 2. **Frontend: `/procare/patient-assignment`**
+
+### **Header**
+
+* Title: “ProCare Patient Assignment – Diabetic”
+* Subtext: “Manage guardrails, monitor glucose, and apply clinical presets.”
+
+### **Toolbar**
+
+* **Search bar:** filter by name or email
+* **Condition filter:** T2D / Cardiac-Diabetic / GLP-1 (future)
+* **Preset filter:** Standard / Strict / Cardiac / Elderly etc.
+* **Summary chips:** total patients, % in range, avg glucose
+
+### **Main Table**
+
+Columns:
+| Patient | Condition | Latest Glucose | Preset | Carb Limit | Last Updated | Actions |
+
+Color logic:
+
+* Green ≤ target → ✅ Stable
+* Yellow ≤ post-meal max + 10 → ⚠️ Borderline
+* Red > post-meal max + 10 → 🔴 High
+
+### **Actions**
+
+* **View/Edit** → opens modal
+* **History** → opens audit trail modal
+* (Future) **Message** → quick doctor-patient note
+
+---
+
+## 🔹 3. **Patient Detail / Edit Modal**
+
+When “View/Edit” is clicked:
+
+**Top:**
+
+* Name, condition, email
+* Current preset name
+* Last glucose + in-range badge
+
+**Middle:**
+
+* Editable guardrail inputs (same structure as Diabetic Hub)
+* Preset dropdown to apply templates instantly
+
+**Bottom:**
+
+* “Save Changes” → `PUT /api/patients/:id/guardrails`
+* “View History” → loads from `guardrail_audit_log`
+
+After save: toast confirmation + dashboard auto-refresh (invalidate query).
+
+---
+
+## 🔹 4. **Audit Trail Modal**
+
+Shows a table:
+| Date/Time | Field | Old Value | New Value | Updated By |
+
+Data pulled from `/api/patients/:id/audit`.
+Clinicians can export to CSV for compliance reports.
+
+---
+
+## 🔹 5. **Realtime Layer**
+
+Start simple:
+
+```ts
+useQuery({
+  queryKey: ['patients'],
+  queryFn: fetchPatients,
+  refetchInterval: 30000 // 30 s polling
+});
+```
+
+Later, upgrade to WebSocket feed for instantaneous glucose updates.
+
+---
+
+## 🔹 6. **Security**
+
+* Only `role: 'doctor' | 'coach' | 'trainer'` can access routes beginning `/procare/`.
+* Backend verifies `req.user.role` before returning any patient data.
+* All audit inserts include `doctor_id = req.user.id`.
+
+---
+
+## 🔹 7. **Rollout Plan**
+
+| Phase   | Deliverable                                           |
+| ------- | ----------------------------------------------------- |
+| **F.1** | Build `/api/patients` + `/api/patients/:id` endpoints |
+| **F.2** | Wire patient table to live API                        |
+| **F.3** | Build & connect View/Edit modal                       |
+| **F.4** | Add audit trail and save logging                      |
+| **F.5** | Add 30 s polling + role guards                        |
+| **F.6** | QA + merge to main branch                             |
+
+---
+
+## 🔹 8. **Commit Example**
+
+```bash
+./push.sh "feat(procare-dashboard): Phase F – live patient list + guardrail editing + audit trail foundation"
+```
+
+---
+
+If that’s the direction you want, I can draft the **exact backend endpoint code (Express + Drizzle)** next, along with the **React Query hook skeletons** that feed the dashboard table.
+Do you want me to move ahead with those now?
