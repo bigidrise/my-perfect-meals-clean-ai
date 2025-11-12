@@ -1140,6 +1140,17 @@ export default function BeachBodyMealBoard() {
           ))
         )}
 
+          {/* Add Meal Button - Above Daily Totals */}
+          <div className="col-span-full flex justify-center my-4">
+            <Button
+              onClick={handleAddMealSlot}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
+            >
+              <Plus className="h-5 w-5" />
+              Add Meal {6 + dynamicMealCount}
+            </Button>
+          </div>
+
           <div className="col-span-full">
             <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/95 backdrop-blur-lg p-6">
               <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
@@ -1275,9 +1286,9 @@ export default function BeachBodyMealBoard() {
                       Create with AI
                     </Button>
 
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal("snacks")}
                     >
@@ -1326,17 +1337,6 @@ export default function BeachBodyMealBoard() {
               </section>
             );
           })}
-
-          {/* Add Meal Button - Above Daily Totals */}
-          <div className="col-span-full flex justify-center my-4">
-            <Button
-              onClick={handleAddMealSlot}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
-            >
-              <Plus className="h-5 w-5" />
-              Add Meal {6 + dynamicMealCount}
-            </Button>
-          </div>
 
           <div className="col-span-full">
             <MacroFixCoach
