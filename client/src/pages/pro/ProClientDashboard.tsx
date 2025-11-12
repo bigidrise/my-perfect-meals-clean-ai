@@ -664,6 +664,33 @@ export default function ProClientDashboard() {
           </Card>
         )}
 
+        {/* DIABETES GUARDRAILS DISPLAY - CLINICIANS ONLY */}
+        {isClinician && (
+          <Card className="bg-white/5 border border-amber-400/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                🩸 Diabetes Guardrails Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="bg-black/30 border border-amber-400/30 rounded-xl p-4">
+                <p className="text-white/60 text-sm mb-2">
+                  Diabetes guardrails control blood sugar targets, carb limits, and meal personalization. View and edit patient protocols below.
+                </p>
+                <Button
+                  onClick={() => {
+                    localStorage.setItem("pro-client-id", clientId);
+                    setLocation("/diabetic-hub");
+                  }}
+                  className="bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  View Diabetes Guardrails
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* GLP-1 GUARDRAILS DISPLAY - CLINICIANS ONLY */}
         {isClinician && (
           <Card className="bg-white/5 border border-purple-400/20">

@@ -102,6 +102,11 @@ export default function ProClients(){
                         </div>
                       )}
                     </div>
+                    <div className="flex gap-2 mt-2 text-xs">
+                      <span className="text-white/50">Medical Status:</span>
+                      <span className="text-amber-400 font-medium">Diabetes Active</span>
+                      <span className="text-purple-400 font-medium">GLP-1 Active</span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

@@ -56,19 +56,15 @@ r.get("/api/patients", proRole, async (req: any, res) => {
 
   const patientIds = careTeamRelations.map(r => r.userId);
 
-  // Get diabetes profiles for assigned patients
+  // Get all diabetes profiles for assigned patients
   const diabetesProfiles = await db
     .select()
-    .from(diabetesProfile)
-    .where(eq(diabetesProfile.userId, patientIds[0])) // Start with first patient
-    .limit(100);
+    .from(diabetesProfile);
 
-  // Get GLP-1 profiles for same patients
+  // Get all GLP-1 profiles for assigned patients
   const glp1Profiles = await db
     .select()
-    .from(glp1Profile)
-    .where(eq(glp1Profile.userId, patientIds[0]))
-    .limit(100);
+    .from(glp1Profile);
 
   // Create lookup maps
   const diabetesMap = new Map(diabetesProfiles.map(p => [p.userId, p]));
@@ -88,13 +84,15 @@ r.get("/api/patients", proRole, async (req: any, res) => {
       id: patientId,
       name: careTeam?.name ?? `Patient ${patientId.slice(0, 8)}`,
       email: careTeam?.email ?? "",
-      condition: "T2D" as const,
+      condition: diabetes?.type === "T2D" ? "T2D" : (glp1 ? "GLP1" : "OTHER") as const,
       latestGlucose,
       inRange,
       preset: diabetes?.guardrails?.presetId ?? null,
       carbLimit: diabetes?.guardrails?.carbLimit ?? null,
-      lastUpdated: diabetes?.updatedAt ?? null,
+      lastUpdated: diabetes?.updatedAt ?? glp1?.updatedAt ?? null,
       diabetesGuardrails: diabetes?.guardrails ?? null,
+      diabetesType: diabetes?.type ?? null,
+      diabetesA1c: diabetes?.a1cPercent ?? null,
       glp1Guardrails: glp1?.guardrails ?? null,
       lastShot: glp1?.lastShotDate ?? null,
       clinicianRole: careTeam?.role ?? null,
@@ -132,10 +130,14 @@ r.get("/api/patients/:id", proRole, async (req: any, res) => {
   res.json({
     profile: diabetesProfileData ?? null,
     guardrails: diabetesProfileData?.guardrails ?? null,
+    diabetesType: diabetesProfileData?.type ?? null,
+    diabetesA1c: diabetesProfileData?.a1cPercent ?? null,
+    diabetesMedications: diabetesProfileData?.medications ?? null,
     glucose: [], // Glucose data is not fetched here
     glp1Profile: glp1ProfileData ?? null,
     glp1Guardrails: glp1ProfileData?.guardrails ?? null,
     lastShot: glp1ProfileData?.lastShotDate ?? null,
+    clinicianRole: careTeamRelation.role ?? null,
   });
 });
 

@@ -6,6 +6,8 @@ const API_BASE = import.meta.env.VITE_API_URL || "";
 
 export interface PatientSummaryExtended extends PatientSummary {
   diabetesGuardrails?: Guardrails | null;
+  diabetesType?: string | null;
+  diabetesA1c?: string | null;
   glp1Guardrails?: GLP1Guardrails | null;
   lastShot?: string | null;
   clinicianRole?: string | null;
@@ -39,10 +41,14 @@ export function usePatient(patientId: string) {
     queryFn: () => fetchApi(`/api/patients/${patientId}`) as Promise<{
       profile: { guardrails?: Guardrails | null } | null;
       guardrails: Guardrails | null;
+      diabetesType: string | null;
+      diabetesA1c: string | null;
+      diabetesMedications: { name: string; dose?: string }[] | null;
       glucose: { value: number; context: string; at: string }[];
       glp1Profile: { guardrails?: GLP1Guardrails | null } | null;
       glp1Guardrails: GLP1Guardrails | null;
       lastShot: string | null;
+      clinicianRole: string | null;
     }>,
     enabled: !!patientId,
   });
