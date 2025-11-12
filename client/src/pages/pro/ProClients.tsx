@@ -80,22 +80,7 @@ export default function ProClients(){
               <Input placeholder="Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
               <Input placeholder="Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Select value={role} onValueChange={(v) => setRole(v as ProRole)}>
-                <SelectTrigger className="bg-black/30 border-white/30 text-white">
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="trainer">Trainer / Coach</SelectItem>
-                  <SelectItem value="doctor">Doctor / Physician</SelectItem>
-                  <SelectItem value="nurse">Nurse</SelectItem>
-                  <SelectItem value="pa">Physician Assistant</SelectItem>
-                  <SelectItem value="nutritionist">Nutritionist</SelectItem>
-                  <SelectItem value="dietitian">Dietitian</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={add} className="bg-white/10 border border-white/20 text-white hover:bg-white/20"><Plus className="h-4 w-4 mr-1" />Add Client</Button>
-            </div>
+            <Button onClick={add} className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Plus className="h-4 w-4 mr-1" />Add Client</Button>
           </CardContent>
         </Card>
 
