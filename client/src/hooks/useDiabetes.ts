@@ -78,8 +78,15 @@ export function useSaveDiabetesProfile() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (profile: Partial<DiabetesProfile>) =>
-      post("/api/diabetes/profile", profile),
+    mutationFn: async (profile: Partial<DiabetesProfile>) => {
+      const response = await fetch("/api/diabetes/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      if (!response.ok) throw new Error("Failed to save profile");
+      return response.json();
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/diabetes/profile", variables.userId] });
       queryClient.invalidateQueries({ queryKey: ["/api/meal-engine/constraints", variables.userId] });
