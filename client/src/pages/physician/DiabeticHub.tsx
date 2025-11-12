@@ -200,7 +200,7 @@ export default function DiabeticHub() {
             <div className="mb-6 relative z-10">
               <label className="block text-sm text-white mb-2">Apply Clinical Preset</label>
               <Select value={selectedPreset} onValueChange={handleApplyPreset}>
-                <SelectTrigger className="w-full bg-white/20 border-white/40 text-white">
+                <SelectTrigger className="w-full bg-white/20 border-white/40 text-white [&>span]:text-white">
                   <SelectValue placeholder="Choose a preset or customize below..." />
                 </SelectTrigger>
                 <SelectContent>
