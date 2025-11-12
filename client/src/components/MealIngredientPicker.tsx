@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
-import { snackIngredients } from "@/data/snackIngredients";
+import { ALL_SNACK_INGREDIENTS } from "@/data/snackIngredients";
 
 interface MealIngredientPickerProps {
   open: boolean;
@@ -15,11 +15,6 @@ interface MealIngredientPickerProps {
   onMealGenerated: (meal: any) => void;
   mealSlot: string;
 }
-
-// Ingredient categories to display - use snackIngredients for snacks, mealIngredients otherwise
-const ingredientSource = mealSlot === "snacks" ? snackIngredients : mealIngredients;
-const categories = Object.keys(ingredientSource) as Array<keyof typeof ingredientSource>;
-
 
 export default function MealIngredientPicker({ 
   open, 
