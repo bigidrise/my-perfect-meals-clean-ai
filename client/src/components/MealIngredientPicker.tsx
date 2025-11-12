@@ -290,12 +290,6 @@ export default function MealIngredientPicker({
 
   const handleCategorySelect = (category: string) => {
     setActiveCategory(category as any);
-    const categoryItems = ingredientSource[category as keyof typeof ingredientSource];
-    if (Array.isArray(categoryItems)) {
-      setSelectedIngredients(prev => 
-        prev.filter(ing => categoryItems.includes(ing))
-      );
-    }
   };
 
   const getCategoryLabel = (category: string) => {
