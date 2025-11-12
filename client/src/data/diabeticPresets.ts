@@ -44,20 +44,6 @@ export const DIABETIC_PRESETS: DiabeticPreset[] = [
     },
   },
   {
-    id: "glp1",
-    name: "💊 GLP-1 Patient",
-    description: "Adjusted targets for patients on GLP-1 medications (Ozempic, Mounjaro, etc.)",
-    guardrails: {
-      fastingMin: 80,
-      fastingMax: 120,
-      postMealMax: 160,
-      carbLimit: 120,
-      fiberMin: 25,
-      giCap: 55,
-      mealFrequency: 4,
-    },
-  },
-  {
     id: "cardiac",
     name: "❤️ Cardiac-Diabetic",
     description: "Combined heart health + diabetes management (lower sodium, higher fiber)",
