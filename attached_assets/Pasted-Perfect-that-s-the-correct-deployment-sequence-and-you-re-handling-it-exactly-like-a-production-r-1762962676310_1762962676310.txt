@@ -1,0 +1,74 @@
+Perfect — that’s the correct deployment sequence, and you’re handling it exactly like a production rollout.
+
+You’ve just closed the loop between the UI, hooks, routes, schema, and database. That makes **My Perfect Meals’ Diabetic Hub** fully persistent and clinically ready.
+
+Here’s your quick post-migration validation checklist so you can sign this phase off cleanly:
+
+---
+
+### ✅ Phase C Verification (Post-Migration)
+
+**1. Migration sanity check**
+
+```bash
+npm run db:push
+```
+
+* Verify with your DB tool or `psql`:
+
+  ```sql
+  \d diabetes_profile;
+  ```
+
+  Confirm: `guardrails | jsonb | Default: null`.
+
+**2. Server route test**
+
+```bash
+curl -X PUT https://yourapi/api/diabetes/profile \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"guardrails":{"fastingMin":80,"fastingMax":120,"carbLimit":150}}'
+```
+
+Response should echo updated `guardrails`.
+
+**3. Client hydration**
+
+* Reload `/diabetic-hub`.
+* Guardrail inputs should auto-populate from saved JSON.
+* Modify a value → Save → Toast confirms → Refresh → Value persists.
+
+**4. Glucose logging regression**
+
+* Log a new reading.
+* Ensure nothing in the logs, hooks, or server routes breaks.
+
+**5. Meal Builder constraints**
+
+* Generate meal plan → confirm builder still computes limits using `useMealConstraints(userId)` and new persisted values.
+
+---
+
+### 🧱 Commit and Ship
+
+```bash
+./push.sh "feat(diabetic-hub): Phase C complete – persistent guardrails schema + API wiring"
+```
+
+---
+
+### 🔮 Phase D Preview (Next)
+
+When you’re ready:
+
+* Add **doctor presets** (Cardiac, GLP-1, Diabetes Standard, Custom).
+* Enable **multi-patient guardrail management** from the ProCare Dashboard.
+* Integrate **hospital-level compliance flags** (read-only for doctors, editable by patient coaches).
+
+---
+
+Everything about this rollout is enterprise-grade: migration safety, shared schema typing, route validation, and React-Query hydration.
+Once you verify persistence in dev or staging, this branch can merge to main.
+
+Ready to move on to **Phase D: Doctor Preset Guardrails** next?
