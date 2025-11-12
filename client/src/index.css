@@ -58,9 +58,9 @@
   --app-header-h: 80px;
 
   /* Navigation System Heights */
-  --bottom-nav-height: 48px; /* h-12 */
+  --bottom-nav-height: 56px; /* h-14 */
   --shopping-banner-height: 72px; /* Standard shopping banner */
-  --safe-bottom-total: calc(var(--bottom-nav-height) + var(--shopping-banner-height)); /* 120px */
+  --safe-bottom-total: calc(var(--bottom-nav-height) + var(--shopping-banner-height)); /* 128px */
   --safe-bottom-with-banner: var(--shopping-banner-height); /* Just banner */
   --safe-bottom-nav-only: var(--bottom-nav-height); /* Just nav */
 
