@@ -59,20 +59,8 @@ export default function DiabeticSupportHub_DEPRECATED() {
 
       <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 text-center mt-14">
-            <h1 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-              ⚠️ This page has been replaced
-            </h1>
-            <p className="text-sm text-white/90 max-w-3xl mx-auto mb-6">
-              This is a deprecated backup file. Please use the new Diabetic Hub instead.
-            </p>
-            <Button
-              onClick={() => setLocation("/diabetic-hub")}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-8 rounded-xl"
-            >
-              Go to Diabetic Hub →
-            </Button>
-          </div>
+          {/* All the rest of your functional content will go here */}
+          {/* This is where the glycemic settings, forms, and other features are */}
         </div>
       </div>
     </>
