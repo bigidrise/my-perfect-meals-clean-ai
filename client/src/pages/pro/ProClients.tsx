@@ -4,7 +4,8 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { proStore, ClientProfile } from "@/lib/proData";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { proStore, ClientProfile, ProRole } from "@/lib/proData";
 import { Plus, User2, ArrowRight, ArrowLeft, Archive, RotateCcw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 
@@ -14,29 +15,30 @@ export default function ProClients(){
   const [showArchived, setShowArchived] = useState(false);
   const [name,setName] = useState(""); 
   const [email,setEmail]=useState("");
+  const [role, setRole] = useState<ProRole>("trainer");
 
   const add = () => {
     if (!name.trim()) return;
-    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined };
+    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined, role };
     const next = [c, ...clients]; setClients(next); proStore.saveClients(next);
-    setName(""); setEmail("");
+    setName(""); setEmail(""); setRole("trainer");
   };
-
+  
   const archiveClient = (id: string) => {
     proStore.archiveClient(id);
     setClients([...proStore.listClients()]);
   };
-
+  
   const restoreClient = (id: string) => {
     proStore.restoreClient(id);
     setClients([...proStore.listClients()]);
   };
-
+  
   const deleteClient = (id: string, name: string) => {
     proStore.deleteClient(id);
     setClients([...proStore.listClients()]);
   };
-
+  
   const go = (id:string)=> setLocation(`/pro/clients/${id}`);
 
   return (
@@ -48,17 +50,11 @@ export default function ProClients(){
     >
       <div className="max-w-5xl mx-auto space-y-6 pt-2">
         <button
-          onClick={() => setLocation("/care-team")}
-          className="
-            fixed top-2 z-50
-            left-4
-            sm:left-[calc((100vw-64rem)/2+1rem)]
-            w-12 h-12 rounded-2xl
-            bg-black/10 hover:bg-black/20 active:bg-black/20
-            flex items-center justify-center transition-colors overflow-hidden
-          "
+          onClick={() => setLocation("/pro-portal")}
+          className="mb-4 w-12 h-12 rounded-2xl bg-black/10 hover:bg-black/20 active:bg-black/20 flex items-center justify-center transition-colors shrink-0 overflow-hidden"
+          data-testid="button-back"
         >
-          <ArrowLeft className="h-4 w-4 text-white" />
+          <ArrowLeft className="h-4 w-4 text-white shrink-0" />
         </button>
 
         <div className="rounded-2xl p-6 bg-white/5 border border-white/20 mt-12">
@@ -78,16 +74,26 @@ export default function ProClients(){
         </div>
 
         <Card className="bg-white/5 border border-white/20">
-          <CardHeader>
-            <CardTitle className="text-white">Add Client</CardTitle>
-            <p className="text-sm text-white/60 mt-1">Enter your client's information</p>
-          </CardHeader>
+          <CardHeader><CardTitle className="text-white">Add Client</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Input placeholder="Client Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
-              <Input placeholder="Client Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
+              <Input placeholder="Name" className="bg-black/30 border-white/30 text-white" value={name} onChange={e=>setName(e.target.value)} />
+              <Input placeholder="Email (optional)" className="bg-black/30 border-white/30 text-white" value={email} onChange={e=>setEmail(e.target.value)} />
             </div>
-            <div className="flex justify-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Select value={role} onValueChange={(v) => setRole(v as ProRole)}>
+                <SelectTrigger className="bg-black/30 border-white/30 text-white">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="trainer">Trainer / Coach</SelectItem>
+                  <SelectItem value="doctor">Doctor / Physician</SelectItem>
+                  <SelectItem value="nurse">Nurse</SelectItem>
+                  <SelectItem value="pa">Physician Assistant</SelectItem>
+                  <SelectItem value="nutritionist">Nutritionist</SelectItem>
+                  <SelectItem value="dietitian">Dietitian</SelectItem>
+                </SelectContent>
+              </Select>
               <Button onClick={add} className="bg-white/10 border border-white/20 text-white hover:bg-white/20"><Plus className="h-4 w-4 mr-1" />Add Client</Button>
             </div>
           </CardContent>
