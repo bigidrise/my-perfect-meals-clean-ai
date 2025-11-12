@@ -932,7 +932,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           <div className="flex items-center justify-center">
             <div className="bg-black/60 backdrop-blur-none border border-white/20 rounded-2xl px-6 py-3 flex items-center gap-3">
               <h1 className="text-xl font-bold text-white">
-                Competition + Beachbody Meal Board
+                Professional/ Trainer Meal Board
               </h1>
               <button
                 onClick={() => setShowInfoModal(true)}
