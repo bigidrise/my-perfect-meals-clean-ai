@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSaveDiabetesProfile, useLogGlucose, useGlucoseLogs, useDiabetesProfile } from "@/hooks/useDiabetes";
 import { useToast } from "@/hooks/use-toast";
 import { GLUCOSE_THRESHOLDS } from "@/content/diabetesEducation";
+import { DIABETIC_PRESETS } from "@/data/diabeticPresets";
 import type { GlucoseContext } from "@/hooks/useDiabetes";
 
 function getDeviceId(): string {
@@ -41,6 +42,7 @@ export default function DiabeticHub() {
   const [fiberMin, setFiberMin] = useState("25");
   const [giCap, setGiCap] = useState("55");
   const [mealFrequency, setMealFrequency] = useState("4");
+  const [selectedPreset, setSelectedPreset] = useState<string>("");
 
   // Auto-hydrate guardrails from server on mount
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function DiabeticHub() {
           mealFrequency: parseInt(mealFrequency) || 4,
         },
       });
+      setSelectedPreset(""); // Clear preset after manual save
       toast({ title: "Guardrails saved successfully" });
     } catch (error) {
       toast({ title: "Failed to save guardrails", variant: "destructive" });
@@ -104,6 +107,25 @@ export default function DiabeticHub() {
     } catch (error) {
       toast({ title: "Failed to log reading", variant: "destructive" });
     }
+  };
+
+  const handleApplyPreset = (presetId: string) => {
+    const preset = DIABETIC_PRESETS.find(p => p.id === presetId);
+    if (!preset) return;
+
+    setFastingMin(String(preset.guardrails.fastingMin));
+    setFastingMax(String(preset.guardrails.fastingMax));
+    setPostMealMax(String(preset.guardrails.postMealMax));
+    setDailyCarbLimit(String(preset.guardrails.carbLimit));
+    setFiberMin(String(preset.guardrails.fiberMin));
+    setGiCap(String(preset.guardrails.giCap));
+    setMealFrequency(String(preset.guardrails.mealFrequency));
+    setSelectedPreset(presetId);
+
+    toast({ 
+      title: `Applied ${preset.name}`,
+      description: preset.description 
+    });
   };
 
   return (
@@ -173,6 +195,27 @@ export default function DiabeticHub() {
                 <h2 className="text-lg font-medium text-white">Doctor / Coach Guardrails</h2>
                 <p className="text-white/80 text-sm">Set your clinical targets and constraints</p>
               </div>
+            </div>
+
+            <div className="mb-6 relative z-10">
+              <label className="block text-sm text-white mb-2">Apply Clinical Preset</label>
+              <Select value={selectedPreset} onValueChange={handleApplyPreset}>
+                <SelectTrigger className="w-full bg-white/20 border-white/40 text-white">
+                  <SelectValue placeholder="Choose a preset or customize below..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {DIABETIC_PRESETS.map((preset) => (
+                    <SelectItem key={preset.id} value={preset.id}>
+                      {preset.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedPreset && (
+                <p className="text-white/70 text-xs mt-2">
+                  {DIABETIC_PRESETS.find(p => p.id === selectedPreset)?.description}
+                </p>
+              )}
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10 mb-6">
