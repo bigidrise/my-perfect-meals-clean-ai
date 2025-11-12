@@ -1350,8 +1350,8 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   );
                 })}
 
-                {/* Add Meal Button */}
-                <div className="col-span-full flex justify-center">
+                {/* Add Meal Button - Above Daily Totals */}
+                <div className="col-span-full flex justify-center my-4">
                   <Button
                     onClick={handleAddMealSlot}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
