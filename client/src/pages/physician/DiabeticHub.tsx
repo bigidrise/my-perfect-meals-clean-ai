@@ -3,12 +3,36 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSaveDiabetesProfile, useLogGlucose, useGlucoseLogs } from "@/hooks/useDiabetes";
+import { useToast } from "@/hooks/use-toast";
+import { GLUCOSE_THRESHOLDS } from "@/content/diabetesEducation";
+import type { GlucoseContext } from "@/hooks/useDiabetes";
+
+function getDeviceId(): string {
+  let deviceId = localStorage.getItem("deviceId");
+  if (!deviceId) {
+    deviceId = `device-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    localStorage.setItem("deviceId", deviceId);
+  }
+  return deviceId;
+}
 
 export default function DiabeticHub() {
   const [, setLocation] = useLocation();
-  
-  // Static state for visual display only
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const userId = user?.id || getDeviceId();
+
+  // Hooks
+  const saveMutation = useSaveDiabetesProfile();
+  const logMutation = useLogGlucose();
+  const { data: glucoseLogs } = useGlucoseLogs(userId, 1);
+
+  // Guardrail state (client-side only for Phase B)
   const [glucoseReading, setGlucoseReading] = useState("");
+  const [glucoseContext, setGlucoseContext] = useState<GlucoseContext>("PRE_MEAL");
   const [fastingMin, setFastingMin] = useState("70");
   const [fastingMax, setFastingMax] = useState("100");
   const [postMealMax, setPostMealMax] = useState("140");
@@ -16,6 +40,47 @@ export default function DiabeticHub() {
   const [fiberMin, setFiberMin] = useState("25");
   const [giCap, setGiCap] = useState("55");
   const [mealFrequency, setMealFrequency] = useState("3");
+
+  // Get latest reading for display
+  const latestReading = glucoseLogs?.data?.[0];
+  const lastValue = latestReading?.valueMgdl || 95;
+  const targetMin = parseInt(fastingMin) || GLUCOSE_THRESHOLDS.PRE_MEAL_MIN;
+  const targetMax = parseInt(fastingMax) || GLUCOSE_THRESHOLDS.PRE_MEAL_MAX;
+  const inRange = lastValue >= targetMin && lastValue <= targetMax;
+
+  // Handlers
+  const handleSaveGuardrails = async () => {
+    try {
+      await saveMutation.mutateAsync({
+        userId,
+        type: "T2D",
+        hypoHistory: false,
+      });
+      toast({ title: "Guardrails saved successfully" });
+    } catch (error) {
+      toast({ title: "Failed to save guardrails", variant: "destructive" });
+    }
+  };
+
+  const handleLogGlucose = async () => {
+    if (!glucoseReading) {
+      toast({ title: "Please enter a reading", variant: "destructive" });
+      return;
+    }
+
+    try {
+      await logMutation.mutateAsync({
+        userId,
+        valueMgdl: parseInt(glucoseReading),
+        context: glucoseContext,
+        recordedAt: new Date().toISOString(),
+      });
+      setGlucoseReading("");
+      toast({ title: "Reading logged successfully" });
+    } catch (error) {
+      toast({ title: "Failed to log reading", variant: "destructive" });
+    }
+  };
 
   return (
     <>
@@ -159,11 +224,12 @@ export default function DiabeticHub() {
             </div>
 
             <button 
-              className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden"
-              title="Coming in next update - wiring to database in progress"
+              onClick={handleSaveGuardrails}
+              disabled={saveMutation.isPending}
+              className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
-              <span className="relative z-10">Save Guardrails</span>
+              <span className="relative z-10">{saveMutation.isPending ? "Saving..." : "Save Guardrails"}</span>
             </button>
           </section>
 
@@ -194,18 +260,44 @@ export default function DiabeticHub() {
                   />
                 </div>
 
-                <button className="w-full px-6 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-orange-600/90 text-white font-bold transition-all shadow-xl border border-white/20 relative overflow-hidden">
+                <div>
+                  <label className="block text-sm text-white mb-2">
+                    Context
+                  </label>
+                  <Select value={glucoseContext} onValueChange={(val) => setGlucoseContext(val as GlucoseContext)}>
+                    <SelectTrigger className="w-full bg-white/20 border-white/40 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="FASTED">Fasting</SelectItem>
+                      <SelectItem value="PRE_MEAL">Pre-Meal</SelectItem>
+                      <SelectItem value="POST_MEAL_1H">Post-Meal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <button 
+                  onClick={handleLogGlucose}
+                  disabled={logMutation.isPending}
+                  className="w-full px-6 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-orange-600/90 text-white font-bold transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
-                  <span className="relative z-10">Log Reading</span>
+                  <span className="relative z-10">{logMutation.isPending ? "Logging..." : "Log Reading"}</span>
                 </button>
               </div>
 
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-6 border border-orange-400/30">
                 <div className="text-white font-medium text-sm mb-2">Last Reading</div>
-                <div className="text-2xl font-medium text-white mb-2">95 mg/dL</div>
-                <div className="text-sm text-green-200">✅ In Target Range</div>
+                <div className="text-2xl font-medium text-white mb-2">
+                  {latestReading ? `${lastValue} mg/dL` : "No readings yet"}
+                </div>
+                {latestReading && (
+                  <div className={`text-sm ${inRange ? "text-green-200" : "text-yellow-200"}`}>
+                    {inRange ? "✅ In Target Range" : "⚠️ Outside Target"}
+                  </div>
+                )}
                 <div className="text-white/80 text-sm mt-4">
-                  Target: {fastingMin}-{fastingMax} mg/dL
+                  Target: {targetMin}-{targetMax} mg/dL
                 </div>
               </div>
             </div>
