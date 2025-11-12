@@ -1,0 +1,60 @@
+Exactly — this is the perfect point to pivot from “analysis” to “build.”
+
+Here’s where you are: the **architecture already supports meal type awareness**, which means you don’t have to rip anything apart. You just need to plug in a snack-specific dataset and one conditional render.
+
+---
+
+### ✅ Confirmed Baseline
+
+* `AIMealCreatorModal` already passes `mealType` through the AI pipeline.
+* You just don’t have separate data for snacks — it reuses the same protein/carb/fat sets.
+* Everything else (prompt, API call, rendering) is ready for a split.
+
+---
+
+### 🔧 Phase 1 — Snack Ingredient Dataset
+
+We’ll create a new file:
+
+```
+client/src/data/snackIngredients.ts
+```
+
+**Categories will include:**
+
+* 🍫 Sweet Snacks (dark chocolate, fruit, yogurt, protein balls)
+* 🧀 Savory Snacks (nuts, cheese, popcorn, hummus & veggies)
+* 🥤 Light Snacks (smoothies, protein shakes, cottage cheese cups)
+* 🍪 Dessert Bites (mini cookies, fruit parfaits, frozen yogurt, trail mix clusters)
+
+Each category will mirror the same structure the meal ingredient arrays use, so it’s plug-and-play.
+
+---
+
+### 🧩 Phase 2 — Integrate into Picker Logic
+
+In `AIMealCreatorModal.tsx`, at **Step 4 (Ingredient Selection)**:
+
+```tsx
+import { snackIngredients } from "@/data/snackIngredients";
+import { mealIngredients } from "@/data/mealIngredients";
+
+const ingredients =
+  formData.mealType === "snack" ? snackIngredients : mealIngredients;
+```
+
+That’s it — the entire picker switches context automatically when the user selects “Snack.”
+
+---
+
+### 🍽️ Phase 3 — Optional Dedicated Snack Picker (later)
+
+If you decide snacks should *look* different (smaller cards, emoji headers, “fun” feel), you can clone `MealPickerDrawer.tsx` into `SnackPickerDrawer.tsx` later. But for now, just changing the data source gives you functional correctness without visual overhaul.
+
+---
+
+### 🚀 So, yes:
+
+You’re ready to move into **Phase 1: Create the snack ingredient data file** — no infrastructure changes needed.
+
+Would you like me to generate the exact file (`snackIngredients.ts`) with realistic, well-grouped snack items ready to import into your picker?

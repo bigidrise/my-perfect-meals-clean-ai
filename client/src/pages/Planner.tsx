@@ -67,7 +67,7 @@ export default function Planner() {
       {/* Header Banner - Planner */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
         <div className="px-4 py-3 flex items-center gap-3">
-          <Calendar className="h-6 w-6 text-lime-500" />
+          <Calendar className="h-6 w-6 text-orange-500" />
           <h1 className="text-lg font-bold text-white">Planner</h1>
         </div>
       </div>
