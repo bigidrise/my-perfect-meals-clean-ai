@@ -460,21 +460,27 @@ export default function MealIngredientPicker({
           {/* Ingredient Grid - Small Checkboxes */}
           <div className="mb-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
-              {INGREDIENTS[activeCategory].map((ingredient) => (
-                <label
-                  key={ingredient}
-                  className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white cursor-pointer group p-1 min-h-[44px]"
-                >
-                  <Checkbox
-                    checked={selectedIngredients.includes(ingredient)}
-                    onCheckedChange={() => toggleIngredient(ingredient)}
-                    className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500"
-                  />
-                  <span className="text-[11px] group-hover:text-emerald-300 transition-colors text-center">
-                    {ingredient}
-                  </span>
-                </label>
-              ))}
+              {INGREDIENTS[activeCategory].map((ingredient) => {
+                const isSelected = selectedIngredients.includes(ingredient);
+                return (
+                  <div
+                    key={ingredient}
+                    className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px]"
+                  >
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={() => toggleIngredient(ingredient)}
+                      className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500"
+                    />
+                    <span 
+                      className="text-[11px] group-hover:text-emerald-300 transition-colors text-center cursor-pointer"
+                      onClick={() => toggleIngredient(ingredient)}
+                    >
+                      {ingredient}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
