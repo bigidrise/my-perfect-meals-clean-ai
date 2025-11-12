@@ -95,11 +95,13 @@ export default function ProClients(){
                   <div>
                     <div className="font-semibold text-white">{c.name}</div>
                     {c.email && <div className="text-white text-sm">{c.email}</div>}
-                    {c.role && (
-                      <div className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/30 text-purple-200 border border-purple-400/30">
-                        {c.role === "doctor" ? "Doctor" : c.role === "nurse" ? "Nurse" : c.role === "pa" ? "PA" : c.role === "nutritionist" ? "Nutritionist" : c.role === "dietitian" ? "Dietitian" : "Trainer"}
-                      </div>
-                    )}
+                    <div className="flex gap-2 mt-1 flex-wrap">
+                      {c.role && (
+                        <div className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/30 text-purple-200 border border-purple-400/30">
+                          {c.role === "doctor" ? "Doctor" : c.role === "nurse" ? "Nurse" : c.role === "pa" ? "PA" : c.role === "nutritionist" ? "Nutritionist" : c.role === "dietitian" ? "Dietitian" : "Trainer"}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

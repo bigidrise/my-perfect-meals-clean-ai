@@ -664,6 +664,33 @@ export default function ProClientDashboard() {
           </Card>
         )}
 
+        {/* GLP-1 GUARDRAILS DISPLAY - CLINICIANS ONLY */}
+        {isClinician && (
+          <Card className="bg-white/5 border border-purple-400/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                💉 GLP-1 Guardrails Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="bg-black/30 border border-purple-400/30 rounded-xl p-4">
+                <p className="text-white/60 text-sm mb-2">
+                  GLP-1 guardrails are managed in the dedicated GLP-1 Hub. View and edit patient-specific protocols below.
+                </p>
+                <Button
+                  onClick={() => {
+                    localStorage.setItem("pro-client-id", clientId);
+                    setLocation("/glp1-hub");
+                  }}
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  View GLP-1 Guardrails
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* PHYSICIANS SECTION */}
         <Card className="bg-white/5 border border-white/20">
           <CardContent className="p-6 space-y-3">

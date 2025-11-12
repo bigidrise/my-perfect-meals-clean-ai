@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db";
-import { diabetesProfile, guardrailAuditLog } from "../db/schema";
+import { diabetesProfile, guardrailAuditLog, glp1Profile } from "../db/schema";
+import { careTeamMember } from "../db/schema/careTeam";
 // Removed import for 'users' as it's causing issues and will be addressed later.
 // import { users } from "../db/schema";
 import { z } from "zod";
@@ -36,40 +37,67 @@ function computeInRange(glucose: number | null, gr?: any): boolean | null {
 }
 
 r.get("/api/patients", proRole, async (req: any, res) => {
-  const doctorId = req.user.id;
+  const clinicianId = req.user.id;
 
-  // Get all diabetes profiles (patients)
-  const profiles = await db
+  // Get care team relationships for this clinician
+  const careTeamRelations = await db
+    .select()
+    .from(careTeamMember)
+    .where(
+      and(
+        eq(careTeamMember.proUserId, clinicianId),
+        eq(careTeamMember.status, "active")
+      )
+    );
+
+  if (careTeamRelations.length === 0) {
+    return res.json([]);
+  }
+
+  const patientIds = careTeamRelations.map(r => r.userId);
+
+  // Get diabetes profiles for assigned patients
+  const diabetesProfiles = await db
     .select()
     .from(diabetesProfile)
+    .where(eq(diabetesProfile.userId, patientIds[0])) // Start with first patient
     .limit(100);
 
-  // For now, return diabetes profiles as patient data
-  // TODO: Join with users table once schema is available
-  const patients = profiles.map(p => ({
-    id: p.userId,
-    name: `Patient ${p.userId.slice(0, 8)}`,
-    email: null, // Email is not directly available from diabetesProfile
-    guardrails: p.guardrails,
-    lastUpdated: p.updatedAt,
-  }));
+  // Get GLP-1 profiles for same patients
+  const glp1Profiles = await db
+    .select()
+    .from(glp1Profile)
+    .where(eq(glp1Profile.userId, patientIds[0]))
+    .limit(100);
 
-  const results = patients.map((row) => {
-    const latestGlucose = null; // Glucose data is not directly available in this query
-    const inRange = computeInRange(latestGlucose, row.guardrails ?? undefined);
-    const carbLimit = row.guardrails?.carbLimit ?? null;
-    const preset = row.guardrails?.presetId ?? null;
+  // Create lookup maps
+  const diabetesMap = new Map(diabetesProfiles.map(p => [p.userId, p]));
+  const glp1Map = new Map(glp1Profiles.map(p => [p.userId, p]));
+  const careTeamMap = new Map(careTeamRelations.map(r => [r.userId, r]));
+
+  // Combine data for all patients
+  const results = patientIds.map((patientId) => {
+    const diabetes = diabetesMap.get(patientId);
+    const glp1 = glp1Map.get(patientId);
+    const careTeam = careTeamMap.get(patientId);
+
+    const latestGlucose = null;
+    const inRange = computeInRange(latestGlucose, diabetes?.guardrails ?? undefined);
 
     return {
-      id: row.id,
-      name: row.name ?? "Unknown",
-      email: row.email ?? "",
+      id: patientId,
+      name: careTeam?.name ?? `Patient ${patientId.slice(0, 8)}`,
+      email: careTeam?.email ?? "",
       condition: "T2D" as const,
       latestGlucose,
       inRange,
-      preset,
-      carbLimit,
-      lastUpdated: row.lastUpdated ?? null,
+      preset: diabetes?.guardrails?.presetId ?? null,
+      carbLimit: diabetes?.guardrails?.carbLimit ?? null,
+      lastUpdated: diabetes?.updatedAt ?? null,
+      diabetesGuardrails: diabetes?.guardrails ?? null,
+      glp1Guardrails: glp1?.guardrails ?? null,
+      lastShot: glp1?.lastShotDate ?? null,
+      clinicianRole: careTeam?.role ?? null,
     };
   });
 
@@ -78,15 +106,36 @@ r.get("/api/patients", proRole, async (req: any, res) => {
 
 r.get("/api/patients/:id", proRole, async (req: any, res) => {
   const patientId = req.params.id;
+  const clinicianId = req.user.id;
 
-  const profile = await db.query.diabetesProfile.findFirst({
+  // Verify clinician has access to this patient
+  const careTeamRelation = await db.query.careTeamMember.findFirst({
+    where: and(
+      eq(careTeamMember.userId, patientId),
+      eq(careTeamMember.proUserId, clinicianId),
+      eq(careTeamMember.status, "active")
+    ),
+  });
+
+  if (!careTeamRelation) {
+    return res.status(403).json({ error: "Access denied to this patient" });
+  }
+
+  const diabetesProfileData = await db.query.diabetesProfile.findFirst({
     where: eq(diabetesProfile.userId, patientId),
   });
 
+  const glp1ProfileData = await db.query.glp1Profile.findFirst({
+    where: eq(glp1Profile.userId, patientId),
+  });
+
   res.json({
-    profile: profile ?? null,
-    guardrails: profile?.guardrails ?? null,
+    profile: diabetesProfileData ?? null,
+    guardrails: diabetesProfileData?.guardrails ?? null,
     glucose: [], // Glucose data is not fetched here
+    glp1Profile: glp1ProfileData ?? null,
+    glp1Guardrails: glp1ProfileData?.guardrails ?? null,
+    lastShot: glp1ProfileData?.lastShotDate ?? null,
   });
 });
 
