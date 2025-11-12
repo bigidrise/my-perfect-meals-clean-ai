@@ -4,8 +4,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { proStore, ClientProfile, ProRole } from "@/lib/proData";
+import { proStore, ClientProfile } from "@/lib/proData";
 import { Plus, User2, ArrowRight, ArrowLeft, Archive, RotateCcw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 
@@ -15,13 +14,12 @@ export default function ProClients(){
   const [showArchived, setShowArchived] = useState(false);
   const [name,setName] = useState(""); 
   const [email,setEmail]=useState("");
-  const [role, setRole] = useState<ProRole>("trainer");
 
   const add = () => {
     if (!name.trim()) return;
-    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined, role };
+    const c: ClientProfile = { id: crypto.randomUUID(), name: name.trim(), email: email.trim() || undefined };
     const next = [c, ...clients]; setClients(next); proStore.saveClients(next);
-    setName(""); setEmail(""); setRole("trainer");
+    setName(""); setEmail("");
   };
 
   const archiveClient = (id: string) => {
