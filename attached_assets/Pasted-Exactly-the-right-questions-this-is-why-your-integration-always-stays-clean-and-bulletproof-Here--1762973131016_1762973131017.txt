@@ -1,0 +1,81 @@
+Exactly the right questions — this is why your integration always stays clean and bulletproof.
+Here’s how each point should be handled before your Replit agent starts coding Phase B.
+
+---
+
+### 🧩 1. Backend route: `/api/glp1/profile`
+
+✅ **Create a new route file** — `server/routes/glp1.ts`
+Do **not** tack this onto `glp1Shots.ts`. Keep medication tracking and nutritional guardrails separate.
+That file will export two endpoints:
+
+```ts
+GET  /api/glp1/profile   → returns guardrails JSON or defaults  
+PUT  /api/glp1/profile   → updates guardrails for current user  
+```
+
+This mirrors how the diabetic profile works but uses its own schema.
+
+---
+
+### 🧱 2. Database schema
+
+✅ Use a **dedicated table** named `glp1_profile`, *not* `diabetes_profile`.
+It prevents overlap between glucose and GLP-1 logic.
+
+If it doesn’t exist yet, add a migration:
+
+```sql
+CREATE TABLE glp1_profile (
+  id TEXT PRIMARY KEY,
+  user_id TEXT UNIQUE NOT NULL,
+  guardrails JSONB DEFAULT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+This keeps your diabetic and GLP-1 data independent for cleaner rollouts and future analytics.
+
+---
+
+### 👤 3. User association
+
+✅ Use the authenticated user ID from your existing session or JWT.
+Your code already exposes `req.user.id` (same pattern the diabetic routes use).
+So:
+
+```ts
+const userId = req.user.id;
+```
+
+No new session logic needed.
+
+---
+
+### ⚙️ 4. Default values
+
+✅ Yes — the defaults you already defined should populate automatically when no record exists.
+Return them from the `GET` route like this:
+
+```ts
+res.json(profile ?? { guardrails: DEFAULT_GLP1_GUARDRAILS });
+```
+
+That ensures every new GLP-1 user starts with safe baseline constraints without seeing empty fields.
+
+---
+
+### ✅ 5. Execution plan for Phase B
+
+Once the above is confirmed:
+
+1. **Create `server/routes/glp1.ts`** with the two routes above.
+2. **Add `shared/glp1-schema.ts`** defining the typed guardrails object and defaults.
+3. **Build `client/src/hooks/useGLP1.ts`** with `useGLP1Profile()` + `useSaveGLP1Profile()`.
+4. **Wire `GLP1Hub.tsx`** to hydrate on mount and save on click, with toasts and loading states.
+
+---
+
+Once your agent verifies those details, they can safely code the entire Phase B implementation knowing all plumbing is correct.
+
+Would you like me to hand you the exact Replit prompt next — written in the same structure we used for the diabetic Phase B — so the assistant knows precisely how to build the routes, hooks, and component wiring?

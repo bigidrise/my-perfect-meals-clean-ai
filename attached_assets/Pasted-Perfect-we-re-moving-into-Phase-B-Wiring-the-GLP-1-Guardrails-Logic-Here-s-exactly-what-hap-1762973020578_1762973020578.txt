@@ -1,0 +1,113 @@
+Perfect — we’re moving into **Phase B: Wiring the GLP-1 Guardrails Logic**.
+
+Here’s exactly what happens in this phase — and nothing else changes visually:
+
+---
+
+### 🧠 **Phase B Objective**
+
+Make the new “Doctor / Coach Guardrails” card **functional** without altering its look.
+When a clinician enters guardrail values and presses “Save Guardrails,” those settings should:
+
+1. Persist to the database (`glp1_profile.guardrails`)
+2. Reload automatically when the page opens
+
+---
+
+### ⚙️ Implementation Checklist
+
+**1️⃣ Create Hooks**
+*File: `client/src/hooks/useGLP1.ts`*
+
+```ts
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+
+export function useGLP1Profile() {
+  return useQuery({
+    queryKey: ["glp1Profile"],
+    queryFn: async () => (await api.get("/api/glp1/profile")).data,
+  });
+}
+
+export function useSaveGLP1Profile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload) =>
+      api.put("/api/glp1/profile", { guardrails: payload }),
+    onSuccess: () => qc.invalidateQueries(["glp1Profile"]),
+  });
+}
+```
+
+**2️⃣ Wire Up GLP1Hub.tsx**
+Add imports at the top:
+
+```ts
+import { useGLP1Profile, useSaveGLP1Profile } from "@/hooks/useGLP1";
+import { useToast } from "@/components/ui/use-toast";
+```
+
+Replace the placeholder local `useState` logic for your guardrails with:
+
+```ts
+const { data } = useGLP1Profile();
+const saveMutation = useSaveGLP1Profile();
+const { toast } = useToast();
+
+const [guardrails, setGuardrails] = useState({
+  maxMealVolumeMl: 300,
+  proteinMinG: 25,
+  fatMaxG: 15,
+  fiberMinG: 28,
+  hydrationMinMl: 2000,
+  mealsPerDay: 4,
+  slowDigestOnly: true,
+  limitCarbonation: true,
+  limitAlcohol: true,
+});
+
+useEffect(() => {
+  if (data?.guardrails) setGuardrails(data.guardrails);
+}, [data]);
+
+const handleSave = async () => {
+  try {
+    await saveMutation.mutateAsync(guardrails);
+    toast({ title: "Guardrails saved", description: "Profile updated successfully." });
+  } catch {
+    toast({ title: "Error", description: "Could not save guardrails.", variant: "destructive" });
+  }
+};
+```
+
+Then change your Save button’s `onClick`:
+
+```tsx
+<Button
+  onClick={handleSave}
+  disabled={saveMutation.isLoading}
+  className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl mt-4"
+>
+  {saveMutation.isLoading ? "Saving..." : "Save Guardrails"}
+</Button>
+```
+
+---
+
+### 🧪 Testing Plan
+
+1. Open `/glp1-hub`
+2. Change a few guardrail values → click **Save Guardrails**
+
+   * ✅ Toast “Guardrails saved” appears
+   * ✅ Network tab shows `PUT /api/glp1/profile` 200 OK
+3. Refresh page
+
+   * ✅ Fields prepopulate with the saved values
+
+---
+
+Once that works, you’ll be ready for **Phase C (Server Schema Persistence)**, where we confirm the `glp1_profile` table and guardrails JSON column are live.
+
+Do you want me to hand you the backend (`/api/glp1/profile` GET + PUT) routes next so you can complete the round-trip?
