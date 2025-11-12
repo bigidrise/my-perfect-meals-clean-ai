@@ -22,13 +22,6 @@ export default function ProCareCover() {
 
   const proCareFeatures: ProCareFeature[] = [
     {
-      title: "Competition & Beachbody",
-      description: "Contest prep meal planning with strategic macro timing",
-      icon: Trophy,
-      route: "/athlete-board",
-      testId: "card-competition-beachbody",
-    },
-    {
       title: "Trainer/ Physician Portal",
       description: "Professional client management and coaching tools",
       icon: Users,
