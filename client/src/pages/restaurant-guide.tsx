@@ -270,6 +270,7 @@ export default function RestaurantGuidePage() {
       saveRestaurantCache({
         restaurantData: data,
         restaurant: restaurantInput,
+        craving: cravingInput,
         cuisine: matchedCuisine || "",
         generatedAtISO: new Date().toISOString(),
       });

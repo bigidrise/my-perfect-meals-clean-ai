@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -83,14 +83,23 @@ export default function MealFinder() {
   const [zipCode, setZipCode] = useState("");
   const [results, setResults] = useState<MealResult[]>([]);
   const [progress, setProgress] = useState(0);
+  const hasRestoredRef = useRef(false);
 
   useEffect(() => {
+    if (hasRestoredRef.current) return;
+    
     const cached = loadMealFinderCache();
     if (cached) {
       setResults(cached.results);
       setMealQuery(cached.mealQuery);
       setZipCode(cached.zipCode);
+      toast({
+        title: "🔄 Meal Finder Restored",
+        description: `Your search results for "${cached.mealQuery}" will remain saved on this page until you search again.`,
+      });
+      hasRestoredRef.current = true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const findMealsMutation = useMutation({
@@ -337,7 +346,9 @@ export default function MealFinder() {
 
                         {result.medicalBadges && result.medicalBadges.length > 0 && (
                           <div className="mb-3">
-                            <HealthBadgesPopover badges={result.medicalBadges} />
+                            <HealthBadgesPopover 
+                              badges={result.medicalBadges.map(b => b.condition)} 
+                            />
                           </div>
                         )}
 
