@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { mealIngredients } from "@/data/mealIngredients";
+import { snackIngredients } from "@/data/snackIngredients";
 
 interface MealIngredientPickerProps {
   open: boolean;
@@ -14,35 +16,10 @@ interface MealIngredientPickerProps {
   mealSlot: string;
 }
 
-const INGREDIENTS = {
-  proteins: [
-    'Chicken Breast', 'Eggs', 'Salmon', 'Steak', 'Tofu', 
-    'Protein Shake', 'Greek Yogurt', 'Cottage Cheese', 'Turkey', 
-    'Tuna', 'Shrimp', 'Ground Beef', 'Pork Chop', 'Tilapia',
-    'Cod', 'Tempeh', 'Chicken Thigh', 'Lamb', 'Bison', 'Duck'
-  ],
-  starchyCarbs: [
-    'Oats', 'Rice', 'Potatoes', 'Pasta', 'Quinoa', 
-    'Sweet Potato', 'Bread', 'Tortillas', 'Bagel', 
-    'English Muffin', 'Pancakes', 'Waffles', 'Couscous',
-    'Barley', 'Farro', 'Rice Cakes', 'Cornbread', 'Polenta',
-    'Noodles', 'Pita Bread'
-  ],
-  fibrousCarbs: [
-    'Broccoli', 'Spinach', 'Peppers', 'Green Beans', 'Asparagus', 
-    'Zucchini', 'Cauliflower', 'Brussels Sprouts', 'Kale', 
-    'Carrots', 'Tomatoes', 'Mushrooms', 'Onions', 'Celery',
-    'Cucumber', 'Lettuce', 'Cabbage', 'Eggplant', 'Squash',
-    'Bok Choy'
-  ],
-  fats: [
-    'Peanut Butter', 'Almond Butter', 'Cashew Butter', 'Almonds', 
-    'Walnuts', 'Cashews', 'Pecans', 'Macadamia Nuts', 'Pistachios', 
-    'Pumpkin Seeds', 'Sunflower Seeds', 'Chia Seeds', 'Flax Seeds', 
-    'Avocado', 'Olive Oil', 'Coconut Oil', 'Butter', 'Cheese', 
-    'Heavy Cream', 'MCT Oil'
-  ]
-};
+// Ingredient categories to display - use snackIngredients for snacks, mealIngredients otherwise
+const ingredientSource = mealSlot === "snacks" ? snackIngredients : mealIngredients;
+const categories = Object.keys(ingredientSource) as Array<keyof typeof ingredientSource>;
+
 
 export default function MealIngredientPicker({ 
   open, 
@@ -54,7 +31,7 @@ export default function MealIngredientPicker({
   const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats'>('proteins');
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
-  
+
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(() => {
@@ -64,10 +41,10 @@ export default function MealIngredientPicker({
       return false;
     }
   });
-  
+
   // 🎯 Macro Targeting State with localStorage persistence
   const MACRO_TARGETS_CACHE_KEY = `macro-targets-${mealSlot}`;
-  
+
   const [macroTargetingEnabled, setMacroTargetingEnabled] = useState(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -76,7 +53,7 @@ export default function MealIngredientPicker({
       return false;
     }
   });
-  
+
   const [targetProtein, setTargetProtein] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -85,7 +62,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const [targetCarbs, setTargetCarbs] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -94,7 +71,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const [targetFat, setTargetFat] = useState<number | ''>(() => {
     try {
       const cached = localStorage.getItem(MACRO_TARGETS_CACHE_KEY);
@@ -103,7 +80,7 @@ export default function MealIngredientPicker({
       return '';
     }
   });
-  
+
   const { toast } = useToast();
 
   // Handle info modal close - mark as seen
@@ -143,7 +120,7 @@ export default function MealIngredientPicker({
   };
 
   const hasProtein = selectedIngredients.some(ing => 
-    INGREDIENTS.proteins.includes(ing)
+    (mealIngredients.proteins as string[]).includes(ing)
   );
 
   // 🎯 Runtime validation for macro targets
@@ -172,7 +149,7 @@ export default function MealIngredientPicker({
   };
 
   const handleGenerateMeal = async () => {
-    if (!hasProtein) {
+    if (!hasProtein && mealSlot !== "snacks") { // Snacks don't require protein selection
       toast({
         title: "Protein Required",
         description: "Please select at least one protein source",
@@ -196,7 +173,7 @@ export default function MealIngredientPicker({
 
     try {
       const allIngredients = [...selectedIngredients];
-      
+
       if (customIngredients.trim()) {
         allIngredients.push(...customIngredients.split(',').map(i => i.trim()).filter(Boolean));
       }
@@ -217,13 +194,14 @@ export default function MealIngredientPicker({
         body: JSON.stringify({
           fridgeItems: allIngredients,
           userId: 1,
+          mealSlot: mealSlot, // Include mealSlot here
           ...(macroTargets && { macroTargets })
         })
       });
       console.log('🍳 AI Meal Creator received data:', data);
 
       const generatedMeal = data.meals?.[0];
-      
+
       if (!generatedMeal) {
         throw new Error('No meal generated');
       }
@@ -244,7 +222,7 @@ export default function MealIngredientPicker({
       };
 
       onMealGenerated(mealWithImage);
-      
+
       setSelectedIngredients([]);
       setCustomIngredients('');
       setActiveCategory('proteins');
@@ -295,12 +273,20 @@ export default function MealIngredientPicker({
     }
   };
 
+  const handleCategorySelect = (category: keyof typeof ingredientSource) => {
+    setActiveCategory(category);
+    setSelectedIngredients(prev => 
+      prev.filter(ing => (ingredientSource[category] as string[]).includes(ing))
+    );
+  };
+
   const getCategoryLabel = (category: string) => {
     switch(category) {
       case 'proteins': return '🥩 Proteins';
       case 'starchyCarbs': return '🍞 Starchy Carbs';
       case 'fibrousCarbs': return '🥦 Fibrous Carbs';
       case 'fats': return '🥑 Fats';
+      case 'snacks': return '🥨 Snacks'; // Added for snacks category
       default: return category;
     }
   };
@@ -323,18 +309,18 @@ export default function MealIngredientPicker({
           </DialogHeader>
 
         {/* Category Tabs - Fixed */}
-        <div className="flex gap-1 mb-3 flex-shrink-0">
-          {(['proteins', 'starchyCarbs', 'fibrousCarbs', 'fats'] as const).map((category) => (
+        <div className="flex gap-1 mb-3 flex-shrink-0 overflow-x-auto">
+          {(Object.keys(ingredientSource) as Array<keyof typeof ingredientSource>).map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => handleCategorySelect(category)}
               className={`flex-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
                 activeCategory === category
                   ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
                   : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
               } ${!hasSeenInfo ? 'flash-border' : ''}`}
             >
-              {getCategoryLabel(category)}
+              {getCategoryLabel(category)} ({ingredientSource[category].length})
             </button>
           ))}
         </div>
@@ -459,28 +445,30 @@ export default function MealIngredientPicker({
 
           {/* Ingredient Grid - Small Checkboxes */}
           <div className="mb-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
-              {INGREDIENTS[activeCategory].map((ingredient) => {
-                const isSelected = selectedIngredients.includes(ingredient);
-                return (
-                  <div
-                    key={ingredient}
-                    onClick={() => toggleIngredient(ingredient)}
-                    className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
-                  >
-                    <Checkbox
-                      checked={isSelected}
-                      onCheckedChange={() => toggleIngredient(ingredient)}
-                      className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
-                    />
-                    <span 
-                      className="text-[11px] group-hover:text-emerald-300 transition-colors text-center"
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
+              {activeCategory && (
+                ingredientSource[activeCategory].map((ingredient) => {
+                  const isSelected = selectedIngredients.includes(ingredient);
+                  return (
+                    <div
+                      key={ingredient}
+                      onClick={() => toggleIngredient(ingredient)}
+                      className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
                     >
-                      {ingredient}
-                    </span>
-                  </div>
-                );
-              })}
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggleIngredient(ingredient)}
+                        className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
+                      />
+                      <span 
+                        className="text-[11px] group-hover:text-emerald-300 transition-colors text-center"
+                      >
+                        {ingredient}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
@@ -511,7 +499,7 @@ export default function MealIngredientPicker({
           )}
 
           {/* Requirement Notice */}
-          {!hasProtein && selectedIngredients.length > 0 && (
+          {!hasProtein && selectedIngredients.length > 0 && mealSlot !== "snacks" && (
             <div className="mb-3 p-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
               <p className="text-yellow-300 text-xs">
                 ⚠️ Please select at least one protein source to generate your meal
@@ -526,9 +514,9 @@ export default function MealIngredientPicker({
           <div className="flex gap-3">
             <Button
               onClick={handleGenerateMeal}
-              disabled={!hasProtein || generating}
+              disabled={(!hasProtein && mealSlot !== "snacks") || generating}
               className={`flex-1 min-h-[48px] text-base font-semibold transition-all ${
-                !hasProtein || generating
+                (!hasProtein && mealSlot !== "snacks") || generating
                   ? 'bg-gray-600/40 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30'
               }`}
