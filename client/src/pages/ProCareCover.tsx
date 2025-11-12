@@ -29,7 +29,7 @@ export default function ProCareCover() {
       testId: "card-competition-beachbody",
     },
     {
-      title: "Care Team",
+      title: "Trainer/ Physician Portal",
       description: "Professional client management and coaching tools",
       icon: Users,
       route: "/care-team",
