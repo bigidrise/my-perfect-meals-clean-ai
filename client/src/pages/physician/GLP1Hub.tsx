@@ -11,6 +11,8 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { useGLP1Profile, useSaveGLP1Profile } from "@/hooks/useGLP1";
+import { useToast } from "@/hooks/use-toast";
 
 type SiteType = "abdomen" | "thigh" | "upper_arm" | "buttock";
 
@@ -26,6 +28,22 @@ export default function GLP1Hub() {
   const [siteHistory, setSiteHistory] = useState<SiteType[]>([]);
   const [noteOpen, setNoteOpen] = useState(false);
 
+  // Fetch and mutate state for GLP-1 profile
+  const { data: profile, isLoading: profileLoading } = useGLP1Profile();
+  const saveMutation = useSaveGLP1Profile();
+  const { toast } = useToast();
+
+  // Initialize form fields with profile data
+  const [maxMealVolume, setMaxMealVolume] = useState<number | undefined>(undefined);
+  const [proteinMin, setProteinMin] = useState<number | undefined>(undefined);
+  const [fatMax, setFatMax] = useState<number | undefined>(undefined);
+  const [fiberMin, setFiberMin] = useState<number | undefined>(undefined);
+  const [hydrationGoal, setHydrationGoal] = useState<number | undefined>(undefined);
+  const [mealsPerDay, setMealsPerDay] = useState<number | undefined>(undefined);
+  const [slowDigestFoodsOnly, setSlowDigestFoodsOnly] = useState<boolean>(false);
+  const [limitCarbonation, setLimitCarbonation] = useState<boolean>(false);
+  const [limitAlcohol, setLimitAlcohol] = useState<boolean>(false);
+
   useEffect(() => {
     document.title = "GLP-1 Hub | My Perfect Meals";
     const saved = localStorage.getItem("glp1-site-history");
@@ -33,6 +51,22 @@ export default function GLP1Hub() {
       setSiteHistory(JSON.parse(saved));
     }
   }, []);
+
+  // Effect to populate form fields when profile data is loaded
+  useEffect(() => {
+    if (profile) {
+      setMaxMealVolume(profile.maxMealVolume);
+      setProteinMin(profile.proteinMin);
+      setFatMax(profile.fatMax);
+      setFiberMin(profile.fiberMin);
+      setHydrationGoal(profile.hydrationGoal);
+      setMealsPerDay(profile.mealsPerDay);
+      setSlowDigestFoodsOnly(profile.slowDigestFoodsOnly);
+      setLimitCarbonation(profile.limitCarbonation);
+      setLimitAlcohol(profile.limitAlcohol);
+    }
+  }, [profile]);
+
 
   const logShot = async () => {
     const dateVal = shotDate || new Date().toISOString().slice(0, 10);
@@ -73,6 +107,25 @@ export default function GLP1Hub() {
     return arr;
   }, [data, view]);
 
+  const handleSave = async () => {
+    saveMutation.mutate({
+      maxMealVolume,
+      proteinMin,
+      fatMax,
+      fiberMin,
+      hydrationGoal,
+      mealsPerDay,
+      slowDigestFoodsOnly,
+      limitCarbonation,
+      limitAlcohol,
+    });
+    toast({
+      title: "GLP-1 Profile Saved",
+      description: "Your guardrail settings have been updated.",
+      variant: "success",
+    });
+  };
+
   return (
     <div className="min-h-screen p-4 pb-16 bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
       {/* Back to Planner Hub */}
@@ -85,7 +138,7 @@ export default function GLP1Hub() {
         <ArrowLeft className="w-5 h-5" />Planner
         <span className="text-sm font-medium"></span>
       </button>
-        
+
       {/* Premium Feature Banner */}
       <div className="fixed top-4 right-4 z-[9999] bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-4 py-2 text-white shadow-2xl">
         <div className="flex items-center gap-2">
@@ -273,92 +326,111 @@ export default function GLP1Hub() {
         <section className="bg-black/60 border border-purple-300/20 rounded-xl p-5 backdrop-blur shadow-lg">
           <h2 className="text-lg text-white font-medium mb-2">Doctor / Coach Guardrails</h2>
           <p className="text-white/80 text-sm mb-4">Set clinical meal guardrails for GLP-1 patients (portion, macros, hydration).</p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-white/90 text-sm block mb-1">Max Meal Volume (mL)</label>
               <input
                 type="number"
                 placeholder="e.g., 300"
+                value={maxMealVolume}
+                onChange={(e) => setMaxMealVolume(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div>
               <label className="text-white/90 text-sm block mb-1">Protein Min (g per meal)</label>
               <input
                 type="number"
                 placeholder="e.g., 20"
+                value={proteinMin}
+                onChange={(e) => setProteinMin(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div>
               <label className="text-white/90 text-sm block mb-1">Fat Max (g per meal)</label>
               <input
                 type="number"
                 placeholder="e.g., 15"
+                value={fatMax}
+                onChange={(e) => setFatMax(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div>
               <label className="text-white/90 text-sm block mb-1">Fiber Min (g per day)</label>
               <input
                 type="number"
                 placeholder="e.g., 25"
+                value={fiberMin}
+                onChange={(e) => setFiberMin(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div>
               <label className="text-white/90 text-sm block mb-1">Hydration Goal (mL per day)</label>
               <input
                 type="number"
                 placeholder="e.g., 2000"
+                value={hydrationGoal}
+                onChange={(e) => setHydrationGoal(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div>
               <label className="text-white/90 text-sm block mb-1">Meals per Day</label>
               <input
                 type="number"
                 placeholder="e.g., 4"
+                value={mealsPerDay}
+                onChange={(e) => setMealsPerDay(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div className="flex items-center justify-between">
               <label className="text-white/90 text-sm">Slow-Digest Foods Only</label>
               <input
                 type="checkbox"
+                checked={slowDigestFoodsOnly}
+                onChange={(e) => setSlowDigestFoodsOnly(e.target.checked)}
                 className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div className="flex items-center justify-between">
               <label className="text-white/90 text-sm">Limit Carbonation</label>
               <input
                 type="checkbox"
+                checked={limitCarbonation}
+                onChange={(e) => setLimitCarbonation(e.target.checked)}
                 className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
-            
+
             <div className="flex items-center justify-between">
               <label className="text-white/90 text-sm">Limit Alcohol</label>
               <input
                 type="checkbox"
+                checked={limitAlcohol}
+                onChange={(e) => setLimitAlcohol(e.target.checked)}
                 className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
           </div>
-          
+
           <Button
-            onClick={() => console.log("Guardrails saved (Phase A visual only)")}
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
             className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl mt-4"
           >
-            Save Guardrails
+            {saveMutation.isPending ? "Saving..." : "Save Guardrails"}
           </Button>
         </section>
 
