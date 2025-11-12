@@ -1020,6 +1020,42 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <BarChart3 className="h-4 w-4 mr-2" />
               Week Overview
             </Button>
+            
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => {
+                if (confirm("Delete all meals from this board? This action cannot be undone.")) {
+                  if (board) {
+                    const clearedBoard = {
+                      ...board,
+                      lists: {
+                        breakfast: [],
+                        lunch: [],
+                        dinner: [],
+                        snacks: []
+                      },
+                      days: board.days ? Object.fromEntries(
+                        Object.keys(board.days).map(dateISO => [
+                          dateISO,
+                          { breakfast: [], lunch: [], dinner: [], snacks: [] }
+                        ])
+                      ) : undefined
+                    };
+                    saveBoard(clearedBoard);
+                    clearAIMealsCache();
+                    toast({
+                      title: "All Meals Deleted",
+                      description: "Successfully cleared all meals from the board",
+                    });
+                  }
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              data-testid="button-delete-all"
+            >
+              Delete All
+            </Button>
 
             {FEATURES.dayPlanning === "alpha" && planningMode === "day" && (
               <Button

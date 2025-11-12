@@ -933,6 +933,41 @@ export default function DiabeticMenuBuilder() {
                   <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
                 )}
               </div>
+              
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => {
+                  if (confirm("Delete all meals from this board? This action cannot be undone.")) {
+                    if (board) {
+                      const clearedBoard = {
+                        ...board,
+                        lists: {
+                          breakfast: [],
+                          lunch: [],
+                          dinner: [],
+                          snacks: []
+                        },
+                        days: board.days ? Object.fromEntries(
+                          Object.keys(board.days).map(dateISO => [
+                            dateISO,
+                            { breakfast: [], lunch: [], dinner: [], snacks: [] }
+                          ])
+                        ) : undefined
+                      };
+                      saveBoard(clearedBoard);
+                      clearAIMealsCache();
+                      toast({
+                        title: "All Meals Deleted",
+                        description: "Successfully cleared all meals from the board",
+                      });
+                    }
+                  }
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Delete All
+              </Button>
 
               <div className="flex flex-col items-end gap-2">
                 {FEATURES.dayPlanning === 'alpha' && (
