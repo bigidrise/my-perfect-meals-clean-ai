@@ -160,7 +160,7 @@ export default function AIMealCreatorModal({
                     key={category.name}
                     type="button"
                     onClick={() => {
-                      const categoryItems = category.items.slice(0, 3).join(", ");
+                      const categoryItems = category.items.slice(0, 5).join(", ");
                       setIngredients((prev) =>
                         prev ? `${prev}, ${categoryItems}` : categoryItems
                       );
