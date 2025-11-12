@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { useGLP1Profile, useSaveGLP1Profile } from "@/hooks/useGLP1";
 import { useToast } from "@/hooks/use-toast";
+import { glp1Presets } from "@/data/glp1Presets";
 
 type SiteType = "abdomen" | "thigh" | "upper_arm" | "buttock";
 
@@ -43,6 +44,7 @@ export default function GLP1Hub() {
   const [slowDigestFoodsOnly, setSlowDigestFoodsOnly] = useState<boolean>(false);
   const [limitCarbonation, setLimitCarbonation] = useState<boolean>(false);
   const [limitAlcohol, setLimitAlcohol] = useState<boolean>(false);
+  const [selectedPreset, setSelectedPreset] = useState<string>("");
 
   useEffect(() => {
     document.title = "GLP-1 Hub | My Perfect Meals";
@@ -106,6 +108,22 @@ export default function GLP1Hub() {
     }
     return arr;
   }, [data, view]);
+
+  const handlePresetSelect = (presetId: string) => {
+    const preset = glp1Presets.find(p => p.id === presetId);
+    if (preset) {
+      setMaxMealVolume(preset.values.maxMealVolumeMl);
+      setProteinMin(preset.values.proteinMinG);
+      setFatMax(preset.values.fatMaxG);
+      setFiberMin(preset.values.fiberMinG);
+      setHydrationGoal(preset.values.hydrationMinMl);
+      setMealsPerDay(preset.values.mealsPerDay);
+      setSlowDigestFoodsOnly(preset.values.slowDigestOnly ?? false);
+      setLimitCarbonation(preset.values.limitCarbonation ?? false);
+      setLimitAlcohol(preset.values.limitAlcohol ?? false);
+    }
+    setSelectedPreset(presetId);
+  };
 
   const handleSave = async () => {
     saveMutation.mutate({
@@ -326,6 +344,26 @@ export default function GLP1Hub() {
         <section className="bg-black/60 border border-purple-300/20 rounded-xl p-5 backdrop-blur shadow-lg">
           <h2 className="text-lg text-white font-medium mb-2">Doctor / Coach Guardrails</h2>
           <p className="text-white/80 text-sm mb-4">Set clinical meal guardrails for GLP-1 patients (portion, macros, hydration).</p>
+
+          {/* Preset Selector */}
+          <div className="mb-4">
+            <label className="text-white/90 text-sm block mb-1">Quick Start Preset</label>
+            <select
+              value={selectedPreset}
+              onChange={(e) => handlePresetSelect(e.target.value)}
+              className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            >
+              <option value="">-- Select Preset --</option>
+              {glp1Presets.map(p => (
+                <option key={p.id} value={p.id}>{p.label}</option>
+              ))}
+            </select>
+            {selectedPreset && (
+              <p className="text-white/70 text-xs mt-2">
+                {glp1Presets.find(p => p.id === selectedPreset)?.description}
+              </p>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

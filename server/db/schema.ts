@@ -9,3 +9,4 @@ export * from "./schema/patientAssignment";
 export * from "./schema/careTeam";
 export * from "./schema/procare";
 export * from "./schema/founders";
+export { glp1AuditLog } from "./schema/patientAssignment";

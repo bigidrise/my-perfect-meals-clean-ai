@@ -3,6 +3,8 @@ import { Router } from "express";
 import { db } from "../db";
 import { sql } from "drizzle-orm";
 import { GLP1GuardrailsZ, DEFAULT_GLP1_GUARDRAILS } from "../../shared/glp1-schema";
+import { glp1AuditLog } from "../db/schema";
+import crypto from "crypto";
 
 const router = Router();
 
@@ -42,6 +44,11 @@ router.put("/profile", async (req, res) => {
 
     const validated = GLP1GuardrailsZ.parse(guardrails);
 
+    // Fetch existing values for audit trail
+    const [existing] = await db.execute(
+      sql`SELECT guardrails FROM glp1_profile WHERE user_id = ${userId}`
+    );
+
     await db.execute(
       sql`
         INSERT INTO glp1_profile (user_id, guardrails, updated_at)
@@ -50,6 +57,16 @@ router.put("/profile", async (req, res) => {
         DO UPDATE SET guardrails = ${JSON.stringify(validated)}, updated_at = NOW()
       `
     );
+
+    // Log the change
+    await db.insert(glp1AuditLog).values({
+      id: crypto.randomUUID(),
+      userId,
+      clinicianId: req.user.role === "doctor" || req.user.role === "coach" ? req.user.id : null,
+      action: "update_guardrails",
+      previousValues: existing?.guardrails ?? null,
+      newValues: validated,
+    });
 
     res.json({ ok: true });
   } catch (error) {
