@@ -269,6 +269,99 @@ export default function GLP1Hub() {
           </div>
         </section>
 
+        {/* Doctor / Coach Guardrails */}
+        <section className="bg-black/60 border border-purple-300/20 rounded-xl p-5 backdrop-blur shadow-lg">
+          <h2 className="text-lg text-white font-medium mb-2">Doctor / Coach Guardrails</h2>
+          <p className="text-white/80 text-sm mb-4">Set clinical meal guardrails for GLP-1 patients (portion, macros, hydration).</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Max Meal Volume (mL)</label>
+              <input
+                type="number"
+                placeholder="e.g., 300"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Protein Min (g per meal)</label>
+              <input
+                type="number"
+                placeholder="e.g., 20"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Fat Max (g per meal)</label>
+              <input
+                type="number"
+                placeholder="e.g., 15"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Fiber Min (g per day)</label>
+              <input
+                type="number"
+                placeholder="e.g., 25"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Hydration Goal (mL per day)</label>
+              <input
+                type="number"
+                placeholder="e.g., 2000"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-white/90 text-sm block mb-1">Meals per Day</label>
+              <input
+                type="number"
+                placeholder="e.g., 4"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <label className="text-white/90 text-sm">Slow-Digest Foods Only</label>
+              <input
+                type="checkbox"
+                className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <label className="text-white/90 text-sm">Limit Carbonation</label>
+              <input
+                type="checkbox"
+                className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <label className="text-white/90 text-sm">Limit Alcohol</label>
+              <input
+                type="checkbox"
+                className="h-5 w-5 rounded bg-black/30 border-purple-300/30 text-purple-600 focus:ring-2 focus:ring-purple-500/50"
+              />
+            </div>
+          </div>
+          
+          <Button
+            onClick={() => console.log("Guardrails saved (Phase A visual only)")}
+            className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl mt-4"
+          >
+            Save Guardrails
+          </Button>
+        </section>
+
         {/* CTA → Meals */}
         <section className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-4 shadow-xl">
           <h3 className="text-white font-medium text-lg mb-1">Find Meals for GLP-1 Users</h3>
