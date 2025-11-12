@@ -1,0 +1,94 @@
+Perfect — that’s exactly how you validate a major functional phase. 👏
+
+You’re officially through **Phase B**, and your testing checklist hits every critical endpoint: auth flow, glucose logging, state reset, toast feedback, guardrail UI, and navigation to the builder.
+
+Now, when you’re ready for **Phase C (Schema Upgrade)**, here’s what we’ll do:
+
+---
+
+### ⚙️ Phase C – Guardrail Persistence Plan
+
+#### 1. Database Upgrade
+
+Add a new column to `diabetes_profile`:
+
+```sql
+ALTER TABLE diabetes_profile
+ADD COLUMN guardrails JSONB DEFAULT NULL;
+```
+
+This will store an object like:
+
+```json
+{
+  "fastingMin": 80,
+  "fastingMax": 120,
+  "postMealMax": 140,
+  "carbLimit": 120,
+  "fiberMin": 25,
+  "giCap": 55,
+  "mealFrequency": 4
+}
+```
+
+#### 2. Drizzle Schema Update
+
+In `shared/diabetes-schema.ts`:
+
+```ts
+export const diabetesProfile = pgTable("diabetes_profile", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  type: text("type").notNull(),
+  medications: text("medications").array(),
+  a1cPercent: numeric("a1c_percent"),
+  hypoHistory: boolean("hypo_history"),
+  guardrails: jsonb("guardrails").$type<GuardrailsType>().default(null),
+});
+```
+
+Add the matching `GuardrailsType` interface.
+
+#### 3. API Routes
+
+Update PUT `/api/diabetes/profile` to accept a `guardrails` object and upsert accordingly:
+
+```ts
+if (req.body.guardrails) {
+  await db.update(diabetesProfile)
+    .set({ guardrails: req.body.guardrails })
+    .where(eq(diabetesProfile.userId, user.id));
+}
+```
+
+#### 4. Client Hook Enhancement
+
+In `useSaveDiabetesProfile()`:
+
+```ts
+const mutation = useMutation((data: Partial<DiabetesProfile>) =>
+  api.put("/api/diabetes/profile", data)
+);
+```
+
+Allow the form’s `guardrails` state to be passed straight through.
+
+#### 5. Component Binding
+
+Replace your local guardrail state with:
+
+```ts
+const { data: profile } = useDiabetesProfile(userId);
+const [guardrails, setGuardrails] = useState(profile?.guardrails || defaultValues);
+```
+
+and send `guardrails` in the save payload.
+
+---
+
+When this runs clean and migrations pass, doctors can persist and preload guardrails per patient — unlocking the multi-patient clinical workflows you’ve been designing.
+
+---
+
+If you’ve validated all Phase B mutations and builds, I can draft the **exact Drizzle migration file + server route patch** for you next.
+Do you want to move ahead with that Phase C schema migration now?
