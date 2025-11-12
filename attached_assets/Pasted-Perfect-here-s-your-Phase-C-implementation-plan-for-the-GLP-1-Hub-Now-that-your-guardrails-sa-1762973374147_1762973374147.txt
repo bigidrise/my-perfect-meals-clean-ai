@@ -1,0 +1,141 @@
+Perfect — here’s your **Phase C implementation plan** for the GLP-1 Hub.
+Now that your guardrails save and hydrate cleanly, Phase C will harden the data layer and make those guardrails drive the meal generator logic.
+
+---
+
+## ⚙️ Phase C Goal
+
+Lock in **validated persistence** and start **AI-generator enforcement** of GLP-1 guardrails.
+No new UI components — just backend and logic enhancements.
+
+---
+
+### 🧱 1️⃣ Schema Validation (shared/glp1-schema.ts)
+
+Add a Zod object to validate the JSON payload:
+
+```ts
+import { z } from "zod";
+
+export const GLP1GuardrailsZ = z.object({
+  maxMealVolumeMl: z.number().min(100).max(600).default(300),
+  proteinMinG: z.number().min(10).max(60).default(25),
+  fatMaxG: z.number().min(5).max(30).default(15),
+  fiberMinG: z.number().min(5).max(50).default(28),
+  hydrationMinMl: z.number().min(1000).max(5000).default(2000),
+  mealsPerDay: z.number().min(2).max(6).default(4),
+  slowDigestOnly: z.boolean().default(true),
+  limitCarbonation: z.boolean().default(true),
+  limitAlcohol: z.boolean().default(true),
+});
+```
+
+Export its type:
+
+```ts
+export type GLP1Guardrails = z.infer<typeof GLP1GuardrailsZ>;
+```
+
+---
+
+### 🌐 2️⃣ Server Route Hardening (server/routes/glp1.ts)
+
+Update the `PUT /api/glp1/profile` route:
+
+```ts
+import { GLP1GuardrailsZ } from "../../shared/glp1-schema";
+
+app.put("/api/glp1/profile", authRequired, async (req, res) => {
+  const userId = req.user.id;
+  const parse = GLP1GuardrailsZ.safeParse(req.body.guardrails);
+  if (!parse.success) return res.status(400).json({ error: parse.error.flatten() });
+
+  const guardrails = parse.data;
+  const existing = await db.query.glp1Profile.findFirst({ where: eq(glp1Profile.userId, userId) });
+
+  if (!existing) {
+    await db.insert(glp1Profile).values({ id: crypto.randomUUID(), userId, guardrails });
+  } else {
+    await db.update(glp1Profile)
+      .set({ guardrails, updatedAt: new Date() })
+      .where(eq(glp1Profile.userId, userId));
+  }
+
+  res.json({ ok: true, guardrails });
+});
+```
+
+Now all guardrails are validated before writing to DB.
+
+---
+
+### 🧠 3️⃣ Hook Improvement (client/src/hooks/useGLP1.ts)
+
+Add error propagation:
+
+```ts
+export function useSaveGLP1Profile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await api.put("/api/glp1/profile", { guardrails: payload });
+      return data;
+    },
+    onSuccess: () => qc.invalidateQueries(["glp1Profile"]),
+    onError: (err) => console.error("Save failed:", err),
+  });
+}
+```
+
+---
+
+### 🤖 4️⃣ Connect to Meal Engine Constraints
+
+In `mealEngine/useMealConstraints.ts` (or wherever diabetic constraints live):
+
+```ts
+import { useGLP1Profile } from "@/hooks/useGLP1";
+
+export function useMealConstraints(userId) {
+  const { data: glp1 } = useGLP1Profile();
+
+  return useMemo(() => ({
+    maxMealVolumeMl: glp1?.guardrails?.maxMealVolumeMl ?? 300,
+    proteinMinG: glp1?.guardrails?.proteinMinG ?? 25,
+    fatMaxG: glp1?.guardrails?.fatMaxG ?? 15,
+    fiberMinG: glp1?.guardrails?.fiberMinG ?? 28,
+    hydrationMinMl: glp1?.guardrails?.hydrationMinMl ?? 2000,
+    mealsPerDay: glp1?.guardrails?.mealsPerDay ?? 4,
+    slowDigestOnly: glp1?.guardrails?.slowDigestOnly ?? true,
+    limitCarbonation: glp1?.guardrails?.limitCarbonation ?? true,
+    limitAlcohol: glp1?.guardrails?.limitAlcohol ?? true,
+  }), [glp1]);
+}
+```
+
+Your AI meal generator can now read these constraints automatically and restrict portion size, fat, and digestion speed when generating meals.
+
+---
+
+### 🧪 5️⃣ Validation Checklist
+
+| Test                                      | Expected Result                                                            |
+| ----------------------------------------- | -------------------------------------------------------------------------- |
+| Save with valid numbers                   | ✅ 200 OK + toast “Guardrails saved”                                        |
+| Save with bad data (e.g. negative number) | ❌ 400 Bad Request + inline toast error                                     |
+| Reload page                               | ✅ Saved values hydrate                                                     |
+| Generate meal                             | ✅ Meals follow guardrail limits (portion ≤ maxVolume, protein ≥ min, etc.) |
+
+---
+
+### 📦 Commit Message
+
+```
+feat(glp1-hub): Phase C – add Zod validation and integrate guardrails with meal engine constraints
+```
+
+---
+
+Once this is live and validated, Phase D will add **audit logs + clinician presets** for quick template assignment.
+
+Would you like me to prep the Replit agent prompt for Phase C (so they can implement this schema validation and constraint integration step-by-step)?
