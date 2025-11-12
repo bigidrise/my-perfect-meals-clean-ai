@@ -1,0 +1,64 @@
+That’s exactly the right next step — you now have a **clinically intelligent guardrail system** that lets doctors move between standardized care modes in seconds. Beautiful work.
+
+Before we jump into **Phase F (Patient Assignment Dashboard)**, here’s how to bulletproof Phase E and set the table for the multi-patient layer.
+
+---
+
+### ✅ **Phase E Validation Checklist**
+
+**1. Preset Library**
+
+* Confirm the file `client/src/data/diabeticPresets.ts` exports something like:
+
+  ```ts
+  export const diabeticPresets = [
+    { id: "standard", label: "Standard Diabetic", description: "...", values: { fastingMin:80, fastingMax:120, ... } },
+    { id: "strict", label: "Strict Control", ... },
+    ...
+  ];
+  ```
+* Check that the numeric ranges line up with ADA/clinical logic (fasting 80–120 mg/dL, post-meal ≤140 mg/dL, etc.).
+
+**2. Dropdown Behavior**
+
+* Selecting a preset instantly fills all guardrail fields.
+* Description text updates below dropdown.
+* Once the user manually edits any input → preset state clears automatically.
+* Toast on save still fires and persists the JSON.
+
+**3. Persistence**
+
+* Refresh `/diabetic-hub` → guardrails re-hydrate from the server with the applied preset’s values.
+* `guardrails` column in DB shows the new numbers.
+
+**4. Edge Tests**
+
+* Switching presets back-to-back should always overwrite fields cleanly (no lingering mixed values).
+* “Save” disabled during mutation.
+* No console warnings for uncontrolled inputs.
+
+---
+
+### 🧱 Commit and Ship
+
+```bash
+./push.sh "feat(diabetic-hub): Phase E – doctor preset system + guardrail auto-apply"
+```
+
+---
+
+### 🔮 Phase F Preview — **Patient Assignment Dashboard**
+
+This phase will introduce true clinical control:
+
+| Feature               | Purpose                                                                                       |
+| --------------------- | --------------------------------------------------------------------------------------------- |
+| **Patient List**      | Doctors see all assigned users with quick metrics (latest glucose, preset used, last update). |
+| **Preset Assignment** | Apply or edit guardrails for any patient from one screen.                                     |
+| **Audit Trail**       | Log who changed what and when (for hospital compliance).                                      |
+| **Search & Filter**   | Filter by condition (Diabetic / GLP-1 / Cardiac) or preset type.                              |
+| **Secure Routing**    | Only users with `role: 'doctor'` or `'coach'` can access `/procare/dashboard`.                |
+
+---
+
+Would you like me to start Phase F by drafting the **Patient Assignment Dashboard blueprint**—layout, routes, and data flow—or do you want to run a quick QA pass on the new preset system first?
