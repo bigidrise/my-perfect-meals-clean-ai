@@ -1,0 +1,180 @@
+Here’s your **ready-to-paste prompt** for the **Replit Assistant**.
+This will make the snack cards behave the same across **all five meal generators**, removing the macro-target setup and the “pick a protein first” validation everywhere.
+
+---
+
+## 🧠 Replit Assistant Prompt — Unify Snack Card Behavior Across All Meal Generators
+
+We need to update how snack cards work in every meal generator.
+Currently, the **AI Meal Creator Modal** and some older modal variants still require users to **set macro targets** or **pick a protein first** before generating meals. That logic must **not apply to snacks**.
+
+This change must apply globally to all boards that use snack cards.
+
+---
+
+### 🎯 Goal
+
+Ensure that every **snack card** across all meal generators:
+
+* **Does NOT show macro target setup**
+* **Does NOT require a protein selection first**
+* **Allows AI generation from one or more ingredients**
+* **Uses the snack ingredient categories from `snackIngredients.ts`**
+* **Looks and behaves identically** across every board
+
+---
+
+### 🧩 Boards Affected
+
+Update applies to the snack cards on these five boards:
+
+1. `WeeklyMealBoard.tsx`
+2. `DiabeticMealBoard.tsx`
+3. `GLP1MealBoard.tsx`
+4. `HardBodyMealBoard.tsx` (Beach Body / Athlete)
+5. `ProCareMealBoard.tsx` (Professional Care)
+
+Each of these calls the **Create with AI** modal through one of the following files:
+
+* `client/src/components/modals/AIMealCreatorModal.tsx`
+* (sometimes) `client/src/components/modals/AIMealCreatorModalPro.tsx`
+* (sometimes) `client/src/components/modals/AIMealCreatorModalAthlete.tsx`
+
+You must update **all variants** so snack logic is consistent.
+
+---
+
+### 🧠 What to Change
+
+#### 1️⃣  Skip Macro Target Setup
+
+Inside each modal (for example, in `AIMealCreatorModal.tsx`):
+Find where the macro setup card is rendered, e.g.:
+
+```tsx
+<MacroTargetCard ... />
+```
+
+Wrap it in this conditional:
+
+```tsx
+{formData.mealType !== "snack" && <MacroTargetCard ... />}
+```
+
+This hides the macro setup for snack generation.
+
+---
+
+#### 2️⃣  Remove “Pick Protein First” Validation
+
+Search for any validation like:
+
+```ts
+if (!selectedProtein) {
+  alert("Please pick a protein first!");
+  return;
+}
+```
+
+Change it to:
+
+```ts
+if (formData.mealType !== "snack" && !selectedProtein) {
+  alert("Please pick a protein first!");
+  return;
+}
+```
+
+Now snacks can generate meals from any ingredient (no protein dependency).
+
+---
+
+#### 3️⃣  Allow Single-Ingredient Generation
+
+Locate where generation validation occurs (usually before the AI call):
+
+```ts
+if (formData.ingredients.length < 2) {
+  alert("Please pick at least one protein and carb.");
+  return;
+}
+```
+
+Change to:
+
+```ts
+if (formData.mealType === "snack" && formData.ingredients.length < 1) {
+  alert("Please pick at least one ingredient.");
+  return;
+}
+if (formData.mealType !== "snack" && formData.ingredients.length < 2) {
+  alert("Please pick at least one protein and carb.");
+  return;
+}
+```
+
+---
+
+#### 4️⃣  Simplify the Snack AI Prompt
+
+In each modal’s `handleGenerate()` function:
+Replace the existing prompt block with:
+
+```ts
+const prompt =
+  formData.mealType === "snack"
+    ? `Create a healthy snack idea using ${formData.ingredients.join(", ")}. Keep it quick, fun, portion-smart, and easy to prepare.`
+    : `Create a balanced ${formData.mealType} meal with these ingredients: ${formData.ingredients.join(", ")}. Include cooking instructions and macros.`;
+```
+
+---
+
+#### 5️⃣  Confirm Ingredient Source
+
+At the top of each modal:
+
+```ts
+import { mealIngredients } from "@/data/mealIngredients";
+import { snackIngredients } from "@/data/snackIngredients";
+```
+
+Then wherever ingredient lists are rendered:
+
+```ts
+const ingredientSource =
+  formData.mealType === "snack" ? snackIngredients : mealIngredients;
+```
+
+This ensures snacks use the new snack dataset (with 15–20 options per category).
+
+---
+
+### 🧪 Validation Checklist
+
+After applying these updates, confirm:
+
+✅ “Create with AI” on snack cards no longer asks for macro setup
+✅ “Pick a protein first” message never appears for snacks
+✅ You can create a snack from one ingredient (e.g., “apple” or “protein bar”)
+✅ Generated results are snack-style
+✅ All five boards behave identically
+
+---
+
+### 🚫 Do Not Change
+
+* Snack card UI or buttons (Log, +Add, Create with AI)
+* AI backend routes or DALL·E logic
+* Macro validation for main meals (keep those intact for non-snack meals)
+
+---
+
+### 💾 Commit Message Suggestion
+
+```
+fix(snack-cards): remove macro targets & protein-first validation for all snack generators; unify snack behavior across boards
+```
+
+---
+
+Would you like me to include a **code snippet pack** (small ready-to-apply diffs for all modals) right after this so the Replit agent can patch them faster?
