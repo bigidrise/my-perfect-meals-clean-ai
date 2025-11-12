@@ -1,0 +1,75 @@
+Got it. We’re only adding snack cards to **two** boards:
+
+* **Beach Hard Body Meal Board**
+* **Pro Professional Care Meal Board**
+
+Do **not** add to: Weekly Meal Board, Diabetic Meal Board, GLP-1 Meal Board (they already have snack cards wired).
+
+Here’s the clean brief for the Replit assistant:
+
+---
+
+## Replit Assistant — Phase 2 (Revised): Add Snack Cards to Two Boards
+
+### Objective
+
+Add **one** Snack card at the bottom of:
+
+1. **Beach Hard Body Meal Board**
+2. **Pro Professional Care Meal Board**
+
+Wire both to the **Create with AI** snack flow using the new snack picker (from `snackIngredients.ts`).
+Do **not** touch Weekly/Diabetic/GLP-1 boards.
+
+### Files to update
+
+* `client/src/pages/boards/BeachbodyHardbodyMealBoard.tsx`
+* `client/src/pages/boards/ProCareMealBoard.tsx`  (or `ProfessionalCareMealBoard.tsx` if that’s the exact filename in repo)
+
+### Snack Card spec
+
+* **Placement:** last card on the board (below dinner / last meal).
+* **Title:** `Snack`
+* **Subtitle:** `Small bites, sweet or savory — powered by AI.`
+* **Button:** `Create Snack with AI`
+
+  ```tsx
+  <Button
+    onClick={() => openAIMealCreator("snack")}
+    className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl"
+  >
+    Create Snack with AI
+  </Button>
+  ```
+* **Modal invocation:** `<AIMealCreatorModal defaultMealType="snack" />`
+* **Picker behavior:** When `mealType === "snack"`, Step 4 uses `SNACK_CATEGORIES` from `client/src/data/snackIngredients.ts`. (This is already implemented in Phase 1.)
+
+### Functional notes
+
+* Snack generation uses existing `POST /api/ai/generate-meal`.
+* Render result with the same MealCard component/flow as other meals.
+* Snacks **contribute to daily totals** but should **not** be counted as a main meal macro bucket (use existing helper if present; otherwise mirror current snack handling logic from Weekly/Diabetic/GLP-1 boards).
+
+### Visual guidelines
+
+* Match existing card aesthetics (black-glass: `bg-black/30 backdrop-blur-lg border border-white/10`, rounded-2xl, consistent spacing).
+* One snack card per board — **no duplicates**.
+
+### Testing checklist
+
+* Snack card appears on **Beach Hard Body** and **Pro Care** only.
+* Clicking **Create Snack with AI** opens modal pre-set to **snack**.
+* Snack category chips (Sweet/Savory/Light/Dessert) show and autofill works.
+* AI returns snack-appropriate items and renders in the Snack card.
+* Daily calorie/macros update correctly; no double-counting.
+* No layout shifts or console errors.
+
+### Do not
+
+* Do not add snack cards to Weekly, Diabetic, or GLP-1 boards (already present).
+* Do not modify backend routes or CreateAI logic.
+* Do not change styling outside the new Snack card section.
+
+---
+
+If your file names differ slightly (e.g., `ProfessionalCareMealBoard.tsx`), apply the same change to the correct files.
