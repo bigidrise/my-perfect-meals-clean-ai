@@ -92,7 +92,7 @@ function formatWeekLabel(weekStartISO: string): string {
   return `${fmt(start)}–${fmt(end)}`;
 }
 
-// Pro Care Meal Slots - 5 meals for competition prep
+// Pro Care Meal Slots - 5 meals for competition prep (fixed)
 const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
   ["breakfast","Meal 1"],
   ["lunch","Meal 2"],
@@ -101,6 +101,7 @@ const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
 ];
 
 // Meal 5 will be rendered separately using the snacks slot
+// Dynamic meals (6+) will be stored in board.days[date].snacks array with special prefix
 
 interface AthleteBoardProps {
   mode?: "athlete" | "procare";
@@ -239,6 +240,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     isOpen: boolean;
     meal: any | null;
   }>({ isOpen: false, meal: null });
+
+  // Dynamic meal tracking (Meal 6+)
+  const [dynamicMealCount, setDynamicMealCount] = useState(0);
 
   // 🔋 AI Meal Creator localStorage persistence (copy Weekly Meal Board pattern)
   const AI_MEALS_CACHE_KEY = "ai-athlete-meal-creator-cached-meals";
@@ -797,6 +801,15 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     setManualModalOpen(true);
   }
 
+  // Add a new dynamic meal slot
+  const handleAddMealSlot = useCallback(() => {
+    setDynamicMealCount(prev => prev + 1);
+    toast({
+      title: "Meal Slot Added",
+      description: `Meal ${6 + dynamicMealCount} is ready to use`,
+    });
+  }, [dynamicMealCount, toast]);
+
   // Get coach-set macro targets from ProCare
   const coachMacroTargets = useMemo(() => {
     const targets = proStore.getTargets(clientId);
@@ -1260,6 +1273,93 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     )}
                   </div>
                 </section>
+
+                {/* Dynamic Meal Cards (Meal 6+) */}
+                {Array.from({ length: dynamicMealCount }, (_, i) => {
+                  const mealNumber = 6 + i;
+                  return (
+                    <section key={`dynamic-meal-${mealNumber}`} className="rounded-2xl border border-emerald-800 bg-emerald-950/40 backdrop-blur p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                            onClick={() => {
+                              setAiMealSlot("snacks");
+                              setAiMealModalOpen(true);
+                            }}
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            Create with AI
+                          </Button>
+
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="text-white/80 hover:bg-white/10"
+                            onClick={() => openManualModal("snacks")}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`dyn-${mealNumber}-`)).map((meal: Meal, idx: number) => (
+                          <MealCard
+                            key={meal.id}
+                            date={activeDayISO}
+                            slot="snacks"
+                            meal={meal}
+                            onUpdated={(m) => {
+                              if (m === null) {
+                                const updatedDayLists = {
+                                  ...dayLists,
+                                  snacks: dayLists.snacks.filter((existingMeal) =>
+                                    existingMeal.id !== meal.id
+                                  )
+                                };
+                                const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                                saveBoard(updatedBoard)
+                                  .catch((err) => {
+                                    console.error("❌ Delete failed (Day mode):", err);
+                                  });
+                              } else {
+                                const updatedDayLists = {
+                                  ...dayLists,
+                                  snacks: dayLists.snacks.map((existingMeal) =>
+                                    existingMeal.id === meal.id ? m : existingMeal
+                                  )
+                                };
+                                const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                                saveBoard(updatedBoard);
+                              }
+                            }}
+                          />
+                        ))}
+                        {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`dyn-${mealNumber}-`)).length === 0 && (
+                          <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                            <p className="mb-2">No Meal {mealNumber} yet</p>
+                            <p className="text-xs text-white/40">Use "+" to add meals</p>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  );
+                })}
+
+                {/* Add Meal Button */}
+                <div className="col-span-full flex justify-center">
+                  <Button
+                    onClick={handleAddMealSlot}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
+                  >
+                    <Plus className="h-5 w-5" />
+                    Add Meal {6 + dynamicMealCount}
+                  </Button>
+                </div>
               </>
             );
           })()
