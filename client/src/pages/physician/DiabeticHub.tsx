@@ -55,6 +55,15 @@ export default function DiabeticHub() {
         userId,
         type: "T2D",
         hypoHistory: false,
+        guardrails: {
+          fastingMin: parseInt(fastingMin) || 80,
+          fastingMax: parseInt(fastingMax) || 120,
+          postMealMax: parseInt(postMealMax) || 140,
+          carbLimit: parseInt(dailyCarbLimit) || 120,
+          fiberMin: parseInt(fiberMin) || 25,
+          giCap: parseInt(giCap) || 55,
+          mealFrequency: parseInt(mealFrequency) || 4,
+        },
       });
       toast({ title: "Guardrails saved successfully" });
     } catch (error) {

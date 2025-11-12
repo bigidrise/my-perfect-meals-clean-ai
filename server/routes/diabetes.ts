@@ -7,17 +7,17 @@ export const diabetesRouter = Router();
 
 // Upsert profile
 // PUT /api/diabetes/profile
-// body: { userId, type, medications?, hypoHistory?, a1cPercent? }
+// body: { userId, type, medications?, hypoHistory?, a1cPercent?, guardrails? }
 diabetesRouter.put("/profile", async (req, res) => {
   try {
-    const { userId, type, medications, hypoHistory, a1cPercent } = req.body;
+    const { userId, type, medications, hypoHistory, a1cPercent, guardrails } = req.body;
     if (!userId || !type) return res.status(400).json({ error: "userId and type required" });
 
     const existing = await db.query.diabetesProfile.findFirst({ where: (p, { eq }) => eq(p.userId, userId) });
     if (existing) {
-      await db.update(diabetesProfile).set({ type, medications, hypoHistory, a1cPercent, updatedAt: new Date() }).where(eq(diabetesProfile.userId, userId));
+      await db.update(diabetesProfile).set({ type, medications, hypoHistory, a1cPercent, guardrails, updatedAt: new Date() }).where(eq(diabetesProfile.userId, userId));
     } else {
-      await db.insert(diabetesProfile).values({ userId, type, medications, hypoHistory, a1cPercent });
+      await db.insert(diabetesProfile).values({ userId, type, medications, hypoHistory, a1cPercent, guardrails });
     }
     res.json({ ok: true });
   } catch (e) {

@@ -11,12 +11,43 @@ export const glucoseContextEnum = pgEnum("glucose_context", [
   "RANDOM",
 ]);
 
+export type Guardrails = {
+  fastingMin?: number;
+  fastingMax?: number;
+  postMealMax?: number;
+  carbLimit?: number;
+  fiberMin?: number;
+  giCap?: number;
+  mealFrequency?: number;
+};
+
+export const GuardrailsZ = z.object({
+  fastingMin: z.number().int().min(40).max(140).optional(),
+  fastingMax: z.number().int().min(80).max(200).optional(),
+  postMealMax: z.number().int().min(100).max(300).optional(),
+  carbLimit: z.number().int().min(30).max(400).optional(),
+  fiberMin: z.number().int().min(5).max(100).optional(),
+  giCap: z.number().int().min(10).max(100).optional(),
+  mealFrequency: z.number().int().min(2).max(8).optional(),
+});
+
+export const DEFAULT_GUARDRAILS: Guardrails = {
+  fastingMin: 80,
+  fastingMax: 120,
+  postMealMax: 140,
+  carbLimit: 120,
+  fiberMin: 25,
+  giCap: 55,
+  mealFrequency: 4,
+};
+
 export const diabetesProfile = pgTable("diabetes_profile", {
   userId: uuid("user_id").primaryKey(),
   type: diabetesTypeEnum("type").notNull().default("NONE"),
   medications: jsonb("medications").$type<{ name: string; dose?: string }[] | null>().default(null),
   hypoHistory: boolean("hypo_history").notNull().default(false),
   a1cPercent: numeric("a1c_percent", { precision: 4, scale: 1 }),
+  guardrails: jsonb("guardrails").$type<Guardrails | null>().default(null),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

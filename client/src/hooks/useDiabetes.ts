@@ -11,6 +11,15 @@ export interface DiabetesProfile {
   medications?: { name: string; dose?: string }[] | null;
   hypoHistory: boolean;
   a1cPercent?: number;
+  guardrails?: {
+    fastingMin?: number;
+    fastingMax?: number;
+    postMealMax?: number;
+    carbLimit?: number;
+    fiberMin?: number;
+    giCap?: number;
+    mealFrequency?: number;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
