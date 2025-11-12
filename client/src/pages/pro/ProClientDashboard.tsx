@@ -722,7 +722,7 @@ export default function ProClientDashboard() {
               className="w-full sm:w-[400px] bg-gradient-to-br from-indigo-950 via-purple-900 to-black hover:opacity-90 text-white font-semibold rounded-xl"
               data-testid="button-athlete-board"
             >
-              <Trophy className="h-4 w-4 mr-2" /> Competition + Beachbody Meal
+              <Trophy className="h-4 w-4 mr-2" /> Professional Care Meal
               Board
             </Button>
           </CardContent>
