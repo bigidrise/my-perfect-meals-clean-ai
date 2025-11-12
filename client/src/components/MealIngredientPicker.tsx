@@ -149,7 +149,16 @@ export default function MealIngredientPicker({
   };
 
   const handleGenerateMeal = async () => {
-    // Snacks don't require protein selection - allow any ingredient combination
+    // Snacks only need at least 1 ingredient, meals need protein
+    if (mealSlot === "snacks" && selectedIngredients.length < 1 && !customIngredients.trim()) {
+      toast({
+        title: "Ingredient Required",
+        description: "Please select at least one ingredient",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (mealSlot !== "snacks" && !hasProtein) {
       toast({
         title: "Protein Required",
@@ -159,15 +168,17 @@ export default function MealIngredientPicker({
       return;
     }
 
-    // 🎯 Validate macro targets before submitting
-    const macroValidation = validateMacroTargets();
-    if (!macroValidation.valid) {
-      toast({
-        title: "Invalid Macro Targets",
-        description: macroValidation.error,
-        variant: "destructive"
-      });
-      return;
+    // 🎯 Validate macro targets before submitting (skip for snacks)
+    if (mealSlot !== "snacks") {
+      const macroValidation = validateMacroTargets();
+      if (!macroValidation.valid) {
+        toast({
+          title: "Invalid Macro Targets",
+          description: macroValidation.error,
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     setGenerating(true);
@@ -189,15 +200,18 @@ export default function MealIngredientPicker({
         };
       }
 
+      // For snacks, don't send macro targets even if enabled
+      const requestPayload = {
+        fridgeItems: allIngredients,
+        userId: 1,
+        mealSlot: mealSlot,
+        ...(mealSlot !== "snacks" && macroTargets && { macroTargets })
+      };
+
       const data = await apiRequest('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fridgeItems: allIngredients,
-          userId: 1,
-          mealSlot: mealSlot, // Include mealSlot here
-          ...(macroTargets && { macroTargets })
-        })
+        body: JSON.stringify(requestPayload)
       });
       console.log('🍳 AI Meal Creator received data:', data);
 
@@ -526,9 +540,15 @@ export default function MealIngredientPicker({
           <div className="flex gap-3">
             <Button
               onClick={handleGenerateMeal}
-              disabled={(mealSlot !== "snacks" && !hasProtein) || generating || selectedIngredients.length === 0}
+              disabled={
+                generating || 
+                (mealSlot === "snacks" && selectedIngredients.length === 0 && !customIngredients.trim()) ||
+                (mealSlot !== "snacks" && (!hasProtein || selectedIngredients.length === 0))
+              }
               className={`flex-1 min-h-[48px] text-base font-semibold transition-all ${
-                (mealSlot !== "snacks" && !hasProtein) || generating || selectedIngredients.length === 0
+                generating || 
+                (mealSlot === "snacks" && selectedIngredients.length === 0 && !customIngredients.trim()) ||
+                (mealSlot !== "snacks" && (!hasProtein || selectedIngredients.length === 0))
                   ? 'bg-gray-600/40 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30'
               }`}
@@ -584,21 +604,28 @@ export default function MealIngredientPicker({
                 <div>
                   <strong className="text-lime-400">1. Pick any snack ingredients</strong>
                   <p className="mt-1 text-white/70 text-xs">
-                    Select one or more ingredients you'd like in your snack
+                    Select one or more ingredients from the snack categories
                   </p>
                 </div>
 
                 <div>
-                  <strong className="text-lime-400">2. Generate your snack</strong>
+                  <strong className="text-lime-400">2. No macro setup needed</strong>
                   <p className="mt-1 text-white/70 text-xs">
-                    AI will create a healthy snack idea with your ingredients
+                    Snacks don't require macro targets or protein selection
+                  </p>
+                </div>
+
+                <div>
+                  <strong className="text-lime-400">3. Generate your snack</strong>
+                  <p className="mt-1 text-white/70 text-xs">
+                    AI will create a quick, healthy snack idea instantly
                   </p>
                 </div>
 
                 <div className="bg-black/20 border border-white/10 rounded-lg p-3">
                   <p className="font-semibold text-white mb-1">💡 Tip:</p>
                   <p className="text-white/70">
-                    You can pick just one ingredient for quick snack ideas!
+                    You can pick just one ingredient (like "apple" or "protein bar") for ultra-quick snack ideas!
                   </p>
                 </div>
               </>
