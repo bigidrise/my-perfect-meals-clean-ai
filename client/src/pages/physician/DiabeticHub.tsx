@@ -1,11 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSaveDiabetesProfile, useLogGlucose, useGlucoseLogs } from "@/hooks/useDiabetes";
+import { useSaveDiabetesProfile, useLogGlucose, useGlucoseLogs, useDiabetesProfile } from "@/hooks/useDiabetes";
 import { useToast } from "@/hooks/use-toast";
 import { GLUCOSE_THRESHOLDS } from "@/content/diabetesEducation";
 import type { GlucoseContext } from "@/hooks/useDiabetes";
@@ -29,17 +29,32 @@ export default function DiabeticHub() {
   const saveMutation = useSaveDiabetesProfile();
   const logMutation = useLogGlucose();
   const { data: glucoseLogs } = useGlucoseLogs(userId, 1);
+  const { data: profile } = useDiabetesProfile(userId);
 
-  // Guardrail state (client-side only for Phase B)
+  // Guardrail state (hydrated from server)
   const [glucoseReading, setGlucoseReading] = useState("");
   const [glucoseContext, setGlucoseContext] = useState<GlucoseContext>("PRE_MEAL");
-  const [fastingMin, setFastingMin] = useState("70");
-  const [fastingMax, setFastingMax] = useState("100");
+  const [fastingMin, setFastingMin] = useState("80");
+  const [fastingMax, setFastingMax] = useState("120");
   const [postMealMax, setPostMealMax] = useState("140");
-  const [dailyCarbLimit, setDailyCarbLimit] = useState("150");
+  const [dailyCarbLimit, setDailyCarbLimit] = useState("120");
   const [fiberMin, setFiberMin] = useState("25");
   const [giCap, setGiCap] = useState("55");
-  const [mealFrequency, setMealFrequency] = useState("3");
+  const [mealFrequency, setMealFrequency] = useState("4");
+
+  // Auto-hydrate guardrails from server on mount
+  useEffect(() => {
+    if (profile?.data?.guardrails) {
+      const g = profile.data.guardrails;
+      if (g.fastingMin) setFastingMin(String(g.fastingMin));
+      if (g.fastingMax) setFastingMax(String(g.fastingMax));
+      if (g.postMealMax) setPostMealMax(String(g.postMealMax));
+      if (g.carbLimit) setDailyCarbLimit(String(g.carbLimit));
+      if (g.fiberMin) setFiberMin(String(g.fiberMin));
+      if (g.giCap) setGiCap(String(g.giCap));
+      if (g.mealFrequency) setMealFrequency(String(g.mealFrequency));
+    }
+  }, [profile?.data?.guardrails]);
 
   // Get latest reading for display
   const latestReading = glucoseLogs?.data?.[0];

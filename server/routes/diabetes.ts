@@ -5,6 +5,23 @@ import { eq } from "drizzle-orm";
 
 export const diabetesRouter = Router();
 
+// Get profile
+// GET /api/diabetes/profile?userId=xxx
+diabetesRouter.get("/profile", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) return res.status(400).json({ error: "userId required" });
+
+    const profile = await db.query.diabetesProfile.findFirst({ where: (p, { eq }) => eq(p.userId, userId as string) });
+    if (!profile) return res.status(404).json({ error: "profile_not_found" });
+
+    res.json({ data: profile });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "failed_to_fetch_profile" });
+  }
+});
+
 // Upsert profile
 // PUT /api/diabetes/profile
 // body: { userId, type, medications?, hypoHistory?, a1cPercent?, guardrails? }
