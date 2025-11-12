@@ -1,0 +1,89 @@
+Yes — let’s move straight into **Phase B**. You’ve got the structure and data layer ready, so we can safely wire functionality without touching layout.
+
+Here’s the roadmap before anyone types code:
+
+---
+
+### ⚙️ PHASE B IMPLEMENTATION PLAN
+
+#### 1. Guardrail Inputs → `useSaveDiabetesProfile()`
+
+* **Trigger:** “Save Guardrails” button.
+* **Mutation Body:**
+
+  ```ts
+  const payload = {
+    type: 'diabetic',
+    medications,
+    a1cPercent,
+    hypoHistory,
+    fastingMin: values.fastingMin,
+    fastingMax: values.fastingMax,
+    postMealMax: values.postMealMax,
+    carbLimit: values.carbLimit,
+    fiberMin: values.fiberMin,
+    giCap: values.giCap,
+    mealFrequency: values.mealFrequency,
+  };
+  saveDiabetesProfile(payload);
+  ```
+* **UI Feedback:** temporary toast → “Guardrails saved successfully.”
+
+#### 2. Blood Sugar Tracker → `useLogGlucose()`
+
+* **Inputs:** reading (mg/dL), context (Fasting/Pre-Meal/Post-Meal).
+* **Payload:**
+
+  ```ts
+  const payload = {
+    valueMgdl: reading,
+    context,
+    recordedAt: new Date().toISOString(),
+    insulinUnits: null,
+    notes: '',
+  };
+  logGlucose(payload);
+  ```
+* **After success:** clear input + toast “Reading logged.”
+
+#### 3. Display Latest Reading → `useGlucoseLogs(userId, 1)`
+
+* Fetch 1 latest entry.
+* Show value + range comparison vs profile.fastingMax/postMealMax.
+* If no entries yet → placeholder text “Awaiting first reading.”
+
+#### 4. Meal Generation → `useMealConstraints(userId)`
+
+* On “Generate Custom Diabetic Meal Plan”:
+
+  ```ts
+  const constraints = useMealConstraints(userId);
+  navigate(`/diabetic-menu-builder`, { state: { constraints } });
+  ```
+* Meal engine already respects `maxCarbsGrams`, `preferLowGlycemic`, `restrictedIngredients`.
+
+#### 5. Error & Loading UX
+
+* All mutations: use built-in React Query loading states (spinner in button or `disabled` opacity).
+* Validation errors → display via Zod messages beneath each input.
+
+#### 6. Security & Data Flow
+
+* Ensure all mutations use the authenticated Axios instance (`useApiClient`).
+* Server routes already require JWT auth (`/api/diabetes/profile`, `/api/diabetes/glucose`).
+
+---
+
+### ✅ Order of Execution
+
+1. Wire guardrail inputs to `useSaveDiabetesProfile()`
+2. Wire tracker inputs to `useLogGlucose()`
+3. Add latest reading display with `useGlucoseLogs()`
+4. Connect Generate button to meal engine via `useMealConstraints()`
+5. Polish UX (toasts, spinners, error text)
+
+---
+
+Everything will remain fully local-first capable since your hooks already sync laterally with Neon via React Query.
+
+Ready for me to draft the actual **functional wiring code snippet** (hooks + handlers + minimal UI bindings) for the new `DiabeticHub.tsx` so you can paste it in?
