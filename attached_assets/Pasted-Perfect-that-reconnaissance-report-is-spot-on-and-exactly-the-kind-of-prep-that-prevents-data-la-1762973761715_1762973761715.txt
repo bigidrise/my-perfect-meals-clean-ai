@@ -1,0 +1,68 @@
+Perfect — that reconnaissance report is *spot-on* and exactly the kind of prep that prevents data-layer chaos later.
+
+Yes, the next step is to **deep-inspect** the following three areas before touching any logic or schema:
+
+---
+
+### 🔍 Files to Inspect in Detail
+
+1. **Frontend Logic**
+
+   * `client/src/pages/pro/ProClientDashboard.tsx`
+   * `client/src/pages/pro/ProClients.tsx`
+
+   → Identify:
+
+   * How patient data is fetched (`usePatients`, `usePatientDetails`, etc.)
+   * Whether it displays or references diabetic or GLP-1 metrics yet
+   * How action buttons (View, Edit, Assign) are wired
+
+2. **Backend Data Feeds**
+
+   * `server/routes/procareRoutes.ts`
+   * `server/routes/patientAssignment.ts`
+   * `server/routes/careTeamRoutes.ts`
+
+   → Identify:
+
+   * Which endpoints populate the patient dashboards/lists
+   * Whether these endpoints currently join to `diabetes_profile` or `glp1_profile`
+   * How clinician–patient assignment is handled
+
+3. **Database Schema**
+
+   * `server/db/schema/procare.ts`
+   * `server/db/schema/careTeam.ts`
+   * `server/db/schema/patientAssignment.ts`
+
+   → Identify:
+
+   * Whether a table like `clinician_assignments` or `care_team_assignments` already defines relationships
+   * Whether there’s a `role` or `type` column (doctor / coach / dietitian)
+   * How `patient_id` and `clinician_id` are linked
+
+---
+
+### 🧩 Deliverables for the Next Report
+
+Return a structured summary that answers:
+
+| Key Question                                        | What to Report                                                                      |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Frontend:** Which hooks/components load patients? | Function names, API endpoints used, and where results render.                       |
+| **Backend:** How are patient datasets built?        | SQL joins or Drizzle ORM queries; whether guardrails/GLP-1 data are included.       |
+| **Schema:** What relationship tables exist?         | Table name, key columns, and if `clinician_id`/`patient_id` mapping already exists. |
+| **Integration readiness:**                          | What additions or joins will be needed to include GLP-1 data safely.                |
+
+---
+
+### ⚠️ Do **not** change anything yet
+
+This is still Phase E reconnaissance.
+We only need visibility — no schema edits, no UI tweaks.
+
+---
+
+Once the Replit agent finishes this inspection, we’ll have everything needed to design **Phase E: GLP-1 Integration into ProCare Dashboard** (so clinicians can see, edit, and audit GLP-1 guardrails right inside each patient card).
+
+Go ahead and give the Replit assistant that directive verbatim — tell it this is **an inspection task only** and to return the detailed findings before any modifications.

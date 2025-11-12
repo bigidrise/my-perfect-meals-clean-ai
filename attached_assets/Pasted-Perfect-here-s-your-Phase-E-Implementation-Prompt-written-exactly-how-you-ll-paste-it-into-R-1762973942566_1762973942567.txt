@@ -1,0 +1,169 @@
+Perfect — here’s your **Phase E Implementation Prompt** written exactly how you’ll paste it into **Replit Assistant**.
+It’s surgical: the agent knows exactly what to do, in what order, and what not to touch.
+
+---
+
+## 🧠 Replit Assistant Implementation Brief — Phase E
+
+**Task:** Integrate GLP-1 guardrails and profiles into the ProCare Dashboard (patient list + individual view).
+
+This must be done without altering styling, authentication, or unrelated logic.
+Do **not** remove any existing diabetes-related functionality or localStorage fallbacks.
+
+---
+
+### 🧩 Objectives
+
+1. Extend the `/api/patients` and `/api/patients/:id` endpoints to include **GLP-1 profile data**.
+2. Update the **usePatients** hook to query the API instead of localStorage.
+3. Display **GLP-1 status, preset, and last update** inside the ProCare patient list and individual dashboard.
+4. Respect existing **care_team_member** relationships for clinician-patient access.
+
+---
+
+### ⚙️ Step 1 — Backend: `server/routes/patientAssignment.ts`
+
+**Goal:** Add GLP-1 profile data to patient endpoints.
+**Do not** rename routes or touch diabetes logic.
+
+#### A. GET `/api/patients`
+
+* LEFT JOIN `glp1_profile` on `glp1_profile.userId = patients.userId`
+* LEFT JOIN `care_team_member` on `care_team_member.userId = patients.userId`
+* Filter by `care_team_member.proUserId = req.session.userId`
+* Return object shape:
+
+  ```js
+  {
+    id: string,
+    name: string,
+    diabetesGuardrails?: object,
+    glp1Guardrails?: object,
+    lastShot?: string,
+    clinicianRole?: string
+  }
+  ```
+
+#### B. GET `/api/patients/:id`
+
+* Include both `diabetes_profile.guardrails` and `glp1_profile.guardrails`
+* Include timestamps for last update
+* Ensure both datasets are filtered by the authenticated clinician via `care_team_member`
+
+---
+
+### ⚙️ Step 2 — Frontend Hook: `client/src/hooks/usePatients.ts`
+
+**Goal:** Replace localStorage-based fetching with API query.
+
+* Use React Query or fetcher:
+
+  ```ts
+  export function usePatients() {
+    return useQuery(['patients'], async () => {
+      const res = await fetch('/api/patients');
+      if (!res.ok) throw new Error('Failed to load patients');
+      return res.json();
+    });
+  }
+  ```
+
+* Type interface:
+
+  ```ts
+  interface PatientSummary {
+    id: string;
+    name: string;
+    diabetesGuardrails?: DiabetesGuardrails;
+    glp1Guardrails?: GLP1Guardrails;
+    lastShot?: string;
+    clinicianRole?: string;
+  }
+  ```
+
+---
+
+### ⚙️ Step 3 — Frontend UI
+
+#### A. `client/src/pages/pro/ProClients.tsx`
+
+* Replace `proStore.listClients()` with the new `usePatients()` hook.
+* Add a small GLP-1 indicator tag to each patient card:
+
+  ```tsx
+  {p.glp1Guardrails ? (
+    <span className="text-purple-400 text-xs font-medium">GLP-1 Active</span>
+  ) : (
+    <span className="text-gray-500 text-xs">No GLP-1 Data</span>
+  )}
+  ```
+* Add button:
+
+  ```tsx
+  <Button onClick={() => setLocation(`/pro/clients/${p.id}?tab=glp1`)}>View GLP-1 Guardrails</Button>
+  ```
+
+#### B. `client/src/pages/pro/ProClientDashboard.tsx`
+
+* Load patient details via new endpoint (`/api/patients/:id`).
+* Add a new section below diabetes summary:
+
+  ```tsx
+  <section className="bg-black/30 border border-purple-400/30 rounded-xl p-4 mt-4">
+    <h3 className="text-lg text-purple-300 font-semibold mb-2">GLP-1 Guardrails</h3>
+    {data.glp1Guardrails ? (
+      <ul className="text-white/80 text-sm space-y-1">
+        <li>Max Meal Volume: {data.glp1Guardrails.maxMealVolumeMl} ml</li>
+        <li>Protein Min: {data.glp1Guardrails.proteinMinG} g</li>
+        <li>Carb Cap: {data.glp1Guardrails.carbCapG} g</li>
+        <li>Preset: {data.glp1Guardrails.presetName || 'Custom'}</li>
+      </ul>
+    ) : (
+      <p className="text-white/60 text-sm">No GLP-1 guardrails set yet.</p>
+    )}
+  </section>
+  ```
+
+---
+
+### ⚙️ Step 4 — Permissions & Security
+
+* Only include patients where `care_team_member.status = 'active'`.
+* Restrict editing GLP-1 guardrails to roles:
+
+  ```js
+  if (role !== 'doctor' && role !== 'nutritionist') fields.readOnly = true;
+  ```
+
+---
+
+### ⚙️ Step 5 — Testing Checklist
+
+1. `/api/patients` returns both diabetes + GLP-1 profiles.
+2. `/api/patients/:id` returns detailed guardrails.
+3. ProCare Dashboard displays GLP-1 Active / Inactive tag correctly.
+4. Individual dashboard shows correct guardrails and preset info.
+5. Only active clinician–patient pairs can view data.
+
+---
+
+### 🧱 Constraints
+
+* **Do not** modify authentication, session, or billing routes.
+* **Do not** remove existing diabetes joins or audit logging.
+* **Do not** touch `proStore` except to replace `listClients()` usage.
+* Preserve all black-glass / purple UI aesthetics.
+
+---
+
+### ✅ Deliverables
+
+* Updated `patientAssignment.ts`
+* Updated `usePatients.ts`
+* Updated `ProClients.tsx`
+* Updated `ProClientDashboard.tsx`
+* Verified functional GLP-1 status in ProCare UI
+
+---
+
+Would you like me to generate a **compressed, plain-text version** (no Markdown, no styling) ready to paste straight into Replit chat?
