@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
@@ -172,7 +171,7 @@ export default function DiabeticHub() {
         <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/10 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto p-4 md:p-8 pb-24 relative z-10">
-          
+
           {/* Header Section */}
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
@@ -452,40 +451,6 @@ export default function DiabeticHub() {
             </button>
           </section>
 
-          {/* Bottom Navigation */}
-          <div className="grid md:grid-cols-2 gap-6 relative z-10">
-            <button
-              onClick={() => setLocation("/diabetes-support")}
-              className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 hover:bg-black/40 transition-all relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                  <Activity className="h-6 w-6" />
-                </div>
-                <div className="text-left">
-                  <h3 className="text-lg font-medium text-white">Blood Sugar History</h3>
-                  <p className="text-white/80 text-sm">View detailed logs and trends</p>
-                </div>
-              </div>
-            </button>
-
-            <button
-              onClick={() => setLocation("/planner")}
-              className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 hover:bg-black/40 transition-all relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                  <Utensils className="h-6 w-6" />
-                </div>
-                <div className="text-left">
-                  <h3 className="text-lg font-medium text-white">Meal Planner</h3>
-                  <p className="text-white/80 text-sm">Plan your diabetic-friendly week</p>
-                </div>
-              </div>
-            </button>
-          </div>
         </div>
       </div>
     </>
