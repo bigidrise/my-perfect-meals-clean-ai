@@ -149,7 +149,8 @@ export default function MealIngredientPicker({
   };
 
   const handleGenerateMeal = async () => {
-    if (!hasProtein && mealSlot !== "snacks") { // Snacks don't require protein selection
+    // Snacks don't require protein selection - allow any ingredient combination
+    if (mealSlot !== "snacks" && !hasProtein) {
       toast({
         title: "Protein Required",
         description: "Please select at least one protein source",
@@ -334,7 +335,8 @@ export default function MealIngredientPicker({
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto mb-3 min-h-0">
-          {/* 🎯 Macro Targeting Section - NOW INSIDE SCROLL AREA */}
+          {/* 🎯 Macro Targeting Section - HIDDEN FOR SNACKS */}
+          {mealSlot !== "snacks" && (
           <div className="mb-3 p-3 bg-black/30 border border-orange-500/30 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <label className="text-white text-sm font-semibold flex items-center gap-2 cursor-pointer">
@@ -449,6 +451,7 @@ export default function MealIngredientPicker({
               </div>
             )}
           </div>
+          )}
 
           {/* Ingredient Grid - Small Checkboxes */}
           <div className="mb-3">
@@ -507,8 +510,8 @@ export default function MealIngredientPicker({
             </div>
           )}
 
-          {/* Requirement Notice */}
-          {!hasProtein && selectedIngredients.length > 0 && mealSlot !== "snacks" && (
+          {/* Requirement Notice - ONLY FOR MEALS */}
+          {mealSlot !== "snacks" && !hasProtein && selectedIngredients.length > 0 && (
             <div className="mb-3 p-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
               <p className="text-yellow-300 text-xs">
                 ⚠️ Please select at least one protein source to generate your meal
@@ -523,9 +526,9 @@ export default function MealIngredientPicker({
           <div className="flex gap-3">
             <Button
               onClick={handleGenerateMeal}
-              disabled={(!hasProtein && mealSlot !== "snacks") || generating}
+              disabled={(mealSlot !== "snacks" && !hasProtein) || generating || selectedIngredients.length === 0}
               className={`flex-1 min-h-[48px] text-base font-semibold transition-all ${
-                (!hasProtein && mealSlot !== "snacks") || generating
+                (mealSlot !== "snacks" && !hasProtein) || generating || selectedIngredients.length === 0
                   ? 'bg-gray-600/40 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30'
               }`}
@@ -576,33 +579,60 @@ export default function MealIngredientPicker({
           <h3 className="text-xl font-bold text-white mb-4">How to Use AI Meal Creator</h3>
 
           <div className="space-y-4 text-white/90 text-sm">
-            <div>
-              <strong className="text-lime-400">1. Pick your protein first</strong><span className="text-orange-400">*</span>
-              <p className="mt-1 text-white/70 text-xs">
-                Select at least one protein source to start building your meal
-              </p>
-            </div>
+            {mealSlot === "snacks" ? (
+              <>
+                <div>
+                  <strong className="text-lime-400">1. Pick any snack ingredients</strong>
+                  <p className="mt-1 text-white/70 text-xs">
+                    Select one or more ingredients you'd like in your snack
+                  </p>
+                </div>
 
-            <div>
-              <strong className="text-lime-400">2. Add starches, vegetables, and fats</strong>
-              <p className="mt-1 text-white/70 text-xs">
-                Choose from the category tabs to customize your meal
-              </p>
-            </div>
+                <div>
+                  <strong className="text-lime-400">2. Generate your snack</strong>
+                  <p className="mt-1 text-white/70 text-xs">
+                    AI will create a healthy snack idea with your ingredients
+                  </p>
+                </div>
 
-            <div>
-              <strong className="text-lime-400">3. Generate your meal</strong>
-              <p className="mt-1 text-white/70 text-xs">
-                AI will create a delicious recipe with your selected ingredients
-              </p>
-            </div>
+                <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                  <p className="font-semibold text-white mb-1">💡 Tip:</p>
+                  <p className="text-white/70">
+                    You can pick just one ingredient for quick snack ideas!
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <strong className="text-lime-400">1. Pick your protein first</strong><span className="text-orange-400">*</span>
+                  <p className="mt-1 text-white/70 text-xs">
+                    Select at least one protein source to start building your meal
+                  </p>
+                </div>
 
-            <div className="bg-black/20 border border-white/10 rounded-lg p-3">
-              <p className="font-semibold text-white mb-1">💡 Tip:</p>
-              <p className="text-white/70">
-                Use "Set Macro Targets" for precise meal portion sizes
-              </p>
-            </div>
+                <div>
+                  <strong className="text-lime-400">2. Add starches, vegetables, and fats</strong>
+                  <p className="mt-1 text-white/70 text-xs">
+                    Choose from the category tabs to customize your meal
+                  </p>
+                </div>
+
+                <div>
+                  <strong className="text-lime-400">3. Generate your meal</strong>
+                  <p className="mt-1 text-white/70 text-xs">
+                    AI will create a delicious recipe with your selected ingredients
+                  </p>
+                </div>
+
+                <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                  <p className="font-semibold text-white mb-1">💡 Tip:</p>
+                  <p className="text-white/70">
+                    Use "Set Macro Targets" for precise meal portion sizes
+                  </p>
+                </div>
+              </>
+            )}
           </div>
 
           <button
