@@ -1,0 +1,248 @@
+Yes — that’s *exactly* right. You’ve nailed the scope, dependencies, and boundaries of this change.
+Here’s the confirmed next step: **build out the dataset snippets** so the Replit assistant can plug them straight in without guessing structure or syntax.
+
+---
+
+## ✅ Implementation Confirmation
+
+We’re expanding the **central snack ingredients dataset** and linking it into the existing **DALL·E image generation workflow** in `mealEngineService.ts`.
+No layout changes, no new routes, no schema adjustments — just smarter snack data with visuals.
+
+---
+
+## 🧩 Snack Ingredient Snippets (15–20 per Category)
+
+Below is the **ready-to-paste** structure for
+`client/src/data/snackIngredients.ts`.
+
+It uses the established shape:
+
+```ts
+export const snackIngredients = {
+  categoryName: [
+    { name: "Ingredient name", image: "" },
+    ...
+  ]
+};
+```
+
+The assistant will populate the `image` fields automatically using the DALL·E call format already defined in `mealEngineService.ts`.
+
+---
+
+### 🍓 Sweet Treats (portion-smart)
+
+```ts
+sweetTreats: [
+  { name: "Greek yogurt with berries" },
+  { name: "Cottage cheese and peaches" },
+  { name: "Chia pudding with almond milk" },
+  { name: "Apple slices with peanut butter" },
+  { name: "Banana coins with dark chocolate" },
+  { name: "Protein pudding cup" },
+  { name: "Low-sugar fruit parfait" },
+  { name: "Rice cake with almond butter" },
+  { name: "Stuffed dates with peanut butter" },
+  { name: "Frozen grapes" },
+  { name: "Fruit compote cup" },
+  { name: "Yogurt bark with berries" },
+  { name: "Mini protein truffles" },
+  { name: "Fruit skewers" },
+  { name: "Oats and peanut butter balls" },
+  { name: "Low-sugar muffin bite" },
+  { name: "Baked apple chips" },
+  { name: "Cinnamon yogurt dip with fruit" },
+  { name: "Protein crepe roll" },
+  { name: "Berry smoothie bowl" }
+],
+```
+
+---
+
+### 🧀 Savory & Crunchy (grab-and-go)
+
+```ts
+savoryCrunchy: [
+  { name: "String cheese" },
+  { name: "Cheddar cubes" },
+  { name: "Turkey roll-ups" },
+  { name: "Hard-boiled eggs" },
+  { name: "Tuna packet with crackers" },
+  { name: "Hummus and carrots" },
+  { name: "Guacamole and veggie sticks" },
+  { name: "Roasted chickpeas" },
+  { name: "Edamame" },
+  { name: "Pickles and cheese" },
+  { name: "Olives cup" },
+  { name: "Air-popped popcorn" },
+  { name: "Roasted nuts mix" },
+  { name: "Whole-grain pretzels" },
+  { name: "Cucumber bites with hummus" },
+  { name: "Mini rice cakes" },
+  { name: "Veggie chips" },
+  { name: "Trail mix (savory)" },
+  { name: "Mini beef stick" },
+  { name: "Pita chips and tzatziki" }
+],
+```
+
+---
+
+### 🍎 Light & Gentle (GLP-friendly)
+
+```ts
+lightGentle: [
+  { name: "Applesauce cup" },
+  { name: "No-sugar gelatin cup" },
+  { name: "Plain yogurt cup" },
+  { name: "Cottage cheese cup" },
+  { name: "Mandarin orange cup" },
+  { name: "Mini pita and tzatziki" },
+  { name: "Baked veggie crisps" },
+  { name: "Rice thins" },
+  { name: "Cucumber rounds with hummus" },
+  { name: "Fruit puree pouch" },
+  { name: "Mini rice cakes with light spread" },
+  { name: "Pear slices" },
+  { name: "Melon cup" },
+  { name: "Mini avocado toast" },
+  { name: "Low-fat pudding cup" },
+  { name: "Banana-oat cookie" },
+  { name: "Mini quiche bite" },
+  { name: "Whipped cottage cheese dip" },
+  { name: "Soft scrambled egg cup" },
+  { name: "Mini soup cup" }
+],
+```
+
+---
+
+### 💪 Protein & Energy (performance-minded)
+
+```ts
+proteinEnergy: [
+  { name: "Ready-to-drink protein shake" },
+  { name: "Protein bar" },
+  { name: "Kefir drink" },
+  { name: "Chocolate milk (light)" },
+  { name: "Protein iced coffee" },
+  { name: "Turkey jerky" },
+  { name: "Smoked salmon cucumber bites" },
+  { name: "Greek yogurt with granola" },
+  { name: "Cottage cheese and pineapple" },
+  { name: "Chicken breast bites" },
+  { name: "High-protein cookie" },
+  { name: "Energy bites (oats + protein)" },
+  { name: "Egg bites" },
+  { name: "Protein oatmeal cup" },
+  { name: "Nut butter packet" },
+  { name: "Mini tuna salad cup" },
+  { name: "Edamame bowl" },
+  { name: "Kefir smoothie" },
+  { name: "Protein pancake bite" },
+  { name: "Almond butter sandwich thin" }
+],
+```
+
+---
+
+### 🥤 Drinkables (mandatory)
+
+```ts
+drinkables: [
+  { name: "Fruit smoothie" },
+  { name: "Green detox smoothie" },
+  { name: "Kefir drink" },
+  { name: "Protein shake" },
+  { name: "Collagen drink" },
+  { name: "Protein coffee" },
+  { name: "Iced oat milk latte" },
+  { name: "Matcha protein latte" },
+  { name: "Berry kefir" },
+  { name: "Light chocolate milk" },
+  { name: "Post-workout recovery shake" },
+  { name: "Pre-workout smoothie" },
+  { name: "Energy smoothie" },
+  { name: "High-fiber fruit shake" },
+  { name: "Rehydration smoothie" },
+  { name: "Low-calorie frappe" },
+  { name: "Greek yogurt drink" },
+  { name: "Meal replacement shake" },
+  { name: "Protein cold brew" },
+  { name: "Coconut protein drink" }
+],
+```
+
+---
+
+### 🍪 Dessert Bites (mandatory)
+
+```ts
+dessertBites: [
+  { name: "Frozen yogurt bar" },
+  { name: "Mini brownie bite" },
+  { name: "Mini cookie" },
+  { name: "Halo-Top ice cream (½ cup)" },
+  { name: "Protein ice cream cup" },
+  { name: "Baked oatmeal square" },
+  { name: "Energy truffle" },
+  { name: "Low-sugar cupcake" },
+  { name: "Fruit tart bite" },
+  { name: "Mini donut protein bite" },
+  { name: "Chocolate mousse cup" },
+  { name: "Protein cheesecake square" },
+  { name: "Chocolate peanut butter bite" },
+  { name: "Banana bread mini" },
+  { name: "Yogurt bark square" },
+  { name: "Strawberry shortcake bite" },
+  { name: "Brownie ball" },
+  { name: "Frozen fruit pop" },
+  { name: "Oat bar mini" },
+  { name: "Protein cookie sandwich" }
+]
+```
+
+---
+
+### 🧠 Image Generation Hook
+
+Add (or confirm) this logic in `mealEngineService.ts` under your existing `generateImageForIngredient` helper:
+
+```ts
+export async function generateSnackImage(ingredientName: string): Promise<string> {
+  const prompt = `Healthy ${ingredientName} snack on a white plate, high-quality food photography, minimal background`;
+  const image = await generateImage(prompt); // uses DALL·E integration
+  return image.url || "";
+}
+```
+
+Then, in the seed/loader for snackIngredients:
+
+```ts
+for (const [category, items] of Object.entries(snackIngredients)) {
+  for (const item of items) {
+    if (!item.image) {
+      item.image = await generateSnackImage(item.name);
+    }
+  }
+}
+```
+
+---
+
+### 💬 Commit Message
+
+```
+feat(snack-picker): expand all snack categories to 15–20 items and auto-generate DALL·E images for each ingredient
+```
+
+---
+
+This gives the Replit assistant:
+
+* A full data model to seed or patch into the project
+* Exact file targets
+* The expected structure for each ingredient
+* A drop-in DALL·E hook that mirrors the existing image workflow
+
+Ready to send this brief and snippets directly to the assistant — this is production-grade and will plug right in.
