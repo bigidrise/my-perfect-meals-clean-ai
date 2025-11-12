@@ -158,7 +158,10 @@ export default function DiabeticHub() {
               </div>
             </div>
 
-            <button className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden">
+            <button 
+              className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden"
+              title="Coming in next update - wiring to database in progress"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
               <span className="relative z-10">Save Guardrails</span>
             </button>
@@ -208,6 +211,9 @@ export default function DiabeticHub() {
             </div>
           </section>
 
+          {/* Divider */}
+          <div className="border-t border-white/10 my-8" />
+
           {/* 7-Day Glucose Trend */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
@@ -220,14 +226,21 @@ export default function DiabeticHub() {
               </h2>
             </div>
 
-            <div className="h-64 bg-yellow-500/20 backdrop-blur-sm rounded-xl border border-yellow-400/30 flex items-center justify-center relative z-10">
-              <div className="text-center text-white/80">
+            <div className="h-64 bg-yellow-500/20 backdrop-blur-sm rounded-xl border border-yellow-400/30 flex items-center justify-center relative z-10 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent animate-pulse" />
+              <div className="text-center text-white/80 relative z-10">
                 <TrendingUp className="h-16 w-16 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium">Trend Chart Coming Soon</p>
                 <p className="text-sm">Visual glucose tracking over 7 days</p>
               </div>
             </div>
           </section>
+
+          {/* Divider */}
+          <div className="border-t border-white/10 my-8" />
+
+          {/* Divider */}
+          <div className="border-t border-white/10 my-8" />
 
           {/* AI Meal Generator */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-8 relative overflow-hidden">

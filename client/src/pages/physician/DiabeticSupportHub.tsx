@@ -1,11 +1,14 @@
+// ⚠️ DEPRECATED: Replaced by DiabeticHub.tsx
+// This file is kept for rollback reference only
+// Last active: 2025-01-22
 
+import { useState } from "react";
 import { useLocation } from "wouter";
-import { Home, ChefHat, Activity, ArrowLeft, ArrowUp, ClipboardList } from "lucide-react";
+import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 
-export default function DiabeticSupportHub() {
+export default function DiabeticSupportHub_DEPRECATED() {
   const [, setLocation] = useLocation();
   const [prefs, setPrefs] = useState<{ carbId: string; preference: number }[]>([]);
   const [loading, setLoading] = useState(true);
