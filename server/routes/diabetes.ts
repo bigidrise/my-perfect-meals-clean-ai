@@ -43,6 +43,25 @@ diabetesRouter.put("/profile", async (req, res) => {
   }
 });
 
+// GET /api/diabetes/glucose?userId=xxx&limit=50
+diabetesRouter.get("/glucose", async (req, res) => {
+  try {
+    const { userId, limit = "50" } = req.query;
+    if (!userId) return res.status(400).json({ error: "userId required" });
+
+    const logs = await db.query.glucoseLogs.findMany({
+      where: (l, { eq }) => eq(l.userId, userId as string),
+      orderBy: (l, { desc }) => [desc(l.recordedAt)],
+      limit: parseInt(limit as string, 10),
+    });
+
+    res.json({ data: logs });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "failed_to_fetch_glucose" });
+  }
+});
+
 // POST /api/diabetes/glucose
 // body: { userId, valueMgdl, context, relatedMealId?, recordedAt?, insulinUnits?, notes? }
 diabetesRouter.post("/glucose", async (req, res) => {

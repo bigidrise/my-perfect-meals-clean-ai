@@ -23,7 +23,7 @@ export default function DiabeticHub() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
-  const userId = user?.id || getDeviceId();
+  const userId = user?.id?.toString() || getDeviceId();
 
   // Hooks
   const saveMutation = useSaveDiabetesProfile();
