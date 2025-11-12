@@ -319,7 +319,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     if (infoSeen === "true") {
       setHasSeenInfo(true);
     }
-    
+
     const dailyTotalsInfoSeen = localStorage.getItem("athlete-board-daily-totals-info-seen");
     if (dailyTotalsInfoSeen === "true") {
       setHasSeenDailyTotalsInfo(true);
@@ -350,7 +350,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     if (tourStep === "breakfast" && lists.breakfast.length > 0) {
       setTourStep("lunch");
       localStorage.setItem("athlete-board-tour-step", "lunch");
-      
+
       // Show Daily Totals info after first meal
       if (!hasSeenDailyTotalsInfo) {
         setShowDailyTotalsInfo(true);
@@ -1739,7 +1739,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
               <Target className="h-6 w-6 text-emerald-400" />
-              How to Use Athlete Board
+              How to Use Professional Care Meals
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-white/90">
