@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db";
-import { users, diabetesProfile, guardrailAuditLog } from "../db/schema";
+import { diabetesProfile, guardrailAuditLog } from "../db/schema";
+import { users } from "../db/schema";
 import { z } from "zod";
 import crypto from "crypto";
 
