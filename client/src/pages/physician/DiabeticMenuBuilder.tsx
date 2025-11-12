@@ -1412,12 +1412,12 @@ export default function DiabeticMenuBuilder() {
         meal={shoppingListModal.meal}
       />
 
-      {/* AI Meal Creator with Ingredient Picker - Breakfast Only */}
+      {/* AI Meal Creator with Ingredient Picker - All Meal Slots */}
       <MealIngredientPicker
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
-        mealSlot="breakfast"
+        mealSlot={aiMealSlot}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
