@@ -262,7 +262,10 @@ export default function Welcome() {
           
           <Button
             data-testid="button-onboarding-direct"
-            onClick={() => setLocation("/onboarding")}
+            onClick={() => {
+              console.log("🔧 Dev: Navigating to onboarding");
+              setLocation("/onboarding");
+            }}
             className="w-full h-12 text-base font-semibold rounded-xl
                      bg-blue-600/80 hover:bg-blue-500
                      text-white shadow-lg
