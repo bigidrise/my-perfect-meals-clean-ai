@@ -9,9 +9,9 @@ import { ArrowLeft, Users, User, Crown } from "lucide-react";
 
 export default function FamilyInfoPage() {
   const [, setLocation] = useLocation();
-  const [wholehouseUpgrade, setWholehouseUpgrade] = useState(false);
+  const [wholehousePremium, setWholehousePremium] = useState(false);
   const [wholehouseUltimate, setWholehouseUltimate] = useState(false);
-  const [memberUpgrades, setMemberUpgrades] = useState({
+  const [memberUpgrades, setMemberUpgrades] = useState<Record<string, string>>({
     alice: "basic",
     bob: "basic",
     kid1: "basic",
@@ -20,13 +20,13 @@ export default function FamilyInfoPage() {
 
   const calculateTotal = () => {
     let total = 24.99; // Family base
-    if (wholehouseUpgrade) {
-      total += 15; // All seats upgrade bundle
+    if (wholehousePremium) {
+      total += 15; // All seats premium bundle
     } else if (wholehouseUltimate) {
       total += 45; // All seats ultimate bundle
     } else {
       Object.values(memberUpgrades).forEach((tier) => {
-        if (tier === "upgrade") total += 6;
+        if (tier === "premium") total += 6;
         if (tier === "ultimate") total += 14;
       });
     }
@@ -36,14 +36,14 @@ export default function FamilyInfoPage() {
   const handleMemberUpgrade = (member: string, tier: string) => {
     setMemberUpgrades((prev) => ({ ...prev, [member]: tier }));
     if (tier !== "basic") {
-      setWholehouseUpgrade(false);
+      setWholehousePremium(false);
       setWholehouseUltimate(false);
     }
   };
 
-  const handleHouseholdBundle = (type: "upgrade" | "ultimate") => {
-    if (type === "upgrade") {
-      setWholehouseUpgrade(!wholehouseUpgrade);
+  const handleHouseholdBundle = (type: "premium" | "ultimate") => {
+    if (type === "premium") {
+      setWholehousePremium(!wholehousePremium);
       setWholehouseUltimate(false);
       setMemberUpgrades({
         alice: "basic",
@@ -53,7 +53,7 @@ export default function FamilyInfoPage() {
       });
     } else {
       setWholehouseUltimate(!wholehouseUltimate);
-      setWholehouseUpgrade(false);
+      setWholehousePremium(false);
       setMemberUpgrades({
         alice: "basic",
         bob: "basic",
@@ -87,7 +87,7 @@ export default function FamilyInfoPage() {
           <span className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-r from-white/10 via-transparent to-transparent" />
           <h1 className="text-3xl font-bold">Family Plan — Preview</h1>
           <p className="text-lg mt-2 text-white">
-            Configure how upgrades apply across your 4 family accounts.
+            Configure how premiums apply across your 4 family accounts.
           </p>
         </div>
 
@@ -103,7 +103,7 @@ export default function FamilyInfoPage() {
             </div>
             <p className="text-white">
               Use this screen to test how household-wide bundles or individual
-              upgrades affect pricing.
+              premiums affect pricing.
             </p>
           </CardContent>
         </Card>
@@ -119,20 +119,20 @@ export default function FamilyInfoPage() {
                   Household-Wide Bundles
                 </h2>
                 <p className="text-sm text-white">
-                  Discounted upgrades for all 4 accounts
+                  Discounted premiums for all 4 accounts
                 </p>
               </CardHeader>
               <CardContent className="space-y-4 text-white">
                 <div className="flex items-center justify-between rounded-xl p-4 bg-white/5 border border-white/10">
                   <div>
-                    <div className="font-medium">All Upgrade Bundle</div>
+                    <div className="font-medium">All Premium Bundle</div>
                     <div className="text-sm text-white">
                       +$15/mo (save $9/mo vs individual)
                     </div>
                   </div>
                   <Switch
-                    checked={wholehouseUpgrade}
-                    onCheckedChange={() => handleHouseholdBundle("upgrade")}
+                    checked={wholehousePremium}
+                    onCheckedChange={() => handleHouseholdBundle("premium")}
                   />
                 </div>
                 <div className="flex items-center justify-between rounded-xl p-4 bg-white/5 border border-white/10">
@@ -155,10 +155,10 @@ export default function FamilyInfoPage() {
               <CardHeader className="pb-2 text-white">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
                   <User className="w-5 h-5" />
-                  Individual Member Upgrades
+                  Individual Member Premiums
                 </h2>
                 <p className="text-sm text-white">
-                  Upgrade specific accounts only
+                  Premium specific accounts only
                 </p>
               </CardHeader>
               <CardContent className="space-y-5 text-white">
@@ -196,7 +196,7 @@ export default function FamilyInfoPage() {
                         }
                         className="bg-white/10 border-white/30 hover:bg-white/20 text-white"
                         onClick={() => handleMemberUpgrade(member.key, "basic")}
-                        disabled={wholehouseUpgrade || wholehouseUltimate}
+                        disabled={wholehousePremium || wholehouseUltimate}
                       >
                         Basic (included)
                       </Button>
@@ -205,17 +205,17 @@ export default function FamilyInfoPage() {
                         variant={
                           memberUpgrades[
                             member.key as keyof typeof memberUpgrades
-                          ] === "upgrade"
+                          ] === "premium"
                             ? "default"
                             : "outline"
                         }
                         className="bg-white/10 border-white/30 hover:bg-white/20 text-white"
                         onClick={() =>
-                          handleMemberUpgrade(member.key, "upgrade")
+                          handleMemberUpgrade(member.key, "premium")
                         }
-                        disabled={wholehouseUpgrade || wholehouseUltimate}
+                        disabled={wholehousePremium || wholehouseUltimate}
                       >
-                        Upgrade (+$6/mo)
+                        Premium (+$6/mo)
                       </Button>
                       <Button
                         size="sm"
@@ -230,7 +230,7 @@ export default function FamilyInfoPage() {
                         onClick={() =>
                           handleMemberUpgrade(member.key, "ultimate")
                         }
-                        disabled={wholehouseUpgrade || wholehouseUltimate}
+                        disabled={wholehousePremium || wholehouseUltimate}
                       >
                         <Crown className="w-3 h-3 mr-1" />
                         Ultimate (+$14/mo)
@@ -257,9 +257,9 @@ export default function FamilyInfoPage() {
                   <span className="text-white">$24.99</span>
                 </div>
 
-                {wholehouseUpgrade && (
+                {wholehousePremium && (
                   <div className="flex justify-between text-white">
-                    <span>All Upgrade Bundle</span>
+                    <span>All Premium Bundle</span>
                     <span>+$15.00</span>
                   </div>
                 )}
@@ -271,7 +271,7 @@ export default function FamilyInfoPage() {
                   </div>
                 )}
 
-                {!wholehouseUpgrade &&
+                {!wholehousePremium &&
                   !wholehouseUltimate &&
                   Object.entries(memberUpgrades).map(([key, tier]) => {
                     if (tier === "basic") return null;
@@ -283,7 +283,7 @@ export default function FamilyInfoPage() {
                           : key === "kid1"
                             ? "Kid 1"
                             : "Kid 2";
-                    const cost = tier === "upgrade" ? "$6.00" : "$14.00";
+                    const cost = tier === "premium" ? "$6.00" : "$14.00";
                     return (
                       <div
                         key={key}
@@ -312,7 +312,7 @@ export default function FamilyInfoPage() {
                   <p>
                     • 21+ content automatically hidden for accounts under 21
                   </p>
-                  <p>• Billing flexibility: change member upgrades anytime</p>
+                  <p>• Billing flexibility: change member premiums anytime</p>
                 </div>
               </CardContent>
 

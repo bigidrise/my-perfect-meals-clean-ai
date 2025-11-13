@@ -69,7 +69,7 @@ function getFeaturesByPlan(plan: string) {
       "craving-creator",
       "biometrics-hub"
     ],
-    upgrade: [
+    premium: [
       "ai-meal-creator",
       "meals-for-kids",
       "craving-creator", 

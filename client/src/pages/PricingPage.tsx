@@ -43,15 +43,15 @@ export default function PricingPage() {
 
   const getButtonText = (sku: string): string => {
     const currentPlan = user?.planLookupKey;
-    
+
     if (currentPlan === sku) {
       return "Current Plan";
     }
-    
+
     if (!currentPlan) {
       return "Select Plan";
     }
-    
+
     // Define tier hierarchy for consumer plans
     const consumerTiers: Record<string, number> = {
       "mpm_basic_monthly": 1,
@@ -60,29 +60,29 @@ export default function PricingPage() {
       "mpm_ultimate_monthly": 3,
       "mpm_procare_monthly": 4,
     };
-    
+
     // Define tier hierarchy for family plans
     const familyTiers: Record<string, number> = {
       "mpm_family_base_monthly": 1,
       "mpm_family_all_upgrade_monthly": 2,
       "mpm_family_all_ultimate_monthly": 3,
     };
-    
+
     const currentTier = consumerTiers[currentPlan] || familyTiers[currentPlan];
     const targetTier = consumerTiers[sku] || familyTiers[sku];
-    
+
     // Different plan types (consumer vs family) can't be compared
     const isConsumerPlan = (plan: string) => plan in consumerTiers;
     const isFamilyPlan = (plan: string) => plan in familyTiers;
-    
+
     if (isConsumerPlan(currentPlan) && isFamilyPlan(sku)) {
       return "Switch to Family";
     }
-    
+
     if (isFamilyPlan(currentPlan) && isConsumerPlan(sku)) {
       return "Switch to Individual";
     }
-    
+
     // Same plan type comparison
     if (currentTier !== undefined && targetTier !== undefined) {
       if (targetTier > currentTier) {
@@ -91,7 +91,7 @@ export default function PricingPage() {
         return "Downgrade";
       }
     }
-    
+
     return "Select Plan";
   };
 
@@ -136,7 +136,7 @@ export default function PricingPage() {
       >
         <Home className="h-4 w-4 text-white" />
       </button>
-      
+
       <div className="container max-w-6xl mx-auto px-4">
         {/* Collapsible Header (Black Glass) */}
         <div className="text-center mb-12 mt-12">
@@ -180,8 +180,8 @@ export default function PricingPage() {
             {consumerPlans.map((plan) => {
               const features = plan.sku === "mpm_basic_monthly" 
                 ? legacyFeatures.basic 
-                : plan.sku === "mpm_upgrade_monthly"
-                ? legacyFeatures.upgrade
+                : plan.sku === "mpm_premium_monthly"
+                ? legacyFeatures.premium
                 : legacyFeatures.ultimate;
 
               return (

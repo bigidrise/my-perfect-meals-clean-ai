@@ -1,10 +1,10 @@
 export type LookupKey =
   | "mpm_basic_monthly"
-  | "mpm_upgrade_monthly"
-  | "mpm_upgrade_beta_monthly"
+  | "mpm_premium_monthly"
+  | "mpm_premium_beta_monthly"
   | "mpm_ultimate_monthly"
   | "mpm_family_base_monthly"
-  | "mpm_family_all_upgrade_monthly"
+  | "mpm_family_all_premium_monthly"
   | "mpm_family_all_ultimate_monthly"
   | "mpm_procare_monthly";
 
@@ -37,7 +37,7 @@ export const PLAN_SKUS: PlanSku[] = [
     ]
   },
   {
-    sku: "mpm_upgrade_monthly",
+    sku: "mpm_premium_monthly",
     label: "Premium",
     price: 19.99,
     group: "consumer",
@@ -52,8 +52,8 @@ export const PLAN_SKUS: PlanSku[] = [
     badge: "Popular"
   },
   {
-    sku: "mpm_upgrade_beta_monthly",
-    label: "Premium (Beta Lock)",
+    sku: "mpm_premium_beta_monthly",
+    label: "Premium (Beta)",
     price: 9.99,
     group: "consumer",
     hidden: true,
@@ -94,7 +94,7 @@ export const PLAN_SKUS: PlanSku[] = [
     badge: "Best for Families"
   },
   {
-    sku: "mpm_family_all_upgrade_monthly",
+    sku: "mpm_family_all_premium_monthly",
     label: "Family All-Premium",
     price: 44.99,
     seats: 4,
