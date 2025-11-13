@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, Users, Plus, ChefHat, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { CRAVING_PRESETS, type CravingPreset } from "@/data/cravingPresetsData";
+import { CRAVING_PRESETS, type CravingPreset } from "@/data/cravingsPresetsData";
 
 // Alias for compatibility
 const craveMeals = CRAVING_PRESETS;
