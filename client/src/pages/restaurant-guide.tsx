@@ -182,6 +182,8 @@ const cuisineKeywords: Record<string, string> = {
 };
 
 export default function RestaurantGuidePage() {
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [, setLocation] = useLocation();
   const [cravingInput, setCravingInput] = useState("");
   const [restaurantInput, setRestaurantInput] = useState("");
@@ -194,6 +196,18 @@ export default function RestaurantGuidePage() {
   // 🔋 Progress bar state (real-time ticker like HolidayFeast)
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenRestaurantInfo = localStorage.getItem("hasSeenRestaurantInfo");
+
+    if (coachMode === "guided" && !hasSeenRestaurantInfo) {
+      setTimeout(() => {
+        setShowInstructions(true);
+      }, 300);
+    }
+  }, []);
 
   // Restore cached restaurant meals on mount (so generated meals come back)
   useEffect(() => {
@@ -265,7 +279,7 @@ export default function RestaurantGuidePage() {
     onSuccess: (data) => {
       stopProgressTicker();
       setGeneratedMeals(data.recommendations || []);
-      
+
       // Immediately cache the new restaurant meals so they survive navigation/refresh
       saveRestaurantCache({
         restaurantData: data,
@@ -274,7 +288,7 @@ export default function RestaurantGuidePage() {
         cuisine: matchedCuisine || "",
         generatedAtISO: new Date().toISOString(),
       });
-      
+
       toast({
         title: "🍽️ Restaurant Meals Generated!",
         description: `Found ${data.recommendations?.length || 0} healthy options for you.`,
@@ -351,7 +365,7 @@ export default function RestaurantGuidePage() {
         }}
       >
         <ArrowLeft className="h-4 w-4 text-white" />
-      
+
       </Button>
 
       <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6 overflow-x-hidden">
@@ -636,7 +650,7 @@ export default function RestaurantGuidePage() {
                     Generating personalized meals...
                   </span>
                 </div>
-                
+
                 {/* Animated Progress Bar */}
                 <div className="max-w-md mx-auto mb-4">
                   <div className="flex items-center justify-between mb-2">
@@ -648,7 +662,7 @@ export default function RestaurantGuidePage() {
                     className="h-3 bg-black/30 border border-white/20" 
                   />
                 </div>
-                
+
                 <p className="text-white/60 text-sm">
                   AI searching for Meal recommendations can take 60-90 seconds
                   to generate. Please be patient.
@@ -722,11 +736,35 @@ export default function RestaurantGuidePage() {
         </Card>
       </div>
 
-      {/* Find Meals Near Me Info Modal */}
-      {showFindMealsInfo && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h2>
+      {/* Instructions Modal - Auto-opens on first visit */}
+      {showInstructions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h3>
+            <div className="space-y-3 text-white/90 text-sm">
+              <p><strong>1. Enter location:</strong> Add ZIP code or city name</p>
+              <p><strong>2. Describe craving:</strong> Tell us what you want to eat</p>
+              <p><strong>3. Find restaurants:</strong> Get nearby options with healthy menu picks</p>
+              <p><strong>4. Order smart:</strong> See nutrition info and make informed choices</p>
+            </div>
+            <button
+              onClick={() => {
+                setShowInstructions(false);
+                localStorage.setItem("hasSeenRestaurantInfo", "true");
+              }}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h3>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <div>
                 <strong className="text-lime-400">What it does:</strong>
@@ -758,7 +796,7 @@ export default function RestaurantGuidePage() {
               </p>
             </div>
             <button
-              onClick={() => setShowFindMealsInfo(false)}
+              onClick={() => setShowInfoModal(false)}
               className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
             >
               Got it!

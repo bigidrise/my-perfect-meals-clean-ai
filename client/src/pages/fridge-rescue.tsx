@@ -139,6 +139,20 @@ const FridgeRescuePage = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenFridgeInfo = localStorage.getItem("hasSeenFridgeInfo");
+
+    if (coachMode === "guided" && !hasSeenFridgeInfo) {
+      setTimeout(() => {
+        setShowInstructions(true);
+      }, 300);
+    }
+  }, []);
 
   // Check if user has access to Fridge Rescue feature
   const userPlan = getCurrentUserPlan();
@@ -380,7 +394,7 @@ const FridgeRescuePage = () => {
       protein: meal.protein || 0,
       carbs: meal.carbs || 0,
       fat: meal.fat || 0,
-      badges: meal.medicalBadges?.map((b: any) => b.condition) || [],
+      badges: meal.medicalBadges?.map((b: any) => b.badge) || [],
       ingredients: meal.ingredients || [],
       instructions: typeof meal.instructions === "string" ? [meal.instructions] : meal.instructions || [],
       source: "fridge-rescue",
@@ -476,7 +490,7 @@ const FridgeRescuePage = () => {
           className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/20 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
         >
           <ArrowLeft className="h-4 w-4" />
-        
+
         </button>
 
         <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 mb-8 mt-12">
@@ -820,11 +834,35 @@ const FridgeRescuePage = () => {
         )}
       </div>
 
+      {/* Instructions Modal - Auto-opens on first visit */}
+      {showInstructions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h3>
+            <div className="space-y-3 text-white/90 text-sm">
+              <p><strong>1. Add ingredients:</strong> List what's in your fridge</p>
+              <p><strong>2. Set servings:</strong> Choose how many people to feed (1-10)</p>
+              <p><strong>3. Generate meal:</strong> AI creates a recipe from your ingredients</p>
+              <p><strong>4. Review & cook:</strong> Get full instructions and nutrition info</p>
+            </div>
+            <button
+              onClick={() => {
+                setShowInstructions(false);
+                localStorage.setItem("hasSeenFridgeInfo", "true");
+              }}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Info Modal */}
       {showInfoModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h3>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <p>
                 <strong>1. Enter Your Ingredients:</strong> List what you have in your fridge, separated by commas.

@@ -76,9 +76,23 @@ interface MealResult {
 }
 
 export default function MealFinder() {
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenMealFinderInfo = localStorage.getItem("hasSeenMealFinderInfo");
+
+    if (coachMode === "guided" && !hasSeenMealFinderInfo) {
+      setTimeout(() => {
+        setShowInstructions(true);
+      }, 300);
+    }
+  }, []);
+
   const [mealQuery, setMealQuery] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [results, setResults] = useState<MealResult[]>([]);
@@ -87,7 +101,7 @@ export default function MealFinder() {
 
   useEffect(() => {
     if (hasRestoredRef.current) return;
-    
+
     const cached = loadMealFinderCache();
     if (cached) {
       setResults(cached.results);
@@ -115,7 +129,7 @@ export default function MealFinder() {
           body: JSON.stringify(data),
           headers: { 'Content-Type': 'application/json' }
         });
-        
+
         clearInterval(progressInterval);
         setProgress(100);
         return response;
@@ -127,21 +141,21 @@ export default function MealFinder() {
     onSuccess: (data) => {
       const newResults = data.results || [];
       setResults(newResults);
-      
+
       saveMealFinderCache({
         results: newResults,
         mealQuery,
         zipCode,
         generatedAtISO: new Date().toISOString()
       });
-      
+
       const uniqueRestaurants = new Set(newResults.map((r: MealResult) => r.restaurantName)).size;
-      
+
       toast({
         title: "Meals Found!",
         description: `Found ${uniqueRestaurants} restaurants with ${newResults.length} meals`,
       });
-      
+
       setTimeout(() => setProgress(0), 500);
     },
     onError: (error: any) => {
@@ -164,7 +178,7 @@ export default function MealFinder() {
       });
       return;
     }
-    
+
     if (!zipCode.trim() || !/^\d{5}$/.test(zipCode)) {
       toast({
         title: "Invalid ZIP Code",
@@ -190,7 +204,7 @@ export default function MealFinder() {
         size="sm"
         onClick={handleGoBack}
         className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        style={{ 
+        style={{
           zIndex: 2147483647,
           position: 'fixed',
           isolation: 'isolate',
@@ -276,9 +290,9 @@ export default function MealFinder() {
                     <span className="text-sm text-white/80">Searching nearby restaurants...</span>
                     <span className="text-sm text-white/80">{Math.round(progress)}%</span>
                   </div>
-                  <Progress 
-                    value={progress} 
-                    className="h-3 bg-black/30 border border-white/20" 
+                  <Progress
+                    value={progress}
+                    className="h-3 bg-black/30 border border-white/20"
                   />
                   <p className="text-white/60 text-sm mt-2 text-center">
                     This may take 30-60 seconds
@@ -346,8 +360,8 @@ export default function MealFinder() {
 
                         {result.medicalBadges && result.medicalBadges.length > 0 && (
                           <div className="mb-3">
-                            <HealthBadgesPopover 
-                              badges={result.medicalBadges.map(b => b.condition)} 
+                            <HealthBadgesPopover
+                              badges={result.medicalBadges.map(b => b.condition)}
                             />
                           </div>
                         )}
@@ -417,6 +431,37 @@ export default function MealFinder() {
           )}
         </div>
       </div>
+
+      {/* Instructions Modal - Auto-opens on first visit */}
+      {showInstructions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Meal Finder</h3>
+            <div className="space-y-3 text-white/90 text-sm">
+              <p><strong>1. Set location:</strong> Enter your ZIP code</p>
+              <p><strong>2. Choose meal type:</strong> Breakfast, lunch, or dinner</p>
+              <p><strong>3. Describe craving:</strong> Tell us what sounds good</p>
+              <p><strong>4. Get recommendations:</strong> Find healthy options nearby</p>
+            </div>
+            <button
+              onClick={() => {
+                setShowInstructions(false);
+                localStorage.setItem("hasSeenMealFinderInfo", "true");
+              }}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div>
+          {/* Info modal content would go here */}
+        </div>
+      )}
     </>
   );
 }
