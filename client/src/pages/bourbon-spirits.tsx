@@ -48,9 +48,6 @@ export default function BourbonSpiritsPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Bourbon & Spirits | My Perfect Meals";
-    const handleScroll = () => setShowBackToTop(window.scrollY > 400);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
 
     // Auto-open instructions on first visit in coach mode
     const coachMode = localStorage.getItem("coachMode");
@@ -61,6 +58,10 @@ export default function BourbonSpiritsPage() {
         setShowInfoModal(true);
       }, 300);
     }
+
+    const handleScroll = () => setShowBackToTop(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleInfoModalClose = () => {

@@ -89,10 +89,6 @@ export default function BeerPairingMode() {
     "text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white data-[state=checked]:bg-white/10";
 
   useEffect(() => {
-    const onScroll = () => setShowBackToTop(window.scrollY > 320);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-
     // Auto-open instructions on first visit in coach mode
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenBeerPairingInfo = localStorage.getItem("hasSeenBeerPairingInfo");
@@ -102,6 +98,10 @@ export default function BeerPairingMode() {
         setShowInfoModal(true);
       }, 300);
     }
+
+    const onScroll = () => setShowBackToTop(window.scrollY > 320);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const handleInfoModalClose = () => {

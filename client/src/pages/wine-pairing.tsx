@@ -65,13 +65,6 @@ export default function WinePairingPage() {
     document.title = "Wine Pairing | My Perfect Meals";
     saveNavigationHistory("/wine-pairing", "/alcohol-hub");
 
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-
     // Auto-open instructions on first visit in coach mode
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenWinePairingInfo = localStorage.getItem("hasSeenWinePairingInfo");
@@ -81,6 +74,13 @@ export default function WinePairingPage() {
         setShowInfoModal(true);
       }, 300);
     }
+
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleInfoModalClose = () => {

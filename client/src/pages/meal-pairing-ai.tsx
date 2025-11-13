@@ -48,13 +48,6 @@ export default function MealPairingAIPage() {
     window.scrollTo(0, 0);
     document.title = "Meal Pairing AI | My Perfect Meals";
 
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-
     // Auto-open instructions on first visit in coach mode
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenMealPairingInfo = localStorage.getItem("hasSeenMealPairingInfo");
@@ -64,6 +57,13 @@ export default function MealPairingAIPage() {
         setShowInfoModal(true);
       }, 300);
     }
+
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleInfoModalClose = () => {
