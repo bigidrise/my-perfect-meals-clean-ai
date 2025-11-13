@@ -461,23 +461,24 @@ export default function MealIngredientPicker({
               {activeCategory && (() => {
                 const categoryItems = ingredientSource[activeCategory as keyof typeof ingredientSource];
                 if (!Array.isArray(categoryItems)) return null;
-                return categoryItems.map((ingredient: string) => {
-                  const isSelected = selectedIngredients.includes(ingredient);
+                return categoryItems.map((ingredient: string | any) => {
+                  const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
+                  const isSelected = selectedIngredients.includes(ingredientName);
                   return (
                     <div
-                      key={ingredient}
-                      onClick={() => toggleIngredient(ingredient)}
+                      key={ingredientName}
+                      onClick={() => toggleIngredient(ingredientName)}
                       className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
                     >
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={() => toggleIngredient(ingredient)}
+                        onCheckedChange={() => toggleIngredient(ingredientName)}
                         className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
                       />
                       <span 
                         className="text-[11px] group-hover:text-emerald-300 transition-colors text-center"
                       >
-                        {ingredient}
+                        {ingredientName}
                       </span>
                     </div>
                   );
