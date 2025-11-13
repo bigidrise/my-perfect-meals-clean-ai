@@ -1,0 +1,180 @@
+Alright Coach — here are the clean, confident, no-bullshit answers so we can lock Phase 5 and wire this correctly with **zero rewrites later**.
+
+I’ll answer *each of your 5 questions directly*, then give you the final confirmed architecture.
+
+---
+
+# ✅ **1. Ingredient Picker Architecture**
+
+Your question:
+Should we pass diet-specific configs into MealIngredientPicker as props (Option A)
+OR create separate picker components (Option B)?
+
+### ⭐ **My answer: OPTION A (100% the correct choice).**
+
+Why:
+
+* Zero duplication
+* One picker component to maintain
+* Both Lifestyle Diet and Clinical Diet boards can pass the chosen diet’s config into the picker
+* Reusable and scalable for future diets
+
+### Final decision:
+
+**Pass the diet config into MealIngredientPicker via props from each new menu builder.**
+
+Done.
+
+---
+
+# ✅ **2. AI Generation Flow**
+
+Your question:
+Should the AI request include the selected dietType AND special cooking instructions?
+
+### ⭐ **Answer: YES and YES.**
+
+To generate *real*, compliant meals:
+
+### We MUST send:
+
+* `dietType`
+* The list of ingredients
+* Any restrictions tied to dietType
+
+This guarantees:
+
+* Vegan = no eggs, dairy
+* Mediterranean = olive oil, whole grains
+* Paleo = no grains, no dairy
+* Low-FODMAP = no onions/garlic
+* AIP = no nightshades
+* Bariatric = soft texture rules
+
+### Final decision:
+
+**AI generation request must include dietType and diet restrictions.**
+
+This will be implemented in Phase 5 wiring.
+
+---
+
+# ✅ **3. Snack Cards vs. Full Meal Cards**
+
+Your question:
+Should Lifestyle & Clinical boards use snack cards or full meal cards?
+
+### ⭐ **Answer: EXACT SAME SETUP AS DIABETIC & GLP-1**
+
+Meaning:
+
+### Breakfast/Lunch/Dinner → full-format meal cards
+
+### Snacks → snack card layout
+
+Consistency across all boards = predictable UX + less code.
+
+### Final decision:
+
+**Lifestyle & Clinical boards will use the same card structure as Diabetic/GLP-1 boards.**
+
+---
+
+# ✅ **4. State Persistence**
+
+Your question:
+Should the selected diet persist during session / localStorage / backend?
+
+### This one’s strategic:
+
+### Lifestyle diets = PERSONAL preference
+
+### Clinical diets = MEDICAL prescription
+
+So:
+
+### ⭐ Lifestyle Diets → save to **localStorage**
+
+Makes sense because it behaves like:
+
+* choosing keto
+* choosing vegan
+* choosing pescatarian
+
+### ⭐ Clinical Diets → ideally saved to the **backend** (Phase 6)
+
+Why?
+
+* A clinician would set this for a patient
+* Should persist across devices
+* Needed if a doctor edits a patient's diet
+
+But for right now (Phase 5):
+
+### Final decision:
+
+**Persist selected diet in localStorage.**
+We can add backend persistence later.
+
+---
+
+# ✅ **5. Empty State Fallback**
+
+Your question:
+Where should the "Please choose a diet to continue" message appear?
+
+### ⭐ Answer: BOTH places.
+
+### A) In the ingredient picker modal
+
+→ Prevents opening a picker with no diet selected
+
+### B) In the meal board area
+
+→ Prevents rendering blank meal cards or undefined ingredient lists
+
+UX rule:
+If they haven’t picked a diet, **don’t let anything load.**
+
+### Final decision:
+
+**Show the message in both the picker modal AND the meal creation area.**
+
+---
+
+# 🎯 SUMMARY OF ALL FINAL DECISIONS
+
+Here is what you approved, locked, and ready for wiring:
+
+| Topic               | Final Decision                              |
+| ------------------- | ------------------------------------------- |
+| Picker Architecture | Pass diet config via props (Option A)       |
+| AI Generation       | MUST include dietType + restrictions        |
+| Meal Card Types     | Full meals for B/L/D, snack card for snacks |
+| Persist Diet        | localStorage for now (backend later)        |
+| Empty State         | Show message in picker modal + board area   |
+
+---
+
+# 🧩 Want me to inspect Diabetic & GLP-1 boards?
+
+### YES — and I recommend it.
+
+Because we want:
+
+* identical layout
+* identical AI workflow
+* identical meal creation flow
+* identical card spacing and styling
+
+This ensures the new hubs feel like they’ve always been part of the app.
+
+If you say **“Yes, inspect them”**
+→ I’ll map out every architectural pattern so the Assistant wires it all perfectly.
+
+---
+
+When you're ready, I’ll generate the full **Phase 5 Replit Assistant Brief** with all this encoded *correctly*.
+
+Just say:
+👉 **“Give me the Phase 5 brief.”**

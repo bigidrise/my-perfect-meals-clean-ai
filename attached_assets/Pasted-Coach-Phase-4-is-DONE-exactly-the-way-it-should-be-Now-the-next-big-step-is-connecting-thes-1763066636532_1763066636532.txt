@@ -1,0 +1,204 @@
+Coach — **Phase 4 is DONE exactly the way it should be.**
+Now the next big step is **connecting these 14 populated diet configs to the ingredient pickers** so the Lifestyle & Clinical Diet Menu Boards actually *use* the new diet-specific ingredients.
+
+But before we move to wiring, here’s the **exact assistant brief** you need to send to the Replit Assistant **to avoid ANY confusion** and get Phase 5 executed clean and correctly.
+
+This brief tells it what Phase 4 accomplished, what exists now, and exactly what it must do next — with ZERO risk of breaking anything.
+
+---
+
+# ✅ **REPLIT ASSISTANT — PHASE 5 BRIEF (COPY & PASTE THIS)**
+
+**Hi Assistant,**
+
+We have completed **Phase 4** of the Lifestyle & Clinical Diet system. Before you continue, here is a full summary of what’s already done and what you need to do next.
+
+---
+
+# ✅ **WHAT IS ALREADY DONE (DO NOT REBUILD)**
+
+### ✔️ We now have 14 fully populated diet configurations:
+
+### **7 Lifestyle Diets**
+
+* mediterranean
+* vegan
+* vegetarian
+* pescatarian
+* paleo
+* keto
+* flexitarian
+
+### **7 Clinical Diets**
+
+* low_fodmap
+* aip (Autoimmune Protocol)
+* cardiac
+* renal
+* bariatric
+* anti_inflammatory
+* liver_friendly
+
+### ✔️ Every diet config contains:
+
+* proteins[]
+* starchyCarbs[]
+* fibrousCarbs[]
+* fats[]
+* fruits[]
+* snacks{} with 6 snack categories:
+
+  * sweetTreats
+  * savoryCrunchy
+  * lightGentle
+  * proteinEnergy
+  * drinkables
+  * dessertBites
+
+### ✔️ Config files **already exist**:
+
+```
+client/src/data/lifestyleDietPickerConfig.ts
+client/src/data/clinicalDietPickerConfig.ts
+```
+
+### ✔️ The dropdown selectors already exist in:
+
+```
+LifestyleDietMenuBuilder.tsx
+ClinicalLifestyleDietMenuBuilder.tsx
+```
+
+**You do NOT need to create any more files or data.
+Everything needed is already in place.**
+
+---
+
+# 🧠 **YOUR PHASE 5 TASK — WHAT YOU MUST DO**
+
+You now need to **wire these diet configs** into the ingredient picker system:
+
+### 1. When a diet is selected from the dropdown:
+
+The meal picker for Breakfast, Lunch, Dinner, and Snacks must pull ingredients from the corresponding config:
+
+* For lifestyle diets → from lifestyleDietPickerConfig
+* For clinical diets → from clinicalDietPickerConfig
+
+### 2. Replace the existing ingredient source logic:
+
+Currently, meal pickers use the **general** ingredients from:
+
+```
+client/src/data/mealIngredients.ts
+```
+
+For these two new hubs, **STOP using that file.**
+Instead, use the diet-specific config based on dropdown selection.
+
+### 3. Breakfast / Lunch / Dinner must use:
+
+* proteins
+* starchyCarbs
+* fibrousCarbs
+* fats
+* fruits
+
+### 4. Snacks must use:
+
+* snacks.sweetTreats
+* snacks.savoryCrunchy
+* snacks.lightGentle
+* snacks.proteinEnergy
+* snacks.drinkables
+* snacks.dessertBites
+
+### 5. If NO diet is selected:
+
+Do **not** load any ingredients.
+Show a message:
+**“Please choose a diet to continue.”**
+
+### 6. Do NOT change:
+
+* UI layout
+* AI modal logic
+* DALL·E integration
+* Guardrails
+* Snack card logic
+
+All we are doing now is **connecting the new configs to the existing pickers.**
+
+---
+
+# 📌 **FILES YOU WILL MODIFY (ONLY THESE)**
+
+### 1. Lifestyle Diet Menu Builder
+
+```
+client/src/pages/LifestyleDietMenuBuilder.tsx
+```
+
+### 2. Clinical Lifestyle Diet Menu Builder
+
+```
+client/src/pages/ClinicalLifestyleDietMenuBuilder.tsx
+```
+
+### 3. Ingredient Picker Component
+
+Whichever picker these menu builders use:
+
+```
+client/src/components/pickers/MealPickerDrawer.tsx
+client/src/components/pickers/SnackPickerDrawer.tsx
+client/src/components/modals/AIMealCreatorModal.tsx
+```
+
+(Only make adjustments needed to swap ingredient sources.)
+
+---
+
+# 🛑 **DO NOT TOUCH THESE FILES**
+
+* Diabetic Menu Builder
+* GLP-1 Menu Builder
+* Weekly Meal Board
+* mealIngredients.ts
+* snackIngredients.ts
+* Any existing meal picker logic for other boards
+
+---
+
+# 🎯 **YOUR GOAL**
+
+Make the Lifestyle & Clinical Diet boards use
+**their OWN ingredients**,
+based on the selected diet,
+exactly like the Diabetic and GLP-1 systems —
+but diet-specific instead of medical-specific.
+
+---
+
+If you need any questions answered before continuing, ask me.
+
+---
+
+# ✅ Coach — this is the perfect brief for the assistant.
+
+Clear. Complete. Zero ambiguity. Zero guesswork.
+
+If you want, I can now write:
+
+### ✔ The exact wiring code
+
+### ✔ The ingredient picker logic patch
+
+### ✔ The diet-to-picker mapping function
+
+### ✔ A test checklist for all 14 diets
+
+Just tell me:
+**“Give me the wiring code”**
+or
+**“Give me the mapping logic”**
