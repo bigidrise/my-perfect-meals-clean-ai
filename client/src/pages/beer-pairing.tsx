@@ -92,7 +92,22 @@ export default function BeerPairingMode() {
     const onScroll = () => setShowBackToTop(window.scrollY > 320);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+
+    // Auto-open instructions on first visit in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenBeerPairingInfo = localStorage.getItem("hasSeenBeerPairingInfo");
+
+    if (coachMode === "guided" && !hasSeenBeerPairingInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenBeerPairingInfo", "true");
+  };
 
   const canSubmit = useMemo(() => abvMin <= abvMax, [abvMin, abvMax]);
 

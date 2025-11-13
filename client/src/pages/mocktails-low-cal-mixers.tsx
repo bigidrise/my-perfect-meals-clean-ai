@@ -3,13 +3,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Sparkles } from "lucide-react";
 import { mocktailsData } from "@/data/mocktailsData";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 
 export default function MocktailsLowCalMixersPage() {
   const [, setLocation] = useLocation();
   const [selectedMocktail, setSelectedMocktail] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenMocktailsInfo = localStorage.getItem("hasSeenMocktailsInfo");
+
+    if (coachMode === "guided" && !hasSeenMocktailsInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
+  }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenMocktailsInfo", "true");
+  };
 
   const selected = mocktailsData.find((m) => m.id === selectedMocktail);
 
@@ -219,7 +236,7 @@ export default function MocktailsLowCalMixersPage() {
               </div>
 
               <button
-                onClick={() => setShowInfoModal(false)}
+                onClick={handleInfoModalClose}
                 className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got it!

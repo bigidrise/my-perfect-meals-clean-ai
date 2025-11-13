@@ -51,7 +51,22 @@ export default function BourbonSpiritsPage() {
     const handleScroll = () => setShowBackToTop(window.scrollY > 400);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+
+    // Auto-open instructions on first visit in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenBourbonInfo = localStorage.getItem("hasSeenBourbonInfo");
+
+    if (coachMode === "guided" && !hasSeenBourbonInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenBourbonInfo", "true");
+  };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 

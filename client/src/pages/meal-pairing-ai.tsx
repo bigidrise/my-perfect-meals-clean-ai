@@ -54,7 +54,22 @@ export default function MealPairingAIPage() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+
+    // Auto-open instructions on first visit in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenMealPairingInfo = localStorage.getItem("hasSeenMealPairingInfo");
+
+    if (coachMode === "guided" && !hasSeenMealPairingInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenMealPairingInfo", "true");
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

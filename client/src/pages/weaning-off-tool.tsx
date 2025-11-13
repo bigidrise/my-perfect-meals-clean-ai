@@ -58,7 +58,22 @@ const WeaningOffTool = () => {
     if (savedCheckIns) {
       setCheckIns(JSON.parse(savedCheckIns));
     }
+
+    // Auto-open instructions on first visit in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenWeaningInfo = localStorage.getItem("hasSeenWeaningInfo");
+
+    if (coachMode === "guided" && !hasSeenWeaningInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenWeaningInfo", "true");
+  };
 
   const generatePlan = () => {
     const weeklyAverage = drinksPerDay * daysPerWeek;

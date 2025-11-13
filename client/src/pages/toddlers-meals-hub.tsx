@@ -84,6 +84,23 @@ export default function ToddlersMealsHub() {
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenToddlersMealsInfo = localStorage.getItem("hasSeenToddlersMealsInfo");
+
+    if (coachMode === "guided" && !hasSeenToddlersMealsInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
+  }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenToddlersMealsInfo", "true");
+  };
+
   const meals = useMemo(() => {
     const q = filterText.trim().toLowerCase();
 
@@ -363,7 +380,7 @@ export default function ToddlersMealsHub() {
                 </p>
               </div>
               <button
-                onClick={() => setShowInfoModal(false)}
+                onClick={handleInfoModalClose}
                 className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
               >
                 Got It!

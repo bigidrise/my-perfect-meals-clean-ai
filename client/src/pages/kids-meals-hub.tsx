@@ -1,5 +1,5 @@
 // client/src/pages/kids-meals-hub.tsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -77,6 +77,23 @@ export default function KidsMealsHub() {
   const [filterText, setFilterText] = useState("");
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenKidsMealsInfo = localStorage.getItem("hasSeenKidsMealsInfo");
+
+    if (coachMode === "guided" && !hasSeenKidsMealsInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
+  }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenKidsMealsInfo", "true");
+  };
 
   const meals = useMemo(() => {
     const q = filterText.trim().toLowerCase();
@@ -196,7 +213,7 @@ export default function KidsMealsHub() {
             >
               <div className="aspect-square overflow-hidden rounded-t-lg">
                 <img
-                  src={meal.image || `/images/kids-meals/${meal.id}.jpg`}
+                  src={meal.image ?? `/images/kids-meals/${meal.id}.jpg`}
                   alt={meal.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -237,7 +254,7 @@ export default function KidsMealsHub() {
                 </div>
 
                 <img
-                  src={selected.image || `/images/kids-meals/${selected.id}.jpg`}
+                  src={selected.image ?? `/images/kids-meals/${selected.id}.jpg`}
                   alt={selected.name}
                   className="w-full h-64 object-cover rounded-lg mb-4 border border-orange-500/30"
                   onError={(e) => {
@@ -327,7 +344,7 @@ export default function KidsMealsHub() {
                 </p>
               </div>
               <button
-                onClick={() => setShowInfoModal(false)}
+                onClick={handleInfoModalClose}
                 className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
               >
                 Got It!

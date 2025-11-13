@@ -70,6 +70,23 @@ export default function AlcoholLogPage() {
   const [, setLocation] = useLocation();
   const [showInfoModal, setShowInfoModal] = useState(false);
 
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenAlcoholLogInfo = localStorage.getItem("hasSeenAlcoholLogInfo");
+
+    if (coachMode === "guided" && !hasSeenAlcoholLogInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
+  }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenAlcoholLogInfo", "true");
+  };
+
   // form
   const [type, setType] = useState<DrinkType>("Wine");
   const [ounces, setOunces] = useState<string>("");

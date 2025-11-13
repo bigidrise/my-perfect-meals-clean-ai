@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -298,6 +298,25 @@ export default function AlcoholLeanAndSocial() {
 
   const selected = DRINKS.find(d => d.id === selectedDrink);
 
+  // New: Function to handle closing the info modal and setting localStorage
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem('seenInfoModal-AlcoholLeanAndSocial', 'true');
+  };
+
+  // New: Effect to check and show modal if not seen
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('seenInfoModal-AlcoholLeanAndSocial');
+    if (!hasSeen) {
+      // Using a small timeout to ensure the UI is ready before showing the modal
+      const timer = setTimeout(() => {
+        setShowInfoModal(true);
+      }, 500); // 500ms delay
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
       <div className="max-w-6xl mx-auto">
@@ -442,7 +461,7 @@ export default function AlcoholLeanAndSocial() {
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
               <h3 className="text-xl font-bold text-white mb-4">How to Use Lean & Social</h3>
-              
+
               <div className="space-y-4 text-white/90 text-sm">
                 <p>Browse our curated collection of diet-friendly drinks that let you stay social without compromising your health goals.</p>
                 <div>
@@ -457,12 +476,12 @@ export default function AlcoholLeanAndSocial() {
                 <p className="text-sm text-lime-300">💡 Tip: Most of these drinks use simple swaps like soda water instead of juice or tonic to keep calories low.</p>
               </div>
 
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              <Button
+                onClick={handleInfoModalClose}
+                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
-                Got it!
-              </button>
+                Got It!
+              </Button>
             </div>
           </div>
         )}

@@ -71,7 +71,22 @@ export default function WinePairingPage() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+
+    // Auto-open instructions on first visit in coach mode
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenWinePairingInfo = localStorage.getItem("hasSeenWinePairingInfo");
+
+    if (coachMode === "guided" && !hasSeenWinePairingInfo) {
+      setTimeout(() => {
+        setShowInfoModal(true);
+      }, 300);
+    }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenWinePairingInfo", "true");
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
