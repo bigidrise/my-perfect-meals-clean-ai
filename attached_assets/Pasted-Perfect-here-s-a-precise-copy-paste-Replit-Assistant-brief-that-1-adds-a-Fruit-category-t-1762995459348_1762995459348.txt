@@ -1,0 +1,174 @@
+Perfect—here’s a precise, copy-paste **Replit Assistant brief** that (1) adds a **Fruit** category to the picker, (2) includes **GI notation per fruit**, and (3) renders the GI badge next to each fruit in the picker for **Weekly, GLP-1, and Diabetic** boards. It’s surgical and won’t mess with existing layouts.
+
+---
+
+## REPLIT ASSISTANT BRIEF — Add “Fruit” Category + GI Labels (Weekly, GLP-1, Diabetic)
+
+### Goal
+
+Add a **fifth picker category: Fruit** with ~20 items, each annotated with **GI** (“Low GI” or “Regular”).
+Show a small badge next to each fruit in the ingredient picker.
+Apply to **Weekly Meal Board**, **GLP-1 Meal Board**, **Diabetic Meal Board**. (Athlete/Hard Body can be added later.)
+
+### Files to Add/Modify
+
+1. **ADD** `client/src/data/fruitIngredients.ts`
+2. **UPDATE** `client/src/components/pickers/MealPickerDrawer.tsx` (or whichever picker component renders the 4 buttons)
+3. **UPDATE** ingredient source wiring in:
+
+   * `client/src/components/modals/AIMealCreatorModal.tsx` (and any modal variants those three boards use)
+   * `client/src/services/mealEngineService.ts` (prompt builder: acknowledge fruit)
+
+> Do **not** change layouts, boards, or snack logic. Only add Fruit as a fifth column/category to the **meal** picker.
+
+---
+
+## 1) New Data File (with GI notation)
+
+Create `client/src/data/fruitIngredients.ts`:
+
+```ts
+// client/src/data/fruitIngredients.ts
+export type FruitItem = { name: string; gi: "Low GI" | "Regular" };
+
+export const fruitIngredients: FruitItem[] = [
+  { name: "Apple", gi: "Low GI" },
+  { name: "Orange", gi: "Low GI" },
+  { name: "Pear", gi: "Low GI" },
+  { name: "Strawberries", gi: "Low GI" },
+  { name: "Blueberries", gi: "Low GI" },
+  { name: "Raspberries", gi: "Low GI" },
+  { name: "Blackberries", gi: "Low GI" },
+  { name: "Kiwi", gi: "Low GI" },
+  { name: "Grapefruit", gi: "Low GI" },
+  { name: "Peach", gi: "Low GI" },
+  { name: "Plum", gi: "Low GI" },
+
+  { name: "Banana", gi: "Regular" },
+  { name: "Grapes", gi: "Regular" },
+  { name: "Pineapple", gi: "Regular" },
+  { name: "Mango", gi: "Regular" },
+  { name: "Papaya", gi: "Regular" },
+  { name: "Watermelon", gi: "Regular" },
+  { name: "Cantaloupe", gi: "Regular" },
+  { name: "Figs", gi: "Regular" },
+  { name: "Dates", gi: "Regular" },
+  { name: "Cherries", gi: "Low GI" },  // include as #21 to exceed 20 items
+  { name: "Tangerine", gi: "Low GI" }  // #22
+];
+```
+
+> Note: “Regular” = medium/high GI. The **Diabetic** and **GLP-1** guardrails already bias low-GI when constraints are active; the badge is for **user clarity** in the picker.
+
+---
+
+## 2) Add the “Fruit” Button (no emoji) & Render GI badge
+
+In **MealPickerDrawer** (the component that shows the 4 category buttons and renders lists):
+
+* Add a **5th** button labeled **“Fruit”** (no emoji) matching current style.
+* If the 5-wide row gets tight on mobile, keep desktop as `grid-cols-5` and make **mobile horizontally scrollable** with `overflow-x-auto` and a flex row.
+
+Example (conceptual diff):
+
+```diff
+// Buttons row (keep existing classes/styles)
+- [Protein] [Starchy Carbs] [Fibrous Carbs] [Fats]
++ [Protein] [Starchy Carbs] [Fibrous Carbs] [Fats] [Fruit]
+
+/* Mobile tweak (if needed):
+<div className="flex gap-2 overflow-x-auto md:grid md:grid-cols-5 ..."> ... </div>
+*/
+```
+
+* When **Fruit** is active, load from `fruitIngredients`.
+
+Render list items with a small GI badge:
+
+```tsx
+// Pseudo item renderer inside the fruit category list
+<li className="flex items-center justify-between rounded-xl bg-white/5 border border-white/15 px-3 py-2">
+  <span className="text-white">{item.name}</span>
+  <span
+    className={`text-xs px-2 py-0.5 rounded-md border ${
+      item.gi === "Low GI"
+        ? "text-emerald-200 border-emerald-300/30 bg-emerald-500/10"
+        : "text-amber-200 border-amber-300/30 bg-amber-500/10"
+    }`}
+    title={item.gi === "Low GI" ? "Lower glycemic impact" : "Regular GI"}
+  >
+    {item.gi}
+  </span>
+</li>
+```
+
+> Apply the same badge rendering for **Weekly**, **GLP-1**, and **Diabetic** pickers so users always see the GI cue. (The **Diabetic** board benefits most; it’s fine to show it consistently across the three.)
+
+---
+
+## 3) Wire “Fruit” into the ingredient source
+
+In `AIMealCreatorModal.tsx` (and any modal variants invoked by the three boards), merge **fruit** into the meal ingredient source used when `mealType !== 'snack'`.
+
+If your modal currently pulls a single `mealIngredients` object with keys like `proteins`, `starchyCarbs`, `fibrousCarbs`, `fats`, you have two options:
+
+**Option A (simple merge at use-site):**
+
+```ts
+import { fruitIngredients } from "@/data/fruitIngredients";
+
+// when mealType !== "snack", build the rendered categories:
+const mealCategoryMap = {
+  Proteins: mealIngredients.proteins,
+  "Starchy Carbs": mealIngredients.starchyCarbs,
+  "Fibrous Carbs": mealIngredients.fibrousCarbs,
+  Fats: mealIngredients.fats,
+  Fruit: fruitIngredients, // ✅ NEW
+};
+```
+
+**Option B (augment the exported mealIngredients object):**
+If `mealIngredients` is a central object you control, you may add `fruit` to it and keep rendering logic unchanged—only if it won’t break other code. If uncertain, use **Option A** above.
+
+Ensure the **snack** path stays untouched:
+
+```ts
+const ingredientSource =
+  formData.mealType === "snack"
+    ? snackIngredients          // snack path (already implemented)
+    : mealCategoryMap;          // meal path with Fruit added
+```
+
+---
+
+## 4) Prompt Builder: Acknowledge Fruit (no schema change)
+
+In `client/src/services/mealEngineService.ts`, when building the AI prompt for **meals** (not snacks), append fruit if selected:
+
+```ts
+if (selected.fruit?.length) {
+  prompt += ` Include fresh fruit selections where appropriate: ${selected.fruit.join(", ")}.`;
+}
+```
+
+> Do **not** change guardrail logic; existing **Diabetic**/**GLP-1** constraints already enforce GI/carb limits.
+
+---
+
+## Validation Checklist
+
+* The three boards (Weekly, GLP-1, Diabetic) now show a **Fruit** button with the other four categories.
+* Fruit list displays ~20 fruits with **Low GI / Regular** badges.
+* Desktop fits 5 buttons cleanly; mobile scrolls horizontally if tight.
+* AI “Create with AI” for **meals** includes selected fruits in the prompt; snacks remain unchanged.
+* No layout regressions or console errors.
+
+---
+
+## Commit Message
+
+```
+feat(pickers): add Fruit category with GI badges to Weekly/GLP-1/Diabetic meal pickers; integrate into AI prompt
+```
+
+If any of these three boards use a **modal variant** instead of the shared `AIMealCreatorModal.tsx`, mirror the same **fruit category + GI badge** rendering and the **prompt append** in that variant.
