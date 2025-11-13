@@ -2,99 +2,84 @@
 // SERVICE WORKER VERSION
 // Update this constant when deploying new builds to force mobile refresh
 // ============================================
-const SW_VERSION = 'v2025-10-24-6pm-fresh';
+const CACHE_VERSION = 'v1-' + Date.now();
+const CACHE_NAME = 'mpm-cache-' + CACHE_VERSION;
 
-console.log(`🔧 Service Worker ${SW_VERSION} initializing`);
+// Files to cache
+const STATIC_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json'
+];
 
-// ============================================
-// PUSH NOTIFICATIONS
-// ============================================
-
-self.addEventListener("push", (event) => {
-  let data = {};
-  try {
-    data = event.data ? event.data.json() : {};
-  } catch (error) {
-    console.error("Error parsing push data:", error);
-  }
-
-  const { title = "🍽️ Meal Reminder", body = "Time for your meal!", data: extra = {} } = data;
-
+// Install event - cache static assets
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing service worker, version:', CACHE_VERSION);
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body,
-      icon: "/icon-192x192.png",
-      badge: "/badge-72x72.png",
-      data: extra, // must include { jobId, slot, userId }
-      actions: [
-        { action: "ate", title: "Ate it" },
-        { action: "snooze", title: "Snooze 10m" },
-        { action: "skip", title: "Skip" },
-      ],
-      requireInteraction: true, // stays until user acts
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[SW] Caching static assets');
+      return cache.addAll(STATIC_CACHE);
+    }).then(() => {
+      // Force activation immediately
+      return self.skipWaiting();
     })
   );
 });
 
-self.addEventListener("notificationclick", (event) => {
-  const { action } = event;
-  const { jobId, slot, userId } = event.notification.data || {};
-  event.notification.close();
-
-  // post ack to server for interactive actions
-  if (action === "ate" || action === "snooze" || action === "skip") {
-    event.waitUntil(fetch("/api/notify/ack", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, jobId, action }),
-    }));
-    return;
-  }
-
-  // default click → open app
-  event.waitUntil(clients.openWindow("/weekly"));
-});
-
-// ============================================
-// LIFECYCLE: INSTALL & ACTIVATE
-// ============================================
-
-// Install event - force immediate activation
-self.addEventListener("install", (event) => {
-  console.log(`✅ Service Worker ${SW_VERSION} installing`);
-  self.skipWaiting(); // Activate immediately, don't wait for old SW to close
-});
-
-// Activate event - claim all clients immediately
-self.addEventListener("activate", (event) => {
-  console.log(`✅ Service Worker ${SW_VERSION} activated`);
-  
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating service worker, version:', CACHE_VERSION);
   event.waitUntil(
-    Promise.all([
-      // Delete any old caches (future-proofing for when we add caching)
-      caches.keys().then(cacheNames => {
-        return Promise.all(
-          cacheNames.map(cacheName => {
-            console.log(`🗑️ Deleting old cache: ${cacheName}`);
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('[SW] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
-          })
-        );
-      }),
+          }
+        })
+      );
+    }).then(() => {
       // Take control of all pages immediately
-      clients.claim()
-    ]).then(() => {
-      console.log(`✅ Service Worker ${SW_VERSION} now controlling all pages`);
+      return self.clients.claim();
     })
   );
 });
 
-// ============================================
-// UPDATE MESSAGING
-// ============================================
+// Fetch event - network first, then cache
+self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
 
+  // Skip chrome-extension and other non-http(s) requests
+  if (!event.request.url.startsWith('http')) return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        // Clone the response before caching
+        const responseToCache = response.clone();
+
+        // Only cache successful responses
+        if (response.status === 200) {
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+
+        return response;
+      })
+      .catch(() => {
+        // If network fails, try cache
+        return caches.match(event.request);
+      })
+  );
+});
+
+// Listen for messages from the client
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log(`📬 Received SKIP_WAITING message, activating ${SW_VERSION}`);
+    console.log('[SW] Received SKIP_WAITING message');
     self.skipWaiting();
   }
 });

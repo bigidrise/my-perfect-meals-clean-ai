@@ -15,14 +15,14 @@ export function useVersionCheck() {
     if (now - lastCheckRef.current < 30000) {
       return;
     }
-    
+
     lastCheckRef.current = now;
     setIsChecking(true);
-    
+
     try {
       const result = await checkForUpdates();
       setVersionState(result);
-      
+
       if (result.updateAvailable || result.forceUpdate) {
         console.log('🔄 Update available:', result.latestVersion);
       }
@@ -86,18 +86,18 @@ export function useVersionCheck() {
             'Pragma': 'no-cache'
           }
         });
-        
+
         if (!res.ok) return;
-        
+
         const { version } = await res.json();
         const current = localStorage.getItem("appVersion");
-        
+
         // Store version on first load
         if (!current) {
           localStorage.setItem("appVersion", version);
           return;
         }
-        
+
         // If version changed, force immediate reload (Facebook-style silent update)
         if (version !== current) {
           console.log(`🔄 Version changed: ${current} → ${version}, reloading...`);
