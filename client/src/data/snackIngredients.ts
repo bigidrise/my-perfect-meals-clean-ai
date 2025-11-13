@@ -171,3 +171,13 @@ export const SNACK_CATEGORIES: SnackCategory[] = [
 export const ALL_SNACK_INGREDIENTS = SNACK_CATEGORIES.flatMap(
   (cat) => cat.items
 );
+
+// Object format for MealPickerDrawer compatibility
+export const snackIngredients = {
+  "Sweet Treats": SNACK_CATEGORIES[0].items,
+  "Savory & Crunchy": SNACK_CATEGORIES[1].items,
+  "Light & Gentle": SNACK_CATEGORIES[2].items,
+  "Protein & Energy": SNACK_CATEGORIES[3].items,
+  "Drinkables": SNACK_CATEGORIES[4].items,
+  "Dessert Bites": SNACK_CATEGORIES[5].items,
+};
