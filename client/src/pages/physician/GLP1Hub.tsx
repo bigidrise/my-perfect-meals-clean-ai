@@ -7,11 +7,13 @@ import { useGLP1Profile, useSaveGLP1Profile } from "@/hooks/useGLP1";
 import { useToast } from "@/hooks/use-toast";
 import { glp1Presets } from "@/data/glp1Presets";
 import ShotTrackerPanel from "@/pages/glp1/ShotTrackerPanel";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function GLP1Hub() {
   const [, setLocation] = useLocation();
   const [noteOpen, setNoteOpen] = useState(false);
   const [shotTrackerOpen, setShotTrackerOpen] = useState(false);
+  const { user } = useAuth();
 
   // Fetch and mutate state for GLP-1 profile
   const { data: profile, isLoading: profileLoading } = useGLP1Profile();
@@ -36,16 +38,16 @@ export default function GLP1Hub() {
 
   // Effect to populate form fields when profile data is loaded
   useEffect(() => {
-    if (profile) {
-      setMaxMealVolume(profile.maxMealVolume);
-      setProteinMin(profile.proteinMin);
-      setFatMax(profile.fatMax);
-      setFiberMin(profile.fiberMin);
-      setHydrationGoal(profile.hydrationGoal);
-      setMealsPerDay(profile.mealsPerDay);
-      setSlowDigestFoodsOnly(profile.slowDigestFoodsOnly);
-      setLimitCarbonation(profile.limitCarbonation);
-      setLimitAlcohol(profile.limitAlcohol);
+    if (profile?.guardrails) {
+      setMaxMealVolume(profile.guardrails.maxMealVolumeMl);
+      setProteinMin(profile.guardrails.proteinMinG);
+      setFatMax(profile.guardrails.fatMaxG);
+      setFiberMin(profile.guardrails.fiberMinG);
+      setHydrationGoal(profile.guardrails.hydrationMinMl);
+      setMealsPerDay(profile.guardrails.mealsPerDay);
+      setSlowDigestFoodsOnly(profile.guardrails.slowDigestOnly ?? false);
+      setLimitCarbonation(profile.guardrails.limitCarbonation ?? false);
+      setLimitAlcohol(profile.guardrails.limitAlcohol ?? false);
     }
   }, [profile]);
 
@@ -70,20 +72,19 @@ export default function GLP1Hub() {
 
   const handleSave = async () => {
     saveMutation.mutate({
-      maxMealVolume,
-      proteinMin,
-      fatMax,
-      fiberMin,
-      hydrationGoal,
+      maxMealVolumeMl: maxMealVolume,
+      proteinMinG: proteinMin,
+      fatMaxG: fatMax,
+      fiberMinG: fiberMin,
+      hydrationMinMl: hydrationGoal,
       mealsPerDay,
-      slowDigestFoodsOnly,
+      slowDigestOnly: slowDigestFoodsOnly,
       limitCarbonation,
       limitAlcohol,
     });
     toast({
       title: "GLP-1 Profile Saved",
       description: "Your guardrail settings have been updated.",
-      variant: "success",
     });
   };
 
@@ -155,7 +156,10 @@ export default function GLP1Hub() {
           </div>
           {shotTrackerOpen && (
             <div className="mt-4">
-              <ShotTrackerPanel onClose={() => setShotTrackerOpen(false)} />
+              <ShotTrackerPanel 
+                userId={user?.id?.toString() || "1"} 
+                onClose={() => setShotTrackerOpen(false)} 
+              />
             </div>
           )}
           {!shotTrackerOpen && (

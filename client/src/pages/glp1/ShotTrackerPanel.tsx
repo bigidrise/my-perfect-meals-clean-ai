@@ -9,8 +9,15 @@ import {
   type InjectionLocation,
 } from "@/hooks/useGlp1Shots";
 
-export default function ShotTrackerPanel({ onClose, userId = "1" }: { onClose: () => void; userId?: string }) {
-  const shotsQ = useGlp1Shots(userId, { enabled: true }); // mounted by user → fetch
+const LABEL: Record<InjectionLocation, string> = {
+  abdomen: "Abdomen",
+  thigh: "Thigh",
+  upper_arm: "Upper Arm",
+  buttock: "Buttock",
+};
+
+export default function ShotTrackerPanel({ onClose, userId }: { onClose: () => void; userId: string }) {
+  const shotsQ = useGlp1Shots(userId, { enabled: !!userId }); // mounted by user → fetch
   const createM = useCreateShot(userId);
   const updateM = useUpdateShot(userId);
   const deleteM = useDeleteShot(userId);

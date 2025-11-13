@@ -28,7 +28,7 @@ export default function DiabeticHub() {
   // Hooks
   const saveMutation = useSaveDiabetesProfile();
   const logMutation = useLogGlucose();
-  const { data: glucoseLogs } = useGlucoseLogs(userId, 1);
+  const { data: glucoseLogs } = useGlucoseLogs(userId, 50); // Fetch last 50 readings for 7-day analytics
   const { data: profile } = useDiabetesProfile(userId);
 
   // Guardrail state (hydrated from server)
