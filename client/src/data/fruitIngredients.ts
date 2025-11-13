@@ -1,6 +1,4 @@
 // client/src/data/fruitIngredients.ts
-console.log("🍎 fruitIngredients.ts loaded");
-
 export type FruitItem = { name: string; gi: "Low GI" | "Regular" };
 
 export const fruitIngredients: FruitItem[] = [

@@ -9,8 +9,6 @@ import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 import { fruitIngredients } from "@/data/fruitIngredients";
 
-console.log("🍎 fruitIngredients loaded:", fruitIngredients);
-
 function matchesProfile(meal: Meal, profile: any){
   const allergies: string[] = (profile?.allergies || []).map((s:string)=>s.toLowerCase());
   const avoidBadges: string[] = (profile?.avoidBadges || []).map((s:string)=>s.toLowerCase());

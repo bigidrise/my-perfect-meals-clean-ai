@@ -20,26 +20,21 @@ export default function AppRouter({ children }: AppRouterProps) {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
     const hasChosenCoachMode = localStorage.getItem("coachMode") !== null;
 
-    console.log("🔄 AppRouter flow check:", { location, isAuthenticated, hasChosenCoachMode });
-
     // Handle root path "/"
     if (location === "/") {
       if (!isAuthenticated) {
         // Not signed in → redirect to Welcome page (sign in/create account)
-        console.log("🔄 Not authenticated - redirecting to /welcome");
         setLocation("/welcome");
         return;
       }
 
       if (!hasChosenCoachMode) {
         // Authenticated but hasn't chosen coach mode → show WelcomeGate
-        console.log("✨ Showing WelcomeGate for coach mode selection");
         setShowWelcomeGate(true);
         return;
       }
 
       // Authenticated and has chosen coach mode → go to dashboard
-      console.log("🏠 Redirecting to dashboard");
       setLocation("/dashboard");
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
@@ -50,7 +45,6 @@ export default function AppRouter({ children }: AppRouterProps) {
     // Protect all routes except public pages
     const publicRoutes = ["/welcome", "/auth", "/forgot-password", "/reset-password"];
     if (!isAuthenticated && !publicRoutes.includes(location)) {
-      console.log("🔒 Protected route - redirecting to /welcome");
       setLocation("/welcome");
     }
   }, [location, setLocation]);
@@ -60,7 +54,6 @@ export default function AppRouter({ children }: AppRouterProps) {
     return (
       <WelcomeGate
         onComplete={() => {
-          console.log("✅ WelcomeGate completed");
           setShowWelcomeGate(false);
           setLocation("/dashboard");
         }}
