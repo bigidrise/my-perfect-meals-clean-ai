@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -68,6 +67,23 @@ function formatWeekLabel(weekStartISO: string): string {
 
 export default function ClinicalLifestyleDietMenuBuilder() {
   const [, setLocation] = useLocation();
+
+  // Diet selection with localStorage persistence
+  const [selectedDiet, setSelectedDiet] = useState<string>(() => {
+    try {
+      return localStorage.getItem('clinical-diet-selection') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  // Persist diet selection
+  useEffect(() => {
+    if (selectedDiet) {
+      localStorage.setItem('clinical-diet-selection', selectedDiet);
+    }
+  }, [selectedDiet]);
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -163,7 +179,10 @@ export default function ClinicalLifestyleDietMenuBuilder() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="relative z-10">
               <label className="block text-sm text-white mb-2 font-medium">Choose Clinical Diet</label>
-              <Select value={clinicalDietMode} onValueChange={(val) => setClinicalDietMode(val as ClinicalDietMode)}>
+              <Select value={clinicalDietMode} onValueChange={(val) => {
+                setClinicalDietMode(val as ClinicalDietMode);
+                setSelectedDiet(val); // Update selectedDiet state
+              }}>
                 <SelectTrigger className="w-full bg-white/20 border-white/40 text-white [&>span]:text-white">
                   <SelectValue />
                 </SelectTrigger>
@@ -187,6 +206,8 @@ export default function ClinicalLifestyleDietMenuBuilder() {
           </div>
         </div>
       </div>
+
+      {/* Removed MealIngredientPicker and related state as it's not used in this view */}
     </>
   );
 }

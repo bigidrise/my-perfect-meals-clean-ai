@@ -14,18 +14,32 @@ interface MealIngredientPickerProps {
   onOpenChange: (open: boolean) => void;
   onMealGenerated: (meal: any) => void;
   mealSlot: string;
+  dietConfig?: any;
+  dietType?: string;
 }
 
 export default function MealIngredientPicker({ 
   open, 
   onOpenChange, 
   onMealGenerated,
-  mealSlot 
+  mealSlot,
+  dietConfig,
+  dietType
 }: MealIngredientPickerProps) {
-  // Ingredient source based on meal type
-  const ingredientSource = mealSlot === "snacks" 
-    ? { snacks: ALL_SNACK_INGREDIENTS }
-    : mealIngredients;
+  // Ingredient source based on meal type and diet config
+  const ingredientSource = (() => {
+    if (dietConfig) {
+      // Use diet-specific ingredients
+      if (mealSlot === "snacks") {
+        return { snacks: Object.values(dietConfig.snacks).flat() };
+      }
+      return dietConfig;
+    }
+    // Fallback to generic ingredients
+    return mealSlot === "snacks" 
+      ? { snacks: ALL_SNACK_INGREDIENTS }
+      : mealIngredients;
+  })();
   
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats' | 'fruit'>('proteins');
@@ -192,7 +206,8 @@ export default function MealIngredientPicker({
         fridgeItems: allIngredients,
         userId: 1,
         mealSlot: mealSlot,
-        ...(mealSlot !== "snacks" && macroTargets && { macroTargets })
+        ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
+        ...(dietType && { dietType })
       };
 
       const data = await apiRequest('/api/meals/fridge-rescue', {

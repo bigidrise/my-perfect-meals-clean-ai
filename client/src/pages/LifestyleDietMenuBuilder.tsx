@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -60,7 +59,7 @@ function addDaysISO(iso: string, days: number): string {
 
 function formatWeekLabel(weekStartISO: string): string {
   const start = new Date(weekStartISO + 'T00:00:00Z');
-  const end = new Date(start); 
+  const end = new Date(start);
   end.setUTCDate(start.getUTCDate() + 6);
   const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   return `${fmt(start)}–${fmt(end)}`;
@@ -70,6 +69,22 @@ export default function LifestyleDietMenuBuilder() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Diet selection with localStorage persistence
+  const [selectedDiet, setSelectedDiet] = useState<string>(() => {
+    try {
+      return localStorage.getItem('lifestyle-diet-selection') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  // Persist diet selection
+  useEffect(() => {
+    if (selectedDiet) {
+      localStorage.setItem('lifestyle-diet-selection', selectedDiet);
+    }
+  }, [selectedDiet]);
 
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
   const { board: hookBoard, loading: hookLoading, error, save: saveToHook, source } = useWeeklyBoard("1", weekStartISO);
@@ -129,7 +144,7 @@ export default function LifestyleDietMenuBuilder() {
     <>
       <div
         className="fixed top-4 left-4 pointer-events-auto"
-        style={{ 
+        style={{
           zIndex: 2147483647,
           isolation: 'isolate',
           transform: 'translateZ(0)',
@@ -163,7 +178,10 @@ export default function LifestyleDietMenuBuilder() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="relative z-10">
               <label className="block text-sm text-white mb-2 font-medium">Choose Lifestyle Diet</label>
-              <Select value={dietMode} onValueChange={(val) => setDietMode(val as LifestyleDietMode)}>
+              <Select value={dietMode} onValueChange={(val) => {
+                setDietMode(val as LifestyleDietMode);
+                setSelectedDiet(val); // Update selectedDiet state
+              }}>
                 <SelectTrigger className="w-full bg-white/20 border-white/40 text-white [&>span]:text-white">
                   <SelectValue />
                 </SelectTrigger>
@@ -185,6 +203,20 @@ export default function LifestyleDietMenuBuilder() {
             <p>Lifestyle Diet Meal Board - Coming Soon</p>
             <p className="text-sm mt-2">Meal cards and planning features will appear here</p>
           </div>
+
+          {/* MealIngredientPicker integration would go here, using selectedDiet */}
+          {/* Example usage (assuming you have state for showPicker, handleMealGenerated, activeMealSlot): */}
+          {/*
+          <MealIngredientPicker
+            open={showPicker}
+            onOpenChange={setShowPicker}
+            onMealGenerated={handleMealGenerated}
+            mealSlot={activeMealSlot}
+            dietConfig={selectedDiet ? lifestyleDietPickerConfig[selectedDiet as keyof typeof lifestyleDietPickerConfig] : undefined}
+            dietType={selectedDiet}
+          />
+          */}
+
         </div>
       </div>
     </>
