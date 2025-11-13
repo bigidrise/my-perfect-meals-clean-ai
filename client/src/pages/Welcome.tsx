@@ -263,8 +263,23 @@ export default function Welcome() {
           <Button
             data-testid="button-onboarding-direct"
             onClick={() => {
-              console.log("🔧 Dev: Navigating to onboarding");
-              setLocation("/onboarding");
+              console.log("🔧 Dev: Setting up test user and navigating to onboarding");
+              
+              // Set up minimal test user to bypass auth guards
+              const testUser = {
+                id: "onboarding-tester-" + Date.now(),
+                email: "onboarding@test.com",
+                name: "Onboarding Tester"
+              };
+              localStorage.setItem("mpm_current_user", JSON.stringify(testUser));
+              localStorage.setItem("userId", testUser.id);
+              localStorage.setItem("isAuthenticated", "true");
+              
+              // Small delay to ensure localStorage is written
+              setTimeout(() => {
+                console.log("🔧 Dev: Auth set, now navigating to /onboarding");
+                setLocation("/onboarding");
+              }, 50);
             }}
             className="w-full h-12 text-base font-semibold rounded-xl
                      bg-blue-600/80 hover:bg-blue-500
