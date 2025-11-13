@@ -54,14 +54,14 @@ export default function Planner() {
       title: "Lifestyle Diet Hub",
       description: "Meal planning for vegan, vegetarian, and pescatarian lifestyles",
       icon: Activity,
-      route: "/lifestyle-diet-hub",
+      route: "/lifestyle-diet-menu",
       testId: "card-lifestyle-diet-hub",
     },
     {
       title: "Clinical Lifestyle Diet Hub",
       description: "Specialized meal plans for fibromyalgia, autoimmune, and chronic conditions",
       icon: Activity,
-      route: "/clinical-lifestyle-diet-hub",
+      route: "/clinical-lifestyle-diet-menu",
       testId: "card-clinical-lifestyle-diet-hub",
     },
   ];
