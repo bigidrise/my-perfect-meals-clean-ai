@@ -736,16 +736,16 @@ export default function RestaurantGuidePage() {
         </Card>
       </div>
 
-      {/* Instructions Modal - Auto-opens on first visit */}
+      {/* Instructions Modal - Auto-opens on first visit (shows Find Meals Near Me instructions) */}
       {showInstructions && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h3>
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h3>
             <div className="space-y-3 text-white/90 text-sm">
-              <p><strong>1. Enter location:</strong> Add ZIP code or city name</p>
-              <p><strong>2. Describe craving:</strong> Tell us what you want to eat</p>
-              <p><strong>3. Find restaurants:</strong> Get nearby options with healthy menu picks</p>
-              <p><strong>4. Order smart:</strong> See nutrition info and make informed choices</p>
+              <p><strong>1. Enter what you're craving:</strong> Type the food you want (e.g., "chicken," "salad," "burger")</p>
+              <p><strong>2. Enter your ZIP code:</strong> Add your location to find nearby restaurants</p>
+              <p><strong>3. Find restaurants:</strong> Get real restaurant names and locations near you</p>
+              <p><strong>4. See healthy options:</strong> View nutrition info and smart ordering tips for each restaurant</p>
             </div>
             <button
               onClick={() => {
@@ -760,11 +760,11 @@ export default function RestaurantGuidePage() {
         </div>
       )}
 
-      {/* Info Modal */}
-      {showInfoModal && (
+      {/* Find Meals Near Me Info Modal */}
+      {showFindMealsInfo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Restaurant Guide</h3>
+            <h3 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h3>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <div>
                 <strong className="text-lime-400">What it does:</strong>
@@ -796,7 +796,7 @@ export default function RestaurantGuidePage() {
               </p>
             </div>
             <button
-              onClick={() => setShowInfoModal(false)}
+              onClick={() => setShowFindMealsInfo(false)}
               className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
             >
               Got it!
