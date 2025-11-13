@@ -98,7 +98,7 @@ export function MealPickerDrawer({
   };
 
   type IngredientSource = Record<string, string[] | any[]>;
-  
+
   const ingredientSource: IngredientSource =
     list === "snacks"
       ? snackIngredients
@@ -107,8 +107,12 @@ export function MealPickerDrawer({
           "Starchy Carbs": mealIngredients.starchyCarbs,
           "Fibrous Carbs": mealIngredients.fibrousCarbs,
           Fats: mealIngredients.fats,
-          Fruit: mealIngredients.fruit,
+          Fruit: fruitIngredients,
         };
+
+  console.log("🔍 ingredientSource keys:", Object.keys(ingredientSource));
+  console.log("🔍 activeCategory:", activeCategory);
+  console.log("🔍 Fruit ingredients count:", ingredientSource["Fruit"]?.length);
 
   const currentIngredients = activeCategory
     ? ingredientSource[activeCategory] ?? []
