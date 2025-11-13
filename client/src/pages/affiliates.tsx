@@ -60,7 +60,7 @@ export default function AffiliatesPage() {
       <div className="max-w-xl mx-auto pt-8 md:pt-16">
         <Card className="bg-black/60 border-white/10 backdrop-blur-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <ShieldCheck className="w-5 h-5" />
               Founding Affiliate (Invite-Only)
             </CardTitle>

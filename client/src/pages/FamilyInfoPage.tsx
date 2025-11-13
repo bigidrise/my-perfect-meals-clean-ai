@@ -85,8 +85,8 @@ export default function FamilyInfoPage() {
         {/* Header strip */}
         <div className={`${glassCard} mb-8 px-6 py-6 text-white`}>
           <span className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-r from-white/10 via-transparent to-transparent" />
-          <h1 className="text-3xl font-bold">Family Plan — Preview</h1>
-          <p className="text-lg mt-2 text-white">
+          <h1 className="text-2xl font-bold">Family Plan — Preview</h1>
+          <p className="text-sm mt-2 text-white">
             Configure how premiums apply across your 4 family accounts.
           </p>
         </div>

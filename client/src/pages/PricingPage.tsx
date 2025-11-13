@@ -146,7 +146,7 @@ export default function PricingPage() {
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1">
-                <h1 className="text-2xl md:text-2xl font-bold mb-2">Simple plans. Powerful results.</h1>
+                <h1 className="text-xl md:text-2xl font-bold mb-2">Simple plans. Powerful results.</h1>
                 <p className="text-sm md:text-sm text-white/90">Pick the plan that fits today. Prem anytime.</p>
               </div>
               <div className="flex-shrink-0">
@@ -200,9 +200,9 @@ export default function PricingPage() {
 
                   <CardHeader className="pb-4">
                     <div className="space-y-2">
-                      <h3 className="text-2xl font-bold">{plan.label}</h3>
+                      <h3 className="text-xl font-bold">{plan.label}</h3>
                       <p className="text-sm text-white/80">{plan.blurb}</p>
-                      <p className="text-xl font-semibold">${plan.price.toFixed(2)} / month</p>
+                      <p className="text-lg font-semibold">${plan.price.toFixed(2)} / month</p>
                     </div>
                   </CardHeader>
 
@@ -244,7 +244,7 @@ export default function PricingPage() {
 
         {/* Family Plans Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-center">Family Plans</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">Family Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {familyPlans.map((plan) => (
               <Card
@@ -260,9 +260,9 @@ export default function PricingPage() {
 
                 <CardHeader className="pb-4">
                   <div className="space-y-2">
-                    <h3 className="text-2xl font-bold">{plan.label}</h3>
+                    <h3 className="text-xl font-bold">{plan.label}</h3>
                     <p className="text-sm text-white/80">{plan.blurb}</p>
-                    <p className="text-xl font-semibold">${plan.price.toFixed(2)} / month</p>
+                    <p className="text-lg font-semibold">${plan.price.toFixed(2)} / month</p>
                     {plan.seats && (
                       <p className="text-xs text-white/60">Includes up to {plan.seats} profiles</p>
                     )}
