@@ -228,6 +228,23 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 // Serve static files from public directory BEFORE API routes
 app.use(express.static(path.join(import.meta.dirname, "../public")));
 
+// Object Storage - Serve public meal images from Replit Object Storage
+import { ObjectStorageService } from "./objectStorage";
+app.get("/public-objects/:filePath(*)", async (req, res) => {
+  const filePath = req.params.filePath;
+  const objectStorageService = new ObjectStorageService();
+  try {
+    const file = await objectStorageService.searchPublicObject(filePath);
+    if (!file) {
+      return res.status(404).json({ error: "File not found" });
+    }
+    objectStorageService.downloadObject(file, res);
+  } catch (error) {
+    console.error("Error serving public object:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // ---------- API Routes ----------
 // Health checks and keep-alive first
 app.use("/api", healthRouter);

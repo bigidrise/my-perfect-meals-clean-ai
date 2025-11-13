@@ -1,8 +1,9 @@
 // server/services/mealImageGenerator.ts
-// DALL-E 3 meal image generation with caching per template
+// DALL-E 3 meal image generation with permanent storage via Replit Object Storage
 
 import OpenAI from 'openai';
 import crypto from 'crypto';
+import { uploadImageToPermanentStorage, checkImageExists } from './permanentImageStorage';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -48,7 +49,7 @@ function createImagePrompt(request: MealImageRequest): string {
   return `${mealName} featuring ${ingredientList}, ${baseStyle}, food photography, realistic, appetizing, no text, no logos, high quality, detailed`;
 }
 
-// Generate meal image using DALL-E 3
+// Generate meal image using DALL-E 3 and store permanently
 export async function generateMealImage(request: MealImageRequest): Promise<GeneratedImage> {
   const hash = generateImageHash(request);
   
@@ -57,6 +58,21 @@ export async function generateMealImage(request: MealImageRequest): Promise<Gene
   if (cached) {
     console.log(`🎨 Using cached image for ${request.mealName}`);
     return cached;
+  }
+  
+  // Check if already exists in permanent storage
+  const existingUrl = await checkImageExists(hash);
+  if (existingUrl) {
+    console.log(`🎨 Found existing permanent image for ${request.mealName}`);
+    const result: GeneratedImage = {
+      url: existingUrl,
+      prompt: createImagePrompt(request),
+      templateRef: request.templateRef,
+      hash,
+      createdAt: new Date().toISOString()
+    };
+    imageCache.set(hash, result);
+    return result;
   }
   
   const prompt = createImagePrompt(request);
@@ -74,22 +90,30 @@ export async function generateMealImage(request: MealImageRequest): Promise<Gene
       style: "natural"
     });
     
-    const imageUrl = response.data?.[0]?.url;
-    if (!imageUrl) {
+    const tempUrl = response.data?.[0]?.url;
+    if (!tempUrl) {
       throw new Error('No image URL returned from DALL-E');
     }
     
+    // Upload to permanent storage immediately
+    console.log(`📦 Uploading to permanent storage...`);
+    const uploadResult = await uploadImageToPermanentStorage({
+      imageUrl: tempUrl,
+      mealName: request.mealName,
+      imageHash: hash,
+    });
+    
     const result: GeneratedImage = {
-      url: imageUrl,
+      url: uploadResult.permanentUrl,
       prompt,
       templateRef: request.templateRef,
       hash,
-      createdAt: new Date().toISOString()
+      createdAt: uploadResult.uploadedAt
     };
     
-    // Cache the result
+    // Cache the result with permanent URL
     imageCache.set(hash, result);
-    console.log(`✅ Generated and cached image for ${request.mealName}`);
+    console.log(`✅ Generated and stored permanent image for ${request.mealName}`);
     
     return result;
     
