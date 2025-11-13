@@ -358,11 +358,18 @@ export default function DiabeticHub() {
                   {latestReading ? `${lastValue} mg/dL` : "No readings yet"}
                 </div>
                 {latestReading && (
-                  <div className={`text-sm ${inRange ? "text-green-200" : "text-yellow-200"}`}>
-                    {inRange ? "✅ In Target Range" : "⚠️ Outside Target"}
-                  </div>
+                  <>
+                    <div className={`text-sm mb-3 ${inRange ? "text-green-200" : "text-yellow-200"}`}>
+                      {inRange ? "✅ In Target Range" : "⚠️ Outside Target"}
+                    </div>
+                    {glucoseLogs?.data && glucoseLogs.data.length > 1 && (
+                      <div className="text-white/80 text-sm mb-2">
+                        7-Day Avg: {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
+                      </div>
+                    )}
+                  </>
                 )}
-                <div className="text-white/80 text-sm mt-4">
+                <div className="text-white/80 text-sm mt-2">
                   Target: {targetMin}-{targetMax} mg/dL
                 </div>
               </div>
@@ -384,14 +391,95 @@ export default function DiabeticHub() {
               </h2>
             </div>
 
-            <div className="h-64 bg-yellow-500/20 backdrop-blur-sm rounded-xl border border-yellow-400/30 flex items-center justify-center relative z-10 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent animate-pulse" />
-              <div className="text-center text-white/80 relative z-10">
-                <TrendingUp className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium">Trend Chart Coming Soon</p>
-                <p className="text-sm">Visual glucose tracking over 7 days</p>
+            {glucoseLogs?.data && glucoseLogs.data.length > 0 ? (
+              <div className="space-y-4 relative z-10">
+                {/* Visual Chart */}
+                <div className="h-64 bg-yellow-500/10 backdrop-blur-sm rounded-xl border border-yellow-400/30 p-4 relative overflow-hidden">
+                  <div className="absolute inset-0 flex items-end justify-around px-4 pb-4">
+                    {glucoseLogs.data.slice(0, 7).reverse().map((log: any, index: number) => {
+                      const maxHeight = 240;
+                      const minValue = 50;
+                      const maxValue = 250;
+                      const normalizedHeight = ((log.valueMgdl - minValue) / (maxValue - minValue)) * maxHeight;
+                      const height = Math.max(20, Math.min(normalizedHeight, maxHeight));
+                      const isInRange = log.valueMgdl >= targetMin && log.valueMgdl <= targetMax;
+                      
+                      return (
+                        <div key={index} className="flex flex-col items-center gap-2" style={{ width: '12%' }}>
+                          <div className="text-white text-xs font-semibold">{log.valueMgdl}</div>
+                          <div 
+                            className={`w-full rounded-t-lg transition-all ${
+                              isInRange ? 'bg-green-500' : 'bg-orange-500'
+                            }`}
+                            style={{ height: `${height}px` }}
+                          />
+                          <div className="text-white/60 text-xs text-center">
+                            {new Date(log.recordedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Statistics */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-emerald-500/20 backdrop-blur-sm rounded-xl p-4 border border-emerald-400/30">
+                    <div className="text-emerald-200 text-xs mb-1">7-Day Average</div>
+                    <div className="text-white text-2xl font-bold">
+                      {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
+                    </div>
+                  </div>
+                  
+                  <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30">
+                    <div className="text-blue-200 text-xs mb-1">Target Range</div>
+                    <div className="text-white text-lg font-bold">
+                      {targetMin}-{targetMax} mg/dL
+                    </div>
+                  </div>
+
+                  <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-4 border border-purple-400/30">
+                    <div className="text-purple-200 text-xs mb-1">In Range</div>
+                    <div className="text-white text-2xl font-bold">
+                      {Math.round((glucoseLogs.data.slice(0, 7).filter((log: any) => log.valueMgdl >= targetMin && log.valueMgdl <= targetMax).length / Math.min(7, glucoseLogs.data.length)) * 100)}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Readings Table */}
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+                  <div className="px-4 py-3 bg-white/10 border-b border-white/20">
+                    <h3 className="text-white font-semibold">Recent Readings</h3>
+                  </div>
+                  <div className="divide-y divide-white/10">
+                    {glucoseLogs.data.slice(0, 7).map((log: any, index: number) => {
+                      const isInRange = log.valueMgdl >= targetMin && log.valueMgdl <= targetMax;
+                      return (
+                        <div key={index} className="px-4 py-3 flex justify-between items-center hover:bg-white/5">
+                          <div>
+                            <span className={`text-lg font-bold ${isInRange ? 'text-green-400' : 'text-orange-400'}`}>
+                              {log.valueMgdl} mg/dL
+                            </span>
+                            <span className="text-white/60 text-sm ml-2">({log.context})</span>
+                          </div>
+                          <div className="text-white/60 text-sm">
+                            {new Date(log.recordedAt).toLocaleString()}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="h-64 bg-yellow-500/10 backdrop-blur-sm rounded-xl border border-yellow-400/30 flex items-center justify-center relative z-10">
+                <div className="text-center text-white/80">
+                  <TrendingUp className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium">No readings yet</p>
+                  <p className="text-sm">Log your first glucose reading above to start tracking</p>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Divider */}
