@@ -1,5 +1,5 @@
 // client/src/pages/CravingPresets.tsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,6 +71,20 @@ export default function CravingPresetsPage() {
   const [filterText, setFilterText] = useState("");
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  // Auto-open instructions on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenPresetsInfo = localStorage.getItem("hasSeenPresetsInfo");
+
+    if (coachMode === "guided" && !hasSeenPresetsInfo) {
+      setTimeout(() => {
+        setShowInstructions(true);
+      }, 300);
+    }
+  }, []);
+
 
   const meals = useMemo(() => {
     const q = filterText.trim().toLowerCase();
@@ -351,6 +365,30 @@ export default function CravingPresetsPage() {
 
               <button
                 onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Instructions Modal */}
+        {showInstructions && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">How to Use Craving Presets</h3>
+              <div className="space-y-3 text-white/90 text-sm">
+                <p><strong>1. Browse presets:</strong> Scroll through 20+ pre-designed healthy cravings</p>
+                <p><strong>2. Select servings:</strong> Choose 1-10 servings to scale the recipe</p>
+                <p><strong>3. Generate meal:</strong> Click to create your personalized version</p>
+                <p><strong>4. Review & add:</strong> Check nutrition, ingredients, and add to your plan</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowInstructions(false);
+                  localStorage.setItem("hasSeenPresetsInfo", "true");
+                }}
                 className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got it!

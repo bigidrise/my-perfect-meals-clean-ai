@@ -161,6 +161,19 @@ export default function CravingCreator() {
   // Import replacement context functions
   const [replaceCtx, setReplaceCtx] = useState<any>(null);
 
+  // Auto-open info modal on first visit in coach mode
+  useEffect(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenCravingInfo = localStorage.getItem("hasSeenCravingInfo");
+    
+    if (coachMode === "guided" && !hasSeenCravingInfo) {
+      // Small delay to let page render first
+      setTimeout(() => {
+        setShowCravingInfoModal(true);
+      }, 300);
+    }
+  }, []);
+
   // Check for replacement context on mount
   useEffect(() => {
     import("@/lib/replacementContext").then(({ getReplaceCtx }) => {
@@ -957,7 +970,10 @@ export default function CravingCreator() {
             </div>
 
             <button
-              onClick={() => setShowCravingInfoModal(false)}
+              onClick={() => {
+                setShowCravingInfoModal(false);
+                localStorage.setItem("hasSeenCravingInfo", "true");
+              }}
               className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               Got it!
