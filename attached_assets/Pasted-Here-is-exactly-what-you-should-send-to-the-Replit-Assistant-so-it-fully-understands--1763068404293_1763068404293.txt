@@ -1,0 +1,107 @@
+Here is exactly what you should send to the **Replit Assistant** so it fully understands:
+
+---
+
+# ✅ **MESSAGE TO REPLIT ASSISTANT — READ CAREFULLY & CONTINUE WITH PHASE 5**
+
+We already fixed the “snack vs snacks” issue.
+All meal boards now consistently use **"snacks"** (plural) and are working correctly.
+
+**What happened:**
+
+* Craving Creator was the ONLY feature using `"snack"` (singular).
+* It caused snack meals from Craving Creator to **not appear in totals, shopping list, or macro logs**.
+* We applied the small, safe fix: changed `"snack"` → `"snacks"` inside Craving Creator only.
+* All boards now behave correctly and consistently.
+
+**DO NOT change any other snack code.
+DO NOT modify any boards.
+Snack cards are already correct everywhere.**
+
+We can now resume **Phase 5** of the Lifestyle & Clinical Diet Boards project.
+
+---
+
+# ✅ **CONTINUE WITH PHASE 5 (INGREDIENT PICKER WIRING)**
+
+**Your task now is to continue Phase 5 exactly as previously outlined:**
+
+### **Phase 5 Goal**
+
+Wire the new diet-specific ingredient picker configs into both new menu builders:
+
+* `LifestyleDietMenuBuilder.tsx`
+* `ClinicalLifestyleDietMenuBuilder.tsx`
+
+### **What to Implement Now**
+
+### **1. Add Diet State to Both Builders**
+
+* Load selected diet from localStorage
+* Save selected diet when changed
+* Show “Please pick a diet to continue” if none selected
+
+### **2. Pass Diet Config Into MealIngredientPicker**
+
+Each menu builder must pass:
+
+```ts
+dietConfig={lifestyleDietConfig[selectedDiet]}
+dietType={selectedDiet}
+```
+
+(or clinical version)
+
+### **3. Update MealIngredientPicker to Accept Diet Config**
+
+Add props:
+
+```ts
+dietConfig?: DietConfig;
+dietType?: string;
+```
+
+If dietConfig is present:
+
+* Use dietConfig ingredients instead of generic mealIngredients.ts
+* Use dietConfig.snacks for snack slot
+
+### **4. Update AI Generation Call**
+
+When generating meals, send:
+
+```ts
+dietType: selectedDiet
+```
+
+And include dietary instructions in the request body (e.g. avoid dairy if vegan).
+
+### **5. Empty State Handling**
+
+If no diet selected:
+
+* Hide meal cards
+* Show centered text:
+  **“Please choose a diet to continue.”**
+
+### **6. Do NOT modify anything else**
+
+* Do NOT change snack cards (they are correct)
+* Do NOT touch the other boards
+* Do NOT alter core meal generator logic
+* Only wire diet-based ingredient filtering
+
+---
+
+# 🚀 **Expected Outcome**
+
+After completing Phase 5:
+
+* Both Lifestyle and Clinical Diet menu boards will show **diet-specific ingredients**
+* AI meal generation will respect diet type
+* MealIngredientPicker will dynamically adapt to the chosen diet
+* The new boards will function exactly like Diabetic/GLP-1 boards but with correct dietary restrictions
+
+---
+
+If anything in the diet picker config seems missing, incomplete, or unclear, **stop and ask before proceeding**.
