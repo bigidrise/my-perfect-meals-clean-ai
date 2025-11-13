@@ -248,7 +248,7 @@ export default function Welcome() {
         </button>
 
         {/* Tester Quick Access */}
-        <div className="mt-8 pt-8 border-t border-white/10">
+        <div className="mt-8 pt-8 border-t border-white/10 space-y-3">
           <Button
             data-testid="button-tester-access"
             onClick={testerQuickAccess}
@@ -259,6 +259,18 @@ export default function Welcome() {
           >
             🧪 Testers - Quick Access to App
           </Button>
+          
+          <Button
+            data-testid="button-onboarding-direct"
+            onClick={() => setLocation("/onboarding")}
+            className="w-full h-12 text-base font-semibold rounded-xl
+                     bg-blue-600/80 hover:bg-blue-500
+                     text-white shadow-lg
+                     transition-all duration-200"
+          >
+            📋 Go to Onboarding (Dev/Test)
+          </Button>
+          
           <p className="text-xs text-white/50 text-center mt-2">
             For testing only - bypasses sign in
           </p>
