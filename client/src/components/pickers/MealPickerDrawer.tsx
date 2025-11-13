@@ -145,7 +145,7 @@ export function MealPickerDrawer({
 
           {/* Category Buttons */}
           <div className="mt-2">
-            <div className="flex gap-2 overflow-x-auto md:grid md:grid-cols-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {(["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
               (cat) => (
                 <button
