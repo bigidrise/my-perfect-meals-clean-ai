@@ -727,7 +727,7 @@ export default function ProClientDashboard() {
                 localStorage.setItem("pro-client-id", clientId);
                 setLocation("/diabetic-hub");
               }}
-              className="w-full sm:w-[400px] bg-gradient-to-br from-orange-600 via-amber-600 to-yellow-600 hover:opacity-90 text-white font-semibold rounded-xl"
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-diabetic-hub"
             >
               🩸 Diabetic Hub
@@ -737,7 +737,7 @@ export default function ProClientDashboard() {
                 localStorage.setItem("pro-client-id", clientId);
                 setLocation("/glp1-hub");
               }}
-              className="w-full sm:w-[400px] bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 hover:opacity-90 text-white font-semibold rounded-xl"
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-glp1-hub"
             >
               💉 GLP-1 Hub
@@ -747,7 +747,7 @@ export default function ProClientDashboard() {
                 localStorage.setItem("pro-client-id", clientId);
                 setLocation("/medical-diets-hub");
               }}
-              className="w-full sm:w-[400px] bg-gradient-to-br from-red-950 via-red-900 to-black hover:opacity-90 text-white font-semibold rounded-xl"
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-medical-diets-hub"
             >
               ❤️ Medical Diets Hub
@@ -757,7 +757,7 @@ export default function ProClientDashboard() {
                 localStorage.setItem("pro-client-id", clientId);
                 setLocation("/clinical-lifestyle-hub");
               }}
-              className="w-full sm:w-[400px] bg-gradient-to-br from-sky-950 via-sky-900 to-black hover:opacity-90 text-white font-semibold rounded-xl"
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-clinical-lifestyle-hub"
             >
               🧬 Clinical Lifestyle Hub
@@ -773,7 +773,7 @@ export default function ProClientDashboard() {
               onClick={() =>
                 setLocation(`/pro/clients/${clientId}/athlete-board`)
               }
-              className="w-full sm:w-[400px] bg-gradient-to-br from-indigo-950 via-purple-900 to-black hover:opacity-90 text-white font-semibold rounded-xl"
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-athlete-board"
             >
               <Trophy className="h-4 w-4 mr-2" /> Professional/ Trainer Meal
