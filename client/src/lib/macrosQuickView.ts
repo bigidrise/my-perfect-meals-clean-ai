@@ -7,7 +7,7 @@ export interface QuickView {
   fat: number;
   calories: number;
   dateISO: string;
-  mealSlot: "breakfast" | "lunch" | "dinner" | "snack" | null;
+  mealSlot: "breakfast" | "lunch" | "dinner" | "snacks" | null;
   expiresAt: number; // timestamp when this data expires
 }
 
@@ -17,7 +17,7 @@ interface QuickViewInput {
   fat: number;
   calories: number;
   dateISO: string;
-  mealSlot?: "breakfast" | "lunch" | "dinner" | "snack" | null;
+  mealSlot?: "breakfast" | "lunch" | "dinner" | "snacks" | null;
 }
 
 export function setQuickView(macros: QuickViewInput): void {

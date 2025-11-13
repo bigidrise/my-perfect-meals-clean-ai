@@ -206,7 +206,7 @@ export default function CravingCreator() {
         generatedMeal: generatedMeals[0],
         craving: cravingInput,
         servings: servings,
-        mealType: "snack", // Default meal type
+        mealType: "snacks", // Default meal type
         generatedAtISO: new Date().toISOString(),
       });
     }
@@ -311,7 +311,7 @@ export default function CravingCreator() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          targetMealType: "snack",
+          targetMealType: "snacks",
           cravingInput,
           dietaryRestrictions: selectedDiet || dietaryRestrictions,
           userId: DEV_USER_ID,
@@ -334,7 +334,7 @@ export default function CravingCreator() {
         generatedMeal: meal,
         craving: cravingInput,
         servings: servings, // Use actual serving size from state
-        mealType: "snack",
+        mealType: "snacks",
         generatedAtISO: new Date().toISOString(),
       });
 
@@ -900,7 +900,7 @@ export default function CravingCreator() {
                             fat: Math.round(macros.fat_g),
                             calories: Math.round(macros.calories),
                             dateISO: new Date().toISOString().slice(0, 10),
-                            mealSlot: "snack"
+                            mealSlot: "snacks"
                           });
                           setLocation("/biometrics?from=craving-creator&view=macros");
                         }}
