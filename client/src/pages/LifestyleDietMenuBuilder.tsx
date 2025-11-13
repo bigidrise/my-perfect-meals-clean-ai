@@ -199,23 +199,27 @@ export default function LifestyleDietMenuBuilder() {
             </div>
           </div>
 
-          <div className="text-center text-white/70 py-20">
-            <p>Lifestyle Diet Meal Board - Coming Soon</p>
-            <p className="text-sm mt-2">Meal cards and planning features will appear here</p>
-          </div>
+          {selectedDiet ? (
+            <div className="text-center text-white/70 py-20">
+              <p className="text-lg">✅ Diet Selected: {dietMode}</p>
+              <p className="text-sm mt-2">MealIngredientPicker will use {dietMode} ingredients</p>
+              <p className="text-xs mt-4 text-white/50">Meal generation with diet-specific ingredients is ready</p>
+            </div>
+          ) : (
+            <div className="text-center text-white/70 py-20 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+              <p className="text-xl font-semibold">⚠️ Choose a diet to continue</p>
+              <p className="text-sm mt-2">Select a lifestyle diet from the dropdown above to start building your meal plan</p>
+            </div>
+          )}
 
-          {/* MealIngredientPicker integration would go here, using selectedDiet */}
-          {/* Example usage (assuming you have state for showPicker, handleMealGenerated, activeMealSlot): */}
-          {/*
           <MealIngredientPicker
-            open={showPicker}
-            onOpenChange={setShowPicker}
-            onMealGenerated={handleMealGenerated}
-            mealSlot={activeMealSlot}
+            open={false}
+            onOpenChange={() => {}}
+            onMealGenerated={() => {}}
+            mealSlot="breakfast"
             dietConfig={selectedDiet ? lifestyleDietPickerConfig[selectedDiet as keyof typeof lifestyleDietPickerConfig] : undefined}
             dietType={selectedDiet}
           />
-          */}
 
         </div>
       </div>

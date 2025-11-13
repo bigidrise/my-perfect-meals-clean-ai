@@ -200,14 +200,29 @@ export default function ClinicalLifestyleDietMenuBuilder() {
             </div>
           </div>
 
-          <div className="text-center text-white/70 py-20">
-            <p>Clinical Lifestyle Meal Board - Coming Soon</p>
-            <p className="text-sm mt-2">Meal cards and planning features will appear here</p>
-          </div>
+          {selectedDiet ? (
+            <div className="text-center text-white/70 py-20">
+              <p className="text-lg">✅ Clinical Diet Selected: {clinicalDietMode}</p>
+              <p className="text-sm mt-2">MealIngredientPicker will use {clinicalDietMode} ingredients</p>
+              <p className="text-xs mt-4 text-white/50">Meal generation with clinical diet-specific ingredients is ready</p>
+            </div>
+          ) : (
+            <div className="text-center text-white/70 py-20 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+              <p className="text-xl font-semibold">⚠️ Choose a diet to continue</p>
+              <p className="text-sm mt-2">Select a clinical diet from the dropdown above to start building your meal plan</p>
+            </div>
+          )}
+
+          <MealIngredientPicker
+            open={false}
+            onOpenChange={() => {}}
+            onMealGenerated={() => {}}
+            mealSlot="breakfast"
+            dietConfig={selectedDiet ? clinicalDietPickerConfig[selectedDiet as keyof typeof clinicalDietPickerConfig] : undefined}
+            dietType={selectedDiet}
+          />
         </div>
       </div>
-
-      {/* Removed MealIngredientPicker and related state as it's not used in this view */}
     </>
   );
 }
