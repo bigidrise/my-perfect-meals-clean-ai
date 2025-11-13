@@ -26,9 +26,9 @@ import glycemicRouter from "./routes/glycemic";
 import mealSummarizeRouter from "./routes/mealSummarize";
 import shoppingListRouter from "./routes/shoppingList";
 import { shoppingPreviewRouter, shoppingRouter } from "./routes/shoppingListV2";
-// import mealLogsRouter from "./routes/mealLogs"; // TEMPORARILY DISABLED - File missing
+import mealLogsRouter from "./routes/mealLogs";
 import waterLogsRouter from "./routes/waterLogs";
-// import foodLogsRouter from "./routes/foodLogs"; // TEMPORARILY DISABLED - File missing
+import foodLogsRouter from "./routes/foodLogs";
 import wmc2LogRouter from "./routes/wmc2Log";
 import wmc2TelemetryRouter from "./routes/wmc2Telemetry";
 import wmc2EnhancedRouter from "./routes/wmc2Enhanced";
@@ -240,7 +240,7 @@ app.use(passwordResetRouter);
 app.use("/api/stripe", stripeRouter);
 
 // Food Logs System - Register BEFORE mealsRouter to prevent route conflict with /api/macros/log
-// app.use("/api", foodLogsRouter); // TEMPORARILY DISABLED - File missing
+app.use("/api", foodLogsRouter);
 
 // Mount your AI endpoints under /api/*
 app.use("/api", mealsRouter);
@@ -248,7 +248,7 @@ app.use("/api", alcoholRouter);
 app.use("/api", glycemicRouter);
 app.use("/api", shoppingListRouter);
 app.use("/api", mealSummarizeRouter);
-// app.use("/api", mealLogsRouter); // TEMPORARILY DISABLED - File missing
+app.use("/api", mealLogsRouter);
 app.use("/api", waterLogsRouter);
 app.use("/api", wmc2LogRouter);
 app.use("/api", wmc2TelemetryRouter);

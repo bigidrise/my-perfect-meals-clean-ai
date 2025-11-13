@@ -45,8 +45,8 @@ import weekBoardRoutes from './routes/weekBoard';
 import manualMacrosRouter from './routes/manualMacros';
 // Import routes
 import mealPlansRoutes from "./routes/mealPlans";
-// import mealLogsRoutes from "./routes/mealLogs"; // TEMPORARILY DISABLED - File missing
-// import macroLogsRoutes from "./routes/macroLogs"; // TEMPORARILY DISABLED - File missing
+import mealLogsRoutes from "./routes/mealLogs";
+import macroLogsRoutes from "./routes/macroLogs";
 import alcoholLogRoutes from "./routes/alcohol-log";
 import glucoseLogRoutes from "./routes/glucose-logs";
 import biometricsRoutes from "./routes/biometricsRoutes";
@@ -4382,8 +4382,8 @@ Provide a single exceptional meal recommendation in JSON format with the followi
 
   // Mount routes
   app.use("/api", mealPlansRoutes);
-  // app.use("/api", mealLogsRoutes); // TEMPORARILY DISABLED - File missing
-  // app.use("/api", macroLogsRoutes); // TEMPORARILY DISABLED - File missing
+  app.use("/api", mealLogsRoutes);
+  app.use("/api", macroLogsRoutes);
   // --- Logs & biometrics routes (no styling changes, just mounts) ---
   app.use("/api", alcoholLogRoutes);              // alcohol routes expect "/api/..." internally
   app.use("/api/glucose-logs", glucoseLogRoutes); // <-- FIX: mount glucose router at explicit path

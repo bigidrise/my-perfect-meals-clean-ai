@@ -550,7 +550,9 @@ export const insertMealLogSchema = createInsertSchema(mealLog).omit({
   createdAt: true,
 });
 
-
+export const insertMacroLogSchema = createInsertSchema(macroLogs).omit({
+  id: true,
+});
 
 export const insertMealReminderSchema = createInsertSchema(mealReminders).omit({
   id: true,
