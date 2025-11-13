@@ -84,9 +84,10 @@ export default function KidsMealsHub() {
     const hasSeenKidsMealsInfo = localStorage.getItem("hasSeenKidsMealsInfo");
 
     if (coachMode === "guided" && !hasSeenKidsMealsInfo) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowInfoModal(true);
       }, 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 

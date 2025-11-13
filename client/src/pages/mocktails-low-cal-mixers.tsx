@@ -17,9 +17,10 @@ export default function MocktailsLowCalMixersPage() {
     const hasSeenMocktailsInfo = localStorage.getItem("hasSeenMocktailsInfo");
 
     if (coachMode === "guided" && !hasSeenMocktailsInfo) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowInfoModal(true);
       }, 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 

@@ -304,9 +304,10 @@ export default function AlcoholLeanAndSocial() {
     const hasSeenAlcoholLeanInfo = localStorage.getItem("hasSeenAlcoholLeanInfo");
 
     if (coachMode === "guided" && !hasSeenAlcoholLeanInfo) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowInfoModal(true);
       }, 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 
