@@ -1,0 +1,184 @@
+Coach — these questions are **exactly the right ones** to ask before Phase 4, and here’s the clean, decisive answers so you can green-light the assistant with ZERO guesswork.
+
+I’m going to lay this out as **final instructions**, no fluff, no confusion, no backtracking.
+
+---
+
+# ✅ **1. Which Lifestyle Diets to Populate?**
+
+You chose **the top 7 lifestyle diets** from our earlier research.
+
+These are the exact diets we are populating inside
+`lifestyleDietPickerConfig.ts`:
+
+### **TOP 7 LIFESTYLE DIETS**
+
+1. **Mediterranean**
+2. **Vegan**
+3. **Vegetarian**
+4. **Pescatarian**
+5. **Paleo**
+6. **Keto**
+7. **Flexitarian**
+
+✔ Populate ALL seven.
+✔ Populate ALL five meal categories (Proteins, Starches, Fibrous Carbs, Fats, Fruits).
+✔ Populate ALL snack categories (Sweet, Savory, Light, Protein, Drinkables, Dessert).
+
+---
+
+# ✅ **2. Which Clinical Diets to Populate?**
+
+We also selected the top 7 clinical diets from real usage across medical apps.
+
+Populate these inside
+`clinicalLifestyleDietPickerConfig.ts`:
+
+### **TOP 7 CLINICAL DIETS**
+
+1. **AIP (Autoimmune Protocol)**
+2. **Low-FODMAP**
+3. **Cardiac / Heart-Healthy**
+4. **Renal / Kidney-Friendly**
+5. **Bariatric Phases (Soft/Blend/Stage 3) — but we’ll treat it as one diet**
+6. **Anti-Inflammatory**
+7. **Liver-Friendly**
+
+✔ Populate ALL seven.
+✔ Populate ALL five meal picker categories.
+✔ Populate ALL snack picker categories.
+
+---
+
+# ✅ **3. Ingredient Data Source**
+
+We are **NOT** reusing the regular meal pickers.
+Why?
+
+Because those contain chicken, beef, pork, rice, etc.
+which **aren’t allowed** in half of these diets.
+
+### So the correct answer:
+
+#### **Create NEW ingredient arrays per diet based on dietary rules.**
+
+Example:
+
+**Vegan proteins:**
+
+* Tofu
+* Tempeh
+* Lentils
+* Chickpeas
+* Edamame
+* Black beans
+* Vegan protein powder
+* etc.
+
+**Keto proteins:**
+
+* Salmon
+* Eggs
+* Chicken thighs
+* Beef
+* Tuna
+* Turkey
+* Protein powder
+* etc.
+
+### The assistant will build these ingredients completely new.
+
+---
+
+# ✅ **4. Snack Filtering**
+
+Use **snackIngredients.ts** ONLY as a structural example.
+
+Do **NOT** reuse the actual ingredients.
+
+### What to do:
+
+For each diet, create snack categories like:
+
+* `sweetTreats: []`
+* `savoryCrunchy: []`
+* `lightGentle: []`
+* `proteinEnergy: []`
+* `drinkables: []`
+* `dessertBites: []`
+
+Example:
+
+**Low-FODMAP Sweet Snacks**
+
+* Strawberries
+* Blueberries
+* Lactose-free yogurt
+* Maple syrup drizzle
+* Gluten-free cookie (low-FODMAP)
+* etc.
+
+**Keto Sweet Snacks**
+
+* 90% dark chocolate
+* Keto protein bar
+* Coconut chips
+* Almond butter fat bombs
+* etc.
+
+### ALL snack ingredient lists must be diet-compliant.
+
+---
+
+# ✅ **5. Fallback Behavior**
+
+If no diet is selected:
+
+### **Show NOTHING.**
+
+Why?
+
+Because:
+
+* They MUST pick a diet
+* The builder is diet-driven
+* A “general” option will give users meals that violate their diet rules
+
+So the correct fallback is:
+
+### ❌ Do NOT load all ingredients
+
+### ❌ Do NOT load a general sheet
+
+### ✔ Show: “Please choose a diet to continue”
+
+This ensures the AI never creates a meal contradictory to their selected diet.
+
+---
+
+# 💥 FINAL READY-TO-GO ANSWERS FOR YOUR QUESTIONS
+
+### ✔ Populate ALL 7 lifestyle diets
+
+### ✔ Populate ALL 7 clinical diets
+
+### ✔ Create NEW diet-specific ingredients
+
+### ✔ Build NEW snack arrays per diet
+
+### ✔ Fallback = no ingredients until diet selected
+
+---
+
+# 🚀 Coach — You’re good to green-light Phase 4 for the assistant.
+
+If you want, I can now generate:
+
+### → **The full detailed Replit Assistant Phase 4 implementation brief**
+
+### → **The exact TypeScript structure for each config file**
+
+### → **Sample ingredient lists per diet to copy/paste**
+
+Just say: **“Give me the Phase 4 assistant brief”** or
+**“Give me the ingredient structure”**.
