@@ -24,7 +24,7 @@ export default function AffiliateOnPricing() {
           <span className="font-semibold"> 25% recurring commission</span> on every referral.
         </p>
         <ul className="list-disc pl-5 space-y-1 text-white/80 text-sm">
-          <li>Beta: $9.99/mo (25% commission)</li>
+          <li>Beta: $9.99/mo</li>
           <li>Launch: $19.99/mo with 60-day trial of $29.99 features (25% commission)</li>
           <li>Monthly payouts ($25 min)</li>
           <li>Limited to 5 affiliates during pilot</li>

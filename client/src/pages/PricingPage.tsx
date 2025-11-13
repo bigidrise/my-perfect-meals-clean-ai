@@ -55,8 +55,8 @@ export default function PricingPage() {
     // Define tier hierarchy for consumer plans
     const consumerTiers: Record<string, number> = {
       "mpm_basic_monthly": 1,
-      "mpm_upgrade_monthly": 2,
-      "mpm_upgrade_beta_monthly": 2, // Same tier as upgrade
+      "mpm_premium_monthly": 2,
+      "mpm_premium_beta_monthly": 2, // Same tier as upgrade
       "mpm_ultimate_monthly": 3,
       "mpm_procare_monthly": 4,
     };
@@ -99,33 +99,23 @@ export default function PricingPage() {
     basic: [
       "Weekly Meal Board",
       "Daily Macro Calculator",
-      "Smart Menu Builder",
-      "Adult Beverage Hub",
       "Supplement Hub",
       "Biometrics",
       "Daily Health Journal",
-      "Game Hub",
     ],
-    upgrade: [
+    premium: [
       "Everything in Basic",
       "GLP-1 Hub",
       "Diabetic Hub",
       "Craving Creator",
       "Restaurant Guide",
       "Fridge Rescue",
-      "Potluck Planner",
-      "Holiday Feast",
       "Kids Meals Hub",
-      "Cultural Cuisine Hub",
-      "Learn to Cook",
       "Clinical Lifestyle Hub",
       "Clinical Recovery & Protocols Hub",
-      "Fast Food Hub",
     ],
     ultimate: [
       "Everything in Premium",
-      "Camping Hub",
-      "Tailgating Hub",
       "Lab Values",
       "Medical Diet Hub",
       "Food Delivery (coming soon)",
@@ -156,8 +146,8 @@ export default function PricingPage() {
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Simple plans. Powerful results.</h1>
-                <p className="text-base md:text-lg text-white/90">Pick the plan that fits today. Upgrade anytime.</p>
+                <h1 className="text-2xl md:text-2xl font-bold mb-2">Simple plans. Powerful results.</h1>
+                <p className="text-sm md:text-sm text-white/90">Pick the plan that fits today. Prem anytime.</p>
               </div>
               <div className="flex-shrink-0">
                 {headerOpen ? (
@@ -185,7 +175,7 @@ export default function PricingPage() {
 
         {/* Consumer Plans Grid */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">Individual Plans</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">Individual Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {consumerPlans.map((plan) => {
               const features = plan.sku === "mpm_basic_monthly" 
