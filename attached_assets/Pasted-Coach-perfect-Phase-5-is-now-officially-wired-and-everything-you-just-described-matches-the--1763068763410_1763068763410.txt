@@ -1,0 +1,88 @@
+Coach — **perfect.** Phase 5 is now officially wired, and everything you just described matches the plan exactly.
+
+Now here’s what you need next, and it’s *important*:
+
+---
+
+# ✅ WHAT YOU SHOULD TELL THE REPLIT ASSISTANT *RIGHT NOW*
+
+You need to confirm to the assistant that Phase 5 is complete **and** tell it what happens next so it doesn’t start “fixing” or touching unrelated parts of the app.
+
+Copy/paste this to the Replit Assistant:
+
+---
+
+### 📩 **MESSAGE FOR REPLIT ASSISTANT — Phase 5 is Complete, STOP & VERIFY BEFORE NEXT STEPS**
+
+Phase 5 implementation is complete.
+You successfully:
+
+* Verified both diet config files
+* Updated MealIngredientPicker to accept dietConfig + dietType
+* Updated LifestyleDietMenuBuilder to load, persist, and pass dietConfig
+* Updated ClinicalLifestyleDietMenuBuilder the same way
+* Ensured fallback to generic ingredients when dietConfig is not provided
+* Updated AI generation request with dietType
+* Implemented empty-state behavior exactly as specified
+* Kept ALL existing boards (Weekly, Diabetic, GLP-1, HardBody, ProCare) untouched
+
+Before we proceed to Phase 6 or any refinements, I need you to:
+
+**1. Re-scan all files you modified**
+Confirm:
+
+* No unintended changes
+* No conflicts
+* No naming mismatches
+* No lost imports or unused imports
+* DietConfig type consistency
+* MealSlot = "snacks" everywhere
+
+**2. Confirm the two new menu builders compile cleanly**
+
+* LifestyleDietMenuBuilder
+* ClinicalLifestyleDietMenuBuilder
+
+**3. DO NOT introduce new logic, refactors, or styling changes.**
+Only verify correctness and stability.
+
+After verification, report back:
+
+* Which files are stable
+* Whether MealIngredientPicker receives correct dietConfig props
+* Whether AI requests include dietType
+* Whether snack card behavior remains untouched
+* Whether all boards still use "snacks" consistently
+
+No changes unless I explicitly say so.
+
+---
+
+# 🧠 COACH — HERE’S WHY THIS IS PERFECT
+
+This message does **three things**:
+
+1. **Stops the assistant** from “helpfully” rewriting something that doesn’t need rewriting
+2. **Forces a verification pass** so it double-checks its own work
+3. **Protects your existing meal boards** (so nothing gets accidentally broken)
+
+You’re keeping the assistant on a tight leash while still letting it do the grunt work.
+
+---
+
+# 🎯 NEXT STEPS (Only after verification)
+
+Once the assistant confirms everything is clean, Phase 6 is:
+
+### **Phase 6 – Fully Integrate Diet Guardrails Into Meal Generation**
+
+* Add guardrail configuration cards (just like diabetic/GLP1)
+* Wire guardrails into AI prompts
+* Add preset templates for each diet
+* Add validation logic (e.g., Keto macros, AIP restrictions)
+
+But don’t start that until the assistant verifies Phase 5 is spotless.
+
+---
+
+If you want, I can draft the Phase 6 brief next — just say the word.

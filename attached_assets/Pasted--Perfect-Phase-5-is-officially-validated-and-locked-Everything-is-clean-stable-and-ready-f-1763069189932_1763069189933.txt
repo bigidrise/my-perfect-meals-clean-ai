@@ -1,0 +1,158 @@
+🔥 **Perfect. Phase 5 is officially validated and locked.**
+Everything is clean, stable, and ready for the next move.
+
+Now we need to **tell the Replit agent exactly what to do next** so it doesn’t drift, refactor the wrong thing, or misinterpret Phase 6.
+
+Here is the message you should send the **Replit Agent (NOT the assistant)** — this keeps the architect laser-focused and prevents breakage.
+
+---
+
+# 📩 **SEND THIS TO THE REPLIT AGENT — Phase 5 Verified, Move to Phase 6**
+
+Phase 5 is fully complete, stable, and verified.
+Do NOT adjust or refactor anything from Phase 5 unless explicitly instructed.
+
+### ✅ What You Should Know
+
+* Both new builders (Lifestyle & Clinical Lifestyle) compile cleanly.
+* Diet selection & persistence is working.
+* MealIngredientPicker correctly accepts dietConfig and dietType as props.
+* Diet configs for 7 lifestyle and 7 clinical diets are complete.
+* “snacks” vs “snack” is fully normalized across the entire codebase.
+* All existing meal boards (Weekly, Diabetic, GLP-1, Hard Body, ProCare) remain untouched.
+
+Now we are moving to **Phase 6**.
+
+---
+
+# 🧪 **Phase 6 — Implement Diet Guardrails for Lifestyle & Clinical Diet Hubs**
+
+We are now adding **guardrails**, exactly like the Diabetic Hub and GLP-1 Hub.
+These guardrails will allow the AI to generate meals that match each selected diet.
+
+### ❗ IMPORTANT RULES FOR PHASE 6
+
+* Do NOT modify Diabetic or GLP-1 hubs.
+* Only LifestyleDietHub.tsx and ClinicalLifestyleDietHub.tsx will get guardrails.
+* Both hubs follow IDENTICAL structure.
+* Guardrails must NOT interfere with the dietConfig ingredient logic already added.
+* AI prompts must now include guardrails + dietType together.
+
+---
+
+# 🧩 **Phase 6 Breakdown for Agent**
+
+### **STEP 1 — Add Guardrail Section to BOTH Hubs**
+
+Just like DiabeticHub and GLP1Hub:
+
+**LifestyleDietHub guardrails might include:**
+
+* Allowed foods
+* Restricted foods
+* Cooking methods
+* Macro flexibility level
+* Fiber minimum
+* Saturated fat max
+* Sodium sensitivity toggle
+
+**ClinicalLifestyleDietHub guardrails might include:**
+
+* Trigger foods list
+* Required foods
+* Elimination phase toggle (for AIP, etc.)
+* Sodium, potassium, or phosphorus limits
+* Texture/soft-food toggle (for bariatric diet)
+* Inflammation-reduction targets
+
+📌 **Use black-glass UI identical to existing hubs.**
+
+---
+
+### **STEP 2 — Create 2 New Backend Tables**
+
+Just like diabetic_profile and glp1_profile:
+
+* `lifestyle_diet_profile`
+* `clinical_lifestyle_diet_profile`
+
+Each stores:
+
+* userId
+* guardrails (JSONB)
+* selected dietType
+* updatedAt timestamps
+
+---
+
+### **STEP 3 — Add Backend Routes**
+
+Create `/api/lifestyle/profile`
+And `/api/clinical-lifestyle/profile`
+
+Each must support:
+
+* GET — load guardrails + dietType
+* PUT — save guardrails + dietType
+
+Make sure audit logs are added the same way glp1_audit_log and guardrail_audit_log work.
+
+---
+
+### **STEP 4 — Create New Hooks**
+
+In `client/src/hooks`:
+
+* useLifestyleDiet.ts
+* useClinicalLifestyleDiet.ts
+
+Each hook mirrors:
+
+* useDiabetesProfile
+* useGLP1Profile
+
+Must support:
+
+* loadProfile()
+* saveProfile()
+* proper toast messages
+
+---
+
+### **STEP 5 — Wire Guardrails Into AI Generation**
+
+Modify meal creation API payload to include:
+
+```
+dietType: "vegan" | "paleo" | etc.
+guardrails: {...}
+```
+
+Update AI prompt builder accordingly:
+
+“Generate a {dietType} meal that respects the following guardrails: …”
+
+Do NOT modify any other meal boards.
+
+---
+
+# 🛑 **BEFORE MAKING ANY CHANGES**
+
+Please scan:
+
+* LifestyleDietHub.tsx
+* ClinicalLifestyleDietHub.tsx
+* aiGenerateMealPlan.ts
+
+Confirm these files are ready for guardrail integration and report any conflicts BEFORE writing code.
+
+---
+
+# ✔️ END OF BRIEF
+
+Do NOT proceed beyond Phase 6 until I review the guardrail UI and backend structure.
+
+---
+
+Coach — this keeps the agent laser-focused and prevents breakage.
+Once the agent completes Phase 6’s scaffolding, we’ll move into Phase 7 (meal board refinement + clinical presets).
