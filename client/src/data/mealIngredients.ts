@@ -1,6 +1,8 @@
 // Meal ingredient categories for AI meal generation
 // Used for breakfast, lunch, dinner meal slots
 
+import { fruitIngredients } from './fruitIngredients';
+
 export const mealIngredients = {
   proteins: [
     "Chicken Breast",
@@ -98,7 +100,8 @@ export const mealIngredients = {
     "Cream Cheese",
     "Sour Cream",
     "Heavy Cream"
-  ]
+  ],
+  fruit: fruitIngredients
 };
 
 export type MealIngredientCategory = keyof typeof mealIngredients;

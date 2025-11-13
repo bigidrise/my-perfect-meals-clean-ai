@@ -28,7 +28,7 @@ export default function MealIngredientPicker({
     : mealIngredients;
   
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats'>('proteins');
+  const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats' | 'fruit'>('proteins');
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
 
@@ -291,6 +291,7 @@ export default function MealIngredientPicker({
       case 'starchyCarbs': return '🍞 Starchy Carbs';
       case 'fibrousCarbs': return '🥦 Fibrous Carbs';
       case 'fats': return '🥑 Fats';
+      case 'fruit': return '🍎 Fruit';
       case 'snacks': return '🥨 Snacks'; // Added for snacks category
       default: return category;
     }

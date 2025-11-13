@@ -97,7 +97,9 @@ export function MealPickerDrawer({
     );
   };
 
-  const ingredientSource =
+  type IngredientSource = Record<string, string[] | any[]>;
+  
+  const ingredientSource: IngredientSource =
     list === "snacks"
       ? snackIngredients
       : {
@@ -105,18 +107,12 @@ export function MealPickerDrawer({
           "Starchy Carbs": mealIngredients.starchyCarbs,
           "Fibrous Carbs": mealIngredients.fibrousCarbs,
           Fats: mealIngredients.fats,
-          Fruit: fruitIngredients,
+          Fruit: mealIngredients.fruit,
         };
-
-  console.log("🔍 ingredientSource keys:", Object.keys(ingredientSource));
-  console.log("🔍 activeCategory:", activeCategory);
-  console.log("🔍 Fruit ingredients count:", ingredientSource["Fruit"]?.length);
 
   const currentIngredients = activeCategory
     ? ingredientSource[activeCategory] ?? []
     : [];
-  
-  console.log("🔍 currentIngredients count:", currentIngredients.length);
 
 
   return (
