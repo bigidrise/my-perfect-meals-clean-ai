@@ -211,18 +211,17 @@ export default function GLP1Hub() {
               className="rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm"
               placeholder="Date"
             />
-            <select
+            <input
+              type="number"
+              inputMode="decimal"
+              step="0.1"
+              min="0"
+              max="20"
               value={dosage}
               onChange={(e) => setDosage(e.target.value)}
-              className="rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm"
-            >
-              <option value="0.25">0.25mg</option>
-              <option value="0.5">0.5mg</option>
-              <option value="1">1mg</option>
-              <option value="1.7">1.7mg</option>
-              <option value="2">2mg</option>
-              <option value="2.4">2.4mg</option>
-            </select>
+              placeholder="e.g., 2.5, 5, 7.5"
+              className="rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm w-32"
+            />
             <select
               value={currentSite}
               onChange={(e) => setCurrentSite(e.target.value as SiteType)}
