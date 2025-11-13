@@ -28,6 +28,18 @@ Feature protection priority: User explicitly demands locked features stay protec
 # Stable Checkpoints
 **GIT EMAIL FIX (Oct 24, 2025 5:50 PM):** Resolved Vercel auto-deployment issue. Git was using Replit email instead of Gmail. Fixed with: `git config user.email "bigidrise@gmail.com"` + `git commit --amend --reset-author --no-edit` + force push. Vercel auto-deployment now working perfectly!
 
+**CHECKPOINT 2025-11-13 02:52 UTC - "Meal Logging Restoration + Compound Cursor Pagination":**
+- ✅ STABLE: Meal logging APIs fully restored with production-ready pagination
+- ✅ STABLE: Compound cursor pagination (`timestamp,id`) prevents data loss when timestamps collide
+- ✅ STABLE: Three logging routes functional: macroLogs, mealLogs, foodLogs
+- ✅ STABLE: Deterministic dual ordering (at DESC, id DESC) ensures stable pagination
+- ✅ STABLE: Removed 5 backup/duplicate files, cleaned up imports
+- **Key Implementation:** Cursor format `"2025-11-13T02:50:00.000Z,123"` with SQL template for compound WHERE clause `(at < cursorAt) OR (at = cursorAt AND id < cursorId)`
+- **Files Created:** server/routes/macroLogs.ts, server/routes/mealLogs.ts, server/routes/foodLogs.ts
+- **Files Modified:** shared/schema.ts (insertMacroLogSchema), server/index.ts (route registration)
+- **Architect Approved:** Production-ready, eliminates skip/duplication risk
+- **Frontend Note:** Consumers must expect `timestamp,id` cursor format (not single timestamp)
+
 **CHECKPOINT 2025-10-23 02:50 UTC - "Dual-Write Weight Tracking + Vercel Config":**
 - ✅ STABLE: Dual-write weight tracking fully functional (Macro Calculator + Biometrics Body Stats)
 - ✅ STABLE: Database weight fetch/save working correctly
