@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import type { Meal } from "@/components/MealCard";
 import { TEMPLATE_SETS } from "@/data/templateSets";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
+import { cn } from "@/lib/utils";
+import { mealIngredients } from "@/data/mealIngredients";
+import { snackIngredients } from "@/data/snackIngredients";
+import { fruitIngredients } from "@/data/fruitIngredients";
 
 function matchesProfile(meal: Meal, profile: any){
   const allergies: string[] = (profile?.allergies || []).map((s:string)=>s.toLowerCase());
@@ -40,6 +44,10 @@ export function MealPickerDrawer({
   const [templates, setTemplates] = React.useState<Meal[]>([]);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const profile = useOnboardingProfile();
+  const [activeCategory, setActiveCategory] = useState<
+    "Proteins" | "Starchy Carbs" | "Fibrous Carbs" | "Fats" | "Fruit" | null
+  >(null);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 
   // Cafeteria generation with safe fallback and deep clone
   async function generateFromCafeteria(list: "breakfast"|"lunch"|"dinner"|"snacks"): Promise<Meal[]> {
@@ -79,6 +87,30 @@ export function MealPickerDrawer({
 
   if (!open || !list) return null;
 
+  const toggleIngredient = (ingredientName: string) => {
+    setSelectedIngredients((prev) =>
+      prev.includes(ingredientName)
+        ? prev.filter((i) => i !== ingredientName)
+        : [...prev, ingredientName]
+    );
+  };
+
+  const ingredientSource =
+    list === "snacks"
+      ? snackIngredients
+      : {
+          Proteins: mealIngredients.proteins,
+          "Starchy Carbs": mealIngredients.starchyCarbs,
+          "Fibrous Carbs": mealIngredients.fibrousCarbs,
+          Fats: mealIngredients.fats,
+          Fruit: fruitIngredients,
+        };
+
+  const currentIngredients = activeCategory
+    ? ingredientSource[activeCategory] ?? []
+    : [];
+
+
   return (
     <>
     <Drawer open={open} onOpenChange={(v)=>!v && onClose()}>
@@ -110,41 +142,107 @@ export function MealPickerDrawer({
               <Button size="sm" variant="ghost" onClick={onClose} className="text-white/80 hover:bg-white/10 rounded-2xl text-xs sm:text-sm px-2 sm:px-3" data-testid="button-close">Close</Button>
             </div>
           </div>
+
+          {/* Category Buttons */}
+          <div className="mt-2">
+            <div className="flex gap-2 overflow-x-auto md:grid md:grid-cols-5">
+            {(["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
+              (cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={cn(
+                    "rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
+                    activeCategory === cat
+                      ? "bg-lime-500 text-black shadow-md"
+                      : "bg-white/10 hover:bg-white/20 text-white/80"
+                  )}
+                >
+                  {cat}
+                </button>
+              )
+            )}
+            </div>
+          </div>
         </div>
 
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="px-3 sm:px-4 py-2 sm:py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
-          {templates.map((t) => (
-            <button
-              key={t.id}
-              onClick={()=>{
-                // deep clone + ensure ingredients array exists
-                const clone: any = JSON.parse(JSON.stringify(t));
-                clone.id = "tpl_pick_" + Math.random().toString(36).slice(2);
-                if (!Array.isArray(clone.ingredients)) clone.ingredients = [];
-                if (!Array.isArray(clone.instructions)) clone.instructions = [];
-                if (!clone.nutrition) clone.nutrition = { calories:0, protein:0, carbs:0, fat:0 };
-                onPick(clone);
-              }}
-              className="text-left rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-900/80 p-2 sm:p-3"
-              data-testid={`card-meal-${t.id}`}
-            >
-              <div className="text-white/90 font-medium text-xs sm:text-base">{t.title}</div>
-              <div className="text-white/60 text-xs mt-0.5 sm:mt-1">
-                {t.nutrition.calories} kcal · P {t.nutrition.protein} · C {t.nutrition.carbs} · F {t.nutrition.fat}
+          <div className="px-3 sm:px-4 py-2 sm:py-4">
+            {activeCategory && (
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              {currentIngredients.map((item) => {
+                const itemName = typeof item === "string" ? item : item.name;
+                const isSelected = selectedIngredients.some(
+                  (i) => i.toLowerCase() === itemName.toLowerCase()
+                );
+                const fruitItem = typeof item === "object" && "gi" in item ? item : null;
+
+                return (
+                  <li
+                    key={itemName}
+                    onClick={() => toggleIngredient(itemName)}
+                    className={cn(
+                      "cursor-pointer rounded-xl border px-3 py-2 transition-all flex items-center justify-between",
+                      isSelected
+                        ? "border-purple-400/50 bg-purple-500/20 text-white shadow-md"
+                        : "border-white/15 bg-white/5 text-white/80 hover:border-purple-300/30 hover:bg-white/10"
+                    )}
+                  >
+                    <span>{itemName}</span>
+                    {fruitItem && (
+                      <span
+                        className={cn(
+                          "text-xs px-2 py-0.5 rounded-md border ml-2 whitespace-nowrap",
+                          fruitItem.gi === "Low GI"
+                            ? "text-emerald-200 border-emerald-300/30 bg-emerald-500/10"
+                            : "text-amber-200 border-amber-300/30 bg-amber-500/10"
+                        )}
+                        title={fruitItem.gi === "Low GI" ? "Lower glycemic impact" : "Regular GI"}
+                      >
+                        {fruitItem.gi}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+              </ul>
+            )}
+
+            {!activeCategory && (
+              <div className="px-3 sm:px-4 py-2 sm:py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+                {templates.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={()=>{
+                      // deep clone + ensure ingredients array exists
+                      const clone: any = JSON.parse(JSON.stringify(t));
+                      clone.id = "tpl_pick_" + Math.random().toString(36).slice(2);
+                      if (!Array.isArray(clone.ingredients)) clone.ingredients = [];
+                      if (!Array.isArray(clone.instructions)) clone.instructions = [];
+                      if (!clone.nutrition) clone.nutrition = { calories:0, protein:0, carbs:0, fat:0 };
+                      onPick(clone);
+                    }}
+                    className="text-left rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-900/80 p-2 sm:p-3"
+                    data-testid={`card-meal-${t.id}`}
+                  >
+                    <div className="text-white/90 font-medium text-xs sm:text-base">{t.title}</div>
+                    <div className="text-white/60 text-xs mt-0.5 sm:mt-1">
+                      {t.nutrition.calories} kcal · P {t.nutrition.protein} · C {t.nutrition.carbs} · F {t.nutrition.fat}
+                    </div>
+                    {t.badges?.length ? (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {t.badges.map((b)=>(
+                          <span key={b} className="text-xs bg-emerald-600/20 text-emerald-400 px-2 py-0.5 rounded-full">
+                            {b}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </button>
+                ))}
               </div>
-              {t.badges?.length ? (
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {t.badges.map((b)=>(
-                    <span key={b} className="text-xs bg-emerald-600/20 text-emerald-400 px-2 py-0.5 rounded-full">
-                      {b}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-            </button>
-          ))}
+            )}
           </div>
         </div>
       </DrawerContent>

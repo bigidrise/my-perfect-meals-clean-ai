@@ -59,7 +59,7 @@ export const deleteMeal = async (userId: string, mealId: string): Promise<void> 
     body: JSON.stringify({ userId, mealId }),
     headers: { 'Content-Type': 'application/json' }
   });
-  
+
   if (!response.ok) {
     throw new Error('Failed to delete meal');
   }
@@ -71,11 +71,11 @@ export const replaceMeal = async (userId: string, mealId: string): Promise<Meal>
     body: JSON.stringify({ userId, mealId }),
     headers: { 'Content-Type': 'application/json' }
   });
-  
+
   if (!response.ok) {
     throw new Error('Failed to replace meal');
   }
-  
+
   const newMeal = await response.json();
   return newMeal;
 };
@@ -86,12 +86,12 @@ export const fetchUserProfile = async (userId: string): Promise<UserProfile> => 
   if (stored) {
     return JSON.parse(stored);
   }
-  
+
   // Fallback to API if localStorage is empty
   const response = await fetch(`/api/users/${userId}`);
   if (!response.ok) {
     throw new Error('Failed to fetch user profile');
   }
-  
+
   return response.json();
 };
