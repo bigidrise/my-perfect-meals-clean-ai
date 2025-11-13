@@ -199,7 +199,7 @@ export default function Profile() {
               onClick={() => {
                 logout();
                 setUser(null);
-                setLocation("/auth");
+                setLocation("/welcome");
               }}
               data-testid="button-signout"
             >

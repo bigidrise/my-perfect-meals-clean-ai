@@ -51,6 +51,9 @@ export function login(email: string, password: string): User {
 export function logout(): void {
   localStorage.removeItem("mpm_current_user");
   localStorage.removeItem("userId");
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("coachMode");
+  localStorage.removeItem("mpm.hasSeenWelcome");
 }
 
 export function getCurrentUser(): User | null {

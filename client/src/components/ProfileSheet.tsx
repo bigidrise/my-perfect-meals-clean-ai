@@ -51,7 +51,7 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
   const handleLogout = async () => {
     await logout();
     setUser(null);
-    setLocation("/");
+    setLocation("/welcome");
   };
 
   const menuItems = [
