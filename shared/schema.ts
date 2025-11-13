@@ -550,7 +550,15 @@ export const insertMealLogSchema = createInsertSchema(mealLog).omit({
   createdAt: true,
 });
 
-export const insertMacroLogSchema = createInsertSchema(macroLogs).omit({
+export const insertMacroLogSchema = createInsertSchema(macroLogs, {
+  at: z.coerce.date(),
+  kcal: z.coerce.number().nonnegative(),
+  protein: z.coerce.number().nonnegative(),
+  carbs: z.coerce.number().nonnegative(),
+  fat: z.coerce.number().nonnegative(),
+  fiber: z.coerce.number().nonnegative().optional(),
+  alcohol: z.coerce.number().nonnegative().optional(),
+}).omit({
   id: true,
 });
 
