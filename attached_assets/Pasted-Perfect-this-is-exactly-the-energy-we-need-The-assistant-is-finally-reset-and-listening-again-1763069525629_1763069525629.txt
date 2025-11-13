@@ -1,0 +1,116 @@
+Perfect — **this is exactly the energy we need**.
+The assistant is finally reset and listening again.
+
+Now you need to give the Replit assistant a *tight, surgical* follow-up so they stay locked into Phase 5 and don’t drift.
+
+Here’s the exact message you should send them next:
+
+---
+
+# ✅ **SEND THIS TO THE REPL.IT ASSISTANT NOW**
+
+(Use this exact wording — it keeps them laser-focused on the ONLY work allowed.)
+
+---
+
+# 🔧 **Phase 5: Verification + Completion Request**
+
+You are correctly reset.
+Here is what I need from you NOW:
+
+---
+
+# ✅ **1. VERIFY Phase 5 Implementation**
+
+Check the following files and confirm ALL Phase 5 behavior is working:
+
+### **Files to verify**
+
+* `client/src/pages/LifestyleDietMenuBuilder.tsx`
+* `client/src/pages/ClinicalLifestyleDietMenuBuilder.tsx`
+* `client/src/components/MealIngredientPicker.tsx`
+* `client/src/data/lifestyleDietPickerConfig.ts`
+* `client/src/data/clinicalDietPickerConfig.ts`
+
+### **Verify these 7 behaviors:**
+
+1. When a diet is selected, the ingredient picker shows ONLY that diet’s ingredients.
+2. When no diet is selected, the screen shows “Choose a diet to continue.”
+3. MealIngredientPicker receives the correct `dietConfig` and `dietType` props.
+4. The AI request includes:
+
+   * `dietType`
+   * selected diet ingredients
+5. Diet selection persists in:
+
+   * `lifestyle-diet-selection`
+   * `clinical-diet-selection`
+6. Snack cards still work correctly and are unchanged.
+7. ALL other meal boards continue using regular ingredients and are untouched.
+
+---
+
+# ✅ **2. FIX ANY PHASE 5 ISSUES FOUND**
+
+If you see ANY missing wiring, do ONLY the following:
+
+* Fix the dietConfig passing
+* Fix dietType passing
+* Fix ingredient source logic
+* Fix empty-state display
+
+⚠️ **Do NOT:**
+
+* Add backend routes
+* Add guardrails
+* Add migrations
+* Add presets
+* Add schemas
+
+Only fix Phase 5 wiring.
+
+---
+
+# ✅ **3. ASK BEFORE MAKING ANY OTHER CHANGES**
+
+If you are unsure about anything, stop and ask.
+Do NOT assume.
+Do NOT improvise.
+Do NOT move to Phase 6.
+
+---
+
+# 🔒 **STRICT LIMITS**
+
+You are forbidden from:
+
+* Creating new tables
+* Modifying existing tables
+* Adding new server routes
+* Changing backend logic
+* Adding guardrail logic
+* Creating extra features
+
+Only Phase 5 verification + completion is allowed.
+
+---
+
+# 📌 **GOAL**
+
+Finish Phase 5 CLEANLY so the two new boards:
+
+* **Lifestyle Diet Menu Builder**
+* **Clinical Lifestyle Diet Menu Builder**
+
+are fully diet-specific and fully functional.
+
+---
+
+# End of instructions.
+
+---
+
+Coach — send that EXACT message to the Replit assistant.
+It will force the assistant to stay in the box and finish Phase 5 correctly.
+
+When they reply, send me their response and I’ll make sure they’re still aligned before they touch anything.

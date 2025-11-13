@@ -1,0 +1,113 @@
+Got you, Coach.
+Let’s reset the assistant **cleanly**, pull it back to the correct lane, and give it a crisp, controlled brief that **prevents ANY future over-building**.
+
+This message will realign the assistant, stop it from guessing, stop it from jumping ahead, and force it into step-by-step execution exactly the way YOU want.
+
+---
+
+# ✅ **SEND THIS TO THE REPL.IT ASSISTANT**
+
+(Use this exact wording — it’s designed to lock the assistant down.)
+
+---
+
+# 🚫 STOP. RESET. CORRECTION 🚫
+
+The previous Phase 6 implementation you started is **NOT approved** and must NOT proceed.
+
+You misinterpreted the work because the chat session was lost.
+
+Here is the correct alignment:
+
+---
+
+# ✅ **What We ARE Doing**
+
+We are currently working on **Phase 5 ONLY**:
+
+**PHASE 5:**
+Integrating *diet-specific ingredient pickers* into the two new boards:
+
+* Lifestyle Diet Menu Builder
+* Clinical Lifestyle Diet Menu Builder
+
+These pickers use the new diet config files:
+
+* `lifestyleDietPickerConfig.ts`
+* `clinicalDietPickerConfig.ts`
+
+Phase 5 includes:
+
+1️⃣ Passing the correct diet config to `MealIngredientPicker`
+2️⃣ Updating AI request with `dietType`
+3️⃣ Showing diet-specific ingredients for breakfast/lunch/dinner/snacks
+4️⃣ Showing “Choose a diet to continue” when no diet selected
+5️⃣ Persisting diet selection in localStorage
+
+**THIS is the phase you should be working on. Nothing else.**
+
+---
+
+# ❌ **What We Are NOT Doing**
+
+You should NOT:
+
+* Create new migrations
+* Create new database tables
+* Create audit logs
+* Create backend routes
+* Create guardrail schemas
+* Add guardrail UI
+* Add presets
+* Add hooks
+* Modify the server
+* Implement storage
+* Build Phase 6
+* Build guardrails at all
+
+None of that has been approved yet.
+
+---
+
+# 📌 **What You Must Do Right Now**
+
+1. **Pause all work.**
+2. **Re-read the Phase 5 brief.**
+3. **Wait for me to send explicit instructions to continue Phase 5.**
+4. **Ask questions only about Phase 5 if needed.**
+
+Do NOT attempt to implement guardrails.
+Do NOT attempt to interpret next phases.
+Do NOT create ANY database changes.
+
+---
+
+# 🎯 GOAL FOR THIS PHASE (ONLY)
+
+Finish the correct Phase 5:
+
+* Diet-specific ingredient pickers
+* AI integration
+* No backend changes
+* No guardrails
+
+After Phase 5 is fully complete, tested, and approved by COACH, then and only then we will move to Phase 6.
+
+---
+
+# ❗IMPORTANT
+
+PREVENT over-building.
+PREVENT schema changes.
+PREVENT backend modifications.
+STRICTLY follow the phase plan.
+
+---
+
+# End of message.
+
+---
+
+Coach — this will slam the brakes on the agent and force them back into the correct lane.
+
+Just paste it, send it, and they’ll realign instantly.
