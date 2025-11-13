@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { Switch, Route, useLocation } from "wouter";
 import ScrollRestorer from "@/components/ScrollRestorer";
 import BottomNav from "@/components/BottomNav";
+import { withPageErrorBoundary } from "@/components/PageErrorBoundary";
 // import MealLogHistoryPage from "@/pages/MealLogHistoryPage"; // TEMPORARILY DISABLED - File missing
 import ABTestingDemo from "@/pages/ABTestingDemo";
 import { FEATURES } from "@/utils/features";
@@ -178,10 +179,10 @@ export default function Router() {
         <Route path="/family-info" component={FamilyInfoPage} />
         <Route path="/admin-moderation" component={AdminModerationPage} />
         {/* DELETED: CommunityTestPage, CommunityPage routes */}
-        <Route path="/onboarding" component={Onboarding} />
-        <Route path="/onboarding-v2" component={OnboardingV2} />
-        <Route path="/onboarding-legacy" component={Onboarding} />
-        <Route path="/dashboard" component={DashboardNew} />
+        <Route path="/onboarding" component={withPageErrorBoundary(Onboarding, "Onboarding")} />
+        <Route path="/onboarding-v2" component={withPageErrorBoundary(OnboardingV2, "Onboarding V2")} />
+        <Route path="/onboarding-legacy" component={withPageErrorBoundary(Onboarding, "Onboarding")} />
+        <Route path="/dashboard" component={withPageErrorBoundary(DashboardNew, "Dashboard")} />
         <Route path="/tutorials" component={TutorialHub} />
         <Route path="/learn" component={Learn} />
         <Route path="/get-inspiration" component={GetInspiration} />
@@ -203,16 +204,16 @@ export default function Router() {
         <Route path="/restaurant-guide" component={RestaurantGuidePage} />
 
         {/* DELETED: SmartWeekBuilder, AdultBeverageHubPage routes */}
-        <Route path="/macro-counter" component={MacroCounter} />
+        <Route path="/macro-counter" component={withPageErrorBoundary(MacroCounter, "Macro Counter")} />
 
         {/* DELETED: All kids meal routes, all alcohol hub routes */}
 
-        <Route path="/my-biometrics" component={MyBiometrics} />
+        <Route path="/my-biometrics" component={withPageErrorBoundary(MyBiometrics, "My Biometrics")} />
 
         {/* Biometric sub-pages */}
-        <Route path="/biometrics" component={MyBiometrics} />
-        <Route path="/biometrics/body-composition" component={BodyComposition} />
-        <Route path="/biometrics/sleep" component={Sleep} />
+        <Route path="/biometrics" component={withPageErrorBoundary(MyBiometrics, "Biometrics")} />
+        <Route path="/biometrics/body-composition" component={withPageErrorBoundary(BodyComposition, "Body Composition")} />
+        <Route path="/biometrics/sleep" component={withPageErrorBoundary(Sleep, "Sleep Tracking")} />
 
         {/* ✅ NEW: Unified Food Logging Routes */}
         {/* <Route path="/food" component={FoodLogToday} /> */} {/* TEMPORARILY DISABLED - File missing */}
@@ -251,15 +252,15 @@ export default function Router() {
         </Route>
 
         {/* DELETED: TemplateHub route */}
-        <Route path="/weekly" component={WeeklyMealBoard} />
+        <Route path="/weekly" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
         {/* DELETED: PlanBuilderTurbo, ProteinPlannerPage, PlanBuilderHub, CompetitionBeachbodyBoard routes */}
-        <Route path="/planner" component={Planner} />
-        <Route path="/weekly-meal-board" component={WeeklyMealBoard} />
+        <Route path="/planner" component={withPageErrorBoundary(Planner, "Planner")} />
+        <Route path="/weekly-meal-board" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
         <Route path="/beach-body-meal-board" component={BeachBodyMealBoard} />
 
         {/* Legacy redirects - redirect Classic Builder to Weekly Meal Board */}
-        <Route path="/plan-builder/classic" component={WeeklyMealBoard} />
-        <Route path="/builder/classic" component={WeeklyMealBoard} />
+        <Route path="/plan-builder/classic" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
+        <Route path="/builder/classic" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
         {/* DELETED: PlanBuilderTurbo route */}
 
         {/* DELETED: CravingHub, CravingPresetsPage, SearchPage, PhysicianReportView, SmartMenuBuilder routes */}
@@ -272,26 +273,26 @@ export default function Router() {
         {/* <Route path="/meal-log-history" component={MealLogHistoryPage} /> */} {/* TEMPORARILY DISABLED - File missing */}
 
         {/* Shopping List Routes */}
-        <Route path="/shopping-list-v2" component={ShoppingListMasterView} />
-        <Route path="/shopping-list" component={ShoppingListMasterView} />
+        <Route path="/shopping-list-v2" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
+        <Route path="/shopping-list" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
 
         {/* ProCare Feature Routes (ProCare Cover → Care Team → Pro Portal → Client Dashboard → Athlete Board) */}
-        <Route path="/procare-cover" component={ProCareCover} />
-        <Route path="/care-team" component={CareTeam} />
-        <Route path="/pro-portal" component={ProPortal} />
-        <Route path="/pro/clients" component={ProClients} />
-        <Route path="/pro/clients/:id" component={ProClientDashboard} />
-        <Route path="/pro-client-dashboard" component={ProClientDashboard} />
+        <Route path="/procare-cover" component={withPageErrorBoundary(ProCareCover, "ProCare Cover")} />
+        <Route path="/care-team" component={withPageErrorBoundary(CareTeam, "Care Team")} />
+        <Route path="/pro-portal" component={withPageErrorBoundary(ProPortal, "Pro Portal")} />
+        <Route path="/pro/clients" component={withPageErrorBoundary(ProClients, "Pro Clients")} />
+        <Route path="/pro/clients/:id" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
+        <Route path="/pro-client-dashboard" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
         <Route path="/athlete-board" component={AthleteBoardStandalone} />
         <Route path="/pro/clients/:id/athlete-board" component={AthleteBoardProCare} />
 
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
-        <Route path="/diabetic-hub" component={DiabeticHub} />
-        <Route path="/diabetes-support" component={DiabetesSupportPage} />
-        <Route path="/diabetic-menu-builder" component={DiabeticMenuBuilder} />
-        <Route path="/glp1-hub" component={GLP1Hub} />
-        <Route path="/glp1-meal-builder" component={GLP1MealBuilder} />
-        <Route path="/medical-diets-hub" component={MedicalDietsHub} />
+        <Route path="/diabetic-hub" component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")} />
+        <Route path="/diabetes-support" component={withPageErrorBoundary(DiabetesSupportPage, "Diabetes Support")} />
+        <Route path="/diabetic-menu-builder" component={withPageErrorBoundary(DiabeticMenuBuilder, "Diabetic Menu Builder")} />
+        <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
+        <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
+        <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
 
         {/* Craving Creator Routes */}
         <Route path="/craving-creator-landing" component={CravingCreatorLanding} />

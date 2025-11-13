@@ -21,16 +21,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Add global error handlers to prevent unhandled rejections from crashing the app
-window.addEventListener('unhandledrejection', (event) => {
-  console.error('Unhandled promise rejection:', event.reason);
-  event.preventDefault();
-});
-
-window.addEventListener('error', (event) => {
-  console.error('Global error:', event.error);
-});
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GlobalErrorBoundary>
