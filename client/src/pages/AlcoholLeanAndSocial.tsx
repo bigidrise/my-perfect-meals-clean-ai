@@ -298,23 +298,22 @@ export default function AlcoholLeanAndSocial() {
 
   const selected = DRINKS.find(d => d.id === selectedDrink);
 
-  // New: Function to handle closing the info modal and setting localStorage
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem('seenInfoModal-AlcoholLeanAndSocial', 'true');
-  };
-
-  // New: Effect to check and show modal if not seen
+  // Auto-open instructions on first visit in coach mode
   useEffect(() => {
-    const hasSeen = localStorage.getItem('seenInfoModal-AlcoholLeanAndSocial');
-    if (!hasSeen) {
-      // Using a small timeout to ensure the UI is ready before showing the modal
-      const timer = setTimeout(() => {
+    const coachMode = localStorage.getItem("coachMode");
+    const hasSeenAlcoholLeanInfo = localStorage.getItem("hasSeenAlcoholLeanInfo");
+
+    if (coachMode === "guided" && !hasSeenAlcoholLeanInfo) {
+      setTimeout(() => {
         setShowInfoModal(true);
-      }, 500); // 500ms delay
-      return () => clearTimeout(timer);
+      }, 300);
     }
   }, []);
+
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("hasSeenAlcoholLeanInfo", "true");
+  };
 
 
   return (
