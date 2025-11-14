@@ -1,0 +1,58 @@
+You are working in my My Perfect Meals project.
+
+GOAL:
+Completely remove the two broken boards and ALL traces of them so they are as if they never existed.
+
+These are the files to REMOVE:
+- client/src/pages/LifestyleDietMenuBuilder.tsx
+- client/src/pages/ClinicalLifestyleDietMenuBuilder.tsx
+
+There may also be backup/duplicate variants. If they exist, DELETE them too:
+- client/src/pages/LifestyleDietMenuBuilder.tsx.backup
+- client/src/pages/ClinicalLifestyleDietMenuBuilder.tsx.backup
+- Any file in client/src/pages whose name starts with:
+  • "LifestyleDietMenuBuilder"
+  • "ClinicalLifestyleDietMenuBuilder"
+
+### TASKS
+
+1. **Delete the files**
+   - Physically delete:
+     - client/src/pages/LifestyleDietMenuBuilder.tsx
+     - client/src/pages/ClinicalLifestyleDietMenuBuilder.tsx
+   - Also delete any backup/duplicate variants with those names in the same folder.
+
+2. **Remove all imports and references**
+   - Search the ENTIRE codebase for:
+     - "LifestyleDietMenuBuilder"
+     - "ClinicalLifestyleDietMenuBuilder"
+   - For every match you find:
+     - Remove the import lines.
+     - Remove any JSX usage, <Route> usage, or component references.
+   - The goal: after you are done, these identifiers should NOT appear anywhere in the repo.
+
+3. **Remove routes**
+   - Search all router-related files (for example: anything in client/src/routes, AppRoutes, router.tsx, or similar) for any route that points to:
+     - LifestyleDietMenuBuilder
+     - ClinicalLifestyleDietMenuBuilder
+     - Any path that was created specifically for these boards (for example anything like "/lifestyle-diet", "/lifestyle-diet-menu-builder", "/clinical-lifestyle-diet", etc.).
+   - Delete those route objects/JSX elements entirely so the app no longer knows these routes exist.
+
+4. **Remove nav buttons/links**
+   - Search for any navigation element (button, card, link, menu item, etc.) that navigates to those routes, using:
+     - "Lifestyle Diet", "Lifestyle Diet Menu", or similar label text
+     - "Clinical Lifestyle Diet" or similar label text
+   - Remove those buttons/links/cards from the UI so there is no way to click into those (now deleted) boards.
+
+5. **Clean up and verify**
+   - After all deletions:
+     - Run the dev/build command for the project.
+     - Fix any TypeScript or build errors that are *only* related to these removed files or routes by removing leftover references.
+   - Confirm:
+     - The app compiles successfully.
+     - There are no references to "LifestyleDietMenuBuilder" or "ClinicalLifestyleDietMenuBuilder" anywhere in the repo.
+     - Navigating through the Planner/Lifestyle/Clinical hubs does NOT show any 404-under-page weirdness tied to these boards.
+
+IMPORTANT:
+- Do NOT touch any other meal boards or builders (Athlete, Competition, ProCare, etc.).
+- Your job is ONLY to surgically remove these two specific boards and their routes/references, and leave everything else exactly as it is.
