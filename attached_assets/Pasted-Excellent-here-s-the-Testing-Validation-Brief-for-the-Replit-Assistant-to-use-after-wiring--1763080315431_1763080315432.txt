@@ -1,0 +1,136 @@
+Excellent — here’s the **Testing & Validation Brief** for the Replit Assistant to use *after wiring and connecting* the new ingredient datasets.
+This makes sure nothing breaks, the AI generation still works, and all boards pull their correct meal libraries.
+
+---
+
+## 🧪 REPLIT ASSISTANT TESTING & VALIDATION BRIEF
+
+### 🎯 Objective
+
+Verify that each **meal board** now loads the correct **ingredient dataset** and AI generation flow after the new plan-specific ingredient files are connected.
+
+This test ensures:
+
+* Each plan type (Paleo, Keto, Mediterranean, GLP-1, Diabetic) pulls its own meal lists
+* The AI prompt builder still generates complete meal outputs
+* UI rendering and DALL·E image calls remain stable
+
+---
+
+### 🔍 TEST ENVIRONMENT
+
+Test Path:
+`client/src/pages/`
+Meal Boards to verify:
+
+```
+WeeklyMealBoard.tsx
+DiabeticMenuBuilder.tsx
+GLP1MealBuilder.tsx
+ProCareMealBoard.tsx
+BeachBodyMealBoard.tsx
+```
+
+All use the same `AIMealCreatorModal.tsx` for AI meal generation.
+
+Make sure local storage is cleared (`localStorage.clear()`) before running tests.
+
+---
+
+### 🧩 TEST STEPS — VALIDATION MATRIX
+
+Run each of these tests for **every plan type** in the selector (Paleo, Keto, Mediterranean, GLP-1, Diabetic).
+
+---
+
+#### **Test 1: Ingredient Board Validation**
+
+1. Go to any meal board (e.g., Weekly Meal Board).
+2. Tap “Create with AI” under *Breakfast*.
+3. Confirm that the ingredient board shows **plan-specific items** (e.g., “Egg scramble with spinach and avocado” for Paleo, or “Oatmeal with cinnamon” for Diabetic).
+4. Repeat for Lunch, Dinner, and Snacks — each should pull from the same plan dataset.
+5. ✅ **Pass Condition:** Each plan shows unique, diet-appropriate options.
+
+---
+
+#### **Test 2: Snack Board Consistency**
+
+1. Scroll to the Snack card.
+2. Tap “Create with AI.”
+3. Confirm that snack ingredients display **snack-specific categories**:
+
+   * Sweet Treats
+   * Savory & Crunchy
+   * Light & Gentle
+   * Protein & Energy
+   * Drinkables
+   * Dessert Bites
+4. ✅ **Pass Condition:** Snack cards behave identically across all five boards (same layout, categories, and AI prompt behavior).
+
+---
+
+#### **Test 3: AI Generation Output**
+
+1. Select 3–5 ingredients and click **Generate with AI**.
+2. Observe the output in the generated meal card:
+
+   * Meal name is relevant to plan (e.g., “Paleo Egg Scramble Bowl”).
+   * Description references selected ingredients.
+   * Macronutrients and image load successfully.
+3. ✅ **Pass Condition:** The AI returns a properly formatted, themed meal card.
+
+---
+
+#### **Test 4: DALL·E Image Rendering**
+
+1. Verify that each generated meal (breakfast/lunch/dinner/snack) displays a unique DALL·E image.
+2. Image prompt should follow format:
+   `"Healthy [meal name] on white plate, high-quality photo, minimal background"`.
+3. ✅ **Pass Condition:** Each meal card has a high-quality image and no image load errors.
+
+---
+
+#### **Test 5: Persistent State Check**
+
+1. Generate 3–4 meals per board (across breakfast, lunch, dinner, snack).
+2. Refresh the page.
+3. ✅ **Pass Condition:** All generated meal cards remain visible until deleted manually.
+
+---
+
+#### **Test 6: Delete All Functionality**
+
+*(if implemented)*
+
+1. Click “Delete All” in the meal board header.
+2. Confirm that all meal cards disappear.
+3. ✅ **Pass Condition:** Instant clear without console errors.
+
+---
+
+#### **Test 7: Medical Safety Consistency**
+
+1. Generate meals on **Diabetic** and **GLP-1** boards.
+2. Check that medical badges show correctly:
+
+   * “Low GI”
+   * “GLP-1 Friendly”
+   * “High Fiber”
+3. ✅ **Pass Condition:** Medical badges appear under meal title; no badge mismatches.
+
+---
+
+### 🧠 Post-Test Confirmation
+
+Once all tests pass:
+
+* Push commit message:
+
+  ```
+  ./push.sh "feat: integrated plan-specific meal datasets + verified AI generation across all boards"
+  ```
+* Notify Coach Idrise: “Plan-based ingredient systems live across all boards; AI generation and persistence verified.”
+
+---
+
+Would you like me to include a **data expansion roadmap** next — listing which five ingredient files (Keto, Mediterranean, GLP-1, ProCare, Athlete) still need to be filled with 100+ items and their category breakdown? That way, you can assign that to the assistant or your data intern later.
