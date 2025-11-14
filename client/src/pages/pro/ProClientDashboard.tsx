@@ -770,7 +770,7 @@ export default function ProClientDashboard() {
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-diabetic-hub"
             >
-              🩸 Diabetic Hub
+              🩸 Diabetic Menu Builder
             </Button>
             <Button
               onClick={() => {
@@ -780,7 +780,7 @@ export default function ProClientDashboard() {
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-glp1-hub"
             >
-              💉 GLP-1 Hub
+              💉 GLP-1 Menu Builder
             </Button>
             <Button
               onClick={() => {
