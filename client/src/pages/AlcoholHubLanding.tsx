@@ -116,7 +116,7 @@ export default function AlcoholHubLanding() {
             </Button>
             <div className="flex items-center gap-2">
               <Wine className="h-6 w-6 text-orange-400" />
-              <h1 className="text-xl font-bold text-white">Alcohol Hub</h1>
+              <h1 className="text-xl font-bold text-white">Spirits & Lifestyle Hub</h1>
             </div>
           </div>
         </div>

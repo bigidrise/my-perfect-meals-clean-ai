@@ -24,7 +24,7 @@ export default function LifestyleHub() {
 
   const lifestyleFeatures: AIFeature[] = [
     {
-      title: "Craving Creator",
+      title: "Craving Creator Hub",
       description: "AI-powered personalized meal suggestions based on your cravings",
       icon: Sparkles,
       route: "/craving-creator-landing",
@@ -48,7 +48,7 @@ export default function LifestyleHub() {
       testId: "card-restaurant-guide",
     },
     {
-      title: "Healthy Kids Meals",
+      title: "Healthy Kids Meals Hub",
       description: "Nutritious, kid-friendly meals that children love",
       icon: Baby,
       route: "/healthy-kids-meals",
@@ -56,7 +56,7 @@ export default function LifestyleHub() {
       testId: "card-healthy-kids-meals",
     },
     {
-      title: "Alcohol Hub",
+      title: "Spirits & Lifestyle Hub",
       description: "Wine pairing, smart drinks, mocktails, and mindful consumption",
       icon: Wine,
       route: "/alcohol-hub",
