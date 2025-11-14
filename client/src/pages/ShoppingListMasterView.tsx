@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Trash2, X, Camera } from "lucide-react";
 import { useLocation } from "wouter";
 import TrashButton from "@/components/ui/TrashButton";
-import { readList, setItems, toggleChecked, deleteItems, updateItem, clearAll, clearChecked, ShopItem, readOptions, writeOptions, setWeekScope } from "@/stores/shoppingListStore";
+import { useShoppingListStore, ShoppingListItem } from "@/stores/shoppingListStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,91 +25,84 @@ export default function ShoppingListMasterView() {
     return params.get('from') || '';
   });
 
-  const [items, setLocalItems] = useState<ShopItem[]>(() => readList().items);
+  // Subscribe to Zustand store
+  const items = useShoppingListStore(s => s.items);
+  const addItem = useShoppingListStore(s => s.addItem);
+  const toggleItem = useShoppingListStore(s => s.toggleItem);
+  const removeItem = useShoppingListStore(s => s.removeItem);
+  const clearChecked = useShoppingListStore(s => s.clearChecked);
+  const clearAll = useShoppingListStore(s => s.clearAll);
+  const updateItem = useShoppingListStore(s => s.updateItem);
+  const replaceItems = useShoppingListStore(s => s.replaceItems);
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [quickAddText, setQuickAddText] = useState("");
-  const [opts, setOpts] = useState(() => readOptions());
+  const [opts, setOpts] = useState({ 
+    groupByAisle: false, 
+    excludePantryStaples: false, 
+    scopeByWeek: false, 
+    rounding: 'friendly' as 'friendly' | 'none'
+  });
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [purchasedOpen, setPurchasedOpen] = useState(true);
   const [scannerOpen, setScannerOpen] = useState(false);
 
-  function handleBarcodeScanned(barcode: string, productName: string) {
-    // Add scanned item to shopping list
-    const store = readList();
-    const merged = [...store.items];
-    merged.push({
-      id: `itm_${Math.random().toString(36).slice(2,10)}${Date.now().toString(36)}`,
+  const handleBarcodeScanned = useCallback((barcode: string, productName: string) => {
+    addItem({
       name: productName,
-      note: `Barcode: ${barcode}`,
-      checked: false
+      quantity: 1,
+      unit: '',
+      notes: `Barcode: ${barcode}`
     });
-    setItems(merged);
     setScannerOpen(false);
     toast({ 
       title: "Item added", 
       description: `${productName} added to shopping list` 
     });
-  }
+  }, [addItem, toast]);
 
-  useEffect(() => {
-    const onUpd = () => setLocalItems(readList().items);
-    window.addEventListener("shopping:list:updated", onUpd);
-    return () => window.removeEventListener("shopping:list:updated", onUpd);
+  const toggleOpt = useCallback(<K extends keyof typeof opts>(key: K) => {
+    setOpts(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
-
-  useEffect(() => {
-    const onOpt = () => setOpts(readOptions());
-    window.addEventListener("shopping:options:updated", onOpt);
-    return () => window.removeEventListener("shopping:options:updated", onOpt);
-  }, []);
-
-  function toggleOpt<K extends keyof typeof opts>(key: K) {
-    const next = { ...opts, [key]: !opts[key] };
-    writeOptions(next);
-    if (key === "scopeByWeek") setWeekScope(next.scopeByWeek);
-  }
 
   const counts = useMemo(()=>({
     total: items.length,
-    checked: items.filter(i=>i.checked).length
+    checked: items.filter(i=>i.isChecked).length
   }), [items]);
 
-  function onInlineEdit(id: string, field: "qty"|"unit"|"name") {
+  const onInlineEdit = useCallback((id: string, field: "quantity"|"unit"|"name"|"notes") => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const v = field === "qty" ? Number(e.target.value) : e.target.value;
-      updateItem(id, field === "qty" ? { qty: Number.isFinite(v as number) ? (v as number) : undefined } : { [field]: v } as any);
+      const v = field === "quantity" ? Number(e.target.value) : e.target.value;
+      updateItem(id, field === "quantity" ? { quantity: Number.isFinite(v as number) ? (v as number) : 1 } : { [field]: v });
     };
-  }
+  }, [updateItem]);
 
-  function onClearChecked() {
+  const onClearChecked = useCallback(() => {
     if (!confirm("Clear all checked items?")) return;
     clearChecked();
-  }
+  }, [clearChecked]);
 
-  function onClearAll() {
+  const onClearAll = useCallback(() => {
     if (!confirm("Clear entire shopping list?")) return;
     clearAll();
-  }
+  }, [clearAll]);
 
-  function onQuickAdd() {
+  const onQuickAdd = useCallback(() => {
     if (!quickAddText.trim()) return;
     const name = quickAddText.trim();
-    const store = readList();
-    const merged = [...store.items];
-    merged.push({
-      id: `itm_${Math.random().toString(36).slice(2,10)}${Date.now().toString(36)}`,
+    addItem({
       name,
-      checked: false
+      quantity: 1,
+      unit: ''
     });
-    setItems(merged);
     setQuickAddText("");
     toast({ title: "Item added", description: name });
-  }
+  }, [quickAddText, addItem, toast]);
 
-  async function onCopyToClipboard() {
+  const onCopyToClipboard = useCallback(async () => {
     const mealItems = items
-      .filter(i => !i.checked)
-      .map(i => `• ${i.name}${i.qty ? ` — ${i.qty}${i.unit ? ' ' + i.unit : ''}` : ''}`);
+      .filter(i => !i.isChecked)
+      .map(i => `• ${i.name}${i.quantity ? ` — ${i.quantity}${i.unit ? ' ' + i.unit : ''}` : ''}`);
 
     const otherItems = readOtherItems().items
       .filter(i => !i.checked)
@@ -140,16 +133,16 @@ export default function ShoppingListMasterView() {
       document.body.removeChild(el);
       toast({ title: "Copied to clipboard", description: `${totalCount} items copied` });
     }
-  }
+  }, [items, toast]);
 
-  const uncheckedItems = useMemo(() => items.filter(i => !i.checked), [items]);
-  const checkedItems = useMemo(() => items.filter(i => i.checked), [items]);
+  const uncheckedItems = useMemo(() => items.filter(i => !i.isChecked), [items]);
+  const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
 
   const groupedUnchecked = useMemo(()=>{
     if (!opts.groupByAisle) return { All: uncheckedItems };
-    const map: Record<string,ShopItem[]> = {};
+    const map: Record<string, ShoppingListItem[]> = {};
     for (const it of uncheckedItems) {
-      const k = it.cat || "Other";
+      const k = it.category || "Other";
       (map[k] ||= []).push(it);
     }
     return map;
@@ -157,9 +150,9 @@ export default function ShoppingListMasterView() {
 
   const groupedChecked = useMemo(()=>{
     if (!opts.groupByAisle) return { All: checkedItems };
-    const map: Record<string,ShopItem[]> = {};
+    const map: Record<string, ShoppingListItem[]> = {};
     for (const it of checkedItems) {
-      const k = it.cat || "Other";
+      const k = it.category || "Other";
       (map[k] ||= []).push(it);
     }
     return map;
@@ -281,7 +274,7 @@ export default function ShoppingListMasterView() {
             </div>
             <select
               value={opts.rounding}
-              onChange={(e)=>writeOptions({ ...opts, rounding: e.target.value as "none" | "friendly" })}
+              onChange={(e)=>setOpts({ ...opts, rounding: e.target.value as "none" | "friendly" })}
               className="bg-white/10 border border-white/20 text-white/90 text-sm rounded-md px-2 py-1"
               title="Rounding"
               data-testid="select-rounding"
@@ -452,9 +445,12 @@ export default function ShoppingListMasterView() {
                       size="sm"
                       className="h-9 px-3 text-sm bg-white/10 border border-white/25 text-white active:scale-[.98]"
                       onClick={() => {
-                        const updated = items.map(i => i.cat === cat ? {...i, checked: true} : i);
-                        setItems(updated);
-                        setLocalItems(updated);
+                        const updated = items.map(i => 
+                          (cat === "All" || i.category === cat) 
+                            ? {...i, isChecked: true} 
+                            : i
+                        );
+                        replaceItems(updated);
                       }}
                       data-testid={`button-check-all-${cat}`}
                     >
@@ -464,9 +460,12 @@ export default function ShoppingListMasterView() {
                       size="sm"
                       className="h-9 px-3 text-sm bg-white/10 border border-white/25 text-white active:scale-[.98]"
                       onClick={() => {
-                        const updated = items.map(i => i.cat === cat ? {...i, checked: false} : i);
-                        setItems(updated);
-                        setLocalItems(updated);
+                        const updated = items.map(i => 
+                          (cat === "All" || i.category === cat) 
+                            ? {...i, isChecked: false} 
+                            : i
+                        );
+                        replaceItems(updated);
                       }}
                       data-testid={`button-uncheck-all-${cat}`}
                     >
@@ -479,12 +478,12 @@ export default function ShoppingListMasterView() {
                     <div 
                       key={item.id} 
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                        item.checked ? 'bg-white/5 opacity-50' : 'bg-white/10'
+                        item.isChecked ? 'bg-white/5 opacity-50' : 'bg-white/10'
                       }`}
                     >
                       <Checkbox
-                        checked={item.checked || false}
-                        onCheckedChange={() => toggleChecked(item.id)}
+                        checked={item.isChecked || false}
+                        onCheckedChange={() => toggleItem(item.id)}
                         className="border-white/30"
                         data-testid={`checkbox-bought-${item.id}`}
                       />
@@ -507,12 +506,12 @@ export default function ShoppingListMasterView() {
                             autoFocus
                           />
                           <Input
-                            defaultValue={item.qty ?? ""}
-                            onBlur={onInlineEdit(item.id, "qty")}
+                            defaultValue={item.quantity ?? ""}
+                            onBlur={onInlineEdit(item.id, "quantity")}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
                                 const val = Number((e.target as HTMLInputElement).value);
-                                updateItem(item.id, { qty: Number.isFinite(val) ? val : undefined });
+                                updateItem(item.id, { quantity: Number.isFinite(val) ? val : 1 });
                               }
                             }}
                             className="w-16 bg-black/30 border-white/30 text-white h-8"
@@ -542,11 +541,11 @@ export default function ShoppingListMasterView() {
                         </>
                       ) : (
                         <>
-                          <div className={`flex-1 text-white ${item.checked ? 'line-through' : ''}`}>
+                          <div className={`flex-1 text-white ${item.isChecked ? 'line-through' : ''}`}>
                             {item.name}
                           </div>
                           <div className="text-white/70 text-sm shrink-0">
-                            {item.qty} {item.unit}
+                            {item.quantity} {item.unit}
                           </div>
                           <Button
                             size="sm"
@@ -559,7 +558,7 @@ export default function ShoppingListMasterView() {
                           </Button>
                           <TrashButton
                             size="sm"
-                            onClick={() => deleteItems([item.id])}
+                            onClick={() => removeItem(item.id)}
                             confirm
                             confirmMessage="Delete this shopping list item?"
                             ariaLabel="Delete item"
@@ -601,8 +600,8 @@ export default function ShoppingListMasterView() {
                               className="flex items-center gap-3 p-2 rounded-lg bg-white/5 opacity-60"
                             >
                               <Checkbox
-                                checked={item.checked || false}
-                                onCheckedChange={() => toggleChecked(item.id)}
+                                checked={item.isChecked || false}
+                                onCheckedChange={() => toggleItem(item.id)}
                                 className="border-white/30"
                                 data-testid={`checkbox-purchased-${item.id}`}
                               />
@@ -610,11 +609,11 @@ export default function ShoppingListMasterView() {
                                 {item.name}
                               </div>
                               <div className="text-white/70 text-sm shrink-0">
-                                {item.qty} {item.unit}
+                                {item.quantity} {item.unit}
                               </div>
                               <TrashButton
                                 size="sm"
-                                onClick={() => deleteItems([item.id])}
+                                onClick={() => removeItem(item.id)}
                                 confirm
                                 confirmMessage="Delete this purchased item?"
                                 ariaLabel="Delete item"
