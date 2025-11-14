@@ -182,7 +182,7 @@ export default function DiabeticHub() {
               </h1>
               <button
                 onClick={() => setShowInfoModal(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white font-bold relative z-10"
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border relative z-10"
                 aria-label="How to use Diabetic Nutrition Hub"
               >
                 ?
@@ -575,7 +575,7 @@ export default function DiabeticHub() {
 
               <button
                 onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors"
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got It!
               </button>

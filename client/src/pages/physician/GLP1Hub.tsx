@@ -117,7 +117,7 @@ export default function GLP1Hub() {
             <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-purple-600 hover:bg-purple-700 transition-all duration-200 text-white font-bold"
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
               aria-label="How to use GLP-1 Hub"
             >
               ?
@@ -350,7 +350,7 @@ export default function GLP1Hub() {
 
               <button
                 onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-colors"
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got It!
               </button>
