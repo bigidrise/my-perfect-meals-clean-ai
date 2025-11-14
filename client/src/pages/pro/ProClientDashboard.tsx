@@ -15,6 +15,7 @@ import {
   Stethoscope,
   Calendar,
   Trophy,
+  Target,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -386,6 +387,45 @@ export default function ProClientDashboard() {
                 className="bg-white/10 border border-white/20 text-white hover:bg-white/20 active:bg-white/30"
               >
                 Save Targets
+              </Button>
+              <Button
+                onClick={() => {
+                  if (t.kcal < 100) {
+                    toast({
+                      title: "Cannot Set Empty Macros",
+                      description: "Please set macro targets first",
+                      variant: "destructive",
+                    });
+                    return;
+                  }
+
+                  // Save macros to localStorage with "anon" user (default biometrics key)
+                  import("@/lib/dailyLimits").then(({ setMacroTargets }) => {
+                    setMacroTargets({
+                      calories: t.kcal,
+                      protein_g: t.protein,
+                      carbs_g: t.carbs,
+                      fat_g: t.fat,
+                    });
+                  });
+
+                  // Link the current user to this clientId for ProCare integration
+                  import("@/lib/macroResolver").then(({ linkUserToClient }) => {
+                    linkUserToClient("anon", clientId);
+                  });
+
+                  toast({
+                    title: "Macros Set to Biometrics!",
+                    description: `${t.kcal} kcal coach-set targets saved`,
+                  });
+
+                  setLocation("/my-biometrics");
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 flash-border"
+                data-testid="button-set-macros-biometrics-red"
+              >
+                <Target className="h-5 w-5 mr-2" />
+                Set Macros to Biometrics
               </Button>
             </div>
           </CardContent>

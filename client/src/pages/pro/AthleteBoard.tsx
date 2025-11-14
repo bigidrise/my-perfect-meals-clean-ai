@@ -1020,7 +1020,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <BarChart3 className="h-4 w-4 mr-2" />
               Week Overview
             </Button>
-            
+
             <Button
               size="sm"
               variant="destructive"
@@ -1084,7 +1084,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         </div>
       </div>
 
-      {/* Macro Totals Display & Red Button - Right Above Meal Cards */}
+      {/* Macro Totals Display - Right Above Meal Cards */}
       <div className="container mx-auto px-4 py-6">
         <div className="rounded-2xl border border-white/30 bg-black/60 backdrop-blur-lg p-6 mb-6">
           <h3 className="text-lg font-semibold text-white mb-4">
@@ -1117,17 +1117,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             </div>
           </div>
         </div>
-
-        <div className="flex justify-center mb-6">
-          <Button
-            onClick={handleSetMacrosToBiometrics}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 animate-pulse"
-            data-testid="button-set-macros-biometrics-red"
-          >
-            <Target className="h-5 w-5 mr-2" />
-            Set Macros to Biometrics
-          </Button>
-        </div>
       </div>
 
       {/* Meal Cards Grid - Same structure as Weekly Meal Board */}
@@ -1159,9 +1148,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     </Button>
 
                     {/* Plus button for manual entry */}
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -1233,7 +1222,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 </div>
               </section>
                 ))}
-                
+
                 {/* Meal 5 - Additional meal slot for Pro Care */}
                 <section key="meal5" className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                   <div className="flex items-center justify-between mb-4">
@@ -1252,9 +1241,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                         Create with AI
                       </Button>
 
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         className="text-white/80 hover:bg-white/10"
                         onClick={() => openManualModal("snacks")}
                       >
@@ -1331,9 +1320,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             Create with AI
                           </Button>
 
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
+                          <Button
+                            size="sm"
+                            variant="ghost"
                             className="text-white/80 hover:bg-white/10"
                             onClick={() => openManualModal("snacks")}
                           >
@@ -1504,9 +1493,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 </Button>
 
                 {/* Plus button for manual entry */}
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="text-white/80 hover:bg-white/10"
                   onClick={() => openManualModal(key)}
                 >
@@ -1579,7 +1568,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             </div>
           </section>
             ))}
-            
+
             {/* Meal 5 - Additional meal slot for Pro Care */}
             <section key="meal5" className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
               <div className="flex items-center justify-between mb-4">
@@ -1598,9 +1587,9 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     Create with AI
                   </Button>
 
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     className="text-white/80 hover:bg-white/10"
                     onClick={() => openManualModal("snacks")}
                   >
@@ -2198,7 +2187,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   💡 Pro Tip: Macro Tracking
                 </p>
                 <p className="text-orange-100/80 text-xs">
-                  Send just ONE day to macros at a time (not the whole week). 
+                  Send just ONE day to macros at a time (not the whole week).
                   This way, if you change meals on other days, you won't have outdated data.
                 </p>
               </div>
@@ -2209,7 +2198,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   Shopping List Ready
                 </p>
                 <p className="text-white/70 text-xs">
-                  You CAN send your entire week to the shopping list! 
+                  You CAN send your entire week to the shopping list!
                   This consolidates all ingredients for easy grocery shopping.
                   Click "Send Entire Week" at the bottom.
                 </p>
