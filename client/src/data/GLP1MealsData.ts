@@ -1,8 +1,10 @@
 
+
 export type Ingredient = {
-  item: string;
+  name: string;
   quantity: number;
   unit?: string;
+  notes?: string;
 };
 
 export type Nutrition = {
@@ -39,11 +41,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Probiotic", "Low Sugar", "Gluten-Free Option", "Vegetarian"],
     ingredients: [
-      { item: "Greek yogurt (plain)", quantity: 0.75, unit: "cup" },
-      { item: "mixed berries", quantity: 0.25, unit: "cup" },
-      { item: "granola", quantity: 2, unit: "tbsp" },
-      { item: "honey", quantity: 1, unit: "tsp" },
-      { item: "sliced almonds", quantity: 1, unit: "tbsp" }
+      { name: "Greek yogurt", quantity: 0.75, unit: "cup", notes: "plain" },
+      { name: "mixed berries", quantity: 0.25, unit: "cup" },
+      { name: "granola", quantity: 2, unit: "tbsp" },
+      { name: "honey", quantity: 1, unit: "tsp" },
+      { name: "sliced almonds", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Place half the Greek yogurt in a small bowl or glass",
@@ -64,12 +66,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Anti-Inflammatory", "High Protein", "Vegetarian", "Omega-3"],
     ingredients: [
-      { item: "whole grain bread", quantity: 1, unit: "slice" },
-      { item: "ripe avocado", quantity: 0.5, unit: "medium" },
-      { item: "egg", quantity: 1, unit: "large" },
-      { item: "lemon juice", quantity: 0.5, unit: "tsp" },
-      { item: "red pepper flakes", quantity: 1, unit: "pinch" },
-      { item: "sea salt", quantity: 1, unit: "pinch" }
+      { name: "whole grain bread", quantity: 1, unit: "slice" },
+      { name: "avocado", quantity: 0.5, unit: "each", notes: "ripe, medium" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" },
+      { name: "lemon juice", quantity: 0.5, unit: "tsp" },
+      { name: "red pepper flakes", quantity: 1, unit: "pinch" },
+      { name: "sea salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Toast bread until golden brown",
@@ -91,12 +93,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Diabetic-Friendly", "Antioxidant-Rich", "Dairy-Free Option", "Low Sodium", "High Protein"],
     ingredients: [
-      { item: "mixed berries (frozen)", quantity: 0.75, unit: "cup" },
-      { item: "protein powder (vanilla)", quantity: 1, unit: "scoop" },
-      { item: "almond milk (unsweetened)", quantity: 1, unit: "cup" },
-      { item: "baby spinach", quantity: 0.5, unit: "cup" },
-      { item: "chia seeds", quantity: 1, unit: "tsp" },
-      { item: "ice cubes", quantity: 3, unit: "cubes" }
+      { name: "mixed berries", quantity: 0.75, unit: "cup", notes: "frozen" },
+      { name: "protein powder", quantity: 1, unit: "scoop", notes: "vanilla" },
+      { name: "almond milk", quantity: 1, unit: "cup", notes: "unsweetened" },
+      { name: "baby spinach", quantity: 0.5, unit: "cup" },
+      { name: "chia seeds", quantity: 1, unit: "tsp" },
+      { name: "ice cubes", quantity: 3, unit: "each" }
     ],
     instructions: [
       "Add almond milk to blender first",
@@ -118,12 +120,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Keto-Friendly", "Gluten-Free", "Vegetarian"],
     ingredients: [
-      { item: "eggs", quantity: 2, unit: "large" },
-      { item: "fresh spinach", quantity: 1, unit: "cup" },
-      { item: "feta cheese", quantity: 2, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" },
-      { item: "black pepper", quantity: 1, unit: "pinch" },
-      { item: "cherry tomatoes", quantity: 3, unit: "small" }
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "fresh spinach", quantity: 1, unit: "cup" },
+      { name: "feta cheese", quantity: 2, unit: "tbsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
+      { name: "black pepper", quantity: 1, unit: "pinch" },
+      { name: "cherry tomatoes", quantity: 3, unit: "each", notes: "small" }
     ],
     instructions: [
       "Heat olive oil in non-stick pan over medium heat",
@@ -145,12 +147,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Heart-Healthy", "Anti-Inflammatory", "Vegetarian", "High Fiber", "Vegan Option"],
     ingredients: [
-      { item: "rolled oats", quantity: 0.5, unit: "cup" },
-      { item: "almond milk", quantity: 0.75, unit: "cup" },
-      { item: "chia seeds", quantity: 1, unit: "tbsp" },
-      { item: "sliced almonds", quantity: 1, unit: "tbsp" },
-      { item: "banana", quantity: 0.5, unit: "medium" },
-      { item: "cinnamon", quantity: 0.25, unit: "tsp" }
+      { name: "rolled oats", quantity: 0.5, unit: "cup" },
+      { name: "almond milk", quantity: 0.75, unit: "cup" },
+      { name: "chia seeds", quantity: 1, unit: "tbsp" },
+      { name: "sliced almonds", quantity: 1, unit: "tbsp" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "medium" },
+      { name: "cinnamon", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Combine oats, almond milk, chia seeds, and cinnamon in jar",
@@ -172,12 +174,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Omega-3 Rich", "Pescatarian", "Heart-Healthy"],
     ingredients: [
-      { item: "mini whole grain bagel", quantity: 1, unit: "piece" },
-      { item: "cream cheese (light)", quantity: 2, unit: "tbsp" },
-      { item: "smoked salmon", quantity: 2, unit: "oz" },
-      { item: "red onion (sliced thin)", quantity: 2, unit: "slices" },
-      { item: "capers", quantity: 1, unit: "tsp" },
-      { item: "fresh dill", quantity: 1, unit: "tsp" }
+      { name: "mini whole grain bagel", quantity: 1, unit: "each" },
+      { name: "cream cheese", quantity: 2, unit: "tbsp", notes: "light" },
+      { name: "smoked salmon", quantity: 2, unit: "oz" },
+      { name: "red onion", quantity: 2, unit: "slice", notes: "sliced thin" },
+      { name: "capers", quantity: 1, unit: "tsp" },
+      { name: "fresh dill", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Toast bagel halves until lightly golden",
@@ -199,12 +201,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Calorie", "High Protein", "Gluten-Free", "Vegetarian", "Low Fat"],
     ingredients: [
-      { item: "egg whites", quantity: 4, unit: "large" },
-      { item: "bell peppers (mixed)", quantity: 0.25, unit: "cup" },
-      { item: "mushrooms (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "cherry tomatoes (halved)", quantity: 4, unit: "small" },
-      { item: "baby spinach", quantity: 0.25, unit: "cup" },
-      { item: "olive oil spray", quantity: 2, unit: "sprays" }
+      { name: "egg whites", quantity: 4, unit: "each", notes: "large" },
+      { name: "bell peppers", quantity: 0.25, unit: "cup", notes: "mixed" },
+      { name: "mushrooms", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "cherry tomatoes", quantity: 4, unit: "each", notes: "small, halved" },
+      { name: "baby spinach", quantity: 0.25, unit: "cup" },
+      { name: "olive oil spray", quantity: 2, unit: "spray" }
     ],
     instructions: [
       "Spray non-stick pan with olive oil and heat over medium",
@@ -226,12 +228,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Energy Boost", "Vegan Option", "High Fiber"],
     ingredients: [
-      { item: "whole grain bread", quantity: 1, unit: "slice" },
-      { item: "natural peanut butter", quantity: 1.5, unit: "tbsp" },
-      { item: "banana", quantity: 0.5, unit: "medium" },
-      { item: "cinnamon", quantity: 1, unit: "pinch" },
-      { item: "honey", quantity: 0.5, unit: "tsp" },
-      { item: "chia seeds", quantity: 0.5, unit: "tsp" }
+      { name: "whole grain bread", quantity: 1, unit: "slice" },
+      { name: "natural peanut butter", quantity: 1.5, unit: "tbsp" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "medium" },
+      { name: "cinnamon", quantity: 1, unit: "pinch" },
+      { name: "honey", quantity: 0.5, unit: "tsp" },
+      { name: "chia seeds", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Toast bread until golden brown",
@@ -253,12 +255,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "High Fiber", "Gluten-Free", "Vegetarian", "Anti-Inflammatory"],
     ingredients: [
-      { item: "eggs", quantity: 2, unit: "large" },
-      { item: "black beans (cooked)", quantity: 0.25, unit: "cup" },
-      { item: "avocado", quantity: 0.25, unit: "medium" },
-      { item: "salsa", quantity: 2, unit: "tbsp" },
-      { item: "shredded cheese", quantity: 2, unit: "tbsp" },
-      { item: "cilantro", quantity: 1, unit: "tbsp" }
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "black beans", quantity: 0.25, unit: "cup", notes: "cooked" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium" },
+      { name: "salsa", quantity: 2, unit: "tbsp" },
+      { name: "shredded cheese", quantity: 2, unit: "tbsp" },
+      { name: "cilantro", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Heat black beans in small pan with cumin",
@@ -280,12 +282,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Probiotic", "Gluten-Free", "Vegetarian", "Low Sugar"],
     ingredients: [
-      { item: "cottage cheese (low-fat)", quantity: 0.75, unit: "cup" },
-      { item: "pineapple chunks", quantity: 0.25, unit: "cup" },
-      { item: "strawberries (sliced)", quantity: 3, unit: "medium" },
-      { item: "walnuts (chopped)", quantity: 1, unit: "tbsp" },
-      { item: "hemp seeds", quantity: 1, unit: "tsp" },
-      { item: "cinnamon", quantity: 1, unit: "pinch" }
+      { name: "cottage cheese", quantity: 0.75, unit: "cup", notes: "low-fat" },
+      { name: "pineapple chunks", quantity: 0.25, unit: "cup" },
+      { name: "strawberries", quantity: 3, unit: "each", notes: "medium, sliced" },
+      { name: "walnuts", quantity: 1, unit: "tbsp", notes: "chopped" },
+      { name: "hemp seeds", quantity: 1, unit: "tsp" },
+      { name: "cinnamon", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Place cottage cheese in serving bowl",
@@ -307,12 +309,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Gluten-Free", "Vegetarian", "Keto-Friendly"],
     ingredients: [
-      { item: "eggs", quantity: 2, unit: "large" },
-      { item: "baby spinach", quantity: 0.5, unit: "cup" },
-      { item: "mushrooms (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "parmesan cheese", quantity: 2, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" },
-      { item: "fresh basil", quantity: 1, unit: "tbsp" }
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "baby spinach", quantity: 0.5, unit: "cup" },
+      { name: "mushrooms", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "parmesan cheese", quantity: 2, unit: "tbsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
+      { name: "fresh basil", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Preheat oven to 375°F",
@@ -334,12 +336,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Vegan", "High Fiber", "Omega-3 Rich", "Gluten-Free", "Anti-Inflammatory"],
     ingredients: [
-      { item: "chia seeds", quantity: 3, unit: "tbsp" },
-      { item: "almond milk (unsweetened)", quantity: 1, unit: "cup" },
-      { item: "vanilla extract", quantity: 0.25, unit: "tsp" },
-      { item: "mixed berries", quantity: 0.25, unit: "cup" },
-      { item: "maple syrup", quantity: 1, unit: "tsp" },
-      { item: "sliced almonds", quantity: 1, unit: "tbsp" }
+      { name: "chia seeds", quantity: 3, unit: "tbsp" },
+      { name: "almond milk", quantity: 1, unit: "cup", notes: "unsweetened" },
+      { name: "vanilla extract", quantity: 0.25, unit: "tsp" },
+      { name: "mixed berries", quantity: 0.25, unit: "cup" },
+      { name: "maple syrup", quantity: 1, unit: "tsp" },
+      { name: "sliced almonds", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Mix chia seeds, almond milk, and vanilla in jar",
@@ -361,12 +363,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Portion-Controlled", "Low Fat", "Balanced Meal"],
     ingredients: [
-      { item: "whole wheat English muffin", quantity: 1, unit: "piece" },
-      { item: "turkey sausage patty", quantity: 1, unit: "piece" },
-      { item: "egg", quantity: 1, unit: "large" },
-      { item: "cheddar cheese (reduced-fat)", quantity: 1, unit: "slice" },
-      { item: "tomato slice", quantity: 1, unit: "slice" },
-      { item: "baby spinach", quantity: 2, unit: "leaves" }
+      { name: "whole wheat English muffin", quantity: 1, unit: "each" },
+      { name: "turkey sausage patty", quantity: 1, unit: "each" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" },
+      { name: "cheddar cheese", quantity: 1, unit: "slice", notes: "reduced-fat" },
+      { name: "tomato slice", quantity: 1, unit: "slice" },
+      { name: "baby spinach", quantity: 2, unit: "leaf" }
     ],
     instructions: [
       "Cook turkey sausage patty according to package directions",
@@ -388,12 +390,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Vegan", "Gluten-Free", "High Fiber", "Heart-Healthy", "Anti-Inflammatory"],
     ingredients: [
-      { item: "cooked quinoa", quantity: 0.5, unit: "cup" },
-      { item: "apple (diced)", quantity: 0.5, unit: "medium" },
-      { item: "almond milk", quantity: 0.25, unit: "cup" },
-      { item: "cinnamon", quantity: 0.5, unit: "tsp" },
-      { item: "walnuts (chopped)", quantity: 1, unit: "tbsp" },
-      { item: "maple syrup", quantity: 1, unit: "tsp" }
+      { name: "cooked quinoa", quantity: 0.5, unit: "cup" },
+      { name: "apple", quantity: 0.5, unit: "each", notes: "medium, diced" },
+      { name: "almond milk", quantity: 0.25, unit: "cup" },
+      { name: "cinnamon", quantity: 0.5, unit: "tsp" },
+      { name: "walnuts", quantity: 1, unit: "tbsp", notes: "chopped" },
+      { name: "maple syrup", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Sauté diced apple with cinnamon in small pan",
@@ -415,12 +417,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "High Fiber", "Vegetarian", "Portion-Controlled"],
     ingredients: [
-      { item: "whole wheat tortilla (small)", quantity: 1, unit: "piece" },
-      { item: "eggs (scrambled)", quantity: 1, unit: "large" },
-      { item: "black beans", quantity: 2, unit: "tbsp" },
-      { item: "shredded cheese", quantity: 2, unit: "tbsp" },
-      { item: "salsa", quantity: 2, unit: "tbsp" },
-      { item: "avocado", quantity: 2, unit: "tbsp" }
+      { name: "whole wheat tortilla", quantity: 1, unit: "each", notes: "small" },
+      { name: "eggs", quantity: 1, unit: "each", notes: "large, scrambled" },
+      { name: "black beans", quantity: 2, unit: "tbsp" },
+      { name: "shredded cheese", quantity: 2, unit: "tbsp" },
+      { name: "salsa", quantity: 2, unit: "tbsp" },
+      { name: "avocado", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Scramble egg and set aside",
@@ -442,12 +444,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Low Sugar", "Portion-Controlled", "Vegetarian"],
     ingredients: [
-      { item: "protein pancake mix", quantity: 0.33, unit: "cup" },
-      { item: "egg", quantity: 1, unit: "large" },
-      { item: "almond milk", quantity: 0.25, unit: "cup" },
-      { item: "fresh blueberries", quantity: 0.25, unit: "cup" },
-      { item: "Greek yogurt", quantity: 2, unit: "tbsp" },
-      { item: "maple syrup", quantity: 1, unit: "tsp" }
+      { name: "protein pancake mix", quantity: 0.33, unit: "cup" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" },
+      { name: "almond milk", quantity: 0.25, unit: "cup" },
+      { name: "fresh blueberries", quantity: 0.25, unit: "cup" },
+      { name: "Greek yogurt", quantity: 2, unit: "tbsp" },
+      { name: "maple syrup", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Mix pancake mix, egg, and almond milk until smooth",
@@ -469,12 +471,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Mediterranean Diet", "Heart-Healthy", "Anti-Inflammatory", "Vegetarian", "High Fiber"],
     ingredients: [
-      { item: "hummus", quantity: 0.25, unit: "cup" },
-      { item: "whole grain pita (mini)", quantity: 1, unit: "piece" },
-      { item: "feta cheese", quantity: 2, unit: "tbsp" },
-      { item: "kalamata olives", quantity: 5, unit: "olives" },
-      { item: "cucumber (sliced)", quantity: 0.5, unit: "cup" },
-      { item: "cherry tomatoes", quantity: 5, unit: "small" }
+      { name: "hummus", quantity: 0.25, unit: "cup" },
+      { name: "whole grain pita", quantity: 1, unit: "each", notes: "mini" },
+      { name: "feta cheese", quantity: 2, unit: "tbsp" },
+      { name: "kalamata olives", quantity: 5, unit: "each" },
+      { name: "cucumber", quantity: 0.5, unit: "cup", notes: "sliced" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small" }
     ],
     instructions: [
       "Warm pita in oven or toaster",
@@ -496,12 +498,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Gluten-Free", "Anti-Inflammatory", "Balanced Meal"],
     ingredients: [
-      { item: "sweet potato (diced)", quantity: 0.5, unit: "cup" },
-      { item: "turkey sausage", quantity: 1, unit: "link" },
-      { item: "bell pepper (diced)", quantity: 0.25, unit: "cup" },
-      { item: "onion (diced)", quantity: 2, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" },
-      { item: "paprika", quantity: 0.25, unit: "tsp" }
+      { name: "sweet potato", quantity: 0.5, unit: "cup", notes: "diced" },
+      { name: "turkey sausage", quantity: 1, unit: "link" },
+      { name: "bell pepper", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "onion", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
+      { name: "paprika", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Dice sweet potato and cook in microwave 3 minutes to soften",
@@ -523,12 +525,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Heart-Healthy", "Energy Boost", "Vegan Option"],
     ingredients: [
-      { item: "almond butter", quantity: 2, unit: "tbsp" },
-      { item: "Greek yogurt", quantity: 0.5, unit: "cup" },
-      { item: "banana (sliced)", quantity: 0.5, unit: "medium" },
-      { item: "granola", quantity: 2, unit: "tbsp" },
-      { item: "hemp seeds", quantity: 1, unit: "tsp" },
-      { item: "dark chocolate chips", quantity: 1, unit: "tsp" }
+      { name: "almond butter", quantity: 2, unit: "tbsp" },
+      { name: "Greek yogurt", quantity: 0.5, unit: "cup" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "medium, sliced" },
+      { name: "granola", quantity: 2, unit: "tbsp" },
+      { name: "hemp seeds", quantity: 1, unit: "tsp" },
+      { name: "dark chocolate chips", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Mix almond butter with Greek yogurt until smooth",
@@ -550,12 +552,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Anti-Inflammatory", "Gluten-Free", "Vegetarian", "Low Carb"],
     ingredients: [
-      { item: "crushed tomatoes", quantity: 0.5, unit: "cup" },
-      { item: "eggs", quantity: 2, unit: "large" },
-      { item: "bell pepper (diced)", quantity: 0.25, unit: "cup" },
-      { item: "onion (diced)", quantity: 2, unit: "tbsp" },
-      { item: "cumin", quantity: 0.25, unit: "tsp" },
-      { item: "feta cheese", quantity: 1, unit: "tbsp" }
+      { name: "crushed tomatoes", quantity: 0.5, unit: "cup" },
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "bell pepper", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "onion", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "cumin", quantity: 0.25, unit: "tsp" },
+      { name: "feta cheese", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Sauté onion and bell pepper in small pan",
@@ -579,12 +581,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Keto-Friendly", "Gluten-Free Option"],
     ingredients: [
-      { item: "grilled chicken breast", quantity: 3, unit: "oz" },
-      { item: "romaine lettuce (chopped)", quantity: 2, unit: "cups" },
-      { item: "parmesan cheese (shaved)", quantity: 2, unit: "tbsp" },
-      { item: "Caesar dressing (light)", quantity: 2, unit: "tbsp" },
-      { item: "whole grain croutons", quantity: 2, unit: "tbsp" },
-      { item: "lemon wedge", quantity: 1, unit: "piece" }
+      { name: "grilled chicken breast", quantity: 3, unit: "oz" },
+      { name: "romaine lettuce", quantity: 2, unit: "cup", notes: "chopped" },
+      { name: "parmesan cheese", quantity: 2, unit: "tbsp", notes: "shaved" },
+      { name: "Caesar dressing", quantity: 2, unit: "tbsp", notes: "light" },
+      { name: "whole grain croutons", quantity: 2, unit: "tbsp" },
+      { name: "lemon wedge", quantity: 1, unit: "each" }
     ],
     instructions: [
       "Grill or pan-sear chicken breast with seasoning",
@@ -606,12 +608,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Anti-Inflammatory", "Vegetarian", "Heart-Healthy", "High Fiber", "Vegan Option"],
     ingredients: [
-      { item: "cooked quinoa", quantity: 0.5, unit: "cup" },
-      { item: "chickpeas (cooked)", quantity: 0.25, unit: "cup" },
-      { item: "cucumber (diced)", quantity: 0.25, unit: "cup" },
-      { item: "cherry tomatoes (halved)", quantity: 0.25, unit: "cup" },
-      { item: "feta cheese", quantity: 2, unit: "tbsp" },
-      { item: "lemon olive oil dressing", quantity: 2, unit: "tbsp" }
+      { name: "cooked quinoa", quantity: 0.5, unit: "cup" },
+      { name: "chickpeas", quantity: 0.25, unit: "cup", notes: "cooked" },
+      { name: "cucumber", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "cherry tomatoes", quantity: 0.25, unit: "cup", notes: "halved" },
+      { name: "feta cheese", quantity: 2, unit: "tbsp" },
+      { name: "lemon olive oil dressing", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Place quinoa as base in bowl",
@@ -633,12 +635,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Heart-Healthy", "Dairy-Free Option", "Portable"],
     ingredients: [
-      { item: "whole wheat tortilla (large)", quantity: 1, unit: "piece" },
-      { item: "sliced turkey breast", quantity: 3, unit: "oz" },
-      { item: "avocado (mashed)", quantity: 0.25, unit: "medium" },
-      { item: "lettuce leaves", quantity: 2, unit: "leaves" },
-      { item: "tomato (sliced)", quantity: 2, unit: "slices" },
-      { item: "mustard", quantity: 1, unit: "tsp" }
+      { name: "whole wheat tortilla", quantity: 1, unit: "each", notes: "large" },
+      { name: "sliced turkey breast", quantity: 3, unit: "oz" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, mashed" },
+      { name: "lettuce leaves", quantity: 2, unit: "leaf" },
+      { name: "tomato", quantity: 2, unit: "slice" },
+      { name: "mustard", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Lay tortilla flat and spread mashed avocado",
@@ -660,12 +662,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Low Sodium", "Gluten-Free", "Anti-Inflammatory", "Low Carb", "High Protein"],
     ingredients: [
-      { item: "ground chicken", quantity: 3, unit: "oz" },
-      { item: "butter lettuce leaves", quantity: 4, unit: "large" },
-      { item: "water chestnuts (diced)", quantity: 2, unit: "tbsp" },
-      { item: "green onions (sliced)", quantity: 2, unit: "tbsp" },
-      { item: "low-sodium soy sauce", quantity: 1, unit: "tsp" },
-      { item: "fresh ginger (minced)", quantity: 0.5, unit: "tsp" }
+      { name: "ground chicken", quantity: 3, unit: "oz" },
+      { name: "butter lettuce leaves", quantity: 4, unit: "leaf", notes: "large" },
+      { name: "water chestnuts", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "green onions", quantity: 2, unit: "tbsp", notes: "sliced" },
+      { name: "low-sodium soy sauce", quantity: 1, unit: "tsp" },
+      { name: "fresh ginger", quantity: 0.5, unit: "tsp", notes: "minced" }
     ],
     instructions: [
       "Brown ground chicken in pan over medium-high heat",
@@ -687,12 +689,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "Anti-Inflammatory", "Gluten-Free", "High Protein", "Mediterranean Diet"],
     ingredients: [
-      { item: "grilled chicken breast", quantity: 3, unit: "oz" },
-      { item: "fresh mozzarella", quantity: 2, unit: "oz" },
-      { item: "tomato (sliced)", quantity: 1, unit: "medium" },
-      { item: "fresh basil leaves", quantity: 6, unit: "leaves" },
-      { item: "balsamic glaze", quantity: 1, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" }
+      { name: "grilled chicken breast", quantity: 3, unit: "oz" },
+      { name: "fresh mozzarella", quantity: 2, unit: "oz" },
+      { name: "tomato", quantity: 1, unit: "each", notes: "medium, sliced" },
+      { name: "fresh basil leaves", quantity: 6, unit: "leaf" },
+      { name: "balsamic glaze", quantity: 1, unit: "tbsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Slice grilled chicken, mozzarella, and tomato",
@@ -714,12 +716,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Omega-3 Rich", "Heart-Healthy", "Low Carb", "Pescatarian"],
     ingredients: [
-      { item: "canned tuna (in water)", quantity: 3, unit: "oz" },
-      { item: "avocado (mashed)", quantity: 0.25, unit: "medium" },
-      { item: "mixed greens", quantity: 2, unit: "cups" },
-      { item: "cherry tomatoes", quantity: 5, unit: "small" },
-      { item: "lemon juice", quantity: 1, unit: "tsp" },
-      { item: "red onion (diced)", quantity: 1, unit: "tbsp" }
+      { name: "canned tuna", quantity: 3, unit: "oz", notes: "in water" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, mashed" },
+      { name: "mixed greens", quantity: 2, unit: "cup" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small" },
+      { name: "lemon juice", quantity: 1, unit: "tsp" },
+      { name: "red onion", quantity: 1, unit: "tbsp", notes: "diced" }
     ],
     instructions: [
       "Drain tuna and place in bowl",
@@ -741,12 +743,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Mediterranean Diet", "Portion-Controlled"],
     ingredients: [
-      { item: "whole wheat pita (small)", quantity: 1, unit: "piece" },
-      { item: "grilled chicken (diced)", quantity: 3, unit: "oz" },
-      { item: "tzatziki sauce", quantity: 2, unit: "tbsp" },
-      { item: "cucumber (diced)", quantity: 0.25, unit: "cup" },
-      { item: "tomato (diced)", quantity: 0.25, unit: "cup" },
-      { item: "red onion (sliced)", quantity: 1, unit: "tbsp" }
+      { name: "whole wheat pita", quantity: 1, unit: "each", notes: "small" },
+      { name: "grilled chicken", quantity: 3, unit: "oz", notes: "diced" },
+      { name: "tzatziki sauce", quantity: 2, unit: "tbsp" },
+      { name: "cucumber", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "tomato", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "red onion", quantity: 1, unit: "tbsp", notes: "sliced" }
     ],
     instructions: [
       "Warm pita in oven or microwave",
@@ -768,12 +770,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Omega-3 Rich", "Low Carb", "Pescatarian", "Heart-Healthy"],
     ingredients: [
-      { item: "cooked shrimp", quantity: 4, unit: "oz" },
-      { item: "mixed greens", quantity: 2, unit: "cups" },
-      { item: "avocado (sliced)", quantity: 0.25, unit: "medium" },
-      { item: "cherry tomatoes", quantity: 5, unit: "small" },
-      { item: "citrus vinaigrette", quantity: 2, unit: "tbsp" },
-      { item: "red onion (sliced thin)", quantity: 2, unit: "tbsp" }
+      { name: "cooked shrimp", quantity: 4, unit: "oz" },
+      { name: "mixed greens", quantity: 2, unit: "cup" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, sliced" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small" },
+      { name: "citrus vinaigrette", quantity: 2, unit: "tbsp" },
+      { name: "red onion", quantity: 2, unit: "tbsp", notes: "sliced thin" }
     ],
     instructions: [
       "Grill or sauté shrimp with light seasoning",
@@ -795,12 +797,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Vegan", "High Fiber", "Anti-Inflammatory", "Heart-Healthy", "Low Sodium"],
     ingredients: [
-      { item: "whole wheat tortilla", quantity: 1, unit: "large" },
-      { item: "hummus", quantity: 3, unit: "tbsp" },
-      { item: "cucumber (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "bell pepper (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "shredded carrots", quantity: 0.25, unit: "cup" },
-      { item: "baby spinach", quantity: 0.5, unit: "cup" }
+      { name: "whole wheat tortilla", quantity: 1, unit: "each", notes: "large" },
+      { name: "hummus", quantity: 3, unit: "tbsp" },
+      { name: "cucumber", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "bell pepper", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "shredded carrots", quantity: 0.25, unit: "cup" },
+      { name: "baby spinach", quantity: 0.5, unit: "cup" }
     ],
     instructions: [
       "Spread hummus evenly over tortilla",
@@ -822,12 +824,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Anti-Inflammatory", "Gluten-Free", "High Fiber"],
     ingredients: [
-      { item: "chicken breast (shredded)", quantity: 2, unit: "oz" },
-      { item: "black beans", quantity: 0.25, unit: "cup" },
-      { item: "diced tomatoes", quantity: 0.25, unit: "cup" },
-      { item: "chicken broth (low-sodium)", quantity: 1, unit: "cup" },
-      { item: "corn", quantity: 2, unit: "tbsp" },
-      { item: "tortilla strips", quantity: 1, unit: "tbsp" }
+      { name: "chicken breast", quantity: 2, unit: "oz", notes: "shredded" },
+      { name: "black beans", quantity: 0.25, unit: "cup" },
+      { name: "diced tomatoes", quantity: 0.25, unit: "cup" },
+      { name: "chicken broth", quantity: 1, unit: "cup", notes: "low-sodium" },
+      { name: "corn", quantity: 2, unit: "tbsp" },
+      { name: "tortilla strips", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Heat chicken broth in small pot",
@@ -849,12 +851,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Omega-3 Rich", "Anti-Inflammatory", "Heart-Healthy", "Pescatarian"],
     ingredients: [
-      { item: "baked salmon fillet", quantity: 3, unit: "oz" },
-      { item: "arugula", quantity: 2, unit: "cups" },
-      { item: "cherry tomatoes", quantity: 5, unit: "small" },
-      { item: "red onion (sliced)", quantity: 2, unit: "tbsp" },
-      { item: "lemon vinaigrette", quantity: 2, unit: "tbsp" },
-      { item: "capers", quantity: 1, unit: "tsp" }
+      { name: "baked salmon fillet", quantity: 3, unit: "oz" },
+      { name: "arugula", quantity: 2, unit: "cup" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small" },
+      { name: "red onion", quantity: 2, unit: "tbsp", notes: "sliced" },
+      { name: "lemon vinaigrette", quantity: 2, unit: "tbsp" },
+      { name: "capers", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Bake salmon at 400°F for 12-15 minutes",
@@ -876,12 +878,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Low Carb", "Keto-Friendly", "Gluten-Free", "Vegetarian"],
     ingredients: [
-      { item: "hard-boiled eggs", quantity: 2, unit: "large" },
-      { item: "Greek yogurt", quantity: 2, unit: "tbsp" },
-      { item: "Dijon mustard", quantity: 1, unit: "tsp" },
-      { item: "butter lettuce leaves", quantity: 4, unit: "large" },
-      { item: "celery (diced)", quantity: 2, unit: "tbsp" },
-      { item: "fresh dill", quantity: 1, unit: "tsp" }
+      { name: "hard-boiled eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "Greek yogurt", quantity: 2, unit: "tbsp" },
+      { name: "Dijon mustard", quantity: 1, unit: "tsp" },
+      { name: "butter lettuce leaves", quantity: 4, unit: "leaf", notes: "large" },
+      { name: "celery", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "fresh dill", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Chop hard-boiled eggs",
@@ -903,12 +905,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Anti-Inflammatory", "Dairy-Free", "Gluten-Free Option"],
     ingredients: [
-      { item: "grilled chicken (sliced)", quantity: 3, unit: "oz" },
-      { item: "mixed greens", quantity: 1, unit: "cup" },
-      { item: "shredded cabbage", quantity: 0.5, unit: "cup" },
-      { item: "shredded carrots", quantity: 0.25, unit: "cup" },
-      { item: "peanut sauce", quantity: 2, unit: "tbsp" },
-      { item: "crushed peanuts", quantity: 1, unit: "tbsp" }
+      { name: "grilled chicken", quantity: 3, unit: "oz", notes: "sliced" },
+      { name: "mixed greens", quantity: 1, unit: "cup" },
+      { name: "shredded cabbage", quantity: 0.5, unit: "cup" },
+      { name: "shredded carrots", quantity: 0.25, unit: "cup" },
+      { name: "peanut sauce", quantity: 2, unit: "tbsp" },
+      { name: "crushed peanuts", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Arrange greens and cabbage in bowl",
@@ -930,12 +932,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Vegan", "High Fiber", "Heart-Healthy", "Anti-Inflammatory", "Low Fat"],
     ingredients: [
-      { item: "cooked lentils", quantity: 0.5, unit: "cup" },
-      { item: "vegetable broth", quantity: 1, unit: "cup" },
-      { item: "diced carrots", quantity: 0.25, unit: "cup" },
-      { item: "diced celery", quantity: 0.25, unit: "cup" },
-      { item: "spinach", quantity: 0.5, unit: "cup" },
-      { item: "garlic (minced)", quantity: 1, unit: "clove" }
+      { name: "cooked lentils", quantity: 0.5, unit: "cup" },
+      { name: "vegetable broth", quantity: 1, unit: "cup" },
+      { name: "diced carrots", quantity: 0.25, unit: "cup" },
+      { name: "diced celery", quantity: 0.25, unit: "cup" },
+      { name: "spinach", quantity: 0.5, unit: "cup" },
+      { name: "garlic", quantity: 1, unit: "clove", notes: "minced" }
     ],
     instructions: [
       "Sauté garlic, carrots, and celery in pot",
@@ -957,12 +959,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "Keto-Friendly", "Gluten-Free", "High Protein", "Anti-Inflammatory"],
     ingredients: [
-      { item: "grilled chicken (sliced)", quantity: 3, unit: "oz" },
-      { item: "zucchini noodles", quantity: 2, unit: "cups" },
-      { item: "basil pesto", quantity: 2, unit: "tbsp" },
-      { item: "cherry tomatoes (halved)", quantity: 5, unit: "small" },
-      { item: "parmesan cheese", quantity: 1, unit: "tbsp" },
-      { item: "pine nuts", quantity: 1, unit: "tsp" }
+      { name: "grilled chicken", quantity: 3, unit: "oz", notes: "sliced" },
+      { name: "zucchini noodles", quantity: 2, unit: "cup" },
+      { name: "basil pesto", quantity: 2, unit: "tbsp" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small, halved" },
+      { name: "parmesan cheese", quantity: 1, unit: "tbsp" },
+      { name: "pine nuts", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Sauté zucchini noodles in pan 2-3 minutes",
@@ -984,12 +986,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Vegan", "High Fiber", "Anti-Inflammatory", "Gluten-Free", "Heart-Healthy"],
     ingredients: [
-      { item: "roasted sweet potato (cubed)", quantity: 0.5, unit: "cup" },
-      { item: "black beans", quantity: 0.5, unit: "cup" },
-      { item: "avocado (sliced)", quantity: 0.25, unit: "medium" },
-      { item: "corn", quantity: 2, unit: "tbsp" },
-      { item: "lime juice", quantity: 1, unit: "tbsp" },
-      { item: "cilantro", quantity: 2, unit: "tbsp" }
+      { name: "roasted sweet potato", quantity: 0.5, unit: "cup", notes: "cubed" },
+      { name: "black beans", quantity: 0.5, unit: "cup" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, sliced" },
+      { name: "corn", quantity: 2, unit: "tbsp" },
+      { name: "lime juice", quantity: 1, unit: "tbsp" },
+      { name: "cilantro", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Roast sweet potato cubes at 425°F for 20 minutes",
@@ -1011,12 +1013,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Keto-Friendly", "Gluten-Free"],
     ingredients: [
-      { item: "mixed greens", quantity: 2, unit: "cups" },
-      { item: "turkey breast (diced)", quantity: 2, unit: "oz" },
-      { item: "hard-boiled egg (chopped)", quantity: 1, unit: "large" },
-      { item: "turkey bacon (crumbled)", quantity: 1, unit: "slice" },
-      { item: "avocado (diced)", quantity: 0.25, unit: "medium" },
-      { item: "blue cheese crumbles", quantity: 1, unit: "tbsp" }
+      { name: "mixed greens", quantity: 2, unit: "cup" },
+      { name: "turkey breast", quantity: 2, unit: "oz", notes: "diced" },
+      { name: "hard-boiled egg", quantity: 1, unit: "each", notes: "large, chopped" },
+      { name: "turkey bacon", quantity: 1, unit: "slice", notes: "crumbled" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, diced" },
+      { name: "blue cheese crumbles", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Arrange mixed greens on plate",
@@ -1038,12 +1040,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Omega-3 Rich", "Mediterranean Diet", "Heart-Healthy", "Pescatarian"],
     ingredients: [
-      { item: "canned tuna (in water)", quantity: 3, unit: "oz" },
-      { item: "white beans", quantity: 0.25, unit: "cup" },
-      { item: "cherry tomatoes (halved)", quantity: 5, unit: "small" },
-      { item: "kalamata olives", quantity: 5, unit: "olives" },
-      { item: "mixed greens", quantity: 1, unit: "cup" },
-      { item: "lemon vinaigrette", quantity: 2, unit: "tbsp" }
+      { name: "canned tuna", quantity: 3, unit: "oz", notes: "in water" },
+      { name: "white beans", quantity: 0.25, unit: "cup" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small, halved" },
+      { name: "kalamata olives", quantity: 5, unit: "each" },
+      { name: "mixed greens", quantity: 1, unit: "cup" },
+      { name: "lemon vinaigrette", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Drain tuna and flake into bowl",
@@ -1065,12 +1067,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Sodium", "Gluten-Free Option", "Diabetic-Friendly"],
     ingredients: [
-      { item: "chicken breast (sliced)", quantity: 3, unit: "oz" },
-      { item: "broccoli florets", quantity: 0.5, unit: "cup" },
-      { item: "bell peppers (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "snap peas", quantity: 0.25, unit: "cup" },
-      { item: "low-sodium soy sauce", quantity: 1, unit: "tbsp" },
-      { item: "fresh ginger (minced)", quantity: 0.5, unit: "tsp" }
+      { name: "chicken breast", quantity: 3, unit: "oz", notes: "sliced" },
+      { name: "broccoli florets", quantity: 0.5, unit: "cup" },
+      { name: "bell peppers", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "snap peas", quantity: 0.25, unit: "cup" },
+      { name: "low-sodium soy sauce", quantity: 1, unit: "tbsp" },
+      { name: "fresh ginger", quantity: 0.5, unit: "tsp", notes: "minced" }
     ],
     instructions: [
       "Heat wok or large pan over high heat",
@@ -1092,12 +1094,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "Vegetarian", "Gluten-Free", "Anti-Inflammatory", "Mediterranean Diet"],
     ingredients: [
-      { item: "portobello mushroom cap (large)", quantity: 1, unit: "piece" },
-      { item: "fresh mozzarella", quantity: 2, unit: "oz" },
-      { item: "tomato (sliced)", quantity: 0.5, unit: "medium" },
-      { item: "fresh basil", quantity: 4, unit: "leaves" },
-      { item: "balsamic glaze", quantity: 1, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" }
+      { name: "portobello mushroom cap", quantity: 1, unit: "each", notes: "large" },
+      { name: "fresh mozzarella", quantity: 2, unit: "oz" },
+      { name: "tomato", quantity: 0.5, unit: "each", notes: "medium, sliced" },
+      { name: "fresh basil", quantity: 4, unit: "leaf" },
+      { name: "balsamic glaze", quantity: 1, unit: "tbsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Remove stem from mushroom and brush with olive oil",
@@ -1121,12 +1123,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Anti-Inflammatory", "Heart-Healthy", "Omega-3 Rich", "Low Sodium", "Diabetic-Friendly", "Pescatarian"],
     ingredients: [
-      { item: "salmon fillet", quantity: 4, unit: "oz" },
-      { item: "asparagus spears", quantity: 6, unit: "spears" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "lemon (sliced)", quantity: 2, unit: "slices" },
-      { item: "fresh dill", quantity: 1, unit: "tbsp" },
-      { item: "garlic (minced)", quantity: 1, unit: "clove" }
+      { name: "salmon fillet", quantity: 4, unit: "oz" },
+      { name: "asparagus spears", quantity: 6, unit: "each" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "lemon", quantity: 2, unit: "slice" },
+      { name: "fresh dill", quantity: 1, unit: "tbsp" },
+      { name: "garlic", quantity: 1, unit: "clove", notes: "minced" }
     ],
     instructions: [
       "Preheat oven to 400°F",
@@ -1148,12 +1150,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Diabetic-Friendly", "Low Sodium", "Gluten-Free Option", "High Protein"],
     ingredients: [
-      { item: "chicken breast (sliced)", quantity: 4, unit: "oz" },
-      { item: "broccoli florets", quantity: 0.5, unit: "cup" },
-      { item: "bell peppers (sliced)", quantity: 0.5, unit: "cup" },
-      { item: "snow peas", quantity: 0.25, unit: "cup" },
-      { item: "low-sodium stir-fry sauce", quantity: 2, unit: "tbsp" },
-      { item: "sesame oil", quantity: 1, unit: "tsp" }
+      { name: "chicken breast", quantity: 4, unit: "oz", notes: "sliced" },
+      { name: "broccoli florets", quantity: 0.5, unit: "cup" },
+      { name: "bell peppers", quantity: 0.5, unit: "cup", notes: "sliced" },
+      { name: "snow peas", quantity: 0.25, unit: "cup" },
+      { name: "low-sodium stir-fry sauce", quantity: 2, unit: "tbsp" },
+      { name: "sesame oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Heat sesame oil in wok over high heat",
@@ -1175,12 +1177,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Customizable", "Dairy-Free Option", "Gluten-Free"],
     ingredients: [
-      { item: "lean ground beef", quantity: 3, unit: "oz" },
-      { item: "romaine lettuce (chopped)", quantity: 2, unit: "cups" },
-      { item: "black beans", quantity: 0.25, unit: "cup" },
-      { item: "corn", quantity: 2, unit: "tbsp" },
-      { item: "salsa", quantity: 2, unit: "tbsp" },
-      { item: "avocado (sliced)", quantity: 0.25, unit: "medium" }
+      { name: "lean ground beef", quantity: 3, unit: "oz" },
+      { name: "romaine lettuce", quantity: 2, unit: "cup", notes: "chopped" },
+      { name: "black beans", quantity: 0.25, unit: "cup" },
+      { name: "corn", quantity: 2, unit: "tbsp" },
+      { name: "salsa", quantity: 2, unit: "tbsp" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium, sliced" }
     ],
     instructions: [
       "Brown ground beef with taco seasoning",
@@ -1202,12 +1204,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Sodium", "Anti-Inflammatory", "Diabetic-Friendly", "Heart-Healthy", "Pescatarian"],
     ingredients: [
-      { item: "cod fillet", quantity: 4, unit: "oz" },
-      { item: "sweet potato (cubed)", quantity: 0.5, unit: "cup" },
-      { item: "green beans", quantity: 0.75, unit: "cup" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "lemon juice", quantity: 1, unit: "tbsp" },
-      { item: "paprika", quantity: 0.25, unit: "tsp" }
+      { name: "cod fillet", quantity: 4, unit: "oz" },
+      { name: "sweet potato", quantity: 0.5, unit: "cup", notes: "cubed" },
+      { name: "green beans", quantity: 0.75, unit: "cup" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "lemon juice", quantity: 1, unit: "tbsp" },
+      { name: "paprika", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 425°F",
@@ -1229,12 +1231,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "High Protein", "Gluten-Free", "Keto-Friendly"],
     ingredients: [
-      { item: "turkey meatballs", quantity: 3, unit: "meatballs" },
-      { item: "zucchini noodles", quantity: 2, unit: "cups" },
-      { item: "marinara sauce", quantity: 0.5, unit: "cup" },
-      { item: "parmesan cheese", quantity: 1, unit: "tbsp" },
-      { item: "fresh basil", quantity: 2, unit: "leaves" },
-      { item: "garlic", quantity: 1, unit: "clove" }
+      { name: "turkey meatballs", quantity: 3, unit: "each" },
+      { name: "zucchini noodles", quantity: 2, unit: "cup" },
+      { name: "marinara sauce", quantity: 0.5, unit: "cup" },
+      { name: "parmesan cheese", quantity: 1, unit: "tbsp" },
+      { name: "fresh basil", quantity: 2, unit: "leaf" },
+      { name: "garlic", quantity: 1, unit: "clove" }
     ],
     instructions: [
       "Bake or pan-fry turkey meatballs until cooked through",
@@ -1256,12 +1258,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Mediterranean Diet", "Heart-Healthy", "Anti-Inflammatory", "Gluten-Free"],
     ingredients: [
-      { item: "chicken breast", quantity: 4, unit: "oz" },
-      { item: "cucumber (diced)", quantity: 0.5, unit: "cup" },
-      { item: "cherry tomatoes (halved)", quantity: 5, unit: "small" },
-      { item: "feta cheese", quantity: 2, unit: "tbsp" },
-      { item: "tzatziki sauce", quantity: 2, unit: "tbsp" },
-      { item: "kalamata olives", quantity: 4, unit: "olives" }
+      { name: "chicken breast", quantity: 4, unit: "oz" },
+      { name: "cucumber", quantity: 0.5, unit: "cup", notes: "diced" },
+      { name: "cherry tomatoes", quantity: 5, unit: "each", notes: "small, halved" },
+      { name: "feta cheese", quantity: 2, unit: "tbsp" },
+      { name: "tzatziki sauce", quantity: 2, unit: "tbsp" },
+      { name: "kalamata olives", quantity: 4, unit: "each" }
     ],
     instructions: [
       "Marinate chicken in lemon, garlic, and oregano",
@@ -1283,12 +1285,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "Keto-Friendly", "High Protein", "Gluten-Free", "Pescatarian"],
     ingredients: [
-      { item: "large shrimp", quantity: 5, unit: "pieces" },
-      { item: "cauliflower rice", quantity: 1, unit: "cup" },
-      { item: "butter", quantity: 1, unit: "tbsp" },
-      { item: "garlic (minced)", quantity: 2, unit: "cloves" },
-      { item: "lemon juice", quantity: 1, unit: "tbsp" },
-      { item: "parsley", quantity: 1, unit: "tbsp" }
+      { name: "large shrimp", quantity: 5, unit: "each" },
+      { name: "cauliflower rice", quantity: 1, unit: "cup" },
+      { name: "butter", quantity: 1, unit: "tbsp" },
+      { name: "garlic", quantity: 2, unit: "clove", notes: "minced" },
+      { name: "lemon juice", quantity: 1, unit: "tbsp" },
+      { name: "parsley", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Sauté cauliflower rice in pan with seasoning",
@@ -1310,12 +1312,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Gluten-Free", "Diabetic-Friendly", "Balanced Meal"],
     ingredients: [
-      { item: "boneless pork chop", quantity: 4, unit: "oz" },
-      { item: "Brussels sprouts (halved)", quantity: 0.5, unit: "cup" },
-      { item: "carrots (chopped)", quantity: 0.25, unit: "cup" },
-      { item: "red onion (wedges)", quantity: 0.25, unit: "cup" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "rosemary", quantity: 0.5, unit: "tsp" }
+      { name: "boneless pork chop", quantity: 4, unit: "oz" },
+      { name: "Brussels sprouts", quantity: 0.5, unit: "cup", notes: "halved" },
+      { name: "carrots", quantity: 0.25, unit: "cup", notes: "chopped" },
+      { name: "red onion", quantity: 0.25, unit: "cup", notes: "wedges" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "rosemary", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 425°F",
@@ -1337,12 +1339,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Gluten-Free Option", "Diabetic-Friendly"],
     ingredients: [
-      { item: "boneless chicken thigh", quantity: 4, unit: "oz" },
-      { item: "broccoli florets", quantity: 1, unit: "cup" },
-      { item: "teriyaki sauce (low-sodium)", quantity: 2, unit: "tbsp" },
-      { item: "sesame seeds", quantity: 1, unit: "tsp" },
-      { item: "green onions (sliced)", quantity: 1, unit: "tbsp" },
-      { item: "fresh ginger", quantity: 0.5, unit: "tsp" }
+      { name: "boneless chicken thigh", quantity: 4, unit: "oz" },
+      { name: "broccoli florets", quantity: 1, unit: "cup" },
+      { name: "teriyaki sauce", quantity: 2, unit: "tbsp", notes: "low-sodium" },
+      { name: "sesame seeds", quantity: 1, unit: "tsp" },
+      { name: "green onions", quantity: 1, unit: "tbsp", notes: "sliced" },
+      { name: "fresh ginger", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Cook chicken in pan until golden",
@@ -1364,12 +1366,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "High Fiber", "Gluten-Free", "Balanced Meal"],
     ingredients: [
-      { item: "bell pepper (large)", quantity: 1, unit: "piece" },
-      { item: "ground turkey", quantity: 3, unit: "oz" },
-      { item: "cooked quinoa", quantity: 0.25, unit: "cup" },
-      { item: "diced tomatoes", quantity: 0.25, unit: "cup" },
-      { item: "mozzarella cheese", quantity: 2, unit: "tbsp" },
-      { item: "Italian seasoning", quantity: 0.5, unit: "tsp" }
+      { name: "bell pepper", quantity: 1, unit: "each", notes: "large" },
+      { name: "ground turkey", quantity: 3, unit: "oz" },
+      { name: "cooked quinoa", quantity: 0.25, unit: "cup" },
+      { name: "diced tomatoes", quantity: 0.25, unit: "cup" },
+      { name: "mozzarella cheese", quantity: 2, unit: "tbsp" },
+      { name: "Italian seasoning", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 375°F",
@@ -1391,12 +1393,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Calorie", "High Protein", "Heart-Healthy", "Pescatarian", "Gluten-Free"],
     ingredients: [
-      { item: "tilapia fillet", quantity: 4, unit: "oz" },
-      { item: "zucchini (sliced)", quantity: 0.5, unit: "cup" },
-      { item: "cherry tomatoes", quantity: 6, unit: "small" },
-      { item: "lemon (sliced)", quantity: 2, unit: "slices" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "fresh thyme", quantity: 0.5, unit: "tsp" }
+      { name: "tilapia fillet", quantity: 4, unit: "oz" },
+      { name: "zucchini", quantity: 0.5, unit: "cup", notes: "sliced" },
+      { name: "cherry tomatoes", quantity: 6, unit: "each", notes: "small" },
+      { name: "lemon", quantity: 2, unit: "slice" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "fresh thyme", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 400°F",
@@ -1418,12 +1420,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Gluten-Free Option", "Diabetic-Friendly"],
     ingredients: [
-      { item: "sirloin beef (sliced thin)", quantity: 3, unit: "oz" },
-      { item: "broccoli florets", quantity: 1, unit: "cup" },
-      { item: "low-sodium soy sauce", quantity: 1, unit: "tbsp" },
-      { item: "oyster sauce", quantity: 1, unit: "tbsp" },
-      { item: "garlic (minced)", quantity: 1, unit: "clove" },
-      { item: "sesame oil", quantity: 1, unit: "tsp" }
+      { name: "sirloin beef", quantity: 3, unit: "oz", notes: "sliced thin" },
+      { name: "broccoli florets", quantity: 1, unit: "cup" },
+      { name: "low-sodium soy sauce", quantity: 1, unit: "tbsp" },
+      { name: "oyster sauce", quantity: 1, unit: "tbsp" },
+      { name: "garlic", quantity: 1, unit: "clove", notes: "minced" },
+      { name: "sesame oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Heat wok over high heat with sesame oil",
@@ -1445,12 +1447,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Gluten-Free", "Mediterranean Diet"],
     ingredients: [
-      { item: "chicken breast", quantity: 4, unit: "oz" },
-      { item: "fresh mozzarella", quantity: 2, unit: "oz" },
-      { item: "tomato (sliced)", quantity: 2, unit: "slices" },
-      { item: "fresh basil", quantity: 4, unit: "leaves" },
-      { item: "balsamic glaze", quantity: 1, unit: "tbsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" }
+      { name: "chicken breast", quantity: 4, unit: "oz" },
+      { name: "fresh mozzarella", quantity: 2, unit: "oz" },
+      { name: "tomato", quantity: 2, unit: "slice" },
+      { name: "fresh basil", quantity: 4, unit: "leaf" },
+      { name: "balsamic glaze", quantity: 1, unit: "tbsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 400°F",
@@ -1472,12 +1474,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Low Carb", "Keto-Friendly", "High Protein", "Gluten-Free", "Pescatarian"],
     ingredients: [
-      { item: "zucchini (large)", quantity: 1, unit: "piece" },
-      { item: "cooked shrimp (chopped)", quantity: 3, unit: "oz" },
-      { item: "cream cheese", quantity: 2, unit: "tbsp" },
-      { item: "parmesan cheese", quantity: 2, unit: "tbsp" },
-      { item: "garlic powder", quantity: 0.25, unit: "tsp" },
-      { item: "paprika", quantity: 0.25, unit: "tsp" }
+      { name: "zucchini", quantity: 1, unit: "each", notes: "large" },
+      { name: "cooked shrimp", quantity: 3, unit: "oz", notes: "chopped" },
+      { name: "cream cheese", quantity: 2, unit: "tbsp" },
+      { name: "parmesan cheese", quantity: 2, unit: "tbsp" },
+      { name: "garlic powder", quantity: 0.25, unit: "tsp" },
+      { name: "paprika", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 375°F",
@@ -1499,12 +1501,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "High Fiber", "Gluten-Free", "Anti-Inflammatory"],
     ingredients: [
-      { item: "ground turkey", quantity: 3, unit: "oz" },
-      { item: "kidney beans", quantity: 0.25, unit: "cup" },
-      { item: "diced tomatoes", quantity: 0.5, unit: "cup" },
-      { item: "bell pepper (diced)", quantity: 0.25, unit: "cup" },
-      { item: "chili powder", quantity: 1, unit: "tsp" },
-      { item: "cumin", quantity: 0.5, unit: "tsp" }
+      { name: "ground turkey", quantity: 3, unit: "oz" },
+      { name: "kidney beans", quantity: 0.25, unit: "cup" },
+      { name: "diced tomatoes", quantity: 0.5, unit: "cup" },
+      { name: "bell pepper", quantity: 0.25, unit: "cup", notes: "diced" },
+      { name: "chili powder", quantity: 1, unit: "tsp" },
+      { name: "cumin", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Brown ground turkey in pot",
@@ -1526,12 +1528,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Gluten-Free", "Anti-Inflammatory", "Low Carb"],
     ingredients: [
-      { item: "chicken thigh (boneless)", quantity: 4, unit: "oz" },
-      { item: "Brussels sprouts (halved)", quantity: 1, unit: "cup" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "garlic powder", quantity: 0.5, unit: "tsp" },
-      { item: "lemon juice", quantity: 1, unit: "tbsp" },
-      { item: "fresh thyme", quantity: 0.5, unit: "tsp" }
+      { name: "chicken thigh", quantity: 4, unit: "oz", notes: "boneless" },
+      { name: "Brussels sprouts", quantity: 1, unit: "cup", notes: "halved" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "garlic powder", quantity: 0.5, unit: "tsp" },
+      { name: "lemon juice", quantity: 1, unit: "tbsp" },
+      { name: "fresh thyme", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 425°F",
@@ -1553,12 +1555,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Low Carb", "Gluten-Free", "Pescatarian", "Heart-Healthy"],
     ingredients: [
-      { item: "large shrimp", quantity: 6, unit: "pieces" },
-      { item: "bell peppers (chunks)", quantity: 0.25, unit: "cup" },
-      { item: "red onion (chunks)", quantity: 0.25, unit: "cup" },
-      { item: "olive oil", quantity: 1, unit: "tbsp" },
-      { item: "lemon juice", quantity: 1, unit: "tbsp" },
-      { item: "garlic (minced)", quantity: 1, unit: "clove" }
+      { name: "large shrimp", quantity: 6, unit: "each" },
+      { name: "bell peppers", quantity: 0.25, unit: "cup", notes: "chunks" },
+      { name: "red onion", quantity: 0.25, unit: "cup", notes: "chunks" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
+      { name: "lemon juice", quantity: 1, unit: "tbsp" },
+      { name: "garlic", quantity: 1, unit: "clove", notes: "minced" }
     ],
     instructions: [
       "Marinate shrimp in olive oil, lemon, and garlic",
@@ -1580,12 +1582,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Low Carb", "Keto-Friendly", "Gluten-Free", "Vegetarian Option"],
     ingredients: [
-      { item: "cauliflower pizza crust (small)", quantity: 1, unit: "piece" },
-      { item: "marinara sauce", quantity: 0.25, unit: "cup" },
-      { item: "mozzarella cheese", quantity: 2, unit: "oz" },
-      { item: "mushrooms (sliced)", quantity: 0.25, unit: "cup" },
-      { item: "bell peppers (diced)", quantity: 2, unit: "tbsp" },
-      { item: "fresh basil", quantity: 3, unit: "leaves" }
+      { name: "cauliflower pizza crust", quantity: 1, unit: "each", notes: "small" },
+      { name: "marinara sauce", quantity: 0.25, unit: "cup" },
+      { name: "mozzarella cheese", quantity: 2, unit: "oz" },
+      { name: "mushrooms", quantity: 0.25, unit: "cup", notes: "sliced" },
+      { name: "bell peppers", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "fresh basil", quantity: 3, unit: "leaf" }
     ],
     instructions: [
       "Preheat oven according to crust package",
@@ -1607,12 +1609,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Carb", "Gluten-Free", "Pescatarian", "Elegant"],
     ingredients: [
-      { item: "sea scallops", quantity: 4, unit: "large" },
-      { item: "baby spinach", quantity: 2, unit: "cups" },
-      { item: "butter", quantity: 1, unit: "tbsp" },
-      { item: "garlic (minced)", quantity: 2, unit: "cloves" },
-      { item: "lemon juice", quantity: 1, unit: "tbsp" },
-      { item: "white wine", quantity: 2, unit: "tbsp" }
+      { name: "sea scallops", quantity: 4, unit: "each", notes: "large" },
+      { name: "baby spinach", quantity: 2, unit: "cup" },
+      { name: "butter", quantity: 1, unit: "tbsp" },
+      { name: "garlic", quantity: 2, unit: "clove", notes: "minced" },
+      { name: "lemon juice", quantity: 1, unit: "tbsp" },
+      { name: "white wine", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Pat scallops dry and season with salt and pepper",
@@ -1636,12 +1638,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Anti-Inflammatory", "Vegan", "High Fiber", "Low Sodium", "Heart-Healthy"],
     ingredients: [
-      { item: "hummus", quantity: 0.25, unit: "cup" },
-      { item: "carrot sticks", quantity: 0.5, unit: "cup" },
-      { item: "cucumber sticks", quantity: 0.5, unit: "cup" },
-      { item: "bell pepper strips", quantity: 0.25, unit: "cup" },
-      { item: "cherry tomatoes", quantity: 4, unit: "small" },
-      { item: "olive oil drizzle", quantity: 1, unit: "tsp" }
+      { name: "hummus", quantity: 0.25, unit: "cup" },
+      { name: "carrot sticks", quantity: 0.5, unit: "cup" },
+      { name: "cucumber sticks", quantity: 0.5, unit: "cup" },
+      { name: "bell pepper strips", quantity: 0.25, unit: "cup" },
+      { name: "cherry tomatoes", quantity: 4, unit: "each", notes: "small" },
+      { name: "olive oil drizzle", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Place hummus in small serving bowl",
@@ -1663,11 +1665,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Vegetarian", "Portion-Controlled", "Calcium-Rich"],
     ingredients: [
-      { item: "sharp cheddar cheese", quantity: 1.5, unit: "oz" },
-      { item: "whole grain crackers", quantity: 6, unit: "crackers" },
-      { item: "apple slices", quantity: 0.25, unit: "cup" },
-      { item: "grapes", quantity: 8, unit: "grapes" },
-      { item: "walnuts", quantity: 5, unit: "halves" }
+      { name: "sharp cheddar cheese", quantity: 1.5, unit: "oz" },
+      { name: "whole grain crackers", quantity: 6, unit: "each" },
+      { name: "apple slices", quantity: 0.25, unit: "cup" },
+      { name: "grapes", quantity: 8, unit: "each" },
+      { name: "walnuts", quantity: 5, unit: "half" }
     ],
     instructions: [
       "Slice cheese into small cubes or slices",
@@ -1689,11 +1691,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Vegan", "Natural Sweetness", "High Fiber"],
     ingredients: [
-      { item: "apple", quantity: 1, unit: "medium" },
-      { item: "almond butter", quantity: 2, unit: "tbsp" },
-      { item: "cinnamon", quantity: 1, unit: "pinch" },
-      { item: "hemp seeds", quantity: 1, unit: "tsp" },
-      { item: "honey", quantity: 0.5, unit: "tsp" }
+      { name: "apple", quantity: 1, unit: "each", notes: "medium" },
+      { name: "almond butter", quantity: 2, unit: "tbsp" },
+      { name: "cinnamon", quantity: 1, unit: "pinch" },
+      { name: "hemp seeds", quantity: 1, unit: "tsp" },
+      { name: "honey", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Wash and slice apple into 8 wedges",
@@ -1715,11 +1717,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["Probiotic", "Low Sugar", "High Protein", "Gluten-Free", "Vegetarian"],
     ingredients: [
-      { item: "Greek yogurt (plain)", quantity: 0.75, unit: "cup" },
-      { item: "mixed berries (fresh)", quantity: 0.25, unit: "cup" },
-      { item: "honey", quantity: 1, unit: "tsp" },
-      { item: "sliced almonds", quantity: 1, unit: "tbsp" },
-      { item: "chia seeds", quantity: 1, unit: "tsp" }
+      { name: "Greek yogurt", quantity: 0.75, unit: "cup", notes: "plain" },
+      { name: "mixed berries", quantity: 0.25, unit: "cup", notes: "fresh" },
+      { name: "honey", quantity: 1, unit: "tsp" },
+      { name: "sliced almonds", quantity: 1, unit: "tbsp" },
+      { name: "chia seeds", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Place Greek yogurt in serving bowl",
@@ -1741,12 +1743,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Energy Boost", "Customizable", "Omega-3 Rich", "Vegan"],
     ingredients: [
-      { item: "almonds", quantity: 10, unit: "nuts" },
-      { item: "walnuts", quantity: 5, unit: "halves" },
-      { item: "cashews", quantity: 8, unit: "nuts" },
-      { item: "dried cranberries", quantity: 1, unit: "tbsp" },
-      { item: "dark chocolate chips", quantity: 1, unit: "tbsp" },
-      { item: "pumpkin seeds", quantity: 1, unit: "tbsp" }
+      { name: "almonds", quantity: 10, unit: "each" },
+      { name: "walnuts", quantity: 5, unit: "half" },
+      { name: "cashews", quantity: 8, unit: "each" },
+      { name: "dried cranberries", quantity: 1, unit: "tbsp" },
+      { name: "dark chocolate chips", quantity: 1, unit: "tbsp" },
+      { name: "pumpkin seeds", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Combine all nuts in a small bowl",
@@ -1768,11 +1770,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Keto-Friendly", "Gluten-Free", "Low Carb", "Vegetarian"],
     ingredients: [
-      { item: "hard-boiled eggs", quantity: 2, unit: "large" },
-      { item: "everything bagel seasoning", quantity: 0.5, unit: "tsp" },
-      { item: "paprika", quantity: 1, unit: "pinch" },
-      { item: "sea salt", quantity: 1, unit: "pinch" },
-      { item: "black pepper", quantity: 1, unit: "pinch" }
+      { name: "hard-boiled eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "everything bagel seasoning", quantity: 0.5, unit: "tsp" },
+      { name: "paprika", quantity: 1, unit: "pinch" },
+      { name: "sea salt", quantity: 1, unit: "pinch" },
+      { name: "black pepper", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Peel hard-boiled eggs",
@@ -1794,11 +1796,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Low Carb", "Keto-Friendly", "Gluten-Free", "Vegetarian", "Low Calorie"],
     ingredients: [
-      { item: "cucumber (thick slices)", quantity: 8, unit: "slices" },
-      { item: "cream cheese (whipped)", quantity: 2, unit: "tbsp" },
-      { item: "fresh dill", quantity: 1, unit: "tsp" },
-      { item: "cherry tomatoes (halved)", quantity: 4, unit: "small" },
-      { item: "everything bagel seasoning", quantity: 0.5, unit: "tsp" }
+      { name: "cucumber", quantity: 8, unit: "slice", notes: "thick slices" },
+      { name: "cream cheese", quantity: 2, unit: "tbsp", notes: "whipped" },
+      { name: "fresh dill", quantity: 1, unit: "tsp" },
+      { name: "cherry tomatoes", quantity: 4, unit: "each", notes: "small, halved" },
+      { name: "everything bagel seasoning", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Slice cucumber into thick rounds",
@@ -1820,10 +1822,10 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Vegan", "High Protein", "High Fiber", "Gluten-Free", "Low Calorie"],
     ingredients: [
-      { item: "edamame pods (frozen)", quantity: 1, unit: "cup" },
-      { item: "sea salt", quantity: 0.5, unit: "tsp" },
-      { item: "sesame oil", quantity: 0.5, unit: "tsp" },
-      { item: "red pepper flakes", quantity: 1, unit: "pinch" }
+      { name: "edamame pods", quantity: 1, unit: "cup", notes: "frozen" },
+      { name: "sea salt", quantity: 0.5, unit: "tsp" },
+      { name: "sesame oil", quantity: 0.5, unit: "tsp" },
+      { name: "red pepper flakes", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Boil edamame pods for 5 minutes",
@@ -1845,11 +1847,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Low Carb", "Keto-Friendly", "Gluten-Free", "Portable"],
     ingredients: [
-      { item: "sliced turkey breast", quantity: 3, unit: "slices" },
-      { item: "Swiss cheese slices", quantity: 2, unit: "slices" },
-      { item: "cucumber sticks", quantity: 3, unit: "sticks" },
-      { item: "mustard", quantity: 1, unit: "tsp" },
-      { item: "lettuce leaves", quantity: 3, unit: "small" }
+      { name: "sliced turkey breast", quantity: 3, unit: "slice" },
+      { name: "Swiss cheese slices", quantity: 2, unit: "slice" },
+      { name: "cucumber sticks", quantity: 3, unit: "stick" },
+      { name: "mustard", quantity: 1, unit: "tsp" },
+      { name: "lettuce leaves", quantity: 3, unit: "leaf", notes: "small" }
     ],
     instructions: [
       "Lay turkey slices flat",
@@ -1871,11 +1873,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Probiotic", "Gluten-Free", "Vegetarian", "Low Fat"],
     ingredients: [
-      { item: "cottage cheese (low-fat)", quantity: 0.75, unit: "cup" },
-      { item: "fresh pineapple chunks", quantity: 0.25, unit: "cup" },
-      { item: "sunflower seeds", quantity: 1, unit: "tbsp" },
-      { item: "cinnamon", quantity: 1, unit: "pinch" },
-      { item: "honey", quantity: 0.5, unit: "tsp" }
+      { name: "cottage cheese", quantity: 0.75, unit: "cup", notes: "low-fat" },
+      { name: "fresh pineapple chunks", quantity: 0.25, unit: "cup" },
+      { name: "sunflower seeds", quantity: 1, unit: "tbsp" },
+      { name: "cinnamon", quantity: 1, unit: "pinch" },
+      { name: "honey", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Place cottage cheese in serving bowl",
@@ -1897,12 +1899,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Vegan Option", "Anti-Inflammatory", "High Fiber"],
     ingredients: [
-      { item: "whole grain bread (small slice)", quantity: 1, unit: "slice" },
-      { item: "avocado", quantity: 0.25, unit: "medium" },
-      { item: "lemon juice", quantity: 0.5, unit: "tsp" },
-      { item: "red pepper flakes", quantity: 1, unit: "pinch" },
-      { item: "sea salt", quantity: 1, unit: "pinch" },
-      { item: "hemp seeds", quantity: 0.5, unit: "tsp" }
+      { name: "whole grain bread", quantity: 1, unit: "slice", notes: "small slice" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "medium" },
+      { name: "lemon juice", quantity: 0.5, unit: "tsp" },
+      { name: "red pepper flakes", quantity: 1, unit: "pinch" },
+      { name: "sea salt", quantity: 1, unit: "pinch" },
+      { name: "hemp seeds", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Toast bread until golden",
@@ -1924,12 +1926,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: false,
     healthBadges: ["High Protein", "Low Sugar", "Dairy-Free Option", "Energy Boost"],
     ingredients: [
-      { item: "protein powder (vanilla)", quantity: 0.5, unit: "scoop" },
-      { item: "banana", quantity: 0.5, unit: "small" },
-      { item: "almond milk (unsweetened)", quantity: 0.75, unit: "cup" },
-      { item: "spinach", quantity: 0.25, unit: "cup" },
-      { item: "almond butter", quantity: 1, unit: "tsp" },
-      { item: "ice cubes", quantity: 3, unit: "cubes" }
+      { name: "protein powder", quantity: 0.5, unit: "scoop", notes: "vanilla" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "small" },
+      { name: "almond milk", quantity: 0.75, unit: "cup", notes: "unsweetened" },
+      { name: "spinach", quantity: 0.25, unit: "cup" },
+      { name: "almond butter", quantity: 1, unit: "tsp" },
+      { name: "ice cubes", quantity: 3, unit: "each" }
     ],
     instructions: [
       "Add almond milk to blender",
@@ -1951,9 +1953,9 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Heart-Healthy", "Antioxidant-Rich", "Vegan", "Energy Boost"],
     ingredients: [
-      { item: "dark chocolate (70% cacao)", quantity: 1, unit: "oz" },
-      { item: "whole almonds", quantity: 15, unit: "nuts" },
-      { item: "sea salt flakes", quantity: 1, unit: "pinch" }
+      { name: "dark chocolate", quantity: 1, unit: "oz", notes: "70% cacao" },
+      { name: "whole almonds", quantity: 15, unit: "each" },
+      { name: "sea salt flakes", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Purchase pre-made dark chocolate almonds OR",
@@ -1975,11 +1977,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Portable", "Gluten-Free", "Vegetarian", "Low Carb"],
     ingredients: [
-      { item: "string cheese (mozzarella)", quantity: 1, unit: "stick" },
-      { item: "cherry tomatoes", quantity: 8, unit: "small" },
-      { item: "fresh basil leaves", quantity: 4, unit: "leaves" },
-      { item: "balsamic glaze", quantity: 1, unit: "tsp" },
-      { item: "black pepper", quantity: 1, unit: "pinch" }
+      { name: "string cheese", quantity: 1, unit: "stick", notes: "mozzarella" },
+      { name: "cherry tomatoes", quantity: 8, unit: "each", notes: "small" },
+      { name: "fresh basil leaves", quantity: 4, unit: "leaf" },
+      { name: "balsamic glaze", quantity: 1, unit: "tsp" },
+      { name: "black pepper", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Peel string cheese into strips or leave whole",
@@ -2001,11 +2003,11 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Gluten-Free", "Energy Boost", "Vegan Option", "Heart-Healthy"],
     ingredients: [
-      { item: "rice cakes (plain)", quantity: 2, unit: "cakes" },
-      { item: "natural peanut butter", quantity: 2, unit: "tbsp" },
-      { item: "banana (sliced)", quantity: 0.5, unit: "small" },
-      { item: "cinnamon", quantity: 1, unit: "pinch" },
-      { item: "honey", quantity: 0.5, unit: "tsp" }
+      { name: "rice cakes", quantity: 2, unit: "each", notes: "plain" },
+      { name: "natural peanut butter", quantity: 2, unit: "tbsp" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "small, sliced" },
+      { name: "cinnamon", quantity: 1, unit: "pinch" },
+      { name: "honey", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Spread peanut butter on each rice cake",
@@ -2027,12 +2029,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Low Carb", "Vegetarian", "Gluten-Free", "Mediterranean Diet"],
     ingredients: [
-      { item: "cherry tomatoes", quantity: 6, unit: "small" },
-      { item: "mini mozzarella balls", quantity: 6, unit: "balls" },
-      { item: "fresh basil leaves", quantity: 6, unit: "leaves" },
-      { item: "balsamic glaze", quantity: 1, unit: "tsp" },
-      { item: "olive oil", quantity: 1, unit: "tsp" },
-      { item: "sea salt", quantity: 1, unit: "pinch" }
+      { name: "cherry tomatoes", quantity: 6, unit: "each", notes: "small" },
+      { name: "mini mozzarella balls", quantity: 6, unit: "each" },
+      { name: "fresh basil leaves", quantity: 6, unit: "leaf" },
+      { name: "balsamic glaze", quantity: 1, unit: "tsp" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
+      { name: "sea salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Thread tomato, basil, and mozzarella on toothpicks",
@@ -2054,12 +2056,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Vegan", "High Fiber", "High Protein", "Gluten-Free", "Crunchy"],
     ingredients: [
-      { item: "chickpeas (cooked, drained)", quantity: 0.5, unit: "cup" },
-      { item: "olive oil", quantity: 1, unit: "tsp" },
-      { item: "paprika", quantity: 0.25, unit: "tsp" },
-      { item: "cumin", quantity: 0.25, unit: "tsp" },
-      { item: "garlic powder", quantity: 0.125, unit: "tsp" },
-      { item: "sea salt", quantity: 0.25, unit: "tsp" }
+      { name: "chickpeas", quantity: 0.5, unit: "cup", notes: "cooked, drained" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
+      { name: "paprika", quantity: 0.25, unit: "tsp" },
+      { name: "cumin", quantity: 0.25, unit: "tsp" },
+      { name: "garlic powder", quantity: 0.125, unit: "tsp" },
+      { name: "sea salt", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Preheat oven to 400°F",
@@ -2081,10 +2083,10 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Low Carb", "Vegan", "Gluten-Free", "Heart-Healthy", "Low Calorie"],
     ingredients: [
-      { item: "celery stalks", quantity: 3, unit: "stalks" },
-      { item: "almond butter", quantity: 2, unit: "tbsp" },
-      { item: "raisins", quantity: 1, unit: "tbsp" },
-      { item: "hemp seeds", quantity: 1, unit: "tsp" }
+      { name: "celery stalks", quantity: 3, unit: "stalk" },
+      { name: "almond butter", quantity: 2, unit: "tbsp" },
+      { name: "raisins", quantity: 1, unit: "tbsp" },
+      { name: "hemp seeds", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Wash celery and cut into 3-inch pieces",
@@ -2106,12 +2108,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["High Protein", "Low Carb", "Omega-3 Rich", "Gluten-Free", "Pescatarian"],
     ingredients: [
-      { item: "cucumber (thick slices)", quantity: 8, unit: "slices" },
-      { item: "canned tuna (in water)", quantity: 2, unit: "oz" },
-      { item: "Greek yogurt", quantity: 1, unit: "tbsp" },
-      { item: "Dijon mustard", quantity: 0.5, unit: "tsp" },
-      { item: "fresh dill", quantity: 1, unit: "tsp" },
-      { item: "paprika", quantity: 1, unit: "pinch" }
+      { name: "cucumber", quantity: 8, unit: "slice", notes: "thick slices" },
+      { name: "canned tuna", quantity: 2, unit: "oz", notes: "in water" },
+      { name: "Greek yogurt", quantity: 1, unit: "tbsp" },
+      { name: "Dijon mustard", quantity: 0.5, unit: "tsp" },
+      { name: "fresh dill", quantity: 1, unit: "tsp" },
+      { name: "paprika", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Slice cucumber into thick rounds",
@@ -2133,12 +2135,12 @@ export const glp1Meals: GLP1Meal[] = [
     fingerFood: true,
     healthBadges: ["Vegan", "Heart-Healthy", "Anti-Inflammatory", "Gluten-Free"],
     ingredients: [
-      { item: "ripe avocado", quantity: 0.5, unit: "medium" },
-      { item: "lime juice", quantity: 1, unit: "tsp" },
-      { item: "diced tomato", quantity: 2, unit: "tbsp" },
-      { item: "red onion (minced)", quantity: 1, unit: "tbsp" },
-      { item: "cilantro (chopped)", quantity: 1, unit: "tbsp" },
-      { item: "veggie chips", quantity: 1, unit: "oz" }
+      { name: "ripe avocado", quantity: 0.5, unit: "each", notes: "medium" },
+      { name: "lime juice", quantity: 1, unit: "tsp" },
+      { name: "diced tomato", quantity: 2, unit: "tbsp" },
+      { name: "red onion", quantity: 1, unit: "tbsp", notes: "minced" },
+      { name: "cilantro", quantity: 1, unit: "tbsp", notes: "chopped" },
+      { name: "veggie chips", quantity: 1, unit: "oz" }
     ],
     instructions: [
       "Mash avocado in small bowl",
