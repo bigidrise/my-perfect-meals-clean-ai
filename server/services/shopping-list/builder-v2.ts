@@ -2,13 +2,20 @@ import { canonicalName } from './normalizer';
 import { normalizeUnit, convertToPreferred, Qty } from './unit-converter';
 import { categorize, AISLE_ORDER } from '../../data/ingredientCategories';
 
+export type UniversalIngredient = {
+  name: string;
+  quantity: number;
+  unit: string;
+  notes?: string;
+};
+
 export type MealInput = {
   mealId: string;
   mealName: string;
   generator?: string;
   day?: string;
   slot?: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
-  ingredients: Array<{ item: string; amount: string }>;
+  ingredients: UniversalIngredient[];
 };
 
 export type MealSource = {
@@ -85,16 +92,25 @@ export function buildShoppingListFromMeals(meals: MealInput[]): ShoppingListItem
   
   for (const meal of meals) {
     for (const ing of meal.ingredients || []) {
-      const name = canonicalName(ing.item);
-      const parsed = parseAmount(ing.amount);
-      
-      if (!parsed.amount || isNaN(parsed.amount) || parsed.amount <= 0) {
+      // Validate universal ingredient schema
+      if (!ing.name || typeof ing.quantity !== 'number' || !ing.unit) {
+        console.warn('Invalid ingredient schema, skipping:', ing);
         continue;
       }
-      
-      const qty = convertToPreferred({ amount: parsed.amount, unit: parsed.unit });
+
+      if (isNaN(ing.quantity) || ing.quantity <= 0) {
+        continue;
+      }
+
+      // Normalize the ingredient name (lowercase, trim, remove descriptors)
+      const normalizedName = canonicalName(ing.name);
+
+      // Convert to preferred unit system
+      const qty = convertToPreferred({ amount: ing.quantity, unit: ing.unit });
       const unit = qty.unit || '';
-      const key = `${name.toLowerCase()}|${unit}`;
+
+      // Create grouping key: normalized name + unit (notes do NOT affect grouping)
+      const key = `${normalizedName.toLowerCase()}|${unit}`;
       
       const source: MealSource = {
         mealId: meal.mealId,
@@ -109,10 +125,10 @@ export function buildShoppingListFromMeals(meals: MealInput[]): ShoppingListItem
       if (!map.has(key)) {
         map.set(key, {
           key,
-          name,
+          name: normalizedName,
           totalQty: qty.amount,
           unit: qty.unit,
-          category: categorize(name),
+          category: categorize(normalizedName),
           sources: [source],
         });
       } else {
@@ -125,6 +141,7 @@ export function buildShoppingListFromMeals(meals: MealInput[]): ShoppingListItem
   
   const items = Array.from(map.values());
   
+  // Sort by category (aisle order) then alphabetically by name
   items.sort((a, b) => {
     const categoryIndexA = AISLE_ORDER.indexOf(a.category);
     const categoryIndexB = AISLE_ORDER.indexOf(b.category);
