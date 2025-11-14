@@ -28,12 +28,12 @@ export const diabeticMenuBreakfast: SmartMeal[] = [
     bglRange: "low",
     macros: { calories: 330, protein_g: 24, carbs_g: 10, fat_g: 20 },
     ingredients: [
-      { item: "Eggs", amount: "2" },
-      { item: "Egg whites", amount: "2" },
-      { item: "Spinach", amount: "1 cup" },
-      { item: "Tomato, diced", amount: "1/2 cup" },
-      { item: "Olive oil", amount: "1 tsp" },
-      { item: "Avocado", amount: "1/4 medium" },
+      { name: "Eggs", quantity: 2, unit: "each" },
+      { name: "Egg whites", quantity: 2, unit: "each" },
+      { name: "Spinach", quantity: 1, unit: "cup" },
+      { name: "Tomato", quantity: 0.5, unit: "cup", notes: "diced" },
+      { name: "Olive oil", quantity: 1, unit: "tsp" },
+      { name: "Avocado", quantity: 0.25, unit: "each", notes: "medium" },
     ],
     instructions: [
       "Sauté spinach and tomato in olive oil.",
