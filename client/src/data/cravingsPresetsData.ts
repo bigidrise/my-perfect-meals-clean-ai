@@ -1,7 +1,9 @@
+
 export type Ingredient = { 
   name: string; 
   quantity: number; 
-  unit?: string; 
+  unit: string;
+  notes?: string;
 };
 
 export type CravingPreset = {
@@ -9,9 +11,9 @@ export type CravingPreset = {
   name: string;
   image?: string;
   summary?: string;
-  baseServings: number; // quantities are for this base (1)
+  baseServings: number;
   ingredients: Ingredient[];
-  instructions: string[]; // specific, no fluff
+  instructions: string[];
   badges?: string[];
   tags?: string[];
   macros?: { calories: number; protein: number; carbs: number; fat: number };
@@ -25,11 +27,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Creamy, chocolatey, high‑protein comfort.",
     baseServings: 1,
     ingredients: [
-      { name: "plain Greek yogurt (2%–5%)", quantity: 170, unit: "g" },
-      { name: "unsweetened cocoa", quantity: 1.5, unit: "tbsp" },
-      { name: "zero‑cal sweetener or maple", quantity: 1, unit: "tbsp" },
+      { name: "Greek yogurt", quantity: 170, unit: "g", notes: "2%-5%" },
+      { name: "cocoa", quantity: 1.5, unit: "tbsp", notes: "unsweetened" },
+      { name: "sweetener", quantity: 1, unit: "tbsp", notes: "zero-cal or maple" },
       { name: "vanilla extract", quantity: 0.5, unit: "tsp" },
-      { name: "pinch of salt", quantity: 1 }
+      { name: "salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Whisk yogurt, cocoa, sweetener, vanilla, salt until smooth.",
@@ -47,11 +49,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Cheesecake vibe without the crash.",
     baseServings: 1,
     ingredients: [
-      { name: "nonfat Greek yogurt", quantity: 170, unit: "g" },
-      { name: "light cream cheese", quantity: 28, unit: "g" },
+      { name: "Greek yogurt", quantity: 170, unit: "g", notes: "nonfat" },
+      { name: "cream cheese", quantity: 28, unit: "g", notes: "light" },
       { name: "vanilla extract", quantity: 0.5, unit: "tsp" },
-      { name: "strawberries, sliced", quantity: 0.75, unit: "cup" },
-      { name: "graham crumbs (or HF alternative)", quantity: 1, unit: "tbsp" },
+      { name: "strawberries", quantity: 0.75, unit: "cup", notes: "sliced" },
+      { name: "graham crumbs", quantity: 1, unit: "tbsp", notes: "or HF alternative" },
       { name: "sweetener", quantity: 1, unit: "tsp" }
     ],
     instructions: [
@@ -71,11 +73,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     baseServings: 1,
     ingredients: [
       { name: "rolled oats", quantity: 40, unit: "g" },
-      { name: "protein powder, vanilla", quantity: 24, unit: "g" },
+      { name: "protein powder", quantity: 24, unit: "g", notes: "vanilla" },
       { name: "cinnamon", quantity: 0.5, unit: "tsp" },
-      { name: "unsweetened almond milk", quantity: 240, unit: "ml" },
-      { name: "Greek yogurt (topping)", quantity: 60, unit: "g" },
-      { name: "sweetener (to taste)", quantity: 1, unit: "tsp" }
+      { name: "almond milk", quantity: 240, unit: "ml", notes: "unsweetened" },
+      { name: "Greek yogurt", quantity: 60, unit: "g", notes: "topping" },
+      { name: "sweetener", quantity: 1, unit: "tsp", notes: "to taste" }
     ],
     instructions: [
       "Cook oats with milk, cinnamon until creamy.",
@@ -93,11 +95,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Pie flavor, weeknight speed.",
     baseServings: 1,
     ingredients: [
-      { name: "apple, diced", quantity: 1 },
+      { name: "apple", quantity: 1, unit: "each", notes: "diced" },
       { name: "rolled oats", quantity: 20, unit: "g" },
-      { name: "almond or oat flour", quantity: 1, unit: "tbsp" },
+      { name: "flour", quantity: 1, unit: "tbsp", notes: "almond or oat" },
       { name: "cinnamon", quantity: 0.5, unit: "tsp" },
-      { name: "butter or coconut oil, melted", quantity: 1, unit: "tsp" },
+      { name: "butter", quantity: 1, unit: "tsp", notes: "melted, or coconut oil" },
       { name: "sweetener", quantity: 1, unit: "tsp" }
     ],
     instructions: [
@@ -116,10 +118,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Salty‑sweet, chocolate‑peanut hit with control.",
     baseServings: 1,
     ingredients: [
-      { name: "natural peanut butter", quantity: 1, unit: "tbsp" },
-      { name: "dark chocolate chips 60–70%", quantity: 1, unit: "tbsp" },
-      { name: "oat flour (or protein crisps)", quantity: 1, unit: "tbsp" },
-      { name: "pinch of salt", quantity: 1 }
+      { name: "peanut butter", quantity: 1, unit: "tbsp", notes: "natural" },
+      { name: "dark chocolate chips", quantity: 1, unit: "tbsp", notes: "60-70%" },
+      { name: "oat flour", quantity: 1, unit: "tbsp", notes: "or protein crisps" },
+      { name: "salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Mix PB with oat flour and salt; roll into 4-5 small balls.",
@@ -137,7 +139,7 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Crunch like chips, fiber like a champ.",
     baseServings: 1,
     ingredients: [
-      { name: "canned chickpeas, drained", quantity: 120, unit: "g" },
+      { name: "chickpeas", quantity: 120, unit: "g", notes: "canned, drained" },
       { name: "apple cider vinegar", quantity: 1.5, unit: "tbsp" },
       { name: "olive oil", quantity: 1, unit: "tsp" },
       { name: "salt", quantity: 0.25, unit: "tsp" }
@@ -158,9 +160,9 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Fries energy, less grease.",
     baseServings: 1,
     ingredients: [
-      { name: "russet potato, wedged", quantity: 200, unit: "g" },
+      { name: "russet potato", quantity: 200, unit: "g", notes: "wedged" },
       { name: "olive oil", quantity: 1, unit: "tsp" },
-      { name: "BBQ seasoning (low‑sodium)", quantity: 1, unit: "tsp" }
+      { name: "BBQ seasoning", quantity: 1, unit: "tsp", notes: "low-sodium" }
     ],
     instructions: [
       "Toss wedges with oil and seasoning.",
@@ -178,10 +180,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Crispy outside, juicy inside.",
     baseServings: 1,
     ingredients: [
-      { name: "chicken breast, strips", quantity: 120, unit: "g" },
-      { name: "egg white", quantity: 1 },
-      { name: "panko crumbs (whole‑wheat pref.)", quantity: 0.5, unit: "cup" },
-      { name: "paprika + garlic powder", quantity: 1, unit: "tsp" },
+      { name: "chicken breast", quantity: 120, unit: "g", notes: "strips" },
+      { name: "egg white", quantity: 1, unit: "each" },
+      { name: "panko crumbs", quantity: 0.5, unit: "cup", notes: "whole-wheat preferred" },
+      { name: "paprika and garlic powder", quantity: 1, unit: "tsp" },
       { name: "salt", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
@@ -200,10 +202,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Pizza flavor, veggie base.",
     baseServings: 1,
     ingredients: [
-      { name: "large portobello cap", quantity: 1 },
-      { name: "marinara (no‑sugar‑added)", quantity: 2, unit: "tbsp" },
-      { name: "part‑skim mozzarella, shredded", quantity: 28, unit: "g" },
-      { name: "turkey pepperoni (opt)", quantity: 6, unit: "slices" }
+      { name: "portobello cap", quantity: 1, unit: "each", notes: "large" },
+      { name: "marinara", quantity: 2, unit: "tbsp", notes: "no-sugar-added" },
+      { name: "mozzarella", quantity: 28, unit: "g", notes: "part-skim, shredded" },
+      { name: "turkey pepperoni", quantity: 6, unit: "slice", notes: "optional" }
     ],
     instructions: [
       "Scoop gills lightly; pat cap dry.",
@@ -221,11 +223,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Nacho fix, protein‑forward.",
     baseServings: 1,
     ingredients: [
-      { name: "extra‑lean ground turkey", quantity: 120, unit: "g" },
-      { name: "taco seasoning (low‑sodium)", quantity: 1, unit: "tsp" },
-      { name: "black beans, rinsed", quantity: 60, unit: "g" },
+      { name: "ground turkey", quantity: 120, unit: "g", notes: "extra-lean" },
+      { name: "taco seasoning", quantity: 1, unit: "tsp", notes: "low-sodium" },
+      { name: "black beans", quantity: 60, unit: "g", notes: "rinsed" },
       { name: "salsa", quantity: 2, unit: "tbsp" },
-      { name: "baked tortilla chips", quantity: 15, unit: "g" },
+      { name: "tortilla chips", quantity: 15, unit: "g", notes: "baked" },
       { name: "shredded cheese", quantity: 28, unit: "g" }
     ],
     instructions: [
@@ -244,8 +246,8 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Ice‑cream feel, fruit‑first.",
     baseServings: 1,
     ingredients: [
-      { name: "frozen ripe banana coins", quantity: 120, unit: "g" },
-      { name: "unsweetened almond milk", quantity: 30, unit: "ml" }
+      { name: "banana", quantity: 120, unit: "g", notes: "frozen ripe, coins" },
+      { name: "almond milk", quantity: 30, unit: "ml", notes: "unsweetened" }
     ],
     instructions: [
       "Blend bananas with milk, scraping as needed, until soft‑serve.",
@@ -262,11 +264,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Thick, rich, macro‑friendly.",
     baseServings: 1,
     ingredients: [
-      { name: "protein powder, chocolate", quantity: 30, unit: "g" },
-      { name: "frozen banana", quantity: 100, unit: "g" },
+      { name: "protein powder", quantity: 30, unit: "g", notes: "chocolate" },
+      { name: "banana", quantity: 100, unit: "g", notes: "frozen" },
       { name: "peanut butter", quantity: 1, unit: "tbsp" },
-      { name: "unsweetened almond milk", quantity: 240, unit: "ml" },
-      { name: "ice cubes", quantity: 4 }
+      { name: "almond milk", quantity: 240, unit: "ml", notes: "unsweetened" },
+      { name: "ice cubes", quantity: 4, unit: "each" }
     ],
     instructions: [
       "Blend everything on high until thick and smooth.",
@@ -284,10 +286,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     baseServings: 1,
     ingredients: [
       { name: "oat flour", quantity: 30, unit: "g" },
-      { name: "applesauce (unsweetened)", quantity: 2, unit: "tbsp" },
-      { name: "egg white", quantity: 1 },
+      { name: "applesauce", quantity: 2, unit: "tbsp", notes: "unsweetened" },
+      { name: "egg white", quantity: 1, unit: "each" },
       { name: "dark chocolate chips", quantity: 1, unit: "tbsp" },
-      { name: "vanilla + pinch salt", quantity: 1 }
+      { name: "vanilla and salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Mix all; form into cookie shape in oven‑safe mug or air‑fryer basket.",
@@ -306,11 +308,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     baseServings: 1,
     ingredients: [
       { name: "oat flour", quantity: 30, unit: "g" },
-      { name: "plain Greek yogurt", quantity: 45, unit: "g" },
-      { name: "egg white", quantity: 1 },
+      { name: "Greek yogurt", quantity: 45, unit: "g", notes: "plain" },
+      { name: "egg white", quantity: 1, unit: "each" },
       { name: "baking powder", quantity: 0.5, unit: "tsp" },
       { name: "cinnamon", quantity: 0.5, unit: "tsp" },
-      { name: "sweetener", quantity: 1 }
+      { name: "sweetener", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Whisk batter until smooth; roll into 6-8 small balls.",
@@ -328,7 +330,7 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Crisp edges, tender centers.",
     baseServings: 1,
     ingredients: [
-      { name: "russet potato, sticks", quantity: 220, unit: "g" },
+      { name: "russet potato", quantity: 220, unit: "g", notes: "sticks" },
       { name: "olive oil", quantity: 1, unit: "tsp" },
       { name: "salt", quantity: 0.25, unit: "tsp" }
     ],
@@ -347,11 +349,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Creamy, cheesy, sneaky veg.",
     baseServings: 1,
     ingredients: [
-      { name: "whole‑wheat elbows, dry", quantity: 40, unit: "g" },
+      { name: "elbow pasta", quantity: 40, unit: "g", notes: "whole-wheat, dry" },
       { name: "cauliflower florets", quantity: 120, unit: "g" },
-      { name: "part‑skim cheddar, shredded", quantity: 28, unit: "g" },
+      { name: "cheddar", quantity: 28, unit: "g", notes: "part-skim, shredded" },
       { name: "Greek yogurt", quantity: 45, unit: "g" },
-      { name: "mustard + garlic powder", quantity: 1, unit: "tsp" }
+      { name: "mustard and garlic powder", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Cook pasta and cauliflower together until tender; drain.",
@@ -370,11 +372,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     baseServings: 1,
     ingredients: [
       { name: "oat flour", quantity: 30, unit: "g" },
-      { name: "unsweetened cocoa", quantity: 1.5, unit: "tbsp" },
-      { name: "sweetener or maple", quantity: 1, unit: "tbsp" },
-      { name: "milk of choice", quantity: 60, unit: "ml" },
+      { name: "cocoa", quantity: 1.5, unit: "tbsp", notes: "unsweetened" },
+      { name: "sweetener", quantity: 1, unit: "tbsp", notes: "or maple" },
+      { name: "milk", quantity: 60, unit: "ml", notes: "of choice" },
       { name: "baking powder", quantity: 0.25, unit: "tsp" },
-      { name: "pinch salt", quantity: 1 }
+      { name: "salt", quantity: 1, unit: "pinch" }
     ],
     instructions: [
       "Mix dry ingredients in microwave‑safe mug.",
@@ -392,12 +394,12 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Picnic vibes, lighter base.",
     baseServings: 1,
     ingredients: [
-      { name: "cauliflower, steamed & cooled", quantity: 200, unit: "g" },
+      { name: "cauliflower", quantity: 200, unit: "g", notes: "steamed and cooled" },
       { name: "Greek yogurt", quantity: 45, unit: "g" },
       { name: "Dijon mustard", quantity: 1, unit: "tsp" },
-      { name: "green onion, chopped", quantity: 1, unit: "tbsp" },
+      { name: "green onion", quantity: 1, unit: "tbsp", notes: "chopped" },
       { name: "turkey bacon bits", quantity: 1, unit: "tbsp" },
-      { name: "cheddar, diced", quantity: 14, unit: "g" }
+      { name: "cheddar", quantity: 14, unit: "g", notes: "diced" }
     ],
     instructions: [
       "Chop steamed cauliflower into bite‑size pieces.",
@@ -415,11 +417,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Wing flavor, no mess.",
     baseServings: 1,
     ingredients: [
-      { name: "cooked chicken breast, diced", quantity: 120, unit: "g" },
-      { name: "buffalo sauce (low‑sodium)", quantity: 2, unit: "tbsp" },
+      { name: "chicken breast", quantity: 120, unit: "g", notes: "cooked, diced" },
+      { name: "buffalo sauce", quantity: 2, unit: "tbsp", notes: "low-sodium" },
       { name: "Greek yogurt", quantity: 30, unit: "g" },
-      { name: "celery, diced", quantity: 2, unit: "tbsp" },
-      { name: "butter lettuce leaves", quantity: 4 }
+      { name: "celery", quantity: 2, unit: "tbsp", notes: "diced" },
+      { name: "butter lettuce leaves", quantity: 4, unit: "each" }
     ],
     instructions: [
       "Mix chicken with buffalo sauce.",
@@ -437,12 +439,12 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Sunday morning vibes, macro‑friendly.",
     baseServings: 1,
     ingredients: [
-      { name: "protein powder, vanilla", quantity: 30, unit: "g" },
-      { name: "egg white", quantity: 2 },
-      { name: "banana, mashed", quantity: 0.5 },
+      { name: "protein powder", quantity: 30, unit: "g", notes: "vanilla" },
+      { name: "egg white", quantity: 2, unit: "each" },
+      { name: "banana", quantity: 0.5, unit: "each", notes: "mashed" },
       { name: "baking powder", quantity: 0.5, unit: "tsp" },
       { name: "cinnamon", quantity: 0.25, unit: "tsp" },
-      { name: "unsweetened almond milk", quantity: 60, unit: "ml" }
+      { name: "almond milk", quantity: 60, unit: "ml", notes: "unsweetened" }
     ],
     instructions: [
       "Blend all ingredients until smooth batter forms.",
@@ -462,7 +464,7 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     ingredients: [
       { name: "rolled oats", quantity: 40, unit: "g" },
       { name: "almond butter", quantity: 1, unit: "tbsp" },
-      { name: "honey or maple syrup", quantity: 1, unit: "tbsp" },
+      { name: "honey", quantity: 1, unit: "tbsp", notes: "or maple syrup" },
       { name: "matcha powder", quantity: 1, unit: "tsp" },
       { name: "chia seeds", quantity: 1, unit: "tsp" }
     ],
@@ -481,10 +483,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Tropical sweetness meets chili heat.",
     baseServings: 1,
     ingredients: [
-      { name: "plain Greek yogurt", quantity: 150, unit: "g" },
-      { name: "mango, diced", quantity: 0.5, unit: "cup" },
+      { name: "Greek yogurt", quantity: 150, unit: "g", notes: "plain" },
+      { name: "mango", quantity: 0.5, unit: "cup", notes: "diced" },
       { name: "chili-lime seasoning", quantity: 0.25, unit: "tsp" },
-      { name: "honey or agave", quantity: 1, unit: "tsp" }
+      { name: "honey", quantity: 1, unit: "tsp", notes: "or agave" }
     ],
     instructions: [
       "Stir yogurt and honey together.",
@@ -504,7 +506,7 @@ export const CRAVING_PRESETS: CravingPreset[] = [
       { name: "hummus", quantity: 3, unit: "tbsp" },
       { name: "carrot sticks", quantity: 0.5, unit: "cup" },
       { name: "cucumber slices", quantity: 0.5, unit: "cup" },
-      { name: "olive oil drizzle", quantity: 1, unit: "tsp" }
+      { name: "olive oil", quantity: 1, unit: "tsp", notes: "drizzle" }
     ],
     instructions: [
       "Spread hummus on a plate.",
@@ -521,10 +523,10 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Crunchy, sweet-salty peanut flavor in lettuce wraps.",
     baseServings: 1,
     ingredients: [
-      { name: "lettuce leaves", quantity: 3 },
-      { name: "shredded chicken or tofu", quantity: 80, unit: "g" },
+      { name: "lettuce leaves", quantity: 3, unit: "each" },
+      { name: "chicken", quantity: 80, unit: "g", notes: "shredded, or tofu" },
       { name: "peanut sauce", quantity: 1.5, unit: "tbsp" },
-      { name: "shredded carrots", quantity: 0.25, unit: "cup" }
+      { name: "carrots", quantity: 0.25, unit: "cup", notes: "shredded" }
     ],
     instructions: [
       "Fill lettuce leaves with chicken, sauce, and carrots.",
@@ -542,9 +544,9 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     baseServings: 1,
     ingredients: [
       { name: "chia seeds", quantity: 2, unit: "tbsp" },
-      { name: "light coconut milk", quantity: 120, unit: "ml" },
+      { name: "coconut milk", quantity: 120, unit: "ml", notes: "light" },
       { name: "vanilla extract", quantity: 0.25, unit: "tsp" },
-      { name: "sweetener (optional)", quantity: 1, unit: "tsp" }
+      { name: "sweetener", quantity: 1, unit: "tsp", notes: "optional" }
     ],
     instructions: [
       "Mix all ingredients in a jar.",
@@ -564,7 +566,7 @@ export const CRAVING_PRESETS: CravingPreset[] = [
       { name: "mixed nuts", quantity: 25, unit: "g" },
       { name: "pumpkin seeds", quantity: 10, unit: "g" },
       { name: "dried cranberries", quantity: 10, unit: "g" },
-      { name: "protein powder, vanilla", quantity: 10, unit: "g" },
+      { name: "protein powder", quantity: 10, unit: "g", notes: "vanilla" },
       { name: "honey", quantity: 1, unit: "tsp" }
     ],
     instructions: [
@@ -582,9 +584,9 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Tomato, mozzarella, basil — Italian simplicity.",
     baseServings: 1,
     ingredients: [
-      { name: "cherry tomatoes", quantity: 6 },
-      { name: "mini mozzarella balls", quantity: 4 },
-      { name: "fresh basil leaves", quantity: 4 },
+      { name: "cherry tomatoes", quantity: 6, unit: "each" },
+      { name: "mozzarella balls", quantity: 4, unit: "each", notes: "mini" },
+      { name: "basil leaves", quantity: 4, unit: "each", notes: "fresh" },
       { name: "balsamic glaze", quantity: 1, unit: "tsp" }
     ],
     instructions: [
@@ -602,9 +604,9 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Naturally sweet and crispy edges.",
     baseServings: 1,
     ingredients: [
-      { name: "sweet potato, sticks", quantity: 180, unit: "g" },
+      { name: "sweet potato", quantity: 180, unit: "g", notes: "sticks" },
       { name: "olive oil", quantity: 1, unit: "tsp" },
-      { name: "cinnamon + salt", quantity: 1, unit: "tsp" }
+      { name: "cinnamon and salt", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Toss sticks with oil and seasoning.",
@@ -621,11 +623,11 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "All sushi flavor, no rolling required.",
     baseServings: 1,
     ingredients: [
-      { name: "cooked sushi rice", quantity: 60, unit: "g" },
-      { name: "imitation crab or tofu", quantity: 50, unit: "g" },
-      { name: "avocado, diced", quantity: 0.25, unit: "fruit" },
+      { name: "sushi rice", quantity: 60, unit: "g", notes: "cooked" },
+      { name: "imitation crab", quantity: 50, unit: "g", notes: "or tofu" },
+      { name: "avocado", quantity: 0.25, unit: "each", notes: "diced" },
       { name: "nori flakes", quantity: 1, unit: "tsp" },
-      { name: "light soy sauce", quantity: 1, unit: "tsp" }
+      { name: "soy sauce", quantity: 1, unit: "tsp", notes: "light" }
     ],
     instructions: [
       "Layer rice, crab, and avocado in a cup.",
@@ -642,9 +644,9 @@ export const CRAVING_PRESETS: CravingPreset[] = [
     summary: "Romantic, portion-controlled indulgence.",
     baseServings: 1,
     ingredients: [
-      { name: "strawberries, halved", quantity: 6 },
-      { name: "dark chocolate (70%)", quantity: 20, unit: "g" },
-      { name: "crushed almonds (optional)", quantity: 1, unit: "tsp" }
+      { name: "strawberries", quantity: 6, unit: "each", notes: "halved" },
+      { name: "dark chocolate", quantity: 20, unit: "g", notes: "70%" },
+      { name: "crushed almonds", quantity: 1, unit: "tsp", notes: "optional" }
     ],
     instructions: [
       "Dip strawberry halves in melted chocolate.",
