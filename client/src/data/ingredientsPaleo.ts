@@ -1,4 +1,3 @@
-
 export const paleoMeals = {
   breakfast: [
     { name: "Egg scramble with spinach and avocado", tags: ["paleo", "low-carb", "protein-rich"] },
@@ -49,3 +48,34 @@ export const paleoMeals = {
     { name: "Chia seed snack balls", tags: ["paleo", "omega-3"] },
   ],
 };
+
+export const PALEO_BREAKFAST_INGREDIENTS = [
+  { name: "Scrambled Eggs & Bacon", ingredients: ["eggs", "bacon", "avocado"] },
+  { name: "Sweet Potato Hash", ingredients: ["sweet potato", "eggs", "spinach", "ground turkey"] },
+  { name: "Paleo Breakfast Bowl", ingredients: ["eggs", "avocado", "tomato", "spinach"] },
+  { name: "Almond Butter Toast", ingredients: ["paleo bread", "almond butter", "banana"] },
+  { name: "Paleo Bacon & Sweet Potato Hash", ingredients: ["bacon", "sweet potato", "egg", "spinach"] },
+  { name: "Almond Flour Pancakes", ingredients: ["almond flour", "egg", "vanilla", "banana"] },
+  { name: "Turkey Sausage Scramble", ingredients: ["turkey sausage", "eggs", "bell pepper", "spinach"] },
+  { name: "Paleo Breakfast Casserole", ingredients: ["eggs", "sweet potato", "ground turkey", "onion"] },
+  { name: "Fried Eggs & Avocado Plate", ingredients: ["eggs", "avocado", "olive oil"] },
+  { name: "Cinnamon Apple Breakfast Bowl", ingredients: ["apple", "almonds", "cinnamon", "honey"] },
+  { name: "Paleo Breakfast Sausage Patties", ingredients: ["ground pork", "sage", "salt", "pepper"] },
+  { name: "Banana Nut Breakfast Bowl", ingredients: ["banana", "pecans", "almond butter"] },
+  { name: "Paleo Omelet", ingredients: ["eggs", "mushrooms", "spinach", "avocado"] },
+  { name: "Paleo Loaded Avocado Bowl", ingredients: ["avocado", "bacon", "tomato"] },
+];
+
+export const PALEO_LUNCH_INGREDIENTS = [
+  { name: "Grilled Chicken Salad", ingredients: ["chicken breast", "mixed greens", "olive oil", "avocado"] },
+  { name: "Beef & Veggie Stir-Fry", ingredients: ["beef", "broccoli", "bell pepper", "coconut aminos"] },
+  { name: "Tuna Salad Bowl", ingredients: ["tuna", "cucumber", "tomato", "olive oil"] },
+  { name: "Paleo Chicken Wrap", ingredients: ["chicken", "lettuce", "tomato", "avocado"] },
+  { name: "Paleo Chicken Veggie Bowl", ingredients: ["chicken", "zucchini", "carrot", "olive oil"] },
+  { name: "Paleo Lettuce Wrap Tacos", ingredients: ["ground beef", "lettuce", "tomato", "avocado"] },
+  { name: "Paleo Chicken Salad", ingredients: ["chicken breast", "celery", "almond mayo"] },
+  { name: "Sweet Potato Turkey Bowl", ingredients: ["ground turkey", "sweet potato", "spinach"] },
+  { name: "Paleo Turkey Roll-Ups", ingredients: ["turkey slices", "avocado", "spinach"] },
+  { name: "Apple Pecan Chicken Salad", ingredients: ["chicken", "apple", "pecans", "mixed greens"] },
+  { name: "Paleo BBQ Chicken Plate", ingredients: ["chicken", "paleo bbq sauce", "green beans"] },
+];
