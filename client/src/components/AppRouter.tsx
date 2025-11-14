@@ -6,8 +6,6 @@ import DiabeticHub from "@/pages/physician/DiabeticHub";
 import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
 import PatientAssignmentDashboard from "@/pages/physician/PatientAssignmentDashboard";
-import LifestyleDietMenuBuilder from "@/pages/LifestyleDietMenuBuilder";
-import ClinicalLifestyleDietMenuBuilder from "@/pages/ClinicalLifestyleDietMenuBuilder";
 import { Route } from "wouter";
 
 interface AppRouterProps {
@@ -66,8 +64,6 @@ export default function AppRouter({ children }: AppRouterProps) {
   // Show normal app wrapped in TourProvider
   return (
     <TourProvider>
-      <Route path="/lifestyle-diet-menu" component={LifestyleDietMenuBuilder} />
-      <Route path="/clinical-lifestyle-diet-menu" component={ClinicalLifestyleDietMenuBuilder} />
       {children}
     </TourProvider>
   );

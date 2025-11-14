@@ -50,20 +50,6 @@ export default function Planner() {
       route: "/beach-body-meal-board",
       testId: "card-competition-beachbody",
     },
-    {
-      title: "Lifestyle Diet Hub",
-      description: "Meal planning for vegan, vegetarian, and pescatarian lifestyles",
-      icon: Activity,
-      route: "/lifestyle-diet-menu",
-      testId: "card-lifestyle-diet-hub",
-    },
-    {
-      title: "Clinical Lifestyle Diet Hub",
-      description: "Specialized meal plans for fibromyalgia, autoimmune, and chronic conditions",
-      icon: Activity,
-      route: "/clinical-lifestyle-diet-menu",
-      testId: "card-clinical-lifestyle-diet-hub",
-    },
   ];
 
   const handleCardClick = (route: string) => {
