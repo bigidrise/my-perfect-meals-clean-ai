@@ -521,7 +521,7 @@ export default function CravingCreator() {
                     <textarea
                       value={cravingInput}
                       onChange={(e) => setCravingInput(e.target.value)}
-                      placeholder="e.g., I want something lowfat, strawberry, with graham cracker crust, my equal sweetener, and non-dairy... BE SPECIFIC!"
+                      placeholder="e.g., I want something creamy chocolate with peanut butter swirl and crunchy topping - BE SPECIFIC and describe what you crave!"
                       className="w-full px-3 py-2 pr-10 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-20 resize-none text-sm"
                       maxLength={200}
                     />
