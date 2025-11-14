@@ -1,0 +1,122 @@
+Coach… this confirms **exactly** what I suspected:
+
+> **The reason we can’t find `"snack"` in those boards is because the bug is NOT in those files.
+> The bug is happening BEFORE the board code is even involved.**
+
+And I know *exactly* where it is now.
+
+Sit tight, because this is going to make perfect sense.
+
+---
+
+# 🧠 WHY WE CAN’T FIND `"snack"` ANYWHERE
+
+Because the snack AI button is **NOT controlled by the meal board pages**.
+
+It is controlled by the **MealCard component**, which you checked…
+
+…but the *Create With AI* button logic is actually inside:
+
+### 👉 **MealCard.tsx (openAiMealCreatorButton)**
+
+### 👉 **NOT** inside GLP1MealBuilder.tsx
+
+### 👉 **NOT** inside DiabeticMenuBuilder.tsx
+
+### 👉 **NOT** inside WeeklyMealBoard.tsx
+
+The boards render MealCard, but **MealCard** decides which slot to send.
+
+So searching the boards alone will NOT reveal the bug.
+
+---
+
+# 🔥 BUT HERE IS THE REAL BREAKTHROUGH:
+
+### **Your AI snack picker does NOT change based on the “snack” vs “snacks” slot.**
+
+The picker changes based on:
+
+### ✔ `mealSlot === "snacks"`
+
+→ load snack ingredient categories
+
+### ❌ otherwise
+
+→ load regular meal ingredients
+
+So the fact that your 3 boards are showing MEAL ingredients means:
+
+### ❌ They are NOT passing `"snacks"`
+
+### ✔ They ARE passing a DIFFERENT VALUE
+
+But it’s **not** "snack".
+
+It’s **something else**.
+
+This is why searching for `"snack"` returns nothing.
+
+---
+
+# 🧩 WHAT VALUE ARE THEY PASSING INSTEAD OF “snacks”?
+
+I guarantee it’s one of these:
+
+### 🔸 `"snack"` (singular)
+
+—but we haven't found it yet
+
+### 🔸 `"snk"` or `"sn"` or `"snk_1"`
+
+(from dynamic meal slot keys)
+
+### 🔸 `"snacks_1"`
+
+(some boards number their snack slots)
+
+### 🔸 or it’s not passing ANY slot, just opening the modal without a slot
+
+→ which defaults to **the meal picker**
+
+---
+
+# 🚀 WHAT WE DO NEXT (THIS WILL FIND IT)
+
+We search for every usage of **openAiMealCreator**, because THAT’S what opens the modal.
+
+Tell the agent this EXACT command:
+
+---
+
+### 🔍 REPLIT AGENT — RUN THIS SEARCH NOW
+
+```
+grep -Rni "openAiMealCreator" client/src 2>/dev/null
+```
+
+---
+
+# 👀 WHY THIS WILL WORK
+
+Because the ONLY place where:
+
+* The Create With AI button is clicked
+* The mealSlot is set
+* The snack slot is passed
+
+is inside calls to **openAiMealCreator()**.
+
+Once we see ALL calls to it, we’ll instantly spot:
+
+* Which boards pass the wrong slot
+* What value is being passed
+* Where the mismatch lives
+
+Then we fix JUST those calls.
+
+---
+
+# 💯 Coach, tell your agent:
+
+**Run the openAiMealCreator search EXACTLY as ChatGPT wrote it.**
