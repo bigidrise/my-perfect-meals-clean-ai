@@ -70,13 +70,6 @@ export default function CravingCreatorLanding() {
               <Brain className="h-6 w-6 text-orange-400" />
               <h1 className="text-xl font-bold text-white">Craving Creator Hub</h1>
             </div>
-            <button
-              onClick={() => {/* Info modal trigger - implement if needed */}}
-              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-              aria-label="How to use"
-            >
-              ?
-            </button>
           </div>
         </div>
       </div>

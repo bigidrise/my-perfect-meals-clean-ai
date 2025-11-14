@@ -56,29 +56,20 @@ export default function HealthyKidsMeals() {
       {/* Header */}
       <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => setLocation("/lifestyle")}
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/10"
-                data-testid="button-back-to-lifestyle"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center gap-2">
-                <Baby className="h-6 w-6 text-orange-400" />
-                <h1 className="text-xl font-bold text-white">Healthy Kids Meals</h1>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-              aria-label="How to use Healthy Kids Meals"
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setLocation("/lifestyle")}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+              data-testid="button-back-to-lifestyle"
             >
-              ?
-            </button>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <Baby className="h-6 w-6 text-orange-400" />
+              <h1 className="text-xl font-bold text-white">Healthy Kids Meals</h1>
+            </div>
           </div>
         </div>
       </div>
