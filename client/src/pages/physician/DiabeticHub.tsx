@@ -58,6 +58,13 @@ export default function DiabeticHub() {
     }
   }, [profile?.data?.guardrails]);
 
+  // Connect to copilot system: show info modal on first visit if coach mode is enabled
+  useEffect(() => {
+    if (localStorage.getItem("coachMode") === "guided" && !localStorage.getItem("diabetic-hub-info-seen")) {
+      setShowInfoModal(true);
+    }
+  }, []);
+
   // Get latest reading for display
   const latestReading = glucoseLogs?.data?.[0];
   const lastValue = latestReading?.valueMgdl || 95;
@@ -128,6 +135,12 @@ export default function DiabeticHub() {
     });
   };
 
+  // Handle info modal close - mark as seen for copilot system
+  const handleInfoModalClose = () => {
+    setShowInfoModal(false);
+    localStorage.setItem("diabetic-hub-info-seen", "true");
+  };
+
   return (
     <>
       {/* Back Button - Portal Style */}
@@ -174,7 +187,7 @@ export default function DiabeticHub() {
         <div className="max-w-6xl mx-auto p-4 md:p-8 pb-24 relative z-10">
 
           {/* Header Section */}
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
+          <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
             <div className="flex items-center justify-center gap-3 mb-4">
               <h1 className="text-2xl md:text-2xl font-semibold text-white relative z-10">
@@ -413,7 +426,7 @@ export default function DiabeticHub() {
                       const normalizedHeight = ((log.valueMgdl - minValue) / (maxValue - minValue)) * maxHeight;
                       const height = Math.max(20, Math.min(normalizedHeight, maxHeight));
                       const isInRange = log.valueMgdl >= targetMin && log.valueMgdl <= targetMax;
-                      
+
                       return (
                         <div key={index} className="flex flex-col items-center gap-2" style={{ width: '12%' }}>
                           <div className="text-white text-xs font-semibold">{log.valueMgdl}</div>
@@ -440,7 +453,7 @@ export default function DiabeticHub() {
                       {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
                     </div>
                   </div>
-                  
+
                   <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30">
                     <div className="text-blue-200 text-xs mb-1">Target Range</div>
                     <div className="text-white text-lg font-bold">
@@ -556,7 +569,7 @@ export default function DiabeticHub() {
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
               <h3 className="text-xl font-bold text-white mb-4">How to Use Diabetic Nutrition Hub</h3>
-              
+
               <div className="space-y-4 text-white/90 text-sm">
                 <p>Welcome to the Diabetic Nutrition Hub! This feature helps you manage Type 2 Diabetes with comprehensive tracking and meal planning.</p>
                 <div>
@@ -574,7 +587,7 @@ export default function DiabeticHub() {
               </div>
 
               <button
-                onClick={() => setShowInfoModal(false)}
+                onClick={handleInfoModalClose}
                 className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got It!

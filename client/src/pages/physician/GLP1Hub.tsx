@@ -16,6 +16,13 @@ export default function GLP1Hub() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const { user } = useAuth();
 
+  // Auto-open info modal if using copilot mode
+  useEffect(() => {
+    if (localStorage.getItem("coachMode") === "guided" && !localStorage.getItem("glp1-hub-info-seen")) {
+      setShowInfoModal(true);
+    }
+  }, []);
+
   // Fetch and mutate state for GLP-1 profile
   const { data: profile, isLoading: profileLoading } = useGLP1Profile();
   const saveMutation = useSaveGLP1Profile();
@@ -349,7 +356,10 @@ export default function GLP1Hub() {
               </div>
 
               <button
-                onClick={() => setShowInfoModal(false)}
+                onClick={() => {
+                  setShowInfoModal(false);
+                  localStorage.setItem("glp1-hub-info-seen", "true");
+                }}
                 className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Got It!
