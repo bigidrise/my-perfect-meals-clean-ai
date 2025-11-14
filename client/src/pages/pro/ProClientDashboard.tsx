@@ -782,26 +782,6 @@ export default function ProClientDashboard() {
             >
               💉 GLP-1 Menu Builder
             </Button>
-            <Button
-              onClick={() => {
-                localStorage.setItem("pro-client-id", clientId);
-                setLocation("/medical-diets-hub");
-              }}
-              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
-              data-testid="button-medical-diets-hub"
-            >
-              ❤️ Medical Diets Hub
-            </Button>
-            <Button
-              onClick={() => {
-                localStorage.setItem("pro-client-id", clientId);
-                setLocation("/clinical-lifestyle-hub");
-              }}
-              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
-              data-testid="button-clinical-lifestyle-hub"
-            >
-              🧬 Clinical Lifestyle Hub
-            </Button>
           </CardContent>
         </Card>
 
