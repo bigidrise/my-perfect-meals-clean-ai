@@ -351,7 +351,7 @@ export default function WeeklyMealBoard() {
         : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
 
     toast({
       title: "Added to Shopping List",

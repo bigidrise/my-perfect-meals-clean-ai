@@ -3,7 +3,7 @@ import { ShoppingCart, Copy } from "lucide-react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { addItems } from "@/stores/shoppingListStore";
+import { useShoppingListStore } from "@/stores/shoppingListStore";
 
 type Ingredient = {
   name: string;

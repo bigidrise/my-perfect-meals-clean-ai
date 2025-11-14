@@ -369,7 +369,7 @@ export default function GLP1MealBuilder() {
         : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
 
     toast({
       title: "Added to Shopping List",
