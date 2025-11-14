@@ -1,4 +1,4 @@
-import { canonicalName } from './utils';
+import { canonicalName } from './normalizer';
 
 export const normalizeShopping = (meals) => {
   const allIngredients = [];
