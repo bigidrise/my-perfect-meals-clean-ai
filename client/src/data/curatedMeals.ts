@@ -1,3 +1,4 @@
+
 export type MedicalBadge = "low-sugar" | "diabetes-friendly" | "gluten-free" | "heart-healthy" | "high-protein";
 
 export type CuratedMeal = {
@@ -6,7 +7,7 @@ export type CuratedMeal = {
   mealType: "breakfast" | "lunch" | "dinner" | "snack";
   calories: number; protein: number; carbs: number; fat: number;
   badges: MedicalBadge[];
-  ingredients: { name: string; amount: string }[];
+  ingredients: { name: string; quantity: number; unit: string; notes?: string }[];
   instructions: string[];
 };
 
@@ -18,9 +19,9 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 320, protein: 28, carbs: 35, fat: 8,
     badges: ["high-protein", "diabetes-friendly"],
     ingredients: [
-      { name: "Greek yogurt, plain 2%", amount: "7 oz" },
-      { name: "Mixed berries", amount: "4 oz" },
-      { name: "Honey (optional)", amount: "1 tsp" },
+      { name: "Greek yogurt", quantity: 7, unit: "oz", notes: "plain, 2%" },
+      { name: "mixed berries", quantity: 4, unit: "oz" },
+      { name: "honey", quantity: 1, unit: "tsp", notes: "optional" },
     ],
     instructions: [
       "Spoon yogurt into a bowl.",
@@ -35,11 +36,11 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 480, protein: 40, carbs: 28, fat: 20,
     badges: ["gluten-free", "high-protein", "heart-healthy"],
     ingredients: [
-      { name: "Chicken breast, cooked", amount: "5 oz" },
-      { name: "Mixed greens", amount: "2 cups" },
-      { name: "Cherry tomatoes", amount: "3.5 oz" },
-      { name: "Cucumber", amount: "3 oz" },
-      { name: "Olive oil + lemon dressing", amount: "2 Tbsp" },
+      { name: "chicken breast", quantity: 5, unit: "oz", notes: "cooked" },
+      { name: "mixed greens", quantity: 2, unit: "cup" },
+      { name: "cherry tomatoes", quantity: 3.5, unit: "oz" },
+      { name: "cucumber", quantity: 3, unit: "oz" },
+      { name: "olive oil and lemon dressing", quantity: 2, unit: "tbsp" },
     ],
     instructions: [
       "Slice the cooked chicken.",
@@ -54,10 +55,10 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 620, protein: 42, carbs: 45, fat: 24,
     badges: ["heart-healthy", "gluten-free"],
     ingredients: [
-      { name: "Salmon fillet", amount: "6 oz" },
-      { name: "Quinoa, cooked", amount: "5 oz" },
-      { name: "Broccoli, steamed", amount: "5 oz" },
-      { name: "Olive oil", amount: "1 Tbsp" },
+      { name: "salmon fillet", quantity: 6, unit: "oz" },
+      { name: "quinoa", quantity: 5, unit: "oz", notes: "cooked" },
+      { name: "broccoli", quantity: 5, unit: "oz", notes: "steamed" },
+      { name: "olive oil", quantity: 1, unit: "tbsp" },
     ],
     instructions: [
       "Season salmon with salt/pepper.",
@@ -72,10 +73,10 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 350, protein: 24, carbs: 10, fat: 22,
     badges: ["low-sugar", "high-protein"],
     ingredients: [
-      { name: "Eggs", amount: "3 large" },
-      { name: "Spinach", amount: "1 cup" },
-      { name: "Bell pepper", amount: "1/2 medium" },
-      { name: "Olive oil", amount: "1 tsp" },
+      { name: "eggs", quantity: 3, unit: "each", notes: "large" },
+      { name: "spinach", quantity: 1, unit: "cup" },
+      { name: "bell pepper", quantity: 0.5, unit: "each", notes: "medium" },
+      { name: "olive oil", quantity: 1, unit: "tsp" },
     ],
     instructions: [
       "Beat eggs with a pinch of salt.",
@@ -90,9 +91,9 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 610, protein: 38, carbs: 55, fat: 20,
     badges: ["high-protein"],
     ingredients: [
-      { name: "Lean ground beef", amount: "5 oz" },
-      { name: "Brown rice, cooked", amount: "6 oz" },
-      { name: "Green beans", amount: "4 oz" },
+      { name: "ground beef", quantity: 5, unit: "oz", notes: "lean" },
+      { name: "brown rice", quantity: 6, unit: "oz", notes: "cooked" },
+      { name: "green beans", quantity: 4, unit: "oz" },
     ],
     instructions: [
       "Brown beef; season with salt/pepper.",
@@ -107,10 +108,10 @@ export const CURATED_MEALS: CuratedMeal[] = [
     calories: 520, protein: 35, carbs: 50, fat: 16,
     badges: ["gluten-free"],
     ingredients: [
-      { name: "Shrimp, peeled", amount: "5.5 oz" },
-      { name: "Black beans", amount: "4 oz" },
-      { name: "Corn", amount: "3 oz" },
-      { name: "Lime-cilantro rice, cooked", amount: "5 oz" },
+      { name: "shrimp", quantity: 5.5, unit: "oz", notes: "peeled" },
+      { name: "black beans", quantity: 4, unit: "oz" },
+      { name: "corn", quantity: 3, unit: "oz" },
+      { name: "rice", quantity: 5, unit: "oz", notes: "lime-cilantro, cooked" },
     ],
     instructions: [
       "Sauté shrimp with taco seasoning 3–4 min.",
