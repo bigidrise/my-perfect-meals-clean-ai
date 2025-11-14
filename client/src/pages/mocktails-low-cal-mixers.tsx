@@ -198,22 +198,22 @@ export default function MocktailsLowCalMixersPage() {
                     ))}
                   </div>
                 </div>
-
-                {/* Shopping Bar - Fixed within modal */}
-                <div className="sticky bottom-0 left-0 right-0 mt-6">
-                  <ShoppingAggregateBar
-                    ingredients={selected.ingredients.map((ing) => ({
-                      name: ing,
-                      qty: 1,
-                      unit: "serving",
-                    }))}
-                    source={selected.name}
-                    sourceSlug="mocktails"
-                  />
-                </div>
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Shopping Bar - Fixed at bottom when modal is open */}
+        {selected && (
+          <ShoppingAggregateBar
+            ingredients={selected.ingredients.map((ing) => ({
+              name: ing,
+              qty: 1,
+              unit: "serving",
+            }))}
+            source={selected.name}
+            sourceSlug="mocktails"
+          />
         )}
 
         {/* Info Modal */}

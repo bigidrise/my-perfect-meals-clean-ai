@@ -438,22 +438,22 @@ export default function AlcoholLeanAndSocial() {
                     {selected.how}
                   </p>
                 </div>
-
-                {/* Shopping Bar - Fixed within modal */}
-                <div className="sticky bottom-0 left-0 right-0 mt-6">
-                  <ShoppingAggregateBar
-                    ingredients={selected.ingredients.map(ing => ({
-                      name: ing.name,
-                      qty: ing.quantity,
-                      unit: ing.unit
-                    }))}
-                    source={selected.name}
-                    sourceSlug="lean-and-social"
-                  />
-                </div>
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Shopping Bar - Fixed at bottom when modal is open */}
+        {selected && (
+          <ShoppingAggregateBar
+            ingredients={selected.ingredients.map(ing => ({
+              name: ing.name,
+              qty: ing.quantity,
+              unit: ing.unit
+            }))}
+            source={selected.name}
+            sourceSlug="lean-and-social"
+          />
         )}
 
         {/* Info Modal */}

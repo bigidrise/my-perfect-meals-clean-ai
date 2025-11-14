@@ -158,6 +158,7 @@ export default function Router() {
     '/toddler-meals',
     '/kids-meals',
     '/alcohol/lean-and-social',
+    '/mocktails-low-cal-mixers',
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
