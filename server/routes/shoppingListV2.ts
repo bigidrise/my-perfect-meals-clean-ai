@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { db } from "../db";
 import { shoppingListItems, shoppingListSources } from "@shared/schema";
-import { buildShoppingListFromMeals, type MealInput } from "../services/shopping-list/builder-v2";
+import { normalizeShopping } from "../services/shopping-list/builder-v2";
 import { eq, and } from "drizzle-orm";
+
+type MealInput = any;
 
 // PUBLIC router - no auth required (preview only)
 export const shoppingPreviewRouter = Router();
@@ -19,7 +21,7 @@ shoppingPreviewRouter.post("/preview", async (req: any, res: any) => {
       return res.status(400).json({ error: "meals array is required" });
     }
 
-    const items = buildShoppingListFromMeals(meals);
+    const items = normalizeShopping(meals);
     
     res.json(items);
   } catch (error: any) {
@@ -40,7 +42,7 @@ shoppingRouter.post("/commit", async (req: any, res: any) => {
       return res.status(400).json({ error: "meals array is required" });
     }
 
-    const items = buildShoppingListFromMeals(meals);
+    const items = normalizeShopping(meals);
     
     const mealIds = meals.map(m => m.mealId);
     const existingSources = await db.query.shoppingListSources.findMany({

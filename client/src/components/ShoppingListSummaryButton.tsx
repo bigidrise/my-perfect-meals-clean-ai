@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { addItems } from "@/stores/shoppingListStore";
+import { useShoppingListStore } from "@/stores/shoppingListStore";
 
 type Ingredient = {
   name: string;
@@ -22,15 +22,16 @@ export default function ShoppingListSummaryButton({ ingredients, mealName, class
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const addItems = useShoppingListStore((state) => state.addItems);
 
   function onAddToList() {
     if (ingredients.length === 0) return;
     
     const items = ingredients.map(i => ({
       name: i.name,
-      qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
-      unit: i.unit,
-      note: mealName
+      quantity: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : 1),
+      unit: i.unit || '',
+      notes: mealName
     }));
     
     addItems(items);

@@ -1,7 +1,7 @@
 // server/services/shopping-list/list-builder.ts
 import { isPantryItem } from './pantry';
 import { canonicalName } from './normalizer';
-import { normalizeUnit, convertToPreferred, tryAggregateSameUnit, Qty } from './unit-converter';
+import { convertToPreferred } from './unit-converter';
 
 type Ingredient = { item: string; amount: string }; // from your Meal type
 type Meal = {
@@ -16,6 +16,7 @@ type WeekBoard = {
   lists: { breakfast: Meal[]; lunch: Meal[]; dinner: Meal[]; snacks: Meal[] };
 };
 
+type Qty = { amount: number; unit?: string };
 type GroceryRow = { name: string; qty?: Qty };
 
 export type ShoppingList = {
@@ -48,7 +49,7 @@ function parseAmount(raw: string): Qty & { rest: string } {
       const amount = whole + fracValue;
       const unit = m[3] || undefined;
       const rest = (m[4] || '').trim();
-      return { ...normalizeUnit(amount, unit), rest };
+      return { amount, unit, rest };
     }
   }
   
@@ -60,7 +61,7 @@ function parseAmount(raw: string): Qty & { rest: string } {
       const amount = fracValue;
       const unit = m[2] || undefined;
       const rest = (m[3] || '').trim();
-      return { ...normalizeUnit(amount, unit), rest };
+      return { amount, unit, rest };
     }
   }
   
@@ -71,7 +72,7 @@ function parseAmount(raw: string): Qty & { rest: string } {
     const unit = m[2] || undefined;
     const rest = (m[3] || '').trim();
     if (!isNaN(amount)) {
-      return { ...normalizeUnit(amount, unit), rest };
+      return { amount, unit, rest };
     }
   }
   
@@ -122,14 +123,17 @@ export function buildShoppingList(week: WeekBoard, excludedItems?: string[]): Sh
       }
 
       // Convert to preferred units (e.g., 16 oz → 1 lb)
-      const qty = convertToPreferred({ amount: parsed.amount, unit: parsed.unit });
+      const converted = convertToPreferred(nameCanon, parsed.amount, parsed.unit || '');
+      const qty = { amount: converted.quantity, unit: converted.unit };
 
       // Try to aggregate into an existing same-unit bucket for this item
       if (!buckets[nameCanon]) buckets[nameCanon] = [];
       const existingIdx = buckets[nameCanon].findIndex(r => r.qty && (r.qty.unit || '') === (qty.unit || ''));
       if (existingIdx >= 0 && buckets[nameCanon][existingIdx].qty) {
-        const merged = tryAggregateSameUnit(buckets[nameCanon][existingIdx].qty!, qty);
-        if (merged) buckets[nameCanon][existingIdx].qty = convertToPreferred(merged);
+        const mergedAmount = (buckets[nameCanon][existingIdx].qty?.amount || 0) + (qty.amount || 0);
+        const mergedUnit = qty.unit || buckets[nameCanon][existingIdx].qty?.unit || '';
+        const convertedMerged = convertToPreferred(nameCanon, mergedAmount, mergedUnit);
+        buckets[nameCanon][existingIdx].qty = { amount: convertedMerged.quantity, unit: convertedMerged.unit };
       } else {
         buckets[nameCanon].push({ name: nameCanon, qty });
       }

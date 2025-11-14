@@ -6,7 +6,8 @@ export interface UniversalIngredient {
   quantity: number;
   unit: string;
   notes?: string;
-  sourceMeals?: string[]; // Added to align with potential new data structures
+  sourceMeals?: string[];
+  category?: string;
 }
 
 export interface ShoppingListItem extends UniversalIngredient {
