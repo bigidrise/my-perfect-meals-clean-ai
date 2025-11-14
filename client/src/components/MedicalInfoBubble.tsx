@@ -45,7 +45,7 @@ export default function MedicalInfoBubble({ badges, description }: MedicalInfoBu
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold"
+        className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-6 h-6 flex items-center justify-center text-sm font-bold"
         aria-label="View health and medical tags"
         data-testid="button-medical-info"
       >
