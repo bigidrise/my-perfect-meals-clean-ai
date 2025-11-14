@@ -8,7 +8,7 @@ export type KidsMeal = {
   description: string;
   baseServings: number;
   healthBadges: string[];
-  ingredients: { item: string; quantity: number; unit: string }[];
+  ingredients: { name: string; quantity: number; unit: string; notes?: string }[];
   instructions: string[];
   funFact?: string;
   image?: string;
@@ -23,10 +23,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["High Protein", "Kid Favorite"],
     ingredients: [
-      { item: "Small flour tortillas", quantity: 4, unit: "pieces" },
-      { item: "Cooked chicken, shredded", quantity: 150, unit: "g" },
-      { item: "Mild cheddar cheese, shredded", quantity: 100, unit: "g" },
-      { item: "Bell peppers, diced fine", quantity: 0.25, unit: "cup" }
+      { name: "flour tortillas", quantity: 4, unit: "each", notes: "small" },
+      { name: "chicken", quantity: 150, unit: "g", notes: "cooked, shredded" },
+      { name: "cheddar cheese", quantity: 100, unit: "g", notes: "mild, shredded" },
+      { name: "bell peppers", quantity: 0.25, unit: "cup", notes: "diced fine" }
     ],
     instructions: [
       "Fill tortillas with chicken, cheese, and peppers.",
@@ -44,12 +44,12 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 4,
     healthBadges: ["Vegetarian", "Hidden Veggies"],
     ingredients: [
-      { item: "Whole wheat pasta", quantity: 300, unit: "g" },
-      { item: "Carrots, finely diced", quantity: 1, unit: "cup" },
-      { item: "Yellow bell pepper, diced", quantity: 0.5, unit: "cup" },
-      { item: "Zucchini, diced", quantity: 0.5, unit: "cup" },
-      { item: "Cream cheese", quantity: 100, unit: "g" },
-      { item: "Milk", quantity: 0.5, unit: "cup" }
+      { name: "pasta", quantity: 300, unit: "g", notes: "whole wheat" },
+      { name: "carrots", quantity: 1, unit: "cup", notes: "finely diced" },
+      { name: "yellow bell pepper", quantity: 0.5, unit: "cup", notes: "diced" },
+      { name: "zucchini", quantity: 0.5, unit: "cup", notes: "diced" },
+      { name: "cream cheese", quantity: 100, unit: "g" },
+      { name: "milk", quantity: 0.5, unit: "cup" }
     ],
     instructions: [
       "Cook pasta according to package directions.",
@@ -67,11 +67,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["High Protein", "No Cook"],
     ingredients: [
-      { item: "Large flour tortillas", quantity: 2, unit: "pieces" },
-      { item: "Cream cheese, softened", quantity: 4, unit: "tbsp" },
-      { item: "Sliced turkey", quantity: 100, unit: "g" },
-      { item: "Apple, thinly sliced", quantity: 1, unit: "small" },
-      { item: "Lettuce leaves", quantity: 4, unit: "pieces" }
+      { name: "flour tortillas", quantity: 2, unit: "each", notes: "large" },
+      { name: "cream cheese", quantity: 4, unit: "tbsp", notes: "softened" },
+      { name: "turkey", quantity: 100, unit: "g", notes: "sliced" },
+      { name: "apple", quantity: 1, unit: "each", notes: "small, thinly sliced" },
+      { name: "lettuce leaves", quantity: 4, unit: "each" }
     ],
     instructions: [
       "Spread cream cheese on tortillas.",
@@ -89,11 +89,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 3,
     healthBadges: ["Vegetarian", "Hidden Veggies"],
     ingredients: [
-      { item: "Broccoli florets, steamed", quantity: 2, unit: "cups" },
-      { item: "Cheddar cheese, shredded", quantity: 1, unit: "cup" },
-      { item: "Breadcrumbs", quantity: 0.5, unit: "cup" },
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Garlic powder", quantity: 0.5, unit: "tsp" }
+      { name: "broccoli florets", quantity: 2, unit: "cup", notes: "steamed" },
+      { name: "cheddar cheese", quantity: 1, unit: "cup", notes: "shredded" },
+      { name: "breadcrumbs", quantity: 0.5, unit: "cup" },
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "garlic powder", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Chop steamed broccoli finely.",
@@ -111,11 +111,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["Vegetarian", "Naturally Sweet"],
     ingredients: [
-      { item: "Ripe bananas, mashed", quantity: 2, unit: "medium" },
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Flour", quantity: 0.5, unit: "cup" },
-      { item: "Baking powder", quantity: 1, unit: "tsp" },
-      { item: "Vanilla extract", quantity: 0.5, unit: "tsp" }
+      { name: "bananas", quantity: 2, unit: "each", notes: "medium, ripe, mashed" },
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "flour", quantity: 0.5, unit: "cup" },
+      { name: "baking powder", quantity: 1, unit: "tsp" },
+      { name: "vanilla extract", quantity: 0.5, unit: "tsp" }
     ],
     instructions: [
       "Mix all ingredients until smooth.",
@@ -133,11 +133,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 4,
     healthBadges: ["High Protein", "Hidden Veggies"],
     ingredients: [
-      { item: "Ground chicken", quantity: 500, unit: "g" },
-      { item: "Carrots, finely grated", quantity: 0.5, unit: "cup" },
-      { item: "Zucchini, finely grated", quantity: 0.5, unit: "cup" },
-      { item: "Breadcrumbs", quantity: 0.5, unit: "cup" },
-      { item: "Egg", quantity: 1, unit: "large" }
+      { name: "chicken", quantity: 500, unit: "g", notes: "ground" },
+      { name: "carrots", quantity: 0.5, unit: "cup", notes: "finely grated" },
+      { name: "zucchini", quantity: 0.5, unit: "cup", notes: "finely grated" },
+      { name: "breadcrumbs", quantity: 0.5, unit: "cup" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" }
     ],
     instructions: [
       "Mix all ingredients gently.",
@@ -155,10 +155,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 3,
     healthBadges: ["Vegetarian", "Naturally Sweet"],
     ingredients: [
-      { item: "Sweet potatoes", quantity: 2, unit: "large" },
-      { item: "Olive oil", quantity: 2, unit: "tbsp" },
-      { item: "Paprika", quantity: 0.5, unit: "tsp" },
-      { item: "Salt", quantity: 0.25, unit: "tsp" }
+      { name: "sweet potatoes", quantity: 2, unit: "each", notes: "large" },
+      { name: "olive oil", quantity: 2, unit: "tbsp" },
+      { name: "paprika", quantity: 0.5, unit: "tsp" },
+      { name: "salt", quantity: 0.25, unit: "tsp" }
     ],
     instructions: [
       "Cut sweet potatoes into fry shapes.",
@@ -176,10 +176,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["Vegetarian", "Customizable"],
     ingredients: [
-      { item: "Mini bagels, halved", quantity: 4, unit: "pieces" },
-      { item: "Pizza sauce", quantity: 0.5, unit: "cup" },
-      { item: "Mozzarella cheese, shredded", quantity: 1, unit: "cup" },
-      { item: "Mini pepperoni (optional)", quantity: 0.25, unit: "cup" }
+      { name: "mini bagels", quantity: 4, unit: "each", notes: "halved" },
+      { name: "pizza sauce", quantity: 0.5, unit: "cup" },
+      { name: "mozzarella cheese", quantity: 1, unit: "cup", notes: "shredded" },
+      { name: "mini pepperoni", quantity: 0.25, unit: "cup", notes: "optional" }
     ],
     instructions: [
       "Spread sauce on bagel halves.",
@@ -197,10 +197,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["Vegetarian", "No Cook", "Probiotic"],
     ingredients: [
-      { item: "Greek yogurt, vanilla", quantity: 1, unit: "cup" },
-      { item: "Mixed berries", quantity: 1, unit: "cup" },
-      { item: "Granola", quantity: 0.5, unit: "cup" },
-      { item: "Honey", quantity: 1, unit: "tbsp" }
+      { name: "greek yogurt", quantity: 1, unit: "cup", notes: "vanilla" },
+      { name: "mixed berries", quantity: 1, unit: "cup" },
+      { name: "granola", quantity: 0.5, unit: "cup" },
+      { name: "honey", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Layer yogurt, berries, and granola in cups.",
@@ -218,10 +218,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["High Protein", "Kid Favorite"],
     ingredients: [
-      { item: "Soft flour tortillas", quantity: 2, unit: "large" },
-      { item: "Chicken nuggets, cooked", quantity: 8, unit: "pieces" },
-      { item: "Lettuce, shredded", quantity: 1, unit: "cup" },
-      { item: "Mild ranch dressing", quantity: 2, unit: "tbsp" }
+      { name: "flour tortillas", quantity: 2, unit: "each", notes: "large, soft" },
+      { name: "chicken nuggets", quantity: 8, unit: "each", notes: "cooked" },
+      { name: "lettuce", quantity: 1, unit: "cup", notes: "shredded" },
+      { name: "ranch dressing", quantity: 2, unit: "tbsp", notes: "mild" }
     ],
     instructions: [
       "Warm tortillas slightly.",
@@ -239,11 +239,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 4,
     healthBadges: ["Vegetarian", "Hidden Veggies"],
     ingredients: [
-      { item: "Macaroni pasta", quantity: 300, unit: "g" },
-      { item: "Cheddar cheese, shredded", quantity: 2, unit: "cups" },
-      { item: "Milk", quantity: 1, unit: "cup" },
-      { item: "Butternut squash puree", quantity: 0.5, unit: "cup" },
-      { item: "Butter", quantity: 2, unit: "tbsp" }
+      { name: "macaroni pasta", quantity: 300, unit: "g" },
+      { name: "cheddar cheese", quantity: 2, unit: "cup", notes: "shredded" },
+      { name: "milk", quantity: 1, unit: "cup" },
+      { name: "butternut squash puree", quantity: 0.5, unit: "cup" },
+      { name: "butter", quantity: 2, unit: "tbsp" }
     ],
     instructions: [
       "Cook pasta according to package directions.",
@@ -261,9 +261,9 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 1,
     healthBadges: ["High Protein", "No Cook"],
     ingredients: [
-      { item: "Sliced turkey", quantity: 3, unit: "slices" },
-      { item: "Cheese slices", quantity: 2, unit: "pieces" },
-      { item: "Cucumber sticks", quantity: 4, unit: "pieces" }
+      { name: "turkey", quantity: 3, unit: "slice", notes: "sliced" },
+      { name: "cheese", quantity: 2, unit: "slice" },
+      { name: "cucumber sticks", quantity: 4, unit: "each" }
     ],
     instructions: [
       "Lay turkey slices flat.",
@@ -281,10 +281,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 3,
     healthBadges: ["High Protein", "Kid Favorite"],
     ingredients: [
-      { item: "Mini burger buns", quantity: 6, unit: "pieces" },
-      { item: "Cooked meatballs", quantity: 6, unit: "small" },
-      { item: "Marinara sauce", quantity: 0.25, unit: "cup" },
-      { item: "Mozzarella cheese, sliced", quantity: 6, unit: "pieces" }
+      { name: "mini burger buns", quantity: 6, unit: "each" },
+      { name: "meatballs", quantity: 6, unit: "each", notes: "small, cooked" },
+      { name: "marinara sauce", quantity: 0.25, unit: "cup" },
+      { name: "mozzarella cheese", quantity: 6, unit: "slice" }
     ],
     instructions: [
       "Warm meatballs in sauce.",
@@ -302,11 +302,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["Vegetarian", "Fiber Rich"],
     ingredients: [
-      { item: "Rolled oats", quantity: 1, unit: "cup" },
-      { item: "Milk", quantity: 2, unit: "cups" },
-      { item: "Apple, diced", quantity: 1, unit: "medium" },
-      { item: "Cinnamon", quantity: 0.5, unit: "tsp" },
-      { item: "Honey", quantity: 1, unit: "tbsp" }
+      { name: "rolled oats", quantity: 1, unit: "cup" },
+      { name: "milk", quantity: 2, unit: "cup" },
+      { name: "apple", quantity: 1, unit: "each", notes: "medium, diced" },
+      { name: "cinnamon", quantity: 0.5, unit: "tsp" },
+      { name: "honey", quantity: 1, unit: "tbsp" }
     ],
     instructions: [
       "Cook oats with milk for 5 minutes.",
@@ -324,10 +324,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 3,
     healthBadges: ["High Protein", "Gluten-Free"],
     ingredients: [
-      { item: "Cooked rice", quantity: 2, unit: "cups" },
-      { item: "Cooked chicken, finely shredded", quantity: 1, unit: "cup" },
-      { item: "Egg", quantity: 1, unit: "large" },
-      { item: "Cheese, grated", quantity: 0.5, unit: "cup" }
+      { name: "rice", quantity: 2, unit: "cup", notes: "cooked" },
+      { name: "chicken", quantity: 1, unit: "cup", notes: "cooked, finely shredded" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" },
+      { name: "cheese", quantity: 0.5, unit: "cup", notes: "grated" }
     ],
     instructions: [
       "Mix rice, chicken, egg, and cheese.",
@@ -345,11 +345,11 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 2,
     healthBadges: ["Vegetarian", "Naturally Sweet", "No Cook"],
     ingredients: [
-      { item: "Frozen strawberries", quantity: 1, unit: "cup" },
-      { item: "Frozen banana", quantity: 1, unit: "medium" },
-      { item: "Greek yogurt", quantity: 0.5, unit: "cup" },
-      { item: "Granola for topping", quantity: 0.25, unit: "cup" },
-      { item: "Fresh berries for topping", quantity: 0.5, unit: "cup" }
+      { name: "strawberries", quantity: 1, unit: "cup", notes: "frozen" },
+      { name: "banana", quantity: 1, unit: "each", notes: "medium, frozen" },
+      { name: "greek yogurt", quantity: 0.5, unit: "cup" },
+      { name: "granola", quantity: 0.25, unit: "cup", notes: "for topping" },
+      { name: "fresh berries", quantity: 0.5, unit: "cup", notes: "for topping" }
     ],
     instructions: [
       "Blend frozen fruit with yogurt until thick.",
@@ -367,9 +367,9 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 1,
     healthBadges: ["Vegetarian", "No Cook", "Balanced"],
     ingredients: [
-      { item: "Whole grain crackers", quantity: 8, unit: "pieces" },
-      { item: "Mild cheddar cheese, cubed", quantity: 0.25, unit: "cup" },
-      { item: "Red grapes", quantity: 0.5, unit: "cup" }
+      { name: "crackers", quantity: 8, unit: "each", notes: "whole grain" },
+      { name: "cheddar cheese", quantity: 0.25, unit: "cup", notes: "mild, cubed" },
+      { name: "red grapes", quantity: 0.5, unit: "cup" }
     ],
     instructions: [
       "Arrange crackers on plate.",
@@ -387,13 +387,13 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 4,
     healthBadges: ["Vegetarian", "Kid-Sized"],
     ingredients: [
-      { item: "Cornmeal", quantity: 1, unit: "cup" },
-      { item: "Flour", quantity: 1, unit: "cup" },
-      { item: "Sugar", quantity: 0.25, unit: "cup" },
-      { item: "Baking powder", quantity: 1, unit: "tbsp" },
-      { item: "Milk", quantity: 1, unit: "cup" },
-      { item: "Egg", quantity: 1, unit: "large" },
-      { item: "Butter, melted", quantity: 0.25, unit: "cup" }
+      { name: "cornmeal", quantity: 1, unit: "cup" },
+      { name: "flour", quantity: 1, unit: "cup" },
+      { name: "sugar", quantity: 0.25, unit: "cup" },
+      { name: "baking powder", quantity: 1, unit: "tbsp" },
+      { name: "milk", quantity: 1, unit: "cup" },
+      { name: "egg", quantity: 1, unit: "each", notes: "large" },
+      { name: "butter", quantity: 0.25, unit: "cup", notes: "melted" }
     ],
     instructions: [
       "Mix dry ingredients in one bowl.",
@@ -411,10 +411,10 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 1,
     healthBadges: ["High Protein", "Naturally Sweet"],
     ingredients: [
-      { item: "Whole grain bread", quantity: 2, unit: "slices" },
-      { item: "Natural peanut butter", quantity: 2, unit: "tbsp" },
-      { item: "Banana, sliced", quantity: 1, unit: "medium" },
-      { item: "Honey", quantity: 1, unit: "tsp" }
+      { name: "bread", quantity: 2, unit: "slice", notes: "whole grain" },
+      { name: "peanut butter", quantity: 2, unit: "tbsp", notes: "natural" },
+      { name: "banana", quantity: 1, unit: "each", notes: "medium, sliced" },
+      { name: "honey", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Toast bread until golden.",
@@ -432,12 +432,12 @@ export const kidsMeals: KidsMeal[] = [
     baseServings: 3,
     healthBadges: ["Vegetarian", "Hidden Veggies"],
     ingredients: [
-      { item: "Cooked rice, cooled", quantity: 3, unit: "cups" },
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Frozen peas and carrots", quantity: 1, unit: "cup" },
-      { item: "Green onions, chopped", quantity: 2, unit: "stalks" },
-      { item: "Soy sauce (low sodium)", quantity: 2, unit: "tbsp" },
-      { item: "Sesame oil", quantity: 1, unit: "tsp" }
+      { name: "rice", quantity: 3, unit: "cup", notes: "cooked, cooled" },
+      { name: "eggs", quantity: 2, unit: "each", notes: "large" },
+      { name: "peas and carrots", quantity: 1, unit: "cup", notes: "frozen" },
+      { name: "green onions", quantity: 2, unit: "stalk", notes: "chopped" },
+      { name: "soy sauce", quantity: 2, unit: "tbsp", notes: "low sodium" },
+      { name: "sesame oil", quantity: 1, unit: "tsp" }
     ],
     instructions: [
       "Scramble eggs and set aside.",
