@@ -160,7 +160,7 @@ export default function ProClientDashboard() {
       <div className="max-w-5xl mx-auto space-y-6 pt-14 sm:pt-16 pb-16">
         <div className="rounded-2xl p-6 bg-white/5 border border-white/20 mt-2">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-white/70 mt-1">
+          <p className="text-sm text-white/70 mt-1">
             {isTrainer &&
               "Set macro targets, carb directives, and coaching notes."}
             {isClinician &&
@@ -775,12 +775,12 @@ export default function ProClientDashboard() {
             <Button
               onClick={() => {
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation(`/glp1-menu-builder?clientId=${clientId}`);
+                setLocation(`/glp1-meal-builder?clientId=${clientId}`);
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-glp1-hub"
             >
-              💉 GLP-1 Menu Builder
+              💉 GLP-1 Meal Builder
             </Button>
           </CardContent>
         </Card>
