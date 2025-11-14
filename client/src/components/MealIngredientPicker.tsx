@@ -8,6 +8,11 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
 import { ALL_SNACK_INGREDIENTS } from "@/data/snackIngredients";
+import { paleoMeals } from "@/data/ingredientsPaleo";
+import { ketoMeals } from "@/data/ingredientsKeto";
+import { mediterraneanMeals } from "@/data/ingredientsMediterranean";
+import { glp1Meals } from "@/data/ingredientsGLP1";
+import { diabeticMeals } from "@/data/ingredientsDiabetic";
 
 interface MealIngredientPickerProps {
   open: boolean;
@@ -17,6 +22,20 @@ interface MealIngredientPickerProps {
   dietConfig?: any;
   dietType?: string;
 }
+
+// Helper to get meal dataset by diet type
+const getMealSetByDiet = (dietType?: string) => {
+  switch (dietType?.toLowerCase()) {
+    case "paleo": return paleoMeals;
+    case "keto": return ketoMeals;
+    case "mediterranean": return mediterraneanMeals;
+    case "glp1": 
+    case "glp-1": return glp1Meals;
+    case "diabetic":
+    case "diabetes": return diabeticMeals;
+    default: return null;
+  }
+};
 
 export default function MealIngredientPicker({ 
   open, 
@@ -28,13 +47,24 @@ export default function MealIngredientPicker({
 }: MealIngredientPickerProps) {
   // Ingredient source based on meal type and diet config
   const ingredientSource = (() => {
+    // First priority: check for diet-specific meal datasets (new system)
+    const dietMeals = getMealSetByDiet(dietType);
+    if (dietMeals) {
+      // Convert diet meal format to ingredient format
+      const mealList = dietMeals[mealSlot as keyof typeof dietMeals] || [];
+      return {
+        [mealSlot]: mealList.map((meal: any) => meal.name)
+      };
+    }
+    
+    // Second priority: use dietConfig (existing picker config system)
     if (dietConfig) {
-      // Use diet-specific ingredients
       if (mealSlot === "snacks") {
         return { snacks: Object.values(dietConfig.snacks).flat() };
       }
       return dietConfig;
     }
+    
     // Fallback to generic ingredients
     return mealSlot === "snacks" 
       ? { snacks: ALL_SNACK_INGREDIENTS }
