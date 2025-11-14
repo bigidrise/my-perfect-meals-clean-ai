@@ -49,3 +49,55 @@ export const mediterraneanMeals = {
     { name: "Mixed nuts (almonds, walnuts, pistachios)", tags: ["mediterranean", "healthy-fat"] },
   ],
 };
+
+export const MEDITERRANEAN_BREAKFAST_INGREDIENTS = [
+  { name: "Greek Yogurt & Honey", ingredients: ["greek yogurt", "honey", "walnuts"] },
+  { name: "Shakshuka", ingredients: ["eggs", "tomato", "bell pepper", "onion"] },
+  { name: "Whole Grain Toast & Olive Oil", ingredients: ["whole grain bread", "olive oil", "tomato"] },
+  { name: "Feta & Olive Plate", ingredients: ["feta cheese", "olives", "whole grain bread"] },
+  { name: "Mediterranean Omelet", ingredients: ["eggs", "spinach", "feta", "tomato"] },
+  { name: "Oatmeal with Figs & Almonds", ingredients: ["oats", "figs", "almonds", "honey"] },
+  { name: "Fruit Salad with Mint", ingredients: ["berries", "melon", "mint"] },
+  { name: "Whole Grain Pita & Hummus", ingredients: ["whole grain pita", "hummus"] },
+  { name: "Ricotta Toast with Berries", ingredients: ["whole grain bread", "ricotta", "berries"] },
+  { name: "Date & Walnut Energy Bites", ingredients: ["dates", "walnuts", "oats"] },
+];
+
+export const MEDITERRANEAN_LUNCH_INGREDIENTS = [
+  { name: "Greek Salad", ingredients: ["cucumber", "tomato", "feta", "olives", "olive oil"] },
+  { name: "Grilled Chicken & Tabbouleh", ingredients: ["chicken", "bulgur", "parsley", "tomato", "lemon"] },
+  { name: "Lentil Soup", ingredients: ["lentils", "carrot", "celery", "lemon"] },
+  { name: "Salmon Quinoa Bowl", ingredients: ["salmon", "quinoa", "cucumber", "tomato"] },
+  { name: "Chickpea Stew", ingredients: ["chickpeas", "tomato", "spinach", "garlic"] },
+  { name: "Whole Grain Pasta & Veggies", ingredients: ["whole grain pasta", "zucchini", "tomato", "olive oil"] },
+  { name: "Turkey Hummus Wrap", ingredients: ["turkey", "hummus", "whole grain wrap", "veggies"] },
+  { name: "Mediterranean Tuna Salad", ingredients: ["tuna", "white beans", "tomato", "olive oil"] },
+  { name: "Falafel & Tahini", ingredients: ["falafel", "tahini sauce", "cucumber", "tomato"] },
+  { name: "Grilled Vegetables", ingredients: ["zucchini", "eggplant", "bell pepper", "olive oil"] },
+];
+
+export const MEDITERRANEAN_DINNER_INGREDIENTS = [
+  { name: "Baked Cod with Lemon", ingredients: ["cod", "lemon", "herbs", "olive oil"] },
+  { name: "Chicken Souvlaki", ingredients: ["chicken", "greek yogurt", "cucumber", "tomato"] },
+  { name: "Eggplant Parmesan", ingredients: ["eggplant", "marinara", "mozzarella", "basil"] },
+  { name: "Grilled Salmon & Couscous", ingredients: ["salmon", "couscous", "vegetables", "lemon"] },
+  { name: "Stuffed Bell Peppers", ingredients: ["bell peppers", "quinoa", "chickpeas", "tomato"] },
+  { name: "Lamb Kebabs", ingredients: ["lamb", "bell pepper", "onion", "olive oil"] },
+  { name: "Whole Grain Pasta with Pesto", ingredients: ["whole grain pasta", "pesto", "cherry tomatoes", "pine nuts"] },
+  { name: "Baked Chicken & Artichokes", ingredients: ["chicken", "artichokes", "olives", "lemon"] },
+  { name: "Shrimp & White Beans", ingredients: ["shrimp", "white beans", "garlic", "tomato"] },
+  { name: "Vegetable Moussaka", ingredients: ["eggplant", "zucchini", "tomato sauce", "bechamel"] },
+];
+
+export const MEDITERRANEAN_SNACK_INGREDIENTS = [
+  { name: "Hummus & Cucumber", ingredients: ["hummus", "cucumber slices"] },
+  { name: "Olives & Almonds", ingredients: ["olives", "almonds"] },
+  { name: "Whole Grain Crackers & Tzatziki", ingredients: ["whole grain crackers", "tzatziki"] },
+  { name: "Feta & Cherry Tomatoes", ingredients: ["feta cheese", "cherry tomatoes"] },
+  { name: "Dates Stuffed with Almonds", ingredients: ["dates", "almonds"] },
+  { name: "Greek Yogurt & Cucumber", ingredients: ["greek yogurt", "cucumber", "dill"] },
+  { name: "Roasted Chickpeas", ingredients: ["chickpeas", "olive oil", "spices"] },
+  { name: "Fresh Figs & Walnuts", ingredients: ["figs", "walnuts"] },
+  { name: "Whole Grain Pita & Baba Ganoush", ingredients: ["whole grain pita", "baba ganoush"] },
+  { name: "Mixed Nuts", ingredients: ["almonds", "walnuts", "pistachios"] },
+];

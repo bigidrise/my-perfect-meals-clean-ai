@@ -49,3 +49,55 @@ export const ketoMeals = {
     { name: "Almond butter (1 tbsp)", tags: ["keto", "nut-based"] },
   ],
 };
+
+export const KETO_BREAKFAST_INGREDIENTS = [
+  { name: "Bacon & Eggs", ingredients: ["bacon", "eggs", "butter"] },
+  { name: "Keto Omelet", ingredients: ["eggs", "cheese", "spinach", "mushrooms"] },
+  { name: "Bulletproof Coffee", ingredients: ["coffee", "butter", "mct oil"] },
+  { name: "Sausage & Avocado Plate", ingredients: ["sausage", "avocado", "eggs"] },
+  { name: "Keto Pancakes", ingredients: ["almond flour", "eggs", "cream cheese"] },
+  { name: "Smoked Salmon & Cream Cheese", ingredients: ["smoked salmon", "cream cheese", "cucumber"] },
+  { name: "Keto Breakfast Bowl", ingredients: ["eggs", "bacon", "avocado", "cheese"] },
+  { name: "Cheese & Veggie Scramble", ingredients: ["eggs", "cheddar", "bell pepper", "spinach"] },
+  { name: "Keto Frittata", ingredients: ["eggs", "cheese", "sausage", "broccoli"] },
+  { name: "Chia Pudding", ingredients: ["chia seeds", "coconut milk", "vanilla"] },
+];
+
+export const KETO_LUNCH_INGREDIENTS = [
+  { name: "Bunless Burger & Salad", ingredients: ["beef patty", "lettuce", "cheese", "mayo"] },
+  { name: "Chicken Caesar Salad", ingredients: ["chicken", "romaine", "parmesan", "caesar dressing"] },
+  { name: "Keto Cobb Salad", ingredients: ["chicken", "bacon", "eggs", "blue cheese", "avocado"] },
+  { name: "Tuna Salad Lettuce Wraps", ingredients: ["tuna", "mayo", "celery", "lettuce"] },
+  { name: "Zucchini Noodle Alfredo", ingredients: ["zucchini", "heavy cream", "parmesan", "garlic"] },
+  { name: "Buffalo Chicken Wings", ingredients: ["chicken wings", "buffalo sauce", "ranch dressing"] },
+  { name: "Keto Cheeseburger Bowl", ingredients: ["ground beef", "cheese", "pickles", "mustard"] },
+  { name: "Grilled Salmon & Greens", ingredients: ["salmon", "mixed greens", "olive oil", "lemon"] },
+  { name: "Keto Pizza Bowl", ingredients: ["ground beef", "mozzarella", "pepperoni", "marinara"] },
+  { name: "Chicken Thighs & Cauliflower Mash", ingredients: ["chicken thighs", "cauliflower", "butter", "cream"] },
+];
+
+export const KETO_DINNER_INGREDIENTS = [
+  { name: "Ribeye Steak & Butter", ingredients: ["ribeye steak", "garlic butter", "asparagus"] },
+  { name: "Baked Salmon & Broccoli", ingredients: ["salmon", "broccoli", "lemon butter"] },
+  { name: "Chicken Parmesan (Keto)", ingredients: ["chicken breast", "mozzarella", "almond flour", "marinara"] },
+  { name: "Pork Chops & Green Beans", ingredients: ["pork chops", "green beans", "butter"] },
+  { name: "Keto Meatballs", ingredients: ["ground beef", "parmesan", "egg", "marinara"] },
+  { name: "Bacon-Wrapped Chicken", ingredients: ["chicken breast", "bacon", "cream cheese"] },
+  { name: "Shrimp Scampi", ingredients: ["shrimp", "butter", "garlic", "zucchini noodles"] },
+  { name: "Keto Lasagna", ingredients: ["ground beef", "mozzarella", "ricotta", "zucchini"] },
+  { name: "Lamb Chops & Rosemary", ingredients: ["lamb chops", "rosemary", "olive oil"] },
+  { name: "Keto Beef Stew", ingredients: ["beef", "celery", "radishes", "bone broth"] },
+];
+
+export const KETO_SNACK_INGREDIENTS = [
+  { name: "Cheese & Pepperoni", ingredients: ["cheese cubes", "pepperoni"] },
+  { name: "Macadamia Nuts", ingredients: ["macadamia nuts"] },
+  { name: "Pork Rinds", ingredients: ["pork rinds"] },
+  { name: "Celery & Cream Cheese", ingredients: ["celery", "cream cheese"] },
+  { name: "Hard-Boiled Eggs", ingredients: ["eggs", "salt"] },
+  { name: "Keto Fat Bombs", ingredients: ["cream cheese", "butter", "cocoa powder"] },
+  { name: "Beef Jerky (Sugar-Free)", ingredients: ["beef jerky"] },
+  { name: "Olives & Cheese", ingredients: ["olives", "cheese"] },
+  { name: "Avocado with Salt", ingredients: ["avocado", "sea salt"] },
+  { name: "Almond Butter (1 tbsp)", ingredients: ["almond butter"] },
+];

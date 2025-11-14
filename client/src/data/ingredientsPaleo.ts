@@ -79,3 +79,29 @@ export const PALEO_LUNCH_INGREDIENTS = [
   { name: "Apple Pecan Chicken Salad", ingredients: ["chicken", "apple", "pecans", "mixed greens"] },
   { name: "Paleo BBQ Chicken Plate", ingredients: ["chicken", "paleo bbq sauce", "green beans"] },
 ];
+
+export const PALEO_DINNER_INGREDIENTS = [
+  { name: "Grilled Steak & Roasted Veggies", ingredients: ["steak", "broccoli", "bell pepper", "olive oil"] },
+  { name: "Baked Salmon & Asparagus", ingredients: ["salmon", "asparagus", "lemon", "garlic"] },
+  { name: "Chicken Thighs & Sweet Potato", ingredients: ["chicken thighs", "sweet potato", "rosemary"] },
+  { name: "Pork Chops & Brussels Sprouts", ingredients: ["pork chops", "brussels sprouts", "olive oil"] },
+  { name: "Paleo Meatballs & Zucchini Noodles", ingredients: ["ground beef", "zucchini", "marinara sauce"] },
+  { name: "Grilled Chicken & Cauliflower Rice", ingredients: ["chicken breast", "cauliflower", "garlic"] },
+  { name: "Beef Stir-Fry", ingredients: ["beef strips", "mixed vegetables", "coconut aminos"] },
+  { name: "Paleo Turkey Meatloaf", ingredients: ["ground turkey", "egg", "almond flour", "tomato"] },
+  { name: "Lemon Herb Cod", ingredients: ["cod fillet", "lemon", "herbs", "olive oil"] },
+  { name: "Paleo Shepherd's Pie", ingredients: ["ground beef", "sweet potato", "carrots", "peas"] },
+];
+
+export const PALEO_SNACK_INGREDIENTS = [
+  { name: "Apple Slices & Almond Butter", ingredients: ["apple", "almond butter"] },
+  { name: "Beef Jerky & Nuts", ingredients: ["beef jerky", "almonds"] },
+  { name: "Veggie Sticks & Guacamole", ingredients: ["carrots", "celery", "guacamole"] },
+  { name: "Hard-Boiled Eggs", ingredients: ["eggs", "sea salt"] },
+  { name: "Paleo Trail Mix", ingredients: ["cashews", "almonds", "dried fruit"] },
+  { name: "Coconut Chips", ingredients: ["coconut flakes"] },
+  { name: "Turkey Roll-Ups", ingredients: ["turkey slices", "avocado"] },
+  { name: "Banana & Nut Butter", ingredients: ["banana", "almond butter"] },
+  { name: "Olives & Macadamia Nuts", ingredients: ["olives", "macadamia nuts"] },
+  { name: "Paleo Energy Balls", ingredients: ["dates", "almonds", "coconut"] },
+];
