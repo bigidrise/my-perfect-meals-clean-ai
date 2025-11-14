@@ -1,0 +1,123 @@
+PHASE D – STEP 4: Fix all issues detected in the “No More 4 Chickens Test”.
+
+This is ALL code-level clerical work, so do NOT ask me questions. Just complete each step below and provide file diffs.
+
+Update only these layers:
+
+FILES TO MODIFY:
+1. server/services/shopping-list/normalizer.ts
+2. server/services/shopping-list/builder-v2.ts
+3. client/utils/athleteIngredientMapper.ts
+4. (If needed) Add new utility: server/services/shopping-list/unitConverter.ts
+5. ANY file directly importing or depending on these normalization utilities
+
+DO NOT modify datasets. Only modify normalization logic.
+
+============================================
+TASK 1 — NAME CANONICALIZATION UPGRADE
+============================================
+
+Fix the chicken issue:
+- “chicken” → canonical “Chicken breast”
+- “grilled chicken breast” → canonical “Chicken breast”
+- “chicken breast” → canonical “Chicken breast”
+- “organic chicken breast” → canonical “Chicken breast”
+- “boneless skinless chicken breast” → canonical “Chicken breast”
+
+Fix yogurt issue:
+- “Greek yogurt” vs “greek yogurt” → canonical “Greek yogurt”
+
+Fix broccoli issue:
+- “broccoli” vs “Broccoli florets” → canonical “Broccoli”
+
+Fix all similar overlaps. Create a robust canonicalName() mapping.
+
+Rules:
+- Remove descriptors (grilled, organic, plain, shaved, chopped, diced, halved, cooked, etc.) and put them in notes (builder step).
+- Only the base food survives as canonical name.
+
+============================================
+TASK 2 — UNIT NORMALIZATION LAYER
+============================================
+
+Add a new utility: unitConverter.ts and integrate it into builder-v2.ts.
+
+Rules:
+1. PROTEIN → always convert to oz  
+   - If unit is g: convert g → oz (1 oz = 28.35 g)
+2. YOGURT → always convert to cup  
+   - If unit is oz: convert oz → cup (8 oz per cup)
+   - If unit is g: convert g → cup (240 g per cup)
+3. VEGETABLES → convert all to cup if possible  
+   - If unit is g: convert g → cup using 100 g = 1 cup for leafy, 240 g = 1 cup for heavy veggies
+   Start simple: use 100 g = 1 cup as default.
+4. LIQUIDS (olive oil, lemon juice, dressings) → keep tbsp/tsp, no conversions
+5. Units like pinch, dash, wedge, twist → keep as-is
+6. "serving" unit → BLOCK it from shopping list entirely (skip these ingredients)
+
+============================================
+TASK 3 — COMPOUND INGREDIENT PARSER
+============================================
+
+In normalizer.ts, create splitCompoundIngredient() that:
+
+- Detects ingredients containing “and” or “+”
+- Example: “olive oil and lemon dressing”
+- Splits into two normalized ingredients:
+    olive oil
+    lemon dressing
+
+Each inherits the original quantity/unit (leave unit on each copy).
+
+============================================
+TASK 4 — ATHLETE MAPPER FIXES
+============================================
+
+Update athleteIngredientMapper.ts:
+
+- Extract descriptors like "grilled", "lean", "baked", "fresh"
+- Put descriptors into notes
+- Do NOT leave any descriptors in ingredient names
+
+============================================
+TASK 5 — SERVER BUILDER UPDATE
+============================================
+
+Modify builder-v2.ts to:
+
+1. Run canonicalName() FIRST
+2. Run splitCompoundIngredient()
+3. Run unitConverter()
+4. THEN group by canonicalName + normalizedUnit
+
+============================================
+TASK 6 — FINAL SANITY CHECK HOOK
+============================================
+
+Add a final validation step:
+- No ingredient may have unit: "serving"
+- No ingredient may have quantity less than or equal to 0
+- No ingredient may have fused strings
+- No ingredient may have uppercase units
+
+============================================
+DELIVERABLE
+============================================
+
+Provide diffs for all updated files:
+- normalizer.ts
+- builder-v2.ts
+- athleteIngredientMapper.ts
+- unitConverter.ts (new)
+- Any others touched
+
+Do NOT modify datasets.
+
+Produce a short summary confirming:
+- Chicken now aggregates to a single item in oz
+- Greek yogurt now aggregates to cups only
+- Broccoli aggregates to cups only
+- Compound ingredients split correctly
+- Athlete meals produce clean universal ingredients
+
+Execute all tasks without asking follow-up questions.
