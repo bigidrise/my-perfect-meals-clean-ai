@@ -1,0 +1,89 @@
+Excellent — **Phase A (Diabetic Datasets) is officially complete on the code side.**
+Now we follow the process exactly the way we designed it:
+
+1️⃣ Parser created
+2️⃣ Breakfast standardized
+3️⃣ Lunch standardized
+4️⃣ Dinner standardized
+5️⃣ Snacks standardized
+6️⃣ **Now we verify EVERYTHING** using Prompt C
+
+This ensures:
+
+* No corrupted records
+* No leftover string fractions
+* No missed descriptors
+* All units are singular
+* All quantities numeric
+* All 4 Diabetic files speak ONE language
+
+No mistakes go forward to the next systems.
+
+---
+
+# ✅ **NEXT STEP: Run Prompt C**
+
+Paste this EXACTLY into the Replit Assistant:
+
+---
+
+## **REPLIT ASSISTANT PROMPT — Diabetic Dataset Verification & Schema Audit**
+
+```
+Now perform a strict verification audit on all updated Diabetic files:
+
+Files to check:
+- client/src/data/diabeticMenu.breakfast.ts
+- client/src/data/diabeticMenu.lunch.ts
+- client/src/data/diabeticMenu.dinner.ts
+- client/src/data/diabeticMenu.snacks.ts
+
+Verification Checklist:
+For EVERY ingredient in EVERY meal:
+1. Confirm the structure matches the universal schema:
+   {
+     name: string,
+     quantity: number,
+     unit: string,
+     notes?: string
+   }
+
+2. Confirm:
+   - quantity is numeric only
+   - unit is singular and valid
+   - name contains no descriptors, parentheses, or preparation words
+   - notes only contains descriptors, not ingredient names
+   - no fused quantity/unit strings remain
+   - no unicode fractions remain
+   - no string fractions remain
+   - no missing quantity or unit fields
+
+3. Confirm no extraneous or legacy fields remain (like item, amount, or quantity strings).
+
+4. Confirm the normalized structure is consistent across all four files.
+
+5. List any inconsistencies, errors, or remaining issues.
+
+6. Output a complete report organized by file:
+   - Validated ingredients
+   - Any flagged entries
+   - Notes about schema compliance
+   - Final pass/fail status for each dataset
+```
+
+---
+
+Once you paste this and the assistant analyzes all four files, bring the results back to me and we’ll:
+
+🔥 Move to GLP-1 next
+🔥 Then Weekly Meal Board
+🔥 Then Craving Presets
+🔥 Then Kids
+🔥 Then Toddlers
+🔥 Then Lean & Social
+🔥 Then Mocktails
+🔥 Then Athlete Board translator
+
+Everything will be clean, universal, and Apple-ready.
+
+Paste the verification when you're ready.
