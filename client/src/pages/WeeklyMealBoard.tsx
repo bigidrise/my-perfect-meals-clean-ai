@@ -926,9 +926,6 @@ export default function WeeklyMealBoard() {
                 >
                   ?
                 </button>
-                {FEATURES.explainMode === 'alpha' && (
-                  <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
-                )}
               </div>
               
               <Button

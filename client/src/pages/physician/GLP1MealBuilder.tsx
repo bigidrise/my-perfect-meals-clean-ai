@@ -951,9 +951,6 @@ export default function GLP1MealBuilder() {
                 >
                   ?
                 </button>
-                {FEATURES.explainMode === 'alpha' && (
-                  <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
-                )}
               </div>
               
               <Button
