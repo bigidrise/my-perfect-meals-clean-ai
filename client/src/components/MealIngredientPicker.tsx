@@ -13,6 +13,10 @@ import { ketoMeals } from "@/data/ingredientsKeto";
 import { mediterraneanMeals } from "@/data/ingredientsMediterranean";
 import { glp1Meals } from "@/data/ingredientsGLP1";
 import { diabeticMeals } from "@/data/ingredientsDiabetic";
+import { vegetarianMeals } from "@/data/ingredientsVegetarian";
+import { veganMeals } from "@/data/ingredientsVegan";
+import { pescatarianMeals } from "@/data/ingredientsPescatarian";
+import { flexitarianMeals } from "@/data/ingredientsFlexitarian";
 
 interface MealIngredientPickerProps {
   open: boolean;
@@ -29,6 +33,10 @@ const getMealSetByDiet = (dietType?: string) => {
     case "paleo": return paleoMeals;
     case "keto": return ketoMeals;
     case "mediterranean": return mediterraneanMeals;
+    case "vegetarian": return vegetarianMeals;
+    case "vegan": return veganMeals;
+    case "pescatarian": return pescatarianMeals;
+    case "flexitarian": return flexitarianMeals;
     case "glp1": 
     case "glp-1": return glp1Meals;
     case "diabetic":
