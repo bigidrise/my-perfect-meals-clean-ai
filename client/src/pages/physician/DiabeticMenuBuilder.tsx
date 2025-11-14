@@ -12,7 +12,7 @@ import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import { normalizeIngredients } from "@/utils/ingredientParser";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
-import { addItems } from "@/stores/shoppingListStore";
+import { useShoppingListStore } from "@/stores/shoppingListStore";
 import { computeTargetsFromOnboarding, sumBoard } from "@/lib/targets";
 import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
@@ -422,7 +422,7 @@ export default function DiabeticMenuBuilder() {
       note: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
 
     toast({
       title: "Added to Shopping List",

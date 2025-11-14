@@ -75,7 +75,7 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
       note: source
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
     toast({
       title: "Added to Shopping List",
       description: `${ingredients.length} items added to your master list`

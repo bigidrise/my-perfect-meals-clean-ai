@@ -20,7 +20,7 @@ import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import { normalizeIngredients } from "@/utils/ingredientParser";
-import { addItems } from "@/stores/shoppingListStore";
+import { useShoppingListStore } from "@/stores/shoppingListStore";
 import { useToast } from "@/hooks/use-toast";
 import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
@@ -559,7 +559,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       note: `Athlete Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
 
     toast({
       title: "Added to Shopping List",

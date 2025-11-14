@@ -13,7 +13,7 @@ import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import BottomNav from "@/components/BottomNav";
 import { normalizeIngredients } from "@/utils/ingredientParser";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
-import { addItems } from "@/stores/shoppingListStore";
+import { useShoppingListStore } from "@/stores/shoppingListStore";
 import { computeTargetsFromOnboarding, sumBoard } from "@/lib/targets";
 import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
@@ -224,7 +224,7 @@ export default function GLP1MealBuilder() {
     if (infoSeen === "true") {
       setHasSeenInfo(true);
     }
-    
+
     const dailyTotalsInfoSeen = localStorage.getItem("glp1-meal-builder-daily-totals-info-seen");
     if (dailyTotalsInfoSeen === "true") {
       setHasSeenDailyTotalsInfo(true);
@@ -255,7 +255,7 @@ export default function GLP1MealBuilder() {
     if (tourStep === "breakfast" && lists.breakfast.length > 0) {
       setTourStep("lunch");
       localStorage.setItem("glp1-meal-builder-tour-step", "lunch");
-      
+
       // Show Daily Totals info after first meal
       if (!hasSeenDailyTotalsInfo) {
         setShowDailyTotalsInfo(true);
@@ -423,7 +423,7 @@ export default function GLP1MealBuilder() {
       note: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
     }));
 
-    addItems(items);
+    useShoppingListStore.getState().addItems(items);
 
     toast({
       title: "Added to Shopping List",
@@ -952,7 +952,7 @@ export default function GLP1MealBuilder() {
                   ?
                 </button>
               </div>
-              
+
               <Button
                 size="sm"
                 variant="destructive"
@@ -1546,7 +1546,7 @@ export default function GLP1MealBuilder() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
             <h3 className="text-xl font-bold text-white mb-4">How to Use GLP-1 Meal Builder</h3>
-            
+
             <div className="space-y-4 text-white/90 text-sm">
               <p>Create your day or week by starting with breakfast.</p>
               <p className="text-white/80">
