@@ -136,6 +136,9 @@ export default function ShoppingListMasterView() {
     }
   }, [items, toast]);
 
+  const uncheckedItems = useMemo(() => items.filter(i => !i.isChecked), [items]);
+  const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
+
   const handleShopAtWalmart = useCallback(() => {
     // Use only unchecked items – user hasn't bought these yet
     if (uncheckedItems.length === 0) {
@@ -162,9 +165,6 @@ export default function ShoppingListMasterView() {
       });
     }
   }, [uncheckedItems, toast]);
-
-  const uncheckedItems = useMemo(() => items.filter(i => !i.isChecked), [items]);
-  const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
 
   const groupedUnchecked = useMemo(()=>{
     if (!opts.groupByAisle) return { All: uncheckedItems };
@@ -337,89 +337,26 @@ export default function ShoppingListMasterView() {
           </div>
         </div>
 
-        {/* Grocery Services Dropdown (black theme) */}
+        {/* Grocery Services Dropdown (Walmart only – Coming Soon) */}
         <details className="rounded-2xl border border-white/20 bg-black/60 text-white">
           <summary className="list-none cursor-pointer select-none px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors">
-            <span className="text-sm font-semibold">Grocery Delivery Options</span>
+            <span className="text-sm font-semibold">Walmart Grocery (Coming Soon)</span>
             <ChevronDown className="h-4 w-4 text-white/70" />
           </summary>
 
           <div className="px-4 pb-4 pt-2 space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {/* Walmart (Primary) */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">Walmart</div>
-                  <span className="text-[11px] rounded-full px-2 py-0.5 bg-emerald-500/20 border border-emerald-300/40 text-emerald-200">Active (MVP)</span>
-                </div>
-                <div className="text-xs text-white/70 mt-1">Cart prefill via Affiliate Add-to-Cart.</div>
-                <div className="mt-3 flex flex-col gap-2">
-                  <button
-                    className="rounded-lg px-3 py-2 border border-white/30 bg-white/10 hover:bg-white/20 text-sm transition-colors"
-                    onClick={handleShopAtWalmart}
-                  >
-                    Shop at Walmart
-                  </button>
-                  {/* Visible later once OPD approved */}
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Pickup & Delivery (OPD)
-                  </button>
-                </div>
+            <div className="rounded-xl border border-white/20 bg-black/50 p-4">
+              <div className="flex items-center justify-between">
+                <div className="font-medium">Walmart</div>
+                <span className="text-[11px] rounded-full px-2 py-0.5 bg-yellow-500/20 border border-yellow-300/40 text-yellow-200">
+                  Coming Soon — Pending Approval
+                </span>
               </div>
-
-              {/* Instacart */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="font-medium">Instacart</div>
-                <div className="text-xs text-white/70 mt-1">Shoppable list (Developer Platform).</div>
-                <div className="mt-3">
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Shop via Instacart
-                  </button>
-                </div>
+              <div className="text-xs text-white/70 mt-2">
+                Once Walmart approves our integration, you&apos;ll be able to send your shopping list to Walmart.com in one tap and finish checkout there.
               </div>
-
-              {/* Kroger */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="font-medium">Kroger</div>
-                <div className="text-xs text-white/70 mt-1">Cart API (free with key).</div>
-                <div className="mt-3">
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Shop at Kroger
-                  </button>
-                </div>
-              </div>
-
-              {/* Target */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="font-medium">Target</div>
-                <div className="text-xs text-white/70 mt-1">Affiliate deep link to products.</div>
-                <div className="mt-3">
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Shop at Target
-                  </button>
-                </div>
-              </div>
-
-              {/* Amazon */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="font-medium">Amazon</div>
-                <div className="text-xs text-white/70 mt-1">Amazon Associates product links.</div>
-                <div className="mt-3">
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Shop on Amazon
-                  </button>
-                </div>
-              </div>
-
-              {/* Shipt */}
-              <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-                <div className="font-medium">Shipt</div>
-                <div className="text-xs text-white/70 mt-1">Affiliate now; Platform API later.</div>
-                <div className="mt-3">
-                  <button className="rounded-lg px-3 py-2 border border-white/20 bg-white/5 text-white/60 text-sm cursor-not-allowed" disabled>
-                    Shop via Shipt
-                  </button>
-                </div>
+              <div className="mt-3 text-[11px] text-white/50 italic">
+                For now, you can still use this list to shop in-store or manually add items to your Walmart cart.
               </div>
             </div>
 
