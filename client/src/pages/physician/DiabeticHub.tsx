@@ -24,6 +24,7 @@ export default function DiabeticHub() {
   const { user } = useAuth();
   const { toast } = useToast();
   const userId = user?.id?.toString() || getDeviceId();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Hooks
   const saveMutation = useSaveDiabetesProfile();
@@ -175,9 +176,18 @@ export default function DiabeticHub() {
           {/* Header Section */}
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
-            <h1 className="text-2xl md:text-2xl font-semibold text-white mb-4 relative z-10">
-              🩺 Diabetic Nutrition Hub
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h1 className="text-2xl md:text-2xl font-semibold text-white relative z-10">
+                🩺 Diabetic Nutrition Hub
+              </h1>
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white font-bold relative z-10"
+                aria-label="How to use Diabetic Nutrition Hub"
+              >
+                ?
+              </button>
+            </div>
             <p className="text-sm text-white/90 max-w-3xl mx-auto relative z-10">
               Track blood sugar, set doctor guardrails, and build diabetic-friendly meal plans
             </p>
@@ -540,6 +550,38 @@ export default function DiabeticHub() {
           </section>
 
         </div>
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">How to Use Diabetic Nutrition Hub</h3>
+              
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>Welcome to the Diabetic Nutrition Hub! This feature helps you manage Type 2 Diabetes with comprehensive tracking and meal planning.</p>
+                <div>
+                  <h4 className="font-semibold text-blue-400 mb-2">Available Tools:</h4>
+                  <ul className="list-disc list-inside space-y-2 ml-2">
+                    <li><strong>Doctor Guardrails:</strong> Set clinical targets for glucose, carbs, fiber, GI, and meal frequency</li>
+                    <li><strong>Blood Sugar Tracker:</strong> Log glucose readings with context (fasting, pre-meal, post-meal)</li>
+                    <li><strong>7-Day Trend:</strong> Visualize your glucose patterns and track time in range</li>
+                    <li><strong>AI Meal Generator:</strong> Get personalized low-GI meals based on your guardrails</li>
+                  </ul>
+                </div>
+                <p className="text-blue-300 font-medium">
+                  💡 Tip: Start by setting your guardrails with your doctor's recommendations, then use the meal generator to build compliant meal plans!
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got It!
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

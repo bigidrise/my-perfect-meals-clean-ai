@@ -13,6 +13,7 @@ export default function GLP1Hub() {
   const [, setLocation] = useLocation();
   const [noteOpen, setNoteOpen] = useState(false);
   const [shotTrackerOpen, setShotTrackerOpen] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const { user } = useAuth();
 
   // Fetch and mutate state for GLP-1 profile
@@ -112,7 +113,16 @@ export default function GLP1Hub() {
       <div className="max-w-2xl mx-auto space-y-6 pt-14">
         {/* Header with Black Glass Background */}
         <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center">
-          <h1 className="text-2xl font-semibold mb-2">GLP-1 Hub</h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-purple-600 hover:bg-purple-700 transition-all duration-200 text-white font-bold"
+              aria-label="How to use GLP-1 Hub"
+            >
+              ?
+            </button>
+          </div>
           <p className="text-white/90 text-sm">Track your GLP-1 medication - simple, reliable, and always with you.</p>
         </div>
 
@@ -315,6 +325,38 @@ export default function GLP1Hub() {
             Go to GLP-1 Meal Builder
           </Button>
         </section>
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">How to Use GLP-1 Hub</h3>
+              
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>Welcome to the GLP-1 Hub! This feature helps you manage your GLP-1 medication and nutrition effectively.</p>
+                <div>
+                  <h4 className="font-semibold text-purple-400 mb-2">Available Tools:</h4>
+                  <ul className="list-disc list-inside space-y-2 ml-2">
+                    <li><strong>Shot Tracker:</strong> Log your medication shots with date, dosage, injection site, and notes</li>
+                    <li><strong>Doctor Guardrails:</strong> Set clinical targets for meal volume, protein, fat, fiber, hydration, and meal frequency</li>
+                    <li><strong>Quick Presets:</strong> Choose from clinical presets (Initiation, Maintenance, Optimization) to get started fast</li>
+                    <li><strong>GLP-1 Meal Builder:</strong> Access specialized meals designed for small portions and high nutrient density</li>
+                  </ul>
+                </div>
+                <p className="text-purple-300 font-medium">
+                  💡 Tip: Start with a preset that matches your current phase, then customize the guardrails with your doctor's guidance!
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got It!
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
