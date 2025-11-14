@@ -157,6 +157,7 @@ export default function Router() {
     '/diabetic-menu-builder',
     '/toddler-meals',
     '/kids-meals',
+    '/alcohol/lean-and-social',
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
