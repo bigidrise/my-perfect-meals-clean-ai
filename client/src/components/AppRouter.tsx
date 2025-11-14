@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import WelcomeGate from "./WelcomeGate";
 import { TourProvider } from "@/contexts/TourContext";
@@ -15,6 +15,24 @@ interface AppRouterProps {
 export default function AppRouter({ children }: AppRouterProps) {
   const [location, setLocation] = useLocation();
   const [showWelcomeGate, setShowWelcomeGate] = useState(false);
+
+  const shouldShowBottomNav = useMemo(() => {
+    const hideOnRoutes = [
+      "/auth",
+      "/welcome",
+      "/onboarding",
+      "/forgot-password",
+      "/reset-password",
+      "/checkout-success",
+      "/pricing",
+      "/affiliates",
+      "/founders",
+      "/privacy",
+      "/admin-moderation",
+      "/alcohol/lean-and-social"
+    ];
+    return !hideOnRoutes.some(route => location.startsWith(route));
+  }, [location]);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
