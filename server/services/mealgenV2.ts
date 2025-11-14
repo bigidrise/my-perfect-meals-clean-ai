@@ -216,11 +216,32 @@ function mapOnboardingToConstraints(ob: Onboarding) {
 
 function normalizeMeal(raw: any): Meal {
   const fatsRaw = raw?.fats ?? raw?.fat ?? raw?.nutrition?.fat;
+  const normalizedIngredients = normalizeIngredients(raw?.ingredients);
+  
+  // Final validation: ensure all ingredients match universal schema
+  const validatedIngredients = normalizedIngredients.map(ing => {
+    // If ingredient has universal format stored, validate it
+    if (ing._universal) {
+      const u = ing._universal;
+      return {
+        name: u.name,
+        amount: `${u.quantity} ${u.unit}`.trim()
+      };
+    }
+    
+    // Otherwise, re-normalize to be safe
+    const universal = normalizeIngredientToUniversal(ing);
+    return {
+      name: universal.name,
+      amount: `${universal.quantity} ${universal.unit}`.trim()
+    };
+  });
+  
   return {
     name: String(raw?.name ?? raw?.title ?? raw?.mealName ?? "Chef's Choice"),
     description: raw?.description ?? raw?.summary ?? undefined,
     imageUrl: raw?.imageUrl ?? raw?.imageURL ?? raw?.image ?? undefined,
-    ingredients: normalizeIngredients(raw?.ingredients),
+    ingredients: validatedIngredients,
     instructions: normalizeInstructions(raw?.instructions),
     calories: numOrU(raw?.calories ?? raw?.nutrition?.calories),
     protein: numOrU(raw?.protein ?? raw?.nutrition?.protein),
@@ -249,32 +270,200 @@ function normalizeInstructions(raw: any): string[] {
   return []; 
 }
 
+// Import universal ingredient normalizer
+import { normalizeIngredient as clientNormalizeIngredient } from "../../client/src/utils/normalizeIngredients";
+
+// Server-side ingredient normalizer matching universal schema
+function normalizeIngredientToUniversal(ing: any): {
+  name: string;
+  quantity: number;
+  unit: string;
+  notes?: string;
+} {
+  // Handle string format
+  if (typeof ing === "string") {
+    const parsed = parseIngredientString(ing);
+    return {
+      name: parsed.name,
+      quantity: parsed.quantity,
+      unit: parsed.unit,
+      ...(parsed.notes && { notes: parsed.notes })
+    };
+  }
+
+  // Handle object format
+  const rawName = ing.item || ing.name || ing.ingredient || String(ing);
+  const rawQty = ing.qty || ing.quantity || ing.amount || ing.amountOz || 1;
+  const rawUnit = ing.unit || "";
+  const rawNotes = ing.notes || "";
+
+  // Parse quantity to number
+  const quantity = parseQuantityToNumber(rawQty);
+  
+  // Normalize unit to singular
+  const unit = normalizeSingularUnit(rawUnit);
+  
+  // Extract descriptors from name
+  const { cleanName, extractedNotes } = extractDescriptors(rawName);
+  
+  // Combine notes
+  const combinedNotes = [extractedNotes, rawNotes].filter(Boolean).join("; ");
+
+  return {
+    name: cleanName,
+    quantity,
+    unit,
+    ...(combinedNotes && { notes: combinedNotes })
+  };
+}
+
+function parseIngredientString(str: string): {
+  name: string;
+  quantity: number;
+  unit: string;
+  notes?: string;
+} {
+  const match = str.match(/^([0-9.,½¼¾⅓⅔⅛⅜⅝⅞\/\s]+)?\s*([a-z]+)?\s*(.+)?$/i);
+  if (!match) {
+    return { name: str.trim(), quantity: 1, unit: "" };
+  }
+
+  const [, qtyPart, unitPart, namePart] = match;
+  const quantity = parseQuantityToNumber(qtyPart);
+  const unit = normalizeSingularUnit(unitPart);
+  const { cleanName, extractedNotes } = extractDescriptors(namePart || str);
+
+  return {
+    name: cleanName,
+    quantity,
+    unit,
+    ...(extractedNotes && { notes: extractedNotes })
+  };
+}
+
+function parseQuantityToNumber(qtyStr: any): number {
+  if (qtyStr === undefined || qtyStr === null || qtyStr === '') return 1;
+  if (typeof qtyStr === 'number') return qtyStr;
+
+  const str = String(qtyStr).trim().toLowerCase();
+
+  // Unicode fractions
+  const fractionMap: Record<string, number> = {
+    '½': 0.5, '⅓': 0.333, '⅔': 0.667, '¼': 0.25, '¾': 0.75,
+    '⅕': 0.2, '⅖': 0.4, '⅗': 0.6, '⅘': 0.8, '⅙': 0.167,
+    '⅚': 0.833, '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875
+  };
+
+  for (const [symbol, value] of Object.entries(fractionMap)) {
+    if (str.includes(symbol)) {
+      const rest = str.replace(symbol, '').trim();
+      const whole = rest ? parseFloat(rest) : 0;
+      return !isNaN(whole) ? whole + value : value;
+    }
+  }
+
+  // Handle "1 1/2" or "1/2" formats
+  if (str.includes('/')) {
+    const parts = str.split(/\s+/);
+    let total = 0;
+    for (const part of parts) {
+      if (part.includes('/')) {
+        const [num, denom] = part.split('/').map(Number);
+        if (num && denom) total += num / denom;
+      } else {
+        const n = parseFloat(part);
+        if (!isNaN(n)) total += n;
+      }
+    }
+    return total > 0 ? total : 1;
+  }
+
+  const num = parseFloat(str.replace(/,/g, ''));
+  return !isNaN(num) && num > 0 ? num : 1;
+}
+
+function normalizeSingularUnit(unit: any): string {
+  if (!unit) return "";
+  
+  const unitMap: Record<string, string> = {
+    'teaspoon': 'tsp', 'teaspoons': 'tsp', 'tablespoon': 'tbsp', 'tablespoons': 'tbsp',
+    'cup': 'cup', 'cups': 'cup', 'ounce': 'oz', 'ounces': 'oz', 
+    'pound': 'lb', 'pounds': 'lb', 'lbs': 'lb', 'gram': 'g', 'grams': 'g',
+    'kilogram': 'kg', 'kilograms': 'kg', 'milliliter': 'ml', 'milliliters': 'ml',
+    'liter': 'l', 'liters': 'l', 'piece': 'piece', 'pieces': 'piece',
+    'clove': 'clove', 'cloves': 'clove', 'slice': 'slice', 'slices': 'slice',
+    'pinch': 'pinch', 'dash': 'dash', 'each': 'each'
+  };
+  
+  const normalized = String(unit).trim().toLowerCase();
+  return unitMap[normalized] || normalized;
+}
+
+function extractDescriptors(name: string): { cleanName: string; extractedNotes: string } {
+  let cleanName = String(name).trim();
+  const foundDescriptors: string[] = [];
+
+  // Extract parenthetical content
+  const parenMatch = cleanName.match(/\(([^)]+)\)/);
+  if (parenMatch) {
+    foundDescriptors.push(parenMatch[1]);
+    cleanName = cleanName.replace(/\([^)]+\)/g, '').trim();
+  }
+
+  // Known descriptors
+  const descriptors = [
+    'diced', 'chopped', 'minced', 'sliced', 'grated', 'shredded',
+    'fresh', 'dried', 'frozen', 'cooked', 'raw', 'canned',
+    'boneless', 'skinless', 'whole', 'halved', 'quartered',
+    'peeled', 'unpeeled', 'trimmed', 'large', 'medium', 'small',
+    'ripe', 'optional', 'plain', 'low-fat', 'grilled'
+  ];
+
+  for (const descriptor of descriptors) {
+    const regex = new RegExp(`\\b${descriptor}\\b`, 'gi');
+    if (regex.test(cleanName)) {
+      foundDescriptors.push(descriptor);
+      cleanName = cleanName.replace(regex, '').trim();
+    }
+  }
+
+  cleanName = cleanName.replace(/\s{2,}/g, ' ').trim();
+
+  return {
+    cleanName,
+    extractedNotes: foundDescriptors.join(', ')
+  };
+}
+
 function normalizeIngredients(raw: any): Ingredient[] {
   if (!raw) return [];
   
-  if (Array.isArray(raw) && raw.every(x => typeof x === "object")) {
-    return raw.map((x: any) => ({
-      name: String(x.name ?? x.ingredient ?? "").trim(),
-      amount: String(x.amount ?? x.quantity ?? x.qty ?? "").trim()
-    })).filter(i => i.name);
-  }
+  let rawIngredients: any[] = [];
   
-  if (Array.isArray(raw) && raw.every(x => typeof x === "string")) {
-    return raw.map((s: string) => splitFreeformIngredient(s));
-  }
-  
-  if (typeof raw === "object") {
-    return Object.entries(raw).map(([name, amount]) => ({
+  // Convert various formats to array
+  if (Array.isArray(raw)) {
+    rawIngredients = raw;
+  } else if (typeof raw === "object") {
+    rawIngredients = Object.entries(raw).map(([name, amount]) => ({
       name: String(name).trim(),
       amount: String(amount ?? "").trim()
     }));
+  } else if (typeof raw === "string") {
+    rawIngredients = raw.split(/\r?\n+/).map(s => s.trim()).filter(Boolean);
   }
   
-  if (typeof raw === "string") {
-    return raw.split(/\r?\n+/).map(splitFreeformIngredient);
-  }
+  // Normalize each ingredient through universal schema
+  const normalized = rawIngredients.map((ing: any) => {
+    const universal = normalizeIngredientToUniversal(ing);
+    return {
+      name: universal.name,
+      amount: `${universal.quantity} ${universal.unit}`.trim(),
+      // Store universal format for validation
+      _universal: universal
+    };
+  }).filter(i => i.name);
   
-  return [];
+  return normalized;
 }
 
 function splitFreeformIngredient(line: string): Ingredient {

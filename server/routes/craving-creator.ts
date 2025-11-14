@@ -40,14 +40,30 @@ router.post('/generate', requireAuth, async (req, res) => {
   try {
     const input = cravingSchema.parse(req.body);
     
+    // Normalize ingredients to universal schema
+    function normalizeToUniversal(ing: any): any {
+      const quantity = typeof ing.amount === 'string' ? parseFloat(ing.amount) || 1 : ing.amount || 1;
+      const unit = ing.unit || "";
+      const name = ing.name || "";
+      
+      return {
+        name,
+        quantity,
+        unit,
+        amount: `${quantity} ${unit}`.trim()
+      };
+    }
+
     // Mock AI recipe generation - replace with actual AI service
+    const rawIngredients = [
+      { name: "Main ingredient", amount: "1", unit: "portion" },
+      { name: "Supporting ingredient", amount: "1/2", unit: "cup" },
+      { name: "Seasoning", amount: "1", unit: "tsp" }
+    ];
+    
     const generatedRecipe = {
       title: `Healthy ${input.craving}`,
-      ingredients: [
-        { name: "Main ingredient", amount: "1", unit: "portion" },
-        { name: "Supporting ingredient", amount: "1/2", unit: "cup" },
-        { name: "Seasoning", amount: "1", unit: "tsp" }
-      ],
+      ingredients: rawIngredients.map(normalizeToUniversal),
       instructions: `1. Prepare ingredients for your ${input.craving} craving\n2. Cook according to preference\n3. Season to satisfy your craving\n4. Serve and enjoy`,
       nutrition: {
         calories: 400,
