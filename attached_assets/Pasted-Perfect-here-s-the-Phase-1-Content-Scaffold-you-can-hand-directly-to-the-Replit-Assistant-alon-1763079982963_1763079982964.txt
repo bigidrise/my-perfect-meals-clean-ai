@@ -1,0 +1,131 @@
+Perfect — here’s the **Phase 1 Content Scaffold** you can hand directly to the Replit Assistant along with the implementation brief.
+This gives it real starter data for **Paleo** and **Diabetic** so the structure is crystal clear and functional the moment it’s added.
+
+---
+
+## 🧱 REPLIT ASSISTANT — STARTER DATA SCAFFOLD
+
+### 📁 File: `client/src/data/ingredientsPaleo.ts`
+
+```ts
+export const paleoMeals = {
+  breakfast: [
+    { name: "Egg scramble with spinach and avocado", tags: ["paleo", "low-carb", "protein-rich"] },
+    { name: "Almond flour pancakes with blueberries", tags: ["paleo", "grain-free", "fiber"] },
+    { name: "Sweet potato hash with eggs", tags: ["paleo", "root-veg"] },
+    { name: "Chia pudding with coconut milk", tags: ["paleo", "omega-3", "dairy-free"] },
+    { name: "Smoked salmon and cucumber boats", tags: ["paleo", "omega-3", "anti-inflammatory"] },
+    { name: "Turkey bacon and avocado wraps", tags: ["paleo", "protein-rich", "keto-friendly"] },
+    { name: "Coconut yogurt with walnuts", tags: ["paleo", "probiotic"] },
+    { name: "Berry compote with almond butter", tags: ["paleo", "antioxidant"] },
+    { name: "Zucchini egg muffins", tags: ["paleo", "meal-prep"] },
+    { name: "Sautéed mushrooms and eggs", tags: ["paleo", "low-carb"] },
+  ],
+  lunch: [
+    { name: "Grilled chicken salad with olive oil dressing", tags: ["paleo", "anti-inflammatory"] },
+    { name: "Beef lettuce wraps with veggies", tags: ["paleo", "grain-free", "protein-rich"] },
+    { name: "Zucchini noodles with pesto shrimp", tags: ["paleo", "low-carb", "omega-3"] },
+    { name: "Tuna-stuffed avocados", tags: ["paleo", "healthy-fat"] },
+    { name: "Turkey and veggie stir fry", tags: ["paleo", "fiber"] },
+    { name: "Cauliflower fried rice with chicken", tags: ["paleo", "low-carb"] },
+    { name: "Grilled salmon with asparagus", tags: ["paleo", "omega-3"] },
+    { name: "Chicken fajita bowl (no rice)", tags: ["paleo", "grain-free"] },
+    { name: "Greek salad with olive oil & herbs", tags: ["paleo", "vegetarian"] },
+    { name: "Bison burger lettuce wraps", tags: ["paleo", "iron-rich"] },
+  ],
+  dinner: [
+    { name: "Steak with roasted root vegetables", tags: ["paleo", "iron-rich", "fiber"] },
+    { name: "Pan-seared cod with lemon garlic greens", tags: ["paleo", "omega-3"] },
+    { name: "Chicken thighs with sweet potato mash", tags: ["paleo", "root-veg"] },
+    { name: "Pork tenderloin with apple slaw", tags: ["paleo", "fruit-based"] },
+    { name: "Zucchini lasagna (no noodles)", tags: ["paleo", "low-carb"] },
+    { name: "Shrimp and broccoli stir fry", tags: ["paleo", "high-protein"] },
+    { name: "Roasted turkey with green beans", tags: ["paleo", "holiday-friendly"] },
+    { name: "Lamb chops with garlic cauliflower mash", tags: ["paleo", "protein-rich"] },
+    { name: "Stuffed bell peppers with ground beef", tags: ["paleo", "meal-prep"] },
+    { name: "Grilled mahi-mahi with mango salsa", tags: ["paleo", "tropical"] },
+  ],
+  snacks: [
+    { name: "Beef jerky and almonds", tags: ["paleo", "on-the-go"] },
+    { name: "Apple slices with almond butter", tags: ["paleo", "fruit-based"] },
+    { name: "Coconut flakes and cashews", tags: ["paleo", "healthy-fat"] },
+    { name: "Carrot sticks with guacamole", tags: ["paleo", "fiber"] },
+    { name: "Boiled eggs with sea salt", tags: ["paleo", "protein-rich"] },
+    { name: "Homemade trail mix (no peanuts)", tags: ["paleo", "snack"] },
+    { name: "Banana with almond butter", tags: ["paleo", "energy"] },
+    { name: "Jerky bites with cucumber slices", tags: ["paleo", "low-carb"] },
+    { name: "Dried mango (no sugar added)", tags: ["paleo", "natural-sugar"] },
+    { name: "Chia seed snack balls", tags: ["paleo", "omega-3"] },
+  ],
+};
+```
+
+---
+
+### 📁 File: `client/src/data/ingredientsDiabetic.ts`
+
+```ts
+export const diabeticMeals = {
+  breakfast: [
+    { name: "Greek yogurt with chia seeds", tags: ["low-GI", "high-protein", "diabetic-safe"] },
+    { name: "Vegetable omelet with mushrooms", tags: ["low-GI", "fiber"] },
+    { name: "Cottage cheese and mixed berries", tags: ["low-GI", "calcium"] },
+    { name: "Oatmeal with cinnamon and walnuts", tags: ["medium-GI", "heart-healthy"] },
+    { name: "Scrambled eggs with spinach", tags: ["low-GI", "high-protein"] },
+    { name: "Tofu scramble with bell peppers", tags: ["low-GI", "plant-based"] },
+    { name: "Avocado toast on whole grain bread", tags: ["medium-GI", "healthy-fat"] },
+    { name: "Berry smoothie with Greek yogurt", tags: ["low-GI", "antioxidant"] },
+    { name: "Whole grain pancakes with fresh berries", tags: ["medium-GI", "fiber"] },
+    { name: "Egg white and veggie wrap", tags: ["low-GI", "light"] },
+  ],
+  lunch: [
+    { name: "Grilled chicken with quinoa salad", tags: ["low-GI", "balanced-carb"] },
+    { name: "Turkey sandwich on whole grain bread", tags: ["medium-GI", "protein-rich"] },
+    { name: "Lentil soup with spinach", tags: ["low-GI", "fiber"] },
+    { name: "Salmon with steamed broccoli", tags: ["low-GI", "omega-3"] },
+    { name: "Chicken stir-fry with brown rice", tags: ["medium-GI", "fiber"] },
+    { name: "Tuna salad on lettuce cups", tags: ["low-GI", "low-carb"] },
+    { name: "Black bean and veggie bowl", tags: ["low-GI", "plant-protein"] },
+    { name: "Roasted turkey with green beans", tags: ["low-GI", "holiday-friendly"] },
+    { name: "Zucchini noodles with lean ground beef", tags: ["low-GI", "low-carb"] },
+    { name: "Shrimp and avocado salad", tags: ["low-GI", "healthy-fat"] },
+  ],
+  dinner: [
+    { name: "Baked chicken with roasted Brussels sprouts", tags: ["low-GI", "fiber"] },
+    { name: "Grilled salmon with quinoa and asparagus", tags: ["low-GI", "omega-3"] },
+    { name: "Turkey chili with beans", tags: ["medium-GI", "fiber"] },
+    { name: "Cauliflower rice stir-fry", tags: ["low-GI", "low-carb"] },
+    { name: "Stuffed bell peppers with lean beef", tags: ["low-GI", "high-protein"] },
+    { name: "Vegetable soup with tofu", tags: ["low-GI", "plant-based"] },
+    { name: "Roasted pork tenderloin with green beans", tags: ["low-GI", "protein-rich"] },
+    { name: "Baked cod with zucchini", tags: ["low-GI", "omega-3"] },
+    { name: "Chicken and spinach casserole", tags: ["low-GI", "comfort-food"] },
+    { name: "Vegetarian lentil stew", tags: ["low-GI", "fiber"] },
+  ],
+  snacks: [
+    { name: "Mixed nuts (unsalted)", tags: ["low-GI", "healthy-fat"] },
+    { name: "Apple slices with peanut butter", tags: ["medium-GI", "fiber"] },
+    { name: "Baby carrots with hummus", tags: ["low-GI", "fiber"] },
+    { name: "Boiled egg", tags: ["low-GI", "protein-rich"] },
+    { name: "Greek yogurt (plain)", tags: ["low-GI", "probiotic"] },
+    { name: "Small banana with walnuts", tags: ["medium-GI", "balanced"] },
+    { name: "Cottage cheese and peaches", tags: ["medium-GI", "calcium"] },
+    { name: "Almonds and string cheese", tags: ["low-GI", "protein-rich"] },
+    { name: "Berry bowl with cinnamon", tags: ["low-GI", "antioxidant"] },
+    { name: "Edamame pods", tags: ["low-GI", "plant-protein"] },
+  ],
+};
+```
+
+---
+
+### 🧩 Notes for the Assistant
+
+* Follow this structure for **Keto, Mediterranean, and GLP-1** next.
+* Each plan needs 30 breakfast, 30 lunch, 30 dinner, 30 snack options minimum.
+* Images will be added later using the same `mealEngineService` → DALL·E integration.
+* Once connected, all boards (Weekly, GLP-1, Diabetic, ProCare, BeachBody) will dynamically pull from their corresponding ingredient datasets.
+
+---
+
+Would you like me to include the **briefing snippet that explains how to test each one** (so the assistant knows how to validate the AI generation per meal type after wiring)? That ensures it verifies data loading and AI calls correctly before pushing.
