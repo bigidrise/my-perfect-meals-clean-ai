@@ -924,7 +924,7 @@ export default function DiabeticMenuBuilder() {
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">Diabetic Meal Board</h1>
                 <button
                   onClick={() => setShowInfoModal(true)}
-                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-6 h-6 flex items-center justify-center text-sm font-bold"
+                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold"
                   aria-label="How to use"
                 >
                   ?
@@ -1239,7 +1239,7 @@ export default function DiabeticMenuBuilder() {
                       size="sm"
                       variant="ghost"
                       onClick={() => setShowDailyTotalsInfo(true)}
-                      className={`h-6 w-6 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
+                      className={`h-5 w-5 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
                         !hasSeenDailyTotalsInfo ? 'flash-border' : ''
                       }`}
                       aria-label="Next Steps Info"
