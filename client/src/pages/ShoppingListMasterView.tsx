@@ -253,7 +253,7 @@ export default function ShoppingListMasterView() {
             </Button>
             <Button 
               onClick={() => setScannerOpen(true)}
-              className="bg-orange-600/20 border border-orange-400/30 text-orange-200 hover:bg-orange-600/30"
+              className="bg-black/60 border border-white/20 text-white hover:bg-black/70"
               data-testid="button-scan-barcode"
             >
               <Camera className="h-4 w-4 mr-2" />
