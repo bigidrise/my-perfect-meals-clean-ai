@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
-import { buildWalmartSearchURL } from "@/lib/walmartLinkBuilder";
+import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BarcodeScanner from "@/components/BarcodeScanner";
 
@@ -140,31 +140,26 @@ export default function ShoppingListMasterView() {
   const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
 
   const handleShopAtWalmart = useCallback(() => {
-    // Use only unchecked items – user hasn't bought these yet
-    if (uncheckedItems.length === 0) {
+    const activeItems = items.filter(i => !i.isChecked);
+
+    if (activeItems.length === 0) {
       toast({
-        title: "No items to shop",
-        description: "Add items to your shopping list before sending to Walmart."
+        title: "No items to send",
+        description: "Add items to your shopping list before sending to Walmart.",
       });
       return;
     }
 
-    const url = buildWalmartSearchURL(uncheckedItems);
+    const url = buildWalmartSearchUrl(activeItems);
 
-    try {
-      window.open(url, "_blank", "noopener,noreferrer");
-      toast({
-        title: "Opening Walmart",
-        description: "Your shopping list is being sent to Walmart search."
-      });
-    } catch (err) {
-      console.error("Failed to open Walmart", err);
-      toast({
-        title: "Unable to open Walmart",
-        description: "Please check your popup blocker or try again."
-      });
+    // fail-safe: if something goes wrong, just land them on walmart.com
+    if (!url || typeof url !== "string") {
+      window.open("https://www.walmart.com/", "_blank", "noopener,noreferrer");
+      return;
     }
-  }, [uncheckedItems, toast]);
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  }, [items, toast]);
 
   const groupedUnchecked = useMemo(()=>{
     if (!opts.groupByAisle) return { All: uncheckedItems };
@@ -337,34 +332,35 @@ export default function ShoppingListMasterView() {
           </div>
         </div>
 
-        {/* Grocery Services Dropdown (Walmart only – Coming Soon) */}
-        <details className="rounded-2xl border border-white/20 bg-black/60 text-white">
-          <summary className="list-none cursor-pointer select-none px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors">
-            <span className="text-sm font-semibold">Walmart Grocery (Coming Soon)</span>
-            <ChevronDown className="h-4 w-4 text-white/70" />
-          </summary>
-
-          <div className="px-4 pb-4 pt-2 space-y-3">
-            <div className="rounded-xl border border-white/20 bg-black/50 p-4">
-              <div className="flex items-center justify-between">
-                <div className="font-medium">Walmart</div>
-                <span className="text-[11px] rounded-full px-2 py-0.5 bg-yellow-500/20 border border-yellow-300/40 text-yellow-200">
-                  Coming Soon — Pending Approval
+        {/* Walmart Card - Single Integration */}
+        <div className="rounded-2xl border border-white/20 bg-black/60 text-white p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-lg font-semibold">Walmart Grocery</div>
+              <div className="text-xs inline-flex items-center gap-2 mt-1">
+                <span className="rounded-full px-2 py-0.5 bg-yellow-500/20 border border-yellow-300/40 text-yellow-200 text-[11px]">
+                  Live — Search on Walmart
+                </span>
+                <span className="text-white/60 text-[11px]">
+                  Full cart & delivery integration pending Walmart approval
                 </span>
               </div>
-              <div className="text-xs text-white/70 mt-2">
-                Once Walmart approves our integration, you&apos;ll be able to send your shopping list to Walmart.com in one tap and finish checkout there.
-              </div>
-              <div className="mt-3 text-[11px] text-white/50 italic">
-                For now, you can still use this list to shop in-store or manually add items to your Walmart cart.
+              <div className="text-xs text-white/70 mt-2 max-w-md">
+                Tap the button below to open your shopping list as a search on Walmart.com.
+                You can choose your preferred brands, add to cart, and complete pickup or delivery
+                inside Walmart.
               </div>
             </div>
 
-            <p className="text-xs text-white/60 pt-2 border-t border-white/10">
-              We never mark up grocery prices. Retailer delivery/pickup fees apply at checkout.
-            </p>
+            <Button
+              onClick={handleShopAtWalmart}
+              className="rounded-xl px-4 py-2 border border-white/40 bg-blue-600/30 hover:bg-blue-600/40 text-white text-sm whitespace-nowrap"
+              data-testid="button-walmart-search"
+            >
+              Shop this list on Walmart
+            </Button>
           </div>
-        </details>
+        </div>
 
         {/* Actions */}
         {(counts.checked > 0 || counts.total > 0) && (
