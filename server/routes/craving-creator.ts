@@ -40,20 +40,9 @@ router.post('/generate', requireAuth, async (req, res) => {
   try {
     const input = cravingSchema.parse(req.body);
     
-    // Normalize ingredients to universal schema
-    function normalizeToUniversal(ing: any): any {
-      const quantity = typeof ing.amount === 'string' ? parseFloat(ing.amount) || 1 : ing.amount || 1;
-      const unit = ing.unit || "";
-      const name = ing.name || "";
-      
-      return {
-        name,
-        quantity,
-        unit,
-        amount: `${quantity} ${unit}`.trim()
-      };
-    }
-
+    // Import server-side ingredient normalizer
+    const { normalizeIngredient } = await import('../services/mealgenV2');
+    
     // Mock AI recipe generation - replace with actual AI service
     const rawIngredients = [
       { name: "Main ingredient", amount: "1", unit: "portion" },
@@ -61,9 +50,24 @@ router.post('/generate', requireAuth, async (req, res) => {
       { name: "Seasoning", amount: "1", unit: "tsp" }
     ];
     
+    // Normalize ALL ingredients through universal schema pipeline
+    const normalizedIngredients = rawIngredients.map((ing: any) => {
+      // Parse quantity to handle string fractions
+      const parsedQuantity = typeof ing.amount === 'string' && ing.amount.includes('/')
+        ? eval(ing.amount.replace(/(\d+)\/(\d+)/, '($1/$2)'))
+        : parseFloat(ing.amount) || 1;
+      
+      return {
+        name: String(ing.name || '').trim(),
+        quantity: parsedQuantity,
+        unit: String(ing.unit || '').trim(),
+        amount: `${parsedQuantity} ${ing.unit || ''}`.trim()
+      };
+    });
+    
     const generatedRecipe = {
       title: `Healthy ${input.craving}`,
-      ingredients: rawIngredients.map(normalizeToUniversal),
+      ingredients: normalizedIngredients,
       instructions: `1. Prepare ingredients for your ${input.craving} craving\n2. Cook according to preference\n3. Season to satisfy your craving\n4. Serve and enjoy`,
       nutrition: {
         calories: 400,

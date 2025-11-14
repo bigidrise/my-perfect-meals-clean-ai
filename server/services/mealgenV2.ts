@@ -220,17 +220,18 @@ function normalizeMeal(raw: any): Meal {
   
   // Final validation: ensure all ingredients match universal schema
   const validatedIngredients = normalizedIngredients.map(ing => {
-    // If ingredient has universal format stored, validate it
-    if (ing._universal) {
-      const u = ing._universal;
+    // Always re-normalize to ensure universal schema compliance
+    const universal = normalizeIngredientToUniversal(ing);
+    
+    // Final validation: ensure all fields are present and valid
+    if (!universal.name || typeof universal.quantity !== 'number' || !universal.unit) {
+      console.warn('⚠️ Invalid ingredient detected, applying fallback:', ing);
       return {
-        name: u.name,
-        amount: `${u.quantity} ${u.unit}`.trim()
+        name: String(ing?.name || ing?.item || 'Unknown ingredient').trim(),
+        amount: '1 portion'
       };
     }
     
-    // Otherwise, re-normalize to be safe
-    const universal = normalizeIngredientToUniversal(ing);
     return {
       name: universal.name,
       amount: `${universal.quantity} ${universal.unit}`.trim()
