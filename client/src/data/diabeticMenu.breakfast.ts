@@ -9,12 +9,12 @@ export const diabeticMenuBreakfast: SmartMeal[] = [
     bglRange: "medium",
     macros: { calories: 360, protein_g: 20, carbs_g: 45, fat_g: 10 },
     ingredients: [
-      { item: "Old-fashioned oats", amount: "1/2 cup" },
-      { item: "Unsweetened almond milk", amount: "3/4 cup" },
-      { item: "Chia seeds", amount: "1 tbsp" },
-      { item: "Greek yogurt (plain, 2%)", amount: "1/3 cup" },
-      { item: "Blueberries", amount: "1/3 cup" },
-      { item: "Cinnamon", amount: "1/4 tsp" },
+      { name: "Old-fashioned oats", quantity: 0.5, unit: "cup" },
+      { name: "Unsweetened almond milk", quantity: 0.75, unit: "cup" },
+      { name: "Chia seeds", quantity: 1, unit: "tbsp" },
+      { name: "Greek yogurt", quantity: 0.33, unit: "cup", notes: "plain, 2%" },
+      { name: "Blueberries", quantity: 0.33, unit: "cup" },
+      { name: "Cinnamon", quantity: 0.25, unit: "tsp" },
     ],
     instructions: [
       "Combine oats, milk, chia, yogurt, cinnamon in a jar.",
