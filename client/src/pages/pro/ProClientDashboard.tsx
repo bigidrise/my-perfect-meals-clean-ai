@@ -160,7 +160,7 @@ export default function ProClientDashboard() {
       <div className="max-w-5xl mx-auto space-y-6 pt-14 sm:pt-16 pb-16">
         <div className="rounded-2xl p-6 bg-white/5 border border-white/20 mt-2">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-sm text-white/70 mt-1">
+          <p className="text-md text-white/70 mt-1">
             {isTrainer &&
               "Set macro targets, carb directives, and coaching notes."}
             {isClinician &&
