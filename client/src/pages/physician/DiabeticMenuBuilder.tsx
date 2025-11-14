@@ -950,9 +950,6 @@ export default function DiabeticMenuBuilder() {
                 >
                   ?
                 </button>
-                {FEATURES.explainMode === 'alpha' && (
-                  <WhyChip onOpen={() => setBoardWhyOpen(true)} label="ⓘ Why weekly?" />
-                )}
               </div>
               
               <Button
