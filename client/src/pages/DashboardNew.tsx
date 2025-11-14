@@ -15,7 +15,6 @@ import {
   Camera,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
-import BarcodeScanner from "@/components/BarcodeScanner";
 import OpenAI from "openai"; // Import OpenAI
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";

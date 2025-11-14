@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Trash2, X, Camera } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Edit2, Home, Info, Plus, ShoppingCart, Mic, ListPlus } from "lucide-react";
 import { useLocation } from "wouter";
 import TrashButton from "@/components/ui/TrashButton";
 import { useShoppingListStore, ShoppingListItem } from "@/stores/shoppingListStore";
@@ -14,7 +14,6 @@ import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import BarcodeScanner from "@/components/BarcodeScanner";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
@@ -46,21 +45,12 @@ export default function ShoppingListMasterView() {
   });
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [purchasedOpen, setPurchasedOpen] = useState(true);
-  const [scannerOpen, setScannerOpen] = useState(false);
-
-  const handleBarcodeScanned = useCallback((barcode: string, productName: string) => {
-    addItem({
-      name: productName,
-      quantity: 1,
-      unit: '',
-      notes: `Barcode: ${barcode}`
-    });
-    setScannerOpen(false);
-    toast({ 
-      title: "Item added", 
-      description: `${productName} added to shopping list` 
-    });
-  }, [addItem, toast]);
+  const [voiceModalOpen, setVoiceModalOpen] = useState(false);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [voiceText, setVoiceText] = useState("");
+  const [bulkText, setBulkText] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any | null>(null);
 
   const toggleOpt = useCallback(<K extends keyof typeof opts>(key: K) => {
     setOpts(prev => ({ ...prev, [key]: !prev[key] }));
@@ -160,6 +150,75 @@ export default function ShoppingListMasterView() {
 
     window.open(url, "_blank", "noopener,noreferrer");
   }, [items, toast]);
+
+  const parseItemsFromText = useCallback((raw: string): string[] => {
+    return raw
+      .split(/[\n,;]+/g)
+      .map(s => s.trim())
+      .filter(Boolean);
+  }, []);
+
+  const addManyItems = useCallback((raw: string) => {
+    const names = parseItemsFromText(raw);
+    if (!names.length) {
+      toast({ title: "No items found", description: "Type or say at least one item name." });
+      return;
+    }
+    names.forEach(name => {
+      addItem({
+        name,
+        quantity: 1,
+        unit: ""
+      });
+    });
+    toast({ title: "Items added", description: `${names.length} items added to your shopping list.` });
+  }, [addItem, parseItemsFromText, toast]);
+
+  const startListening = useCallback(() => {
+    try {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast({ title: "Voice not supported", description: "Your browser does not support voice input. You can type items instead." });
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript as string;
+        setVoiceText(prev => prev ? `${prev}, ${transcript}` : transcript);
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+      setIsListening(true);
+    } catch {
+      toast({ title: "Voice error", description: "Unable to start voice recognition." });
+      setIsListening(false);
+    }
+  }, [toast]);
+
+  const stopListening = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
+    }
+    setIsListening(false);
+  }, []);
 
   const groupedUnchecked = useMemo(()=>{
     if (!opts.groupByAisle) return { All: uncheckedItems };
@@ -267,13 +326,26 @@ export default function ShoppingListMasterView() {
             >
               <Plus className="h-4 w-4" />
             </Button>
-            <Button 
-              onClick={() => setScannerOpen(true)}
-              className="bg-black/60 border border-white/20 text-white hover:bg-black/70"
-              data-testid="button-scan-barcode"
+          </div>
+
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Button
+              onClick={() => setVoiceModalOpen(true)}
+              className="bg-black/60 border border-white/20 text-white hover:bg-black/70 text-sm"
+              size="sm"
+              data-testid="button-voice-add"
             >
-              <Camera className="h-4 w-4 mr-2" />
-              Barcode Scanner
+              <Mic className="h-4 w-4 mr-2" />
+              Voice Add
+            </Button>
+            <Button
+              onClick={() => setBulkModalOpen(true)}
+              className="bg-black/60 border border-white/20 text-white hover:bg-black/70 text-sm"
+              size="sm"
+              data-testid="button-bulk-add"
+            >
+              <ListPlus className="h-4 w-4 mr-2" />
+              Bulk Add
             </Button>
           </div>
 
@@ -596,12 +668,130 @@ export default function ShoppingListMasterView() {
           </div>
         )}
 
-        {/* Barcode Scanner Modal */}
-        {scannerOpen && (
-          <BarcodeScanner
-            onItemScanned={handleBarcodeScanned}
-            onClose={() => setScannerOpen(false)}
-          />
+        {/* Voice Add Modal */}
+        {voiceModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+            <div className="w-full max-w-md rounded-2xl bg-black/90 border border-white/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white text-lg font-semibold">Voice Add Items</h2>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="text-white hover:bg-white/10"
+                  onClick={() => {
+                    stopListening();
+                    setVoiceModalOpen(false);
+                  }}
+                >
+                  ✕
+                </Button>
+              </div>
+              <p className="text-xs text-white/70">
+                Speak your items naturally, like: <span className="italic">"milk, eggs, chicken breast, spinach"</span>. 
+                You can also edit the text below before adding.
+              </p>
+              <textarea
+                value={voiceText}
+                onChange={(e) => setVoiceText(e.target.value)}
+                rows={4}
+                className="w-full rounded-xl bg-black/60 border border-white/25 text-white text-sm p-2 focus:outline-none focus:ring-1 focus:ring-white/50"
+                placeholder="milk, eggs, chicken breast, spinach..."
+              />
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-white/60">
+                  {isListening ? "Listening..." : "Tap Start to capture your voice."}
+                </div>
+                <div className="flex gap-2">
+                  {!isListening ? (
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600/30 border border-emerald-400/40 text-emerald-100 hover:bg-emerald-600/40"
+                      onClick={startListening}
+                      data-testid="button-voice-start"
+                    >
+                      <Mic className="h-4 w-4 mr-1" />
+                      Start
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      className="bg-red-600/30 border border-red-400/40 text-red-100 hover:bg-red-600/40"
+                      onClick={stopListening}
+                      data-testid="button-voice-stop"
+                    >
+                      Stop
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    className="bg-blue-600/30 border border-blue-400/40 text-blue-100 hover:bg-blue-600/40"
+                    onClick={() => {
+                      addManyItems(voiceText);
+                      setVoiceText("");
+                      stopListening();
+                      setVoiceModalOpen(false);
+                    }}
+                    disabled={!voiceText.trim()}
+                    data-testid="button-voice-add-items"
+                  >
+                    Add Items
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Bulk Add Modal */}
+        {bulkModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+            <div className="w-full max-w-md rounded-2xl bg-black/90 border border-white/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white text-lg font-semibold">Bulk Add Items</h2>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="text-white hover:bg-white/10"
+                  onClick={() => setBulkModalOpen(false)}
+                >
+                  ✕
+                </Button>
+              </div>
+              <p className="text-xs text-white/70">
+                Type or paste one item per line, or separate items with commas:
+              </p>
+              <textarea
+                value={bulkText}
+                onChange={(e) => setBulkText(e.target.value)}
+                rows={6}
+                className="w-full rounded-xl bg-black/60 border border-white/25 text-white text-sm p-2 focus:outline-none focus:ring-1 focus:ring-white/50"
+                placeholder={"milk\neggs\nchicken breast\nspinach\nbrown rice"}
+              />
+              <div className="flex items-center justify-end gap-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-white hover:bg-white/10"
+                  onClick={() => setBulkModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-blue-600/30 border border-blue-400/40 text-blue-100 hover:bg-blue-600/40"
+                  onClick={() => {
+                    addManyItems(bulkText);
+                    setBulkText("");
+                    setBulkModalOpen(false);
+                  }}
+                  disabled={!bulkText.trim()}
+                  data-testid="button-bulk-add-items"
+                >
+                  Add Items
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </motion.div>
