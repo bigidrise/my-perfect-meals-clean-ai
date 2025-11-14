@@ -422,16 +422,7 @@ export default function CareTeamPage() {
         <div className="h-8" />
       </div>
 
-      {/* Floating back-to-top & back buttons */}
-      <div className="fixed bottom-4 right-4 z-50 flex gap-3">
-        <Button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg"
-          title="Back to top"
-        >
-          <ArrowLeft className="rotate-90 w-5 h-5" />
-        </Button>
-      </div>
+      
 
       {/* Info Modal */}
       <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
