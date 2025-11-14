@@ -1,0 +1,164 @@
+Coach — **STOP.**
+The assistant is absolutely *not* understanding the boundaries, and if we don’t lock it down **right now**, it’s going to break shit you’ve already built.
+
+I’m taking control.
+
+I’m about to give you a **strict, bulletproof, idiot-proof Replit Agent Correction Brief** that will:
+
+✅ Tell it EXACTLY what it should touch
+❌ Tell it EXACTLY what it must NEVER touch
+⚡ Put it back on the correct path
+🔒 Prevent it from messing with GLP-1 or Diabetic meal logic
+🛑 Stop it from “validating snack boards” or altering UI it doesn’t understand
+
+This brief will reset the agent mentally and get it 100% aligned with **your** system.
+
+---
+
+# 🚨 **REPLIT AGENT RESET BRIEF — READ THIS BEFORE YOU DO ANYTHING**
+
+**YOU MUST NOT TOUCH ANYTHING OUTSIDE OF THE WORK WE ARE DOING RIGHT NOW.**
+
+Here is the full correction brief to send to the agent:
+
+---
+
+## 🔥 **REPLIT AGENT — STOP AND READ CAREFULLY BEFORE MAKING ANY CHANGES**
+
+### ❌ DO NOT TOUCH THESE SYSTEMS:
+
+* GLP-1 Medical Hub
+* GLP-1 Meal Builder
+* GLP-1 Snack Cards
+* Diabetic Hub
+* Diabetic Meal Builder
+* Diabetic Snack Cards
+* Weekly Meal Board snack cards
+* ANY existing snack card logic
+* ANY existing Create With AI logic except for ingredient datasets
+* ANY “snack board consistency”
+* ANY “six snack categories validation”
+* ANY macros logic
+* ANY medical guardrails logic
+* ANY GLP-1 or Diabetic-specific logic
+
+These systems are COMPLETE and WORKING.
+Changing them will BREAK the app.
+
+---
+
+## ✅ WHAT YOU **ARE** SUPPOSED TO BE DOING
+
+### The ONLY job right now:
+
+### **1. Wire the NEW diet-based meal ingredient datasets**
+
+We created new diet ingredient files:
+
+```
+ingredientsPaleo.ts
+ingredientsKeto.ts
+ingredientsMediterranean.ts
+ingredientsGLP1.ts
+ingredientsDiabetic.ts
+```
+
+These files are **already correct**.
+
+You must **ONLY**:
+
+### ✔️ Confirm they are imported properly
+
+### ✔️ Confirm they are passed into the dietType system
+
+### ✔️ Confirm they show up in AIMealCreatorModal when dietType changes
+
+### ✔️ Confirm Create With AI uses the correct dataset
+
+That’s it.
+
+---
+
+## 🚫 WHAT YOU MUST NOT DO UNDER ANY CIRCUMSTANCES
+
+### DO NOT:
+
+* Modify snacks
+* Modify snack boards
+* Modify snack logic
+* Rebuild the snack categories
+* Alter snack ingredient lists
+* Add or remove snack categories
+* Adjust snack picker UI
+* Adjust snack card UI
+* Touch ANY snack UI on GLP-1 or Diabetic or Weekly boards
+
+THE SNACK SYSTEM IS DONE.
+IT IS NOT TO BE CHANGED.
+
+---
+
+## 🔥 WHAT **NEEDS FIXING RIGHT NOW**
+
+Three meal boards still pass `"snack"` instead of `"snacks"`:
+
+* WeeklyMealBoard
+* GLP1 Meal Builder
+* Diabetic Meal Builder
+
+This causes them to load MEAL ingredients instead of snack ingredients.
+
+### ✔️ Fix only this:
+
+Change:
+
+```ts
+setAiMealSlot("snack")
+```
+
+to:
+
+```ts
+setAiMealSlot("snacks")
+```
+
+in all three files.
+
+### ❗ NOTHING ELSE SHOULD CHANGE IN THOSE FILES.
+
+---
+
+## 📌 SUMMARY OF YOUR CURRENT MISSION
+
+### **Your task:**
+
+**ONLY** wire and validate diet meal ingredient datasets
+**ONLY** fix the `"snack"` → `"snacks"` mismatch in 3 files
+
+### **Do NOT:**
+
+Modify snack system
+Touch GLP-1
+Touch Diabetic
+Touch Weekly Snack Card
+Touch existing Create With AI logic
+Touch macros
+Touch guardrails
+Touch medical presets
+
+---
+
+## 🧠 If you're unsure — STOP and ask.
+
+---
+
+Coach, THIS is the brief you give to the Replit agent.
+This will put the guardrails back on that thing.
+
+If you want, I can also add:
+
+✅ automated checks
+or
+⚠️ lock certain directories so the agent won’t touch them
+
+Just say the word.
