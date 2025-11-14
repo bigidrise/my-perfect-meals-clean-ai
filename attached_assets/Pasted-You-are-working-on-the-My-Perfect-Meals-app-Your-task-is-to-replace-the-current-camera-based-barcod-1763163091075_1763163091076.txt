@@ -1,3 +1,62 @@
+You are working on the My Perfect Meals app. Your task is to replace the current camera-based barcode scanner with a clean, manual barcode entry modal ONLY.
+
+⚠️ Critical rules:
+- DO NOT change any aesthetics or layout in any other file.
+- DO NOT modify ShoppingListMasterView.tsx except to keep it compiling with the new BarcodeScanner behavior (if needed).
+- All changes must be confined to: client/src/components/BarcodeScanner.tsx
+
+Goal:
+The current BarcodeScanner shows a camera and a fake scanning line that never actually decodes barcodes. We want a simple, honest manual entry modal instead.
+
+New behavior:
+- No camera access.
+- No BarcodeDetector usage.
+- No backend / API lookup.
+- User manually types a barcode string and taps “Add Item”.
+- The component calls the existing onItemScanned callback with:
+    - barcode as the first argument
+    - barcode again as productName (second argument)
+  so the parent can keep working without changes.
+- Then the modal closes.
+
+Parent contract (MUST KEEP):
+ShoppingListMasterView.tsx currently uses:
+
+  <BarcodeScanner
+    onItemScanned={handleBarcodeScanned}
+    onClose={() => setScannerOpen(false)}
+  />
+
+And handleBarcodeScanned looks like:
+
+  const handleBarcodeScanned = useCallback((barcode: string, productName: string) => {
+    addItem({
+      name: productName,
+      quantity: 1,
+      unit: '',
+      notes: `Barcode: ${barcode}`
+    });
+    setScannerOpen(false);
+    toast({ 
+      title: "Item added", 
+      description: `${productName} added to shopping list` 
+    });
+  }, [addItem, toast]);
+
+Do NOT change this signature. The new BarcodeScanner MUST call onItemScanned(barcode, productName) with both arguments.
+
+Task:
+1. Replace the entire contents of client/src/components/BarcodeScanner.tsx with the implementation below.
+2. Make sure there are NO references to:
+   - navigator.mediaDevices
+   - BarcodeDetector
+   - getUserMedia
+   - any video/canvas elements
+3. Ensure the component compiles cleanly and works on both desktop and mobile.
+
+Here is the NEW file content to use verbatim:
+
+----- FILE: client/src/components/BarcodeScanner.tsx -----
 import { useState, KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { X, Barcode as BarcodeIcon } from "lucide-react";
@@ -114,3 +173,19 @@ export default function BarcodeScanner({ onItemScanned, onClose }: BarcodeScanne
     </div>
   );
 }
+----- END FILE -----
+
+After applying the change:
+1. Run the dev server.
+2. Open the Shopping List page.
+3. Click “Barcode Scanner”.
+4. Verify:
+   - A black-glass modal appears (no camera).
+   - Title: “Enter barcode”
+   - Subtitle: “Type any barcode from your product to add to your list.”
+   - Input accepts any text.
+   - “Add Item” button is disabled when empty, enabled when text is present.
+   - On submit, a new shopping list item appears with:
+        - name = the barcode text
+        - notes containing the barcode (handled in parent)
+   - Modal closes and no console errors appear.
