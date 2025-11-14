@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
+import { buildWalmartSearchURL } from "@/lib/walmartLinkBuilder";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BarcodeScanner from "@/components/BarcodeScanner";
 
@@ -134,6 +135,33 @@ export default function ShoppingListMasterView() {
       toast({ title: "Copied to clipboard", description: `${totalCount} items copied` });
     }
   }, [items, toast]);
+
+  const handleShopAtWalmart = useCallback(() => {
+    // Use only unchecked items – user hasn't bought these yet
+    if (uncheckedItems.length === 0) {
+      toast({
+        title: "No items to shop",
+        description: "Add items to your shopping list before sending to Walmart."
+      });
+      return;
+    }
+
+    const url = buildWalmartSearchURL(uncheckedItems);
+
+    try {
+      window.open(url, "_blank", "noopener,noreferrer");
+      toast({
+        title: "Opening Walmart",
+        description: "Your shopping list is being sent to Walmart search."
+      });
+    } catch (err) {
+      console.error("Failed to open Walmart", err);
+      toast({
+        title: "Unable to open Walmart",
+        description: "Please check your popup blocker or try again."
+      });
+    }
+  }, [uncheckedItems, toast]);
 
   const uncheckedItems = useMemo(() => items.filter(i => !i.isChecked), [items]);
   const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
@@ -326,7 +354,10 @@ export default function ShoppingListMasterView() {
                 </div>
                 <div className="text-xs text-white/70 mt-1">Cart prefill via Affiliate Add-to-Cart.</div>
                 <div className="mt-3 flex flex-col gap-2">
-                  <button className="rounded-lg px-3 py-2 border border-white/30 bg-white/10 hover:bg-white/20 text-sm transition-colors">
+                  <button
+                    className="rounded-lg px-3 py-2 border border-white/30 bg-white/10 hover:bg-white/20 text-sm transition-colors"
+                    onClick={handleShopAtWalmart}
+                  >
                     Shop at Walmart
                   </button>
                   {/* Visible later once OPD approved */}
