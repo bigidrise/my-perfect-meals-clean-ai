@@ -10,7 +10,7 @@ export type ToddlersMeal = {
   baseServings: number; // how the ingredient list was authored
   image?: string;
   healthBadges?: string[];
-  ingredients: { item: string; quantity: number; unit: string }[];
+  ingredients: { name: string; quantity: number; unit: string; notes?: string }[];
   instructions?: string[];
   funFact?: string;
 };
@@ -24,10 +24,10 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t1-mini-turkey-meatballs-peas.jpg",
     healthBadges: ["High Protein", "Iron-Rich", "Toddler-Safe"],
     ingredients: [
-      { item: "ground turkey (93%)", quantity: 6, unit: "oz" },
-      { item: "fine breadcrumbs", quantity: 0.25, unit: "cup" },
-      { item: "egg, beaten", quantity: 0.5, unit: "each" },
-      { item: "steamed peas", quantity: 0.5, unit: "cup" }
+      { name: "ground turkey", quantity: 6, unit: "oz", notes: "93% lean" },
+      { name: "breadcrumbs", quantity: 0.25, unit: "cup", notes: "fine" },
+      { name: "egg", quantity: 0.5, unit: "each", notes: "beaten" },
+      { name: "peas", quantity: 0.5, unit: "cup", notes: "steamed" }
     ],
     instructions: [
       "Mix turkey, crumbs, and egg; form 1-inch meatballs.",
@@ -43,8 +43,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t2-sweet-potato-mash-chicken-bites.jpg",
     healthBadges: ["Vitamin A", "Soft Texture"],
     ingredients: [
-      { item: "cooked chicken breast, finely diced", quantity: 3, unit: "oz" },
-      { item: "sweet potato, cooked & mashed", quantity: 1, unit: "cup" }
+      { name: "chicken breast", quantity: 3, unit: "oz", notes: "cooked, finely diced" },
+      { name: "sweet potato", quantity: 1, unit: "cup", notes: "cooked, mashed" }
     ],
     instructions: [
       "Mash sweet potato; fold in chicken.",
@@ -59,8 +59,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t3-scrambled-egg-avocado-fingers.jpg",
     healthBadges: ["Protein", "Healthy Fats"],
     ingredients: [
-      { item: "eggs", quantity: 2, unit: "each" },
-      { item: "avocado, ripe", quantity: 0.5, unit: "each" }
+      { name: "eggs", quantity: 2, unit: "each" },
+      { name: "avocado", quantity: 0.5, unit: "each", notes: "ripe" }
     ],
     instructions: [
       "Soft-scramble eggs on low heat.",
@@ -75,9 +75,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t4-greek-yogurt-berries-oats.jpg",
     healthBadges: ["Calcium", "No Added Sugar"],
     ingredients: [
-      { item: "full-fat Greek yogurt", quantity: 0.75, unit: "cup" },
-      { item: "very soft berries, chopped", quantity: 0.5, unit: "cup" },
-      { item: "quick oats", quantity: 2, unit: "tbsp" }
+      { name: "greek yogurt", quantity: 0.75, unit: "cup", notes: "full-fat" },
+      { name: "berries", quantity: 0.5, unit: "cup", notes: "very soft, chopped" },
+      { name: "quick oats", quantity: 2, unit: "tbsp" }
     ],
   },
   {
@@ -88,9 +88,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t5-banana-oat-mini-pancakes.jpg",
     healthBadges: ["No Added Sugar", "Soft Texture"],
     ingredients: [
-      { item: "ripe banana, mashed", quantity: 1, unit: "each" },
-      { item: "egg", quantity: 1, unit: "each" },
-      { item: "quick oats (optional)", quantity: 2, unit: "tbsp" }
+      { name: "banana", quantity: 1, unit: "each", notes: "ripe, mashed" },
+      { name: "egg", quantity: 1, unit: "each" },
+      { name: "quick oats", quantity: 2, unit: "tbsp", notes: "optional" }
     ],
     instructions: [
       "Mix banana + egg (+ oats).",
@@ -105,8 +105,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t6-salmon-flakes-soft-rice.jpg",
     healthBadges: ["Omega-3", "Protein"],
     ingredients: [
-      { item: "cooked salmon, flaked", quantity: 3, unit: "oz" },
-      { item: "cooked rice, very soft", quantity: 0.75, unit: "cup" }
+      { name: "salmon", quantity: 3, unit: "oz", notes: "cooked, flaked" },
+      { name: "rice", quantity: 0.75, unit: "cup", notes: "cooked, very soft" }
     ],
   },
   {
@@ -117,8 +117,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t7-lentil-pasta-marinara-low-salt.jpg",
     healthBadges: ["Iron", "Fiber", "Hidden Veg Option"],
     ingredients: [
-      { item: "lentil pasta, cooked very soft", quantity: 1, unit: "cup" },
-      { item: "low-salt marinara", quantity: 0.33, unit: "cup" }
+      { name: "lentil pasta", quantity: 1, unit: "cup", notes: "cooked very soft" },
+      { name: "marinara sauce", quantity: 0.33, unit: "cup", notes: "low-salt" }
     ],
   },
   {
@@ -129,8 +129,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t8-cottage-cheese-pear-slices.jpg",
     healthBadges: ["Calcium", "Protein"],
     ingredients: [
-      { item: "full-fat cottage cheese", quantity: 0.5, unit: "cup" },
-      { item: "ripe pear, peeled, thin", quantity: 0.5, unit: "each" }
+      { name: "cottage cheese", quantity: 0.5, unit: "cup", notes: "full-fat" },
+      { name: "pear", quantity: 0.5, unit: "each", notes: "ripe, peeled, thin slices" }
     ],
   },
   {
@@ -141,9 +141,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t9-black-bean-sweet-corn-soft-bowl.jpg",
     healthBadges: ["Fiber", "Plant Protein"],
     ingredients: [
-      { item: "black beans, very soft", quantity: 0.5, unit: "cup" },
-      { item: "sweet corn, soft", quantity: 0.25, unit: "cup" },
-      { item: "soft rice (optional)", quantity: 0.25, unit: "cup" }
+      { name: "black beans", quantity: 0.5, unit: "cup", notes: "very soft" },
+      { name: "sweet corn", quantity: 0.25, unit: "cup", notes: "soft" },
+      { name: "rice", quantity: 0.25, unit: "cup", notes: "soft, optional" }
     ],
   },
   {
@@ -154,8 +154,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t10-butternut-squash-mac-hidden-veg.jpg",
     healthBadges: ["Hidden Veg", "Soft Texture"],
     ingredients: [
-      { item: "small pasta shapes, very soft", quantity: 1, unit: "cup" },
-      { item: "butternut squash purée", quantity: 0.5, unit: "cup" }
+      { name: "pasta", quantity: 1, unit: "cup", notes: "small shapes, very soft" },
+      { name: "butternut squash purée", quantity: 0.5, unit: "cup" }
     ],
   },
   {
@@ -166,9 +166,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t11-chicken-carrot-rice-balls.jpg",
     healthBadges: ["Protein", "Hidden Veg"],
     ingredients: [
-      { item: "cooked chicken, minced", quantity: 3, unit: "oz" },
-      { item: "carrot, very finely grated", quantity: 0.25, unit: "cup" },
-      { item: "sticky rice, warm", quantity: 0.75, unit: "cup" }
+      { name: "chicken", quantity: 3, unit: "oz", notes: "cooked, minced" },
+      { name: "carrot", quantity: 0.25, unit: "cup", notes: "very finely grated" },
+      { name: "rice", quantity: 0.75, unit: "cup", notes: "sticky, warm" }
     ],
     instructions: [
       "Mix warm rice with chicken and carrot.",
@@ -183,8 +183,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t12-hummus-soft-pita-strips.jpg",
     healthBadges: ["Fiber", "Plant Protein"],
     ingredients: [
-      { item: "plain hummus", quantity: 0.33, unit: "cup" },
-      { item: "soft pita, cut thin", quantity: 0.5, unit: "each" }
+      { name: "hummus", quantity: 0.33, unit: "cup", notes: "plain" },
+      { name: "pita", quantity: 0.5, unit: "each", notes: "soft, cut thin" }
     ],
   },
   {
@@ -195,9 +195,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t13-blueberry-chia-pudding.jpg",
     healthBadges: ["No Added Sugar", "Fiber"],
     ingredients: [
-      { item: "full-fat yogurt", quantity: 0.75, unit: "cup" },
-      { item: "blueberries, very soft", quantity: 0.33, unit: "cup" },
-      { item: "chia seeds (soaked 10 min)", quantity: 1, unit: "tsp" }
+      { name: "yogurt", quantity: 0.75, unit: "cup", notes: "full-fat" },
+      { name: "blueberries", quantity: 0.33, unit: "cup", notes: "very soft" },
+      { name: "chia seeds", quantity: 1, unit: "tsp", notes: "soaked 10 min" }
     ],
   },
   {
@@ -208,8 +208,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t14-soft-broccoli-trees-cheddar.jpg",
     healthBadges: ["Calcium", "Veggies"],
     ingredients: [
-      { item: "broccoli florets, steamed very soft", quantity: 0.75, unit: "cup" },
-      { item: "mild cheddar, finely grated", quantity: 2, unit: "tbsp" }
+      { name: "broccoli florets", quantity: 0.75, unit: "cup", notes: "steamed very soft" },
+      { name: "cheddar", quantity: 2, unit: "tbsp", notes: "mild, finely grated" }
     ],
   },
   {
@@ -220,10 +220,10 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t15-turkey-spinach-quesadilla-soft.jpg",
     healthBadges: ["Hidden Veg", "Iron"],
     ingredients: [
-      { item: "soft flour tortilla", quantity: 1, unit: "each" },
-      { item: "cooked turkey, minced", quantity: 2, unit: "oz" },
-      { item: "spinach, finely chopped", quantity: 0.25, unit: "cup" },
-      { item: "mild cheese, shredded", quantity: 2, unit: "tbsp" }
+      { name: "flour tortilla", quantity: 1, unit: "each", notes: "soft" },
+      { name: "turkey", quantity: 2, unit: "oz", notes: "cooked, minced" },
+      { name: "spinach", quantity: 0.25, unit: "cup", notes: "finely chopped" },
+      { name: "cheese", quantity: 2, unit: "tbsp", notes: "mild, shredded" }
     ],
   },
   {
@@ -234,8 +234,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t16-applesauce-oat-energy-bites.jpg",
     healthBadges: ["No Added Sugar", "Soft Texture"],
     ingredients: [
-      { item: "unsweetened applesauce", quantity: 0.5, unit: "cup" },
-      { item: "quick oats", quantity: 0.5, unit: "cup" }
+      { name: "applesauce", quantity: 0.5, unit: "cup", notes: "unsweetened" },
+      { name: "quick oats", quantity: 0.5, unit: "cup" }
     ],
     instructions: [
       "Stir oats into applesauce; rest 5–10 min to soften.",
@@ -250,9 +250,9 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t17-quinoa-peas-tiny-tofu-cubes.jpg",
     healthBadges: ["Plant Protein", "Iron"],
     ingredients: [
-      { item: "cooked quinoa, very soft", quantity: 0.75, unit: "cup" },
-      { item: "silken/soft tofu, tiny cubes", quantity: 0.5, unit: "cup" },
-      { item: "peas, steamed", quantity: 0.25, unit: "cup" }
+      { name: "quinoa", quantity: 0.75, unit: "cup", notes: "cooked, very soft" },
+      { name: "tofu", quantity: 0.5, unit: "cup", notes: "silken/soft, tiny cubes" },
+      { name: "peas", quantity: 0.25, unit: "cup", notes: "steamed" }
     ],
   },
   {
@@ -263,8 +263,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t18-mashed-cauliflower-ground-beef.jpg",
     healthBadges: ["Hidden Veg", "Iron"],
     ingredients: [
-      { item: "cauliflower florets, steamed & mashed", quantity: 1, unit: "cup" },
-      { item: "lean ground beef, cooked & crumbled", quantity: 3, unit: "oz" }
+      { name: "cauliflower florets", quantity: 1, unit: "cup", notes: "steamed, mashed" },
+      { name: "ground beef", quantity: 3, unit: "oz", notes: "lean, cooked, crumbled" }
     ],
   },
   {
@@ -275,8 +275,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t19-pumpkin-yogurt-swirl.jpg",
     healthBadges: ["Vitamin A", "Calcium", "No Added Sugar"],
     ingredients: [
-      { item: "full-fat yogurt", quantity: 0.75, unit: "cup" },
-      { item: "pumpkin purée", quantity: 0.33, unit: "cup" }
+      { name: "yogurt", quantity: 0.75, unit: "cup", notes: "full-fat" },
+      { name: "pumpkin purée", quantity: 0.33, unit: "cup" }
     ],
   },
   {
@@ -287,8 +287,8 @@ export const toddlersMeals: ToddlersMeal[] = [
     image: "/images/toddlers/t20-avocado-chickpea-smash.jpg",
     healthBadges: ["Fiber", "Healthy Fats", "Plant Protein"],
     ingredients: [
-      { item: "ripe avocado", quantity: 0.5, unit: "each" },
-      { item: "chickpeas, very soft", quantity: 0.33, unit: "cup" }
+      { name: "avocado", quantity: 0.5, unit: "each", notes: "ripe" },
+      { name: "chickpeas", quantity: 0.33, unit: "cup", notes: "very soft" }
     ],
   },
 ];
