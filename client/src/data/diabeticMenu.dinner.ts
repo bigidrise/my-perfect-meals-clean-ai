@@ -1,4 +1,3 @@
-
 import type { SmartMeal } from "./smartMenu.types";
 
 export const diabeticMenuDinner: SmartMeal[] = [
