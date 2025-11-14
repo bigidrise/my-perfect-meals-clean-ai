@@ -765,7 +765,7 @@ export default function ProClientDashboard() {
             <Button
               onClick={() => {
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation("/diabetic-menu-builder");
+                setLocation(`/diabetic-menu-builder?clientId=${clientId}`);
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-diabetic-hub"
@@ -775,7 +775,7 @@ export default function ProClientDashboard() {
             <Button
               onClick={() => {
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation("/glp1-menu-builder");
+                setLocation(`/glp1-menu-builder?clientId=${clientId}`);
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-glp1-hub"
