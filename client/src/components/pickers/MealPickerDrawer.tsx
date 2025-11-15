@@ -248,7 +248,7 @@ export function MealPickerDrawer({
                   >
                     <div className="text-white/90 font-medium text-xs sm:text-base">{t.title}</div>
                     <div className="text-white/60 text-xs mt-0.5 sm:mt-1">
-                      {t.nutrition.calories} kcal · P {t.nutrition.protein} · C {t.nutrition.carbs} · F {t.nutrition.fat}
+                      {t.nutrition?.calories || 0} kcal · P {t.nutrition?.protein || 0} · C {t.nutrition?.carbs || 0} · F {t.nutrition?.fat || 0}
                     </div>
                     {t.badges?.length ? (
                       <div className="mt-1 flex flex-wrap gap-1">
