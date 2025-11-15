@@ -40,17 +40,9 @@ export default function MealIngredientPicker({
       return dietConfig;
     }
     // Fallback to generic ingredients
-    if (mealSlot === "snacks") {
-      return snackIngredients;
-    }
-    // Map mealIngredients to display-friendly keys
-    return {
-      "Proteins": mealIngredients.proteins,
-      "Starchy Carbs": mealIngredients.starchyCarbs,
-      "Fibrous Carbs": mealIngredients.fibrousCarbs,
-      "Fats": mealIngredients.fats,
-      "Fruit": mealIngredients.fruit
-    };
+    return mealSlot === "snacks" 
+      ? snackIngredients
+      : mealIngredients;
   })();
   
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
