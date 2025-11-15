@@ -47,8 +47,8 @@ export default function Planner() {
       title: "Anti-Inflammatory (Clinical)",
       description: "Specialized meal planning for autoimmune & inflammatory conditions",
       icon: Activity,
-      route: "/anti-inflammatory-hub",
-      testId: "card-anti-inflammatory-hub",
+      route: "/anti-inflammatory-menu-builder",
+      testId: "card-anti-inflammatory-menu-builder",
     },
     {
       title: "Beach Body / Hard Body",
