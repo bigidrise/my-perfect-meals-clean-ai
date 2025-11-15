@@ -1,0 +1,247 @@
+Perfect. They’ve got a decent skeleton, they’re just missing the “Who is this hub for?” intelligence layer we just designed.
+
+Here’s the **exact updated plan** you can paste back to the agent/architect. I’ve **kept their structure** and **added the info-modal requirements + copy** so there is zero ambiguity.
+
+---
+
+📋 **Anti-Inflammatory Clinical Hub Implementation Plan (UPDATED WITH INFO MODAL)**
+
+### Files to Create (by duplicating Diabetes hub)
+
+1. **Main Hub Page**
+
+* Source:
+  `client/src/pages/physician/DiabeticHub.tsx`
+* New:
+  `client/src/pages/physician/AntiInflammatoryHub.tsx`
+
+2. **Meal Picker Component**
+
+* Source (if exists):
+  `client/src/components/pickers/DiabeticMealPickerDrawer.tsx`
+* New:
+  `client/src/components/pickers/AntiInflammatoryMealPickerDrawer.tsx`
+
+3. **Data & Presets**
+
+* Source:
+  `client/src/data/diabeticPresets.ts`
+* New:
+  `client/src/data/antiInflammatoryPresets.ts`
+
+4. **Guardrail Configuration**
+
+* Add `antiInflammatory` preset to the clinical diet picker config
+* Update types to include the new preset key (see Type Definitions below)
+
+---
+
+### Files to Modify (minimal, surgical changes only)
+
+1. **Router**
+   (`client/src/App.tsx` or central router file)
+
+* Add route:
+  `/clinical/anti-inflammatory` → `AntiInflammatoryHub`
+
+2. **Planner Page**
+   (`client/src/pages/Planner.tsx`)
+
+* Add **ONE** new button/tile:
+  **"Anti-Inflammatory (Clinical)"**
+* Copy **exact styling** from Diabetes / GLP-1 buttons:
+
+  * Same size
+  * Same typography
+  * Same radius
+  * Same spacing / alignment
+  * Same black-glass look
+* Link this button directly to the new route:
+  `/clinical/anti-inflammatory`
+
+3. **Type Definitions**
+
+* Update `ClinicalGuardrailPresetKey` (or equivalent) to include:
+  `antiInflammatory`
+* Ensure all guardrail-related types/enums/unions are extended properly so `antiInflammatory` is fully type-safe.
+
+4. **AntiInflammatoryHub Info Modal (NEW REQUIREMENT)**
+   (`client/src/pages/physician/AntiInflammatoryHub.tsx`)
+
+Add a **question-mark info modal** or **"Who is this hub for?"** link near the top of the hub, using the same modal/tooltip component pattern used elsewhere in the app.
+
+* Placement:
+
+  * Near the hub title and short description
+  * Example: hub title + short subtitle, with a small `?` icon or “Who is this for?” text that opens a modal
+
+* Behavior:
+
+  * Click opens a modal or drawer with **scrollable text** if needed
+  * Non-editable static copy (no user input)
+
+* Content (use this copy verbatim, minor formatting adjustments OK):
+
+---
+
+**Title:**
+**Who is this Anti-Inflammatory Clinical Hub for?**
+
+**Body:**
+
+> This Anti-Inflammatory Clinical Plan is designed to support people who have been advised by their doctor or dietitian to follow an anti-inflammatory or autoimmune-friendly eating pattern.
+>
+> It is commonly used for conditions such as:
+>
+> **• Rheumatoid Arthritis (RA)**
+> **• Raynaud’s Phenomenon**
+> **• Autoimmune disorders** such as:
+>    – Lupus
+>    – Hashimoto’s Thyroiditis
+>    – Psoriatic Arthritis
+>    – Sjögren’s Syndrome
+>    – Mixed Connective Tissue Disease
+>
+> **• Inflammatory joint & muscle conditions** such as:
+>    – Fibromyalgia
+>    – Polymyalgia Rheumatica
+>
+> **• Chronic inflammation–related conditions**, where a clinician has recommended an anti-inflammatory pattern:
+>    – Chronic inflammatory pain
+>    – General autoimmune inflammation
+>
+> **• Circulation & vascular sensitivity**, including:
+>    – Cold-induced circulation issues (such as Raynaud’s)
+>
+> **• Gut-related autoimmune conditions**, when an anti-inflammatory plan is recommended and tolerated:
+>    – Crohn’s disease
+>    – Ulcerative colitis
+>
+> **Important:** This hub is designed to support medically recommended eating patterns, not replace medical treatment. Always confirm with your healthcare provider if you are unsure which plan is right for your condition.
+
+---
+
+* Visual style:
+
+  * Same modal component and styling pattern used elsewhere
+  * Same font sizes and spacing as other clinical info modals
+  * No new visual style invented just for this hub
+
+---
+
+### Guardrail Implementation Details (Anti-Inflammatory Preset)
+
+In `client/src/data/antiInflammatoryPresets.ts` (or equivalent), define a new preset following the **exact same shape** as the diabetic presets.
+
+**Key:** `antiInflammatory`
+
+**High-level rules:**
+
+* **Priority / Emphasized categories:**
+
+  * Omega-3–rich foods (fatty fish, walnuts, chia, flax, etc.)
+  * Colorful fruits and vegetables (especially berries, leafy greens, cruciferous vegetables)
+  * Olive oil, avocado, and other unsaturated fats
+  * Lean proteins (fish, poultry, plant-based proteins)
+  * Warm meals (soups, stews, warm teas) as a UX preference tag, not a strict medical rule
+
+* **Limited categories:**
+
+  * Processed meats
+  * High-sugar desserts and drinks
+  * High-sodium processed foods
+  * Fried foods
+  * High-caffeine items (flag in UI as “may worsen symptoms for some people” rather than hard exclusion)
+
+* **Avoid / minimize categories (if your guardrail model supports explicit exclusions):**
+
+  * Ultra-processed junk foods
+  * Trans-fat items (if they exist as tags)
+  * Any category your existing schema uses to mark “junk” or “discretionary” foods
+
+This must be **data-driven**, matching Diabetes/GLP-1 guardrail structure — no hard-coded `if (preset === 'antiInflammatory')` logic scattered through components.
+
+---
+
+### Implementation Steps (Step-by-Step)
+
+✅ **Audit**
+
+* Locate all Diabetes hub–related files:
+
+  * Main page
+  * Picker
+  * Presets
+  * Guardrail config
+  * Any related planner tile wiring
+* Document the flow in a few bullets so you’re mirroring the *actual* Diabetes architecture, not guessing.
+
+✅ **Duplicate**
+
+* Duplicate the Diabetes files and create Anti-Inflammatory versions as listed above.
+* Do **not** alter Diabetes or GLP-1 code during this step.
+
+✅ **Add Guardrail**
+
+* Implement `antiInflammatory` preset in its own data file.
+* Register it in the clinical diet picker config.
+* Update the type system so it’s fully supported.
+
+✅ **Wire Route**
+
+* Add `/clinical/anti-inflammatory` → `AntiInflammatoryHub` to the router.
+* Follow the exact same pattern as the Diabetes route.
+
+✅ **Add Planner Button**
+
+* Add the **“Anti-Inflammatory (Clinical)”** button to the Planner page.
+* Copy styling and layout from existing clinical tiles to keep everything visually identical.
+* Link it to `/clinical/anti-inflammatory`.
+
+✅ **Add Info Modal**
+
+* Implement the “Who is this hub for?” modal on the Anti-Inflammatory hub page.
+* Use the provided copy and existing modal component pattern.
+* Make sure it’s discoverable but not intrusive (small `?` icon or “Who is this for?” link).
+
+✅ **Content Swap**
+
+* Replace all Diabetes-specific wording in the new hub with Anti-Inflammatory/Rheumatoid/Raynaud’s/Autoimmune-appropriate language.
+* Ensure there are **no** leftover references to A1C, blood sugar, etc.
+
+✅ **Test**
+
+* Verify all three hubs work **independently**:
+
+  * Diabetes hub: unchanged and fully functional.
+  * GLP-1 hub: unchanged and fully functional.
+  * Anti-Inflammatory hub:
+
+    * Opens from Planner button
+    * Uses Anti-Inflammatory guardrails
+    * Shows the info modal and correct copy
+    * Maintains identical aesthetics and layout to the other hubs
+
+---
+
+### Safety Checks (Non-Negotiable)
+
+* Zero modifications to Diabetes / GLP-1 hub logic, styling, or behavior (beyond type additions where necessary).
+* No extra or “mystery” pages created or left behind.
+* Exact match in:
+
+  * Typography
+  * Card layout
+  * Spacing
+  * Black-glass styling
+* The **only** differences allowed:
+
+  * Guardrail preset key
+  * Text/content
+  * Info modal content
+
+---
+
+You can drop that entire block back to them as your “Yes, I approve — implement THIS” version.
+
+If you want next, I can write the **actual TypeScript shape** for `antiInflammatoryPresets.ts` to match your current diabetic preset structure so they literally can’t claim confusion.
