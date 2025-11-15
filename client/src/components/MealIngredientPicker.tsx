@@ -344,7 +344,7 @@ export default function MealIngredientPicker({
           </DialogHeader>
 
         {/* Category Tabs - Horizontally Scrollable */}
-        <div className="flex gap-2 mb-3 flex-shrink-0 overflow-x-auto pb-2">
+        <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
           {Object.keys(ingredientSource).map((category) => {
             const categoryKey = category as keyof typeof ingredientSource;
             const items = ingredientSource[categoryKey];
@@ -352,7 +352,7 @@ export default function MealIngredientPicker({
               <button
                 key={category}
                 onClick={() => handleCategorySelect(category)}
-                className={`px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                   activeCategory === category
                     ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
                     : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'

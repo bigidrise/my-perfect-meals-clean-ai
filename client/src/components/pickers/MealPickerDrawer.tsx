@@ -165,14 +165,14 @@ export function MealPickerDrawer({
 
           {/* Category Buttons */}
           <div className="mt-2">
-            <div className="flex overflow-x-auto space-x-2 pb-2">
+            <div className="flex flex-nowrap overflow-x-auto space-x-2 w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
             {(list === "snacks" ? Object.keys(snackIngredients) : ["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
               (cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={cn(
-                    "rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
+                    "flex-shrink-0 rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
                     activeCategory === cat
                       ? "bg-lime-500 text-black shadow-md"
                       : "bg-white/10 hover:bg-white/20 text-white/80"
