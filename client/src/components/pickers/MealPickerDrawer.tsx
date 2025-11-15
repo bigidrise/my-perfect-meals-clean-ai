@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 import { fruitIngredients } from "@/data/fruitIngredients";
+import { antiInflammatoryIngredients } from "@/data/antiInflammatoryIngredients";
 
 function matchesProfile(meal: Meal, profile: any){
   const allergies: string[] = (profile?.allergies || []).map((s:string)=>s.toLowerCase());
@@ -42,12 +43,13 @@ const CATEGORY_KEY_MAP: Record<string, string> = {
 };
 
 export function MealPickerDrawer({
-  open, list, onClose, onPick
+  open, list, onClose, onPick, useAntiInflammatory = false
 }:{
   open: boolean;
   list: "breakfast"|"lunch"|"dinner"|"snacks"|null;
   onClose: ()=>void;
   onPick: (meal: Meal)=>void;
+  useAntiInflammatory?: boolean;
 }){
   const [loading, setLoading] = React.useState<"cafeteria"|null>(null);
   const [templates, setTemplates] = React.useState<Meal[]>([]);
@@ -119,6 +121,8 @@ export function MealPickerDrawer({
   const ingredientSource: IngredientSource =
     list === "snacks"
       ? snackIngredients
+      : useAntiInflammatory
+      ? antiInflammatoryIngredients
       : {
           Proteins: mealIngredients.proteins,
           "Starchy Carbs": mealIngredients.starchyCarbs,

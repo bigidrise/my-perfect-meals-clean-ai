@@ -204,6 +204,7 @@ export default function AntiInflammatoryMenuBuilder() {
         list={pickerList}
         onClose={() => setPickerOpen(false)}
         onPick={handlePickMeal}
+        useAntiInflammatory={true}
       />
 
       {/* INFO MODAL */}
