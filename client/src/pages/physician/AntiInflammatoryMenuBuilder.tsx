@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { TEMPLATE_SETS } from "@/data/templateSets";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
 import { Meal } from "@/components/MealCard";
-import MealPickerDrawer from "@/components/pickers/MealPickerDrawer";
+import { MealPickerDrawer } from "@/components/pickers/MealPickerDrawer";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 
@@ -32,12 +32,19 @@ export default function AntiInflammatoryMenuBuilder() {
   // -------------------------------
   // WEEKLY MEAL STATE
   // -------------------------------
+  const emptyWeek = {
+    breakfast: null,
+    lunch: null,
+    dinner: null,
+    snacks: null,
+  };
+
   const [weekMeals, setWeekMeals] = useState(() => {
     try {
       const stored = localStorage.getItem("antiInflammatory-weekMeals");
-      return stored ? JSON.parse(stored) : TEMPLATE_SETS.weeklyEmpty;
+      return stored ? JSON.parse(stored) : emptyWeek;
     } catch {
-      return TEMPLATE_SETS.weeklyEmpty;
+      return emptyWeek;
     }
   });
 
@@ -72,7 +79,7 @@ export default function AntiInflammatoryMenuBuilder() {
   // CLEAR MEALS
   // -------------------------------
   const resetWeek = () => {
-    setWeekMeals(TEMPLATE_SETS.weeklyEmpty);
+    setWeekMeals(emptyWeek);
   };
 
   // -------------------------------
@@ -131,7 +138,7 @@ export default function AntiInflammatoryMenuBuilder() {
           </select>
 
           <p className="text-xs text-white/70 leading-snug">
-            {ANTI_INFLAMMATORY_PRESETS[currentPreset].description}
+            {(ANTI_INFLAMMATORY_PRESETS as any)[currentPreset].description}
           </p>
         </div>
 
