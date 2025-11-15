@@ -12,7 +12,6 @@ import ComingSoon from "@/pages/ComingSoon";
 // DELETED: PlanBuilderTurbo, PlanBuilderHub, CompetitionBeachbodyBoard
 import Planner from "@/pages/Planner";
 import WeeklyMealBoard from "@/pages/WeeklyMealBoard";
-import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
 import BeachBodyMealBoard from "@/pages/BeachBodyMealBoard";
 import MacroCounter from "@/pages/MacroCounter";
 // DELETED: AdultBeverageHubPage
@@ -259,7 +258,6 @@ export default function Router() {
         {/* DELETED: PlanBuilderTurbo, ProteinPlannerPage, PlanBuilderHub, CompetitionBeachbodyBoard routes */}
         <Route path="/planner" component={withPageErrorBoundary(Planner, "Planner")} />
         <Route path="/weekly-meal-board" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
-        <Route path="/anti-inflammatory-meal-board" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu")} />
         <Route path="/beach-body-meal-board" component={BeachBodyMealBoard} />
 
         {/* Legacy redirects - redirect Classic Builder to Weekly Meal Board */}
