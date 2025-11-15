@@ -88,7 +88,6 @@ import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
 import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import GLP1Hub from "@/pages/physician/GLP1Hub";
 import GLP1MealBuilder from "@/pages/physician/GLP1MealBuilder";
-import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
 import MedicalDietsHub from "@/pages/physician/MedicalDietsHub";
 
 // Craving pages
@@ -289,13 +288,12 @@ export default function Router() {
         <Route path="/athlete-board" component={AthleteBoardStandalone} />
         <Route path="/pro/clients/:id/athlete-board" component={AthleteBoardProCare} />
 
-        {/* Physician Hub Routes (Diabetic, GLP-1, Anti-Inflammatory, Medical Diets, Clinical Lifestyle) */}
+        {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
         <Route path="/diabetic-hub" component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")} />
         <Route path="/diabetes-support" component={withPageErrorBoundary(DiabetesSupportPage, "Diabetes Support")} />
         <Route path="/diabetic-menu-builder" component={withPageErrorBoundary(DiabeticMenuBuilder, "Diabetic Menu Builder")} />
         <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
         <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
-        <Route path="/anti-inflammatory-menu-builder" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
         <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
 
         {/* Craving Creator Routes */}
