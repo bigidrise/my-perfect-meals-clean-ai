@@ -891,7 +891,7 @@ export default function WeeklyMealBoard() {
           
           {/* ROW 1: Week Navigation + Info Button */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 mx-auto">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={onPrevWeek}
@@ -914,7 +914,7 @@ export default function WeeklyMealBoard() {
             </div>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="ml-2 flex items-center justify-center w-6 h-6 rounded-full bg-lime-700 hover:bg-lime-800 border border-lime-600 text-white text-xs"
+              className="flex items-center justify-center h-4 w-4 rounded-2xl bg-lime-700 hover:bg-lime-800 border border-lime-600 text-white text-xs font-bold"
               aria-label="How to use Weekly Meal Board"
             >
               ?
