@@ -235,6 +235,13 @@ export default function AntiInflammatoryMenuBuilder() {
     }
   }, []);
 
+  // Connect to copilot system: show info modal on first visit if coach mode is enabled
+  useEffect(() => {
+    if (localStorage.getItem("coachMode") === "guided" && !localStorage.getItem("anti-inflammatory-menu-builder-info-seen")) {
+      setShowInfoModal(true);
+    }
+  }, []);
+
   // Handle info modal close - start the guided tour
   const handleInfoModalClose = () => {
     setShowInfoModal(false);
@@ -1542,32 +1549,114 @@ export default function AntiInflammatoryMenuBuilder() {
         );
       })()}
 
-      {/* Info Modal - How to Use */}
+      {/* Info Modal - Anti-Inflammatory Co-Pilot Walkthrough */}
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Anti-Inflammatory Menu Builder</h3>
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-xl w-full shadow-xl max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-white mb-6">Welcome to the Anti-Inflammatory Clinical Hub</h3>
             
             <div className="space-y-4 text-white/90 text-sm">
-              <p>Create your anti-inflammatory day or week by starting with breakfast.</p>
-              <p className="text-white/80">
-                Click the "Create with AI" button on each meal section to build your plan. 
-                The AI will prioritize omega-3 rich foods, antioxidants, and avoid inflammatory triggers.
-                You can create one day and duplicate it across the week, or create each day individually.
-              </p>
-              <p className="text-white/80">
-                If you change your mind about a meal, just hit the <span className="font-semibold text-white">trash can</span> to delete it and create a new one.
-              </p>
+              
+              {/* Step 1 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 1 — Welcome
+                </h4>
+                <p>
+                  Welcome to the Anti-Inflammatory Clinical Hub. This hub is designed for people with conditions like 
+                  rheumatoid arthritis, Raynaud's, lupus, Hashimoto's, and other inflammation-related or autoimmune 
+                  conditions. Let me walk you through how to use it.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 2 — How This Hub Works
+                </h4>
+                <p>
+                  This hub builds anti-inflammatory meals using specific guardrails. Your meals prioritize omega-3 
+                  proteins, colorful vegetables, berries, healthy fats, and warm circulation-friendly foods that help 
+                  reduce inflammation and support autoimmune health.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 3 — What To Avoid
+                </h4>
+                <p>
+                  We keep inflammatory foods out of your plan — especially processed meats, deep-fried foods, 
+                  high-sodium meals, refined sugars, and disruptive oils. Your meals will always follow the 
+                  Anti-Inflammatory preset to help calm inflammation.
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 4 — Meal Generation
+                </h4>
+                <p>
+                  When you generate meals, I'll use these guardrails to create balanced breakfast, lunch, dinner, 
+                  and snack options that are built to support inflammation reduction, immune regulation, and long-term 
+                  well-being.
+                </p>
+              </div>
+
+              {/* Step 5 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 5 — Weekly Meal Planner
+                </h4>
+                <p>
+                  You can build a full week of meals tailored to anti-inflammatory guidelines. Each meal can be 
+                  customized, swapped, or regenerated — and every replacement will still follow all anti-inflammatory 
+                  rules.
+                </p>
+              </div>
+
+              {/* Step 6 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 6 — Meal Replacements
+                </h4>
+                <p>
+                  If something doesn't look good, simply tap "Replace." I'll instantly generate a new anti-inflammatory 
+                  meal with approved ingredients, warm options where helpful, and clean nutrition.
+                </p>
+              </div>
+
+              {/* Step 7 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 7 — Warm Food Priority
+                </h4>
+                <p>
+                  Warm meals can improve circulation for people with Raynaud's. Whenever possible, I'll prioritize warm 
+                  meal options, soups, stews, and heated dishes that promote better blood flow and comfort.
+                </p>
+              </div>
+
+              {/* Step 8 */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">
+                  Step 8 — You're Ready
+                </h4>
+                <p>
+                  That's it! You're ready to start creating anti-inflammatory meals. I'll guide you throughout the 
+                  process so you can confidently build a week of meals that supports your health and lifestyle.
+                </p>
+              </div>
+
             </div>
 
             <button
-              onClick={() => {
-                setShowInfoModal(false);
-                handleInfoModalClose();
-              }}
+              onClick={handleInfoModalClose}
               className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
             >
-              Got it!
+              Got It!
             </button>
           </div>
         </div>
