@@ -32,6 +32,15 @@ function pickFromTemplates(list: "breakfast"|"lunch"|"dinner"|"snacks"): Meal[] 
   return TEMPLATE_SETS[list];
 }
 
+// Category key normalization map
+const CATEGORY_KEY_MAP: Record<string, string> = {
+  "Proteins": "proteins",
+  "Starchy Carbs": "starchyCarbs",
+  "Fibrous Carbs": "fibrousCarbs",
+  "Fats": "fats",
+  "Fruit": "fruit"
+};
+
 export function MealPickerDrawer({
   open, list, onClose, onPick
 }:{
