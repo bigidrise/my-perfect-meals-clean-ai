@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardBody, CardTitle, CardText, Button } from 'reactstrap';
 import { Info, Activity, Users } from 'lucide-react';
+import LifestyleGuidedTour from '@/components/guided/LifestyleGuidedTour';
 
 const Lifestyle = ({ user }) => { // Assuming 'user' is passed as a prop to check role
   const setLocation = (path) => {
@@ -13,6 +14,7 @@ const Lifestyle = ({ user }) => { // Assuming 'user' is passed as a prop to chec
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <LifestyleGuidedTour />
       {/* Main Content */}
       <div className="flex-1 px-4 py-8 pt-20">
         <div className="max-w-2xl mx-auto space-y-4">
