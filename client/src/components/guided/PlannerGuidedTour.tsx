@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 /**
@@ -34,11 +33,31 @@ export default function PlannerGuidedTour() {
 
 function PlannerOverlay({ onClose }: { onClose: () => void }) {
   const hubs = [
-    { name: "Weekly Meal Board", desc: "Everyday balanced meal planning.", route: "/weekly-meal-board" },
-    { name: "Diabetic Hub", desc: "Plans that stabilize blood sugar.", route: "/diabetic-hub" },
-    { name: "GLP-1 Hub", desc: "Small, high-nutrient meals for GLP-1 users.", route: "/glp1-hub" },
-    { name: "Anti-Inflammatory Hub", desc: "Autoimmune support and joint relief meals.", route: "/anti-inflammatory-menu-builder" },
-    { name: "Competition Hub", desc: "Advanced meal building for athletes.", route: "/athlete-board" },
+    {
+      name: "My Weekly Meal Builder",
+      desc: "Everyday balanced meal planning",
+      route: "/weekly-meal-board",
+    },
+    {
+      name: "Diabetic Hub",
+      desc: "Plans designed off of your blood sugar levels",
+      route: "/diabetic-hub",
+    },
+    {
+      name: "GLP-1 Hub",
+      desc: "Small, high-nutrient meals for GLP-1 users",
+      route: "/glp1-hub",
+    },
+    {
+      name: "Anti-Inflammatory Builder",
+      desc: "Autoimmune support and joint relief meals",
+      route: "/anti-inflammatory-menu-builder",
+    },
+    {
+      name: "Beach Body/ Hard Body Builder",
+      desc: "Advanced meal building for athletes",
+      route: "/athlete-board",
+    },
   ];
 
   return (
@@ -46,7 +65,8 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
       <div className="bg-black/50 border border-white/15 text-white rounded-3xl shadow-xl p-6 max-w-lg w-[92vw] relative">
         <h2 className="text-2xl font-bold mb-2">Choose Your Planner</h2>
         <p className="text-white/80 text-sm mb-6">
-          This is your meal-planning center. Pick the type of plan that fits you.
+          This is your meal-planning center. Pick the type of plan that fits
+          you.
         </p>
 
         <div className="space-y-4">
@@ -57,7 +77,7 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
                 onClose();
                 // Simulate click of the real hub button
                 const el = document.querySelector(
-                  `[data-testid="card-${h.name.toLowerCase().replace(/\s+/g, "-")}"]`
+                  `[data-testid="card-${h.name.toLowerCase().replace(/\s+/g, "-")}"]`,
                 ) as HTMLElement | null;
                 el?.click();
               }}

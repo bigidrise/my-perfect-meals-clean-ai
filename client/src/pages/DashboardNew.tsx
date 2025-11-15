@@ -75,7 +75,7 @@ export default function DashboardNew() {
   const features: FeatureCard[] = [
     {
       title: "Macro Calculator",
-      description: "Track nutrition & biometrics",
+      description: "Precision macro targeting",
       icon: Calculator,
       route: "/macro-counter",
       size: "large",
@@ -210,10 +210,10 @@ export default function DashboardNew() {
                 </div>
                 <div className="flex-1">
                   <CardTitle className="text-white text-lg">
-                    Shopping List
+                    Master Shopping List
                   </CardTitle>
                   <CardDescription className="text-white/70 text-sm mt-1">
-                    View your master grocery list
+                    Smart grocery list manager
                   </CardDescription>
                 </div>
               </div>
