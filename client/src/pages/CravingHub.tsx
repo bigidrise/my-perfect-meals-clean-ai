@@ -22,7 +22,7 @@ export default function CravingHub() {
     >
       <Button
         variant="ghost"
-        onClick={() => setLocation("/emotion-ai")}
+        onClick={() => setLocation("/lifestyle")}
         className="fixed top-4 left-4 z-50 flex items-center gap-2 text-white bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 transition-all duration-200 rounded-2xl"
         data-testid="button-back-dashboard"
       >

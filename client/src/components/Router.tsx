@@ -15,7 +15,7 @@ import WeeklyMealBoard from "@/pages/WeeklyMealBoard";
 import BeachBodyMealBoard from "@/pages/BeachBodyMealBoard";
 import MacroCounter from "@/pages/MacroCounter";
 // DELETED: AdultBeverageHubPage
-import EmotionAIHub from "@/pages/EmotionAIHub";
+import LifestyleLandingPage from "@/pages/LifestyleLandingPage"; // Renamed from EmotionAIHub
 import HealthyKidsMeals from "@/pages/HealthyKidsMeals";
 import GLP1MealsTracking from "@/pages/GLP1MealsTracking";
 import KidsMealsHub from "@/pages/kids-meals-hub";
@@ -196,7 +196,7 @@ export default function Router() {
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
 
         {/* DELETED: MealPlanning, LowGlycemicCarbPage, AiMealCreatorPage, MealPlanningHubRevised routes */}
-        <Route path="/emotion-ai" component={EmotionAIHub} />
+        <Route path="/lifestyle" component={LifestyleLandingPage} />
         <Route path="/healthy-kids-meals" component={HealthyKidsMeals} />
         <Route path="/kids-meals" component={KidsMealsHub} />
         <Route path="/toddler-meals" component={ToddlersMealsHub} />
@@ -317,8 +317,8 @@ export default function Router() {
         <Route path="/wine-pairing" component={WinePairing} />
 
         {/* Lifestyle Hub (formerly Emotion AI) */}
-        <Route path="/lifestyle" component={EmotionAIHub} />
-        <Route path="/emotion-ai" component={EmotionAIHub} />
+        <Route path="/lifestyle" component={LifestyleLandingPage} />
+        <Route path="/emotion-ai" component={LifestyleLandingPage} />
 
         {/* Meal Finder Route */}
         <Route path="/meal-finder" component={MealFinder} />

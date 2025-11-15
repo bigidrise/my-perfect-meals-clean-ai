@@ -485,7 +485,7 @@ const FridgeRescuePage = () => {
         <button
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "instant" });
-            setLocation("/emotion-ai");
+            setLocation("/lifestyle");
           }}
           className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/20 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
         >

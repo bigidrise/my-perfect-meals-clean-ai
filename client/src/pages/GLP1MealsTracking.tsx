@@ -25,11 +25,11 @@ export default function GLP1MealsTracking() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <Button
-              onClick={() => setLocation("/emotion-ai")}
+              onClick={() => setLocation("/lifestyle")}
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/10"
-              data-testid="button-back-to-emotion-ai"
+              data-testid="button-back-to-lifestyle"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
