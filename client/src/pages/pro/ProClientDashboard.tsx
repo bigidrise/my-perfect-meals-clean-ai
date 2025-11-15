@@ -186,9 +186,9 @@ export default function ProClientDashboard() {
               <Input
                 inputMode="numeric"
                 className="bg-black/30 border-white/30 text-white"
-                value={t.kcal}
+                value={t.kcal || ""}
                 onChange={(e) =>
-                  setT({ ...t, kcal: Number(e.target.value || 0) })
+                  setT({ ...t, kcal: e.target.value === "" ? 0 : Number(e.target.value) })
                 }
                 placeholder="kcal"
               />
@@ -200,9 +200,9 @@ export default function ProClientDashboard() {
               <Input
                 inputMode="numeric"
                 className="bg-black/30 border-white/30 text-white"
-                value={t.protein}
+                value={t.protein || ""}
                 onChange={(e) =>
-                  setT({ ...t, protein: Number(e.target.value || 0) })
+                  setT({ ...t, protein: e.target.value === "" ? 0 : Number(e.target.value) })
                 }
                 placeholder="protein"
               />
@@ -214,9 +214,9 @@ export default function ProClientDashboard() {
               <Input
                 inputMode="numeric"
                 className="bg-black/30 border-white/30 text-white"
-                value={t.carbs}
+                value={t.carbs || ""}
                 onChange={(e) =>
-                  setT({ ...t, carbs: Number(e.target.value || 0) })
+                  setT({ ...t, carbs: e.target.value === "" ? 0 : Number(e.target.value) })
                 }
                 placeholder="carbs"
               />
@@ -228,9 +228,9 @@ export default function ProClientDashboard() {
               <Input
                 inputMode="numeric"
                 className="bg-black/30 border-white/30 text-white"
-                value={t.fat}
+                value={t.fat || ""}
                 onChange={(e) =>
-                  setT({ ...t, fat: Number(e.target.value || 0) })
+                  setT({ ...t, fat: e.target.value === "" ? 0 : Number(e.target.value) })
                 }
                 placeholder="fat"
               />
