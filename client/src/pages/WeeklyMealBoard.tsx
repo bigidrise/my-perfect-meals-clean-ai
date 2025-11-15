@@ -936,7 +936,7 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="outline"
                   onClick={() => setShowDuplicateDayModal(true)}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs sm:text-sm px-3 py-1.5 rounded-xl"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
                 >
                   Duplicate...
                 </Button>
@@ -947,7 +947,7 @@ export default function WeeklyMealBoard() {
                   size="sm"
                   variant="outline"
                   onClick={() => setShowDuplicateWeekModal(true)}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs sm:text-sm px-3 py-1.5 rounded-xl"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
                 >
                   Copy Week...
                 </Button>
@@ -997,7 +997,7 @@ export default function WeeklyMealBoard() {
                   }
                 }
               }}
-              className="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm px-3 py-2 rounded-xl"
+              className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-xl"
             >
               Delete All
             </Button>
@@ -1010,7 +1010,7 @@ export default function WeeklyMealBoard() {
                 justSaved
                   ? "bg-emerald-500 hover:bg-emerald-600 text-white"
                   : "bg-emerald-600/80 hover:bg-emerald-600 text-white"
-              } text-xs sm:text-sm px-4 py-2 rounded-xl transition-all duration-200`}
+              } text-xs px-3 py-1 rounded-xl transition-all duration-200`}
             >
               {justSaved ? (
                 <><Check className="h-3 w-3 mr-1" />Saved ✓</>
