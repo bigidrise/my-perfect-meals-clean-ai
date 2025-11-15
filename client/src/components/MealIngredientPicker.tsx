@@ -476,7 +476,12 @@ export default function MealIngredientPicker({
               {activeCategory && (() => {
                 const categoryItems = ingredientSource[activeCategory as keyof typeof ingredientSource];
                 if (!Array.isArray(categoryItems)) return null;
-                return categoryItems.map((ingredient: string | any) => {
+                const sortedItems = categoryItems.slice().sort((a, b) => {
+                  const nameA = typeof a === "string" ? a : a.name;
+                  const nameB = typeof b === "string" ? b : b.name;
+                  return nameA.localeCompare(nameB);
+                });
+                return sortedItems.map((ingredient: string | any) => {
                   const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
                   const isSelected = selectedIngredients.includes(ingredientName);
                   return (

@@ -113,7 +113,11 @@ export function MealPickerDrawer({
   console.log("🔍 Fruit ingredients count:", ingredientSource["Fruit"]?.length);
 
   const currentIngredients = activeCategory
-    ? ingredientSource[activeCategory] ?? []
+    ? (ingredientSource[activeCategory] ?? []).slice().sort((a, b) => {
+        const nameA = typeof a === "string" ? a : a.name;
+        const nameB = typeof b === "string" ? b : b.name;
+        return nameA.localeCompare(nameB);
+      })
     : [];
 
 
