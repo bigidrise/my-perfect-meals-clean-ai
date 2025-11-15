@@ -157,6 +157,12 @@ export default function BeachBodyMealBoard() {
     [saveToHook, toast],
   );
 
+  // Manual save handler for Save Plan button
+  const handleSave = React.useCallback(async () => {
+    if (!board) return;
+    await saveBoard(board);
+  }, [board, saveBoard]);
+
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [pickerList, setPickerList] = React.useState<"breakfast" | "lunch" | "dinner" | "snacks" | null>(null);
   const [manualModalOpen, setManualModalOpen] = React.useState(false);
@@ -831,97 +837,95 @@ export default function BeachBodyMealBoard() {
         Back
       </Button>
 
-      <div className="bg-black/40 backdrop-blur-xl border-b border-white/20 shadow-2xl">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-center">
-            <div className="bg-black/60 backdrop-blur-none border border-white/20 rounded-2xl px-6 py-3 flex items-center gap-3">
-              <h1 className="text-xl font-bold text-white">
-                Beach Body / Hard Body Meal Board
-              </h1>
+      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4 mt-6">
+        <div className="px-4 py-4 flex flex-col gap-3">
+          
+          {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
+          <div className="relative flex justify-center">
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => setShowInfoModal(true)}
-                className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
-                aria-label="How to use Beach Body Meal Board"
+                type="button"
+                onClick={onPrevWeek}
+                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors"
+                aria-label="Previous week"
+                data-testid="button-prev-week"
               >
-                ?
+                ‹
               </button>
 
-              <div className="flex gap-2">
-                {saving && (
-                  <span className="text-sm text-white/60">Saving...</span>
-                )}
-                {justSaved && (
-                  <span className="text-sm text-emerald-400 flex items-center gap-1">
-                    <Check className="h-4 w-4" /> Saved
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-center justify-between">
-            <Button
-              size="sm"
-              onClick={onPrevWeek}
-              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
-              data-testid="button-prev-week"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Prev Week
-            </Button>
-
-            <div className="text-center">
-              <div className="text-lg font-semibold text-white">
+              <div className="text-sm font-medium text-white/90">
                 {formatWeekLabel(weekStartISO)}
               </div>
-              <div className="text-xs text-white">
-                Week of {weekStartISO}
-              </div>
+
+              <button
+                type="button"
+                onClick={onNextWeek}
+                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors"
+                aria-label="Next week"
+                data-testid="button-next-week"
+              >
+                ›
+              </button>
             </div>
 
-            <Button
-              size="sm"
-              onClick={onNextWeek}
-              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
-              data-testid="button-next-week"
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
+              aria-label="How to use Beach Body Meal Board"
             >
-              Next Week
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+              ?
+            </button>
           </div>
 
-          {FEATURES.dayPlanning === "alpha" && (
-            <>
-              <div className="mt-4 flex justify-center">
-                <DayWeekToggle
-                  mode={planningMode}
-                  onModeChange={setPlanningMode}
-                />
-              </div>
+          {/* ROW 2: Title (centered) */}
+          <h1 className="text-center text-2xl font-semibold text-white">
+            Beach Body / Hard Body Meal Board
+          </h1>
 
+          {/* ROW 3: Day/Week Toggle + Duplicate */}
+          {FEATURES.dayPlanning === "alpha" && (
+            <div className="flex items-center justify-between gap-3">
+              <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
+              
               {planningMode === "day" && (
-                <div className="mt-4">
-                  <DayChips
-                    weekDates={weekDatesList}
-                    activeDayISO={activeDayISO}
-                    onDayChange={setActiveDayISO}
-                  />
-                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowDuplicateDayModal(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
+                  data-testid="button-duplicate-day"
+                >
+                  Duplicate...
+                </Button>
               )}
-            </>
+
+              {planningMode === "week" && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowDuplicateWeekModal(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
+                  data-testid="button-duplicate-week"
+                >
+                  Copy Week...
+                </Button>
+              )}
+            </div>
           )}
 
-          <div className="mt-4 flex flex-wrap gap-2 justify-center">
-            <Button
-              size="sm"
-              onClick={() => setShowOverview(true)}
-              className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
-              data-testid="button-overview"
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Week Overview
-            </Button>
+          {/* ROW 4: Days of Week */}
+          {FEATURES.dayPlanning === "alpha" && planningMode === "day" && weekDatesList.length > 0 && (
+            <div className="flex justify-center">
+              <DayChips 
+                weekDates={weekDatesList}
+                activeDayISO={activeDayISO}
+                onDayChange={setActiveDayISO}
+              />
+            </div>
+          )}
 
+          {/* ROW 5: Bottom Actions (Delete All + Save) */}
+          <div className="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
             <Button
               size="sm"
               variant="destructive"
@@ -952,36 +956,32 @@ export default function BeachBodyMealBoard() {
                   }
                 }
               }}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-xl"
               data-testid="button-delete-all"
             >
               Delete All
             </Button>
 
-            {FEATURES.dayPlanning === "alpha" && planningMode === "day" && (
-              <Button
-                size="sm"
-                onClick={() => setShowDuplicateDayModal(true)}
-                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
-                data-testid="button-duplicate-day"
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Duplicate Day
-              </Button>
-            )}
-
-            {FEATURES.dayPlanning === "alpha" && (
-              <Button
-                size="sm"
-                onClick={() => setShowDuplicateWeekModal(true)}
-                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-white/20 text-white hover:bg-black/80"
-                data-testid="button-duplicate-week"
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Duplicate Week
-              </Button>
-            )}
+            <Button
+              onClick={handleSave}
+              disabled={saving || justSaved}
+              size="sm"
+              className={`${
+                justSaved
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                  : "bg-emerald-600/80 hover:bg-emerald-600 text-white"
+              } text-xs px-3 py-1 rounded-xl transition-all duration-200`}
+            >
+              {justSaved ? (
+                <><Check className="h-3 w-3 mr-1" />Saved ✓</>
+              ) : saving ? (
+                "Saving…"
+              ) : (
+                "Save Plan"
+              )}
+            </Button>
           </div>
+
         </div>
       </div>
 

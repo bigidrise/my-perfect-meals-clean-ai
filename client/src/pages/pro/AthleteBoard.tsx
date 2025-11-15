@@ -202,6 +202,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     [saveToHook, toast],
   );
 
+  // Manual save handler for Save Plan button
+  const handleSave = React.useCallback(async () => {
+    if (!board) return;
+    await saveBoard(board);
+  }, [board, saveBoard]);
+
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [pickerList, setPickerList] = React.useState<
     "breakfast" | "lunch" | "dinner" | "snacks" | null
