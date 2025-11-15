@@ -6,7 +6,6 @@ import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { TEMPLATE_SETS } from "@/data/templateSets";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
-import MenuBuilderGuidedTour from "@/components/guided/MenuBuilderGuidedTour";
 import { Meal } from "@/components/MealCard";
 import MealPickerDrawer from "@/components/pickers/MealPickerDrawer";
 import { cn } from "@/lib/utils";
@@ -88,8 +87,6 @@ export default function AntiInflammatoryMenuBuilder() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-24 flex flex-col"
     >
-      <MenuBuilderGuidedTour />
-
       {/* HEADER */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-xl border-b border-white/10">
         <div className="px-4 py-3 flex items-center gap-3">
