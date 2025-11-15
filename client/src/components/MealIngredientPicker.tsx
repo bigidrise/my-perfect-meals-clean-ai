@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
-import { ALL_SNACK_INGREDIENTS } from "@/data/snackIngredients";
+import { snackIngredients } from "@/data/snackIngredients";
 
 interface MealIngredientPickerProps {
   open: boolean;
@@ -31,18 +31,22 @@ export default function MealIngredientPicker({
     if (dietConfig) {
       // Use diet-specific ingredients
       if (mealSlot === "snacks") {
-        return { snacks: Object.values(dietConfig.snacks).flat() };
+        // Normalize snacks: if array, convert to category object
+        if (Array.isArray(dietConfig.snacks)) {
+          return { "Snacks": dietConfig.snacks };
+        }
+        return dietConfig.snacks || snackIngredients;
       }
       return dietConfig;
     }
     // Fallback to generic ingredients
     return mealSlot === "snacks" 
-      ? { snacks: ALL_SNACK_INGREDIENTS }
+      ? snackIngredients
       : mealIngredients;
   })();
   
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [activeCategory, setActiveCategory] = useState<'proteins' | 'starchyCarbs' | 'fibrousCarbs' | 'fats' | 'fruit'>('proteins');
+  const [activeCategory, setActiveCategory] = useState<string>('');
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
 
@@ -112,6 +116,16 @@ export default function MealIngredientPicker({
       setShowInfoModal(true);
     }
   }, [open, hasSeenInfo]);
+
+  // Auto-select first category when modal opens
+  useEffect(() => {
+    if (open && !activeCategory) {
+      const firstCategory = Object.keys(ingredientSource)[0];
+      if (firstCategory) {
+        setActiveCategory(firstCategory);
+      }
+    }
+  }, [open, ingredientSource, activeCategory]);
 
   // 🎯 Persist macro targets to localStorage whenever they change
   const saveMacroTargetsCache = (enabled: boolean, protein: number | '', carbs: number | '', fat: number | '') => {
@@ -242,7 +256,7 @@ export default function MealIngredientPicker({
 
       setSelectedIngredients([]);
       setCustomIngredients('');
-      setActiveCategory('proteins');
+      setActiveCategory('');
       setMacroTargetingEnabled(false);
       setTargetProtein('');
       setTargetCarbs('');
@@ -329,8 +343,8 @@ export default function MealIngredientPicker({
             </DialogTitle>
           </DialogHeader>
 
-        {/* Category Tabs - Fixed */}
-        <div className="flex gap-1 mb-3 flex-shrink-0 overflow-x-auto">
+        {/* Category Tabs - Horizontally Scrollable */}
+        <div className="flex gap-2 mb-3 flex-shrink-0 overflow-x-auto pb-2">
           {Object.keys(ingredientSource).map((category) => {
             const categoryKey = category as keyof typeof ingredientSource;
             const items = ingredientSource[categoryKey];
@@ -338,9 +352,9 @@ export default function MealIngredientPicker({
               <button
                 key={category}
                 onClick={() => handleCategorySelect(category)}
-                className={`flex-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                   activeCategory === category
-                    ? 'bg-purple-600/40 border-2 border-purple-400 text-white'
+                    ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
                     : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
                 } ${!hasSeenInfo ? 'flash-border' : ''}`}
               >
