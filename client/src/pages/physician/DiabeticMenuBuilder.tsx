@@ -911,143 +911,145 @@ export default function DiabeticMenuBuilder() {
       })()}
 
       <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <div>
-            {/* Week Navigation Header */}
-            <div className="flex items-center gap-3 mb-2">
+        <div className="px-4 py-4 flex flex-col gap-3">
+          
+          {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
+          <div className="relative flex justify-center">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={onPrevWeek}
-                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
+                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors"
                 aria-label="Previous week"
               >
                 ‹
               </button>
 
               <div className="text-sm font-medium text-white/90">
-                {weekStartISO ? `Week: ${formatWeekLabel(weekStartISO)}` : 'Loading…'}
+                {weekStartISO ? formatWeekLabel(weekStartISO) : 'Loading…'}
               </div>
 
               <button
                 type="button"
                 onClick={onNextWeek}
-                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
+                className="rounded-md px-2 py-1 border border-white/20 text-white/80 hover:bg-white/10 transition-colors"
                 aria-label="Next week"
               >
                 ›
               </button>
-
-              {/* Week Overview feature disabled */}
             </div>
 
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <h1 className="text-white/95 text-lg sm:text-xl font-semibold">Diabetic Meal Board</h1>
-                <button
-                  onClick={() => setShowInfoModal(true)}
-                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold"
-                  aria-label="How to use"
-                >
-                  ?
-                </button>
-              </div>
-              
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => {
-                  if (confirm("Delete all meals from this board? This action cannot be undone.")) {
-                    if (board) {
-                      const clearedBoard = {
-                        ...board,
-                        lists: {
-                          breakfast: [],
-                          lunch: [],
-                          dinner: [],
-                          snacks: []
-                        },
-                        days: board.days ? Object.fromEntries(
-                          Object.keys(board.days).map(dateISO => [
-                            dateISO,
-                            { breakfast: [], lunch: [], dinner: [], snacks: [] }
-                          ])
-                        ) : undefined
-                      };
-                      saveBoard(clearedBoard);
-                      clearAIMealsCache();
-                      toast({
-                        title: "All Meals Deleted",
-                        description: "Successfully cleared all meals from the board",
-                      });
-                    }
-                  }
-                }}
-                className="bg-red-600 hover:bg-red-700 text-white"
-              >
-                Delete All
-              </Button>
-
-              <div className="flex flex-col items-end gap-2">
-                {FEATURES.dayPlanning === 'alpha' && (
-                  <div className="flex items-center gap-3">
-                    <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
-
-                    {planningMode === 'day' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setShowDuplicateDayModal(true)}
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs overflow-hidden text-ellipsis whitespace-nowrap"
-                      >
-                        Duplicate...
-                      </Button>
-                    )}
-
-                    {planningMode === 'week' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setShowDuplicateWeekModal(true)}
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs overflow-hidden text-ellipsis whitespace-nowrap"
-                      >
-                        Copy Week...
-                      </Button>
-                    )}
-                  </div>
-                )}
-
-                {/* Save button moved below duplicate button */}
-                <Button
-                  onClick={handleSave}
-                  disabled={saving || justSaved}
-                  size="sm"
-                  className={`${
-                    justSaved
-                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                      : "bg-emerald-600/80 hover:bg-emerald-600 text-white"
-                  } px-3 py-1.5 text-xs rounded-xl transition-all duration-200 overflow-hidden text-ellipsis whitespace-nowrap`}
-                >
-                  {justSaved ? (
-                    <><Check className="h-3 w-3 mr-1" />Saved ✓</>
-                  ) : saving ? (
-                    "Saving…"
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && weekDatesList.length > 0 && (
-              <div className="mb-3 mt-3">
-                <DayChips 
-                  weekDates={weekDatesList}
-                  activeDayISO={activeDayISO}
-                  onDayChange={setActiveDayISO}
-                />
-              </div>
-            )}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
+              aria-label="How to use"
+            >
+              ?
+            </button>
           </div>
+
+          {/* ROW 2: Title (centered) */}
+          <h1 className="text-center text-2xl font-semibold text-white">
+            Diabetic Meal Board
+          </h1>
+
+          {/* ROW 3: Day/Week Toggle + Duplicate */}
+          {FEATURES.dayPlanning === 'alpha' && (
+            <div className="flex items-center justify-between gap-3">
+              <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
+              
+              {planningMode === 'day' && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowDuplicateDayModal(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
+                >
+                  Duplicate...
+                </Button>
+              )}
+
+              {planningMode === 'week' && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowDuplicateWeekModal(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
+                >
+                  Copy Week...
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* ROW 4: Days of Week */}
+          {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && weekDatesList.length > 0 && (
+            <div className="flex justify-center">
+              <DayChips 
+                weekDates={weekDatesList}
+                activeDayISO={activeDayISO}
+                onDayChange={setActiveDayISO}
+              />
+            </div>
+          )}
+
+          {/* ROW 5: Bottom Actions (Delete All + Save) */}
+          <div className="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => {
+                if (confirm("Delete all meals from this board? This action cannot be undone.")) {
+                  if (board) {
+                    const clearedBoard = {
+                      ...board,
+                      lists: {
+                        breakfast: [],
+                        lunch: [],
+                        dinner: [],
+                        snacks: []
+                      },
+                      days: board.days ? Object.fromEntries(
+                        Object.keys(board.days).map(dateISO => [
+                          dateISO,
+                          { breakfast: [], lunch: [], dinner: [], snacks: [] }
+                        ])
+                      ) : undefined
+                    };
+                    saveBoard(clearedBoard);
+                    clearAIMealsCache();
+                    toast({
+                      title: "All Meals Deleted",
+                      description: "Successfully cleared all meals from the board",
+                    });
+                  }
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-xl"
+            >
+              Delete All
+            </Button>
+
+            <Button
+              onClick={handleSave}
+              disabled={saving || justSaved}
+              size="sm"
+              className={`${
+                justSaved
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                  : "bg-emerald-600/80 hover:bg-emerald-600 text-white"
+              } text-xs px-3 py-1 rounded-xl transition-all duration-200`}
+            >
+              {justSaved ? (
+                <><Check className="h-3 w-3 mr-1" />Saved ✓</>
+              ) : saving ? (
+                "Saving…"
+              ) : (
+                "Save Plan"
+              )}
+            </Button>
+          </div>
+
         </div>
       </div>
 
