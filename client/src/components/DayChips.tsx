@@ -21,7 +21,7 @@ export function DayChips({ weekDates, activeDayISO, onDayChange }: DayChipsProps
             variant="ghost"
             size="sm"
             onClick={() => onDayChange(dateISO)}
-            className={`flex-shrink-0 flex flex-col items-center px-3 py-1.5 rounded-lg transition-all min-w-[80px] sm:min-w-[90px] ${
+            className={`flex-shrink-0 flex flex-col items-center px-4 py-1.5 rounded-lg transition-all min-w-[95px] sm:min-w-[105px] ${
               isActive
                 ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white shadow-lg border border-blue-400/50'
                 : 'bg-black/40 text-white/70 hover:text-white hover:bg-black/60 border border-white/10'
