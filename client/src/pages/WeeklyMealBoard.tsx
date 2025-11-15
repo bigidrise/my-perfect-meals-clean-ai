@@ -921,7 +921,7 @@ export default function WeeklyMealBoard() {
                 <h1 className="text-white/95 text-lg sm:text-xl font-semibold">Weekly Meal Board</h1>
                 <button
                   onClick={() => setShowInfoModal(true)}
-                  className="w-8 h-8 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl flex items-center justify-center text-sm font-bold flash-border"
+                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold"
                   aria-label="How to use Weekly Meal Board"
                 >
                   ?
