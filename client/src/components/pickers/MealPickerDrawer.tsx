@@ -45,7 +45,7 @@ export function MealPickerDrawer({
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const profile = useOnboardingProfile();
   const [activeCategory, setActiveCategory] = useState<
-    "Proteins" | "Starchy Carbs" | "Fibrous Carbs" | "Fats" | "Fruit" | null
+    "Proteins" | "Starchy Carbs" | "Fibrous Carbs" | "Fats" | "Fruit" | string | null
   >(null);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 
@@ -84,6 +84,16 @@ export function MealPickerDrawer({
     const filtered = raw.filter(m => matchesProfile(m, profile));
     setTemplates(filtered.length > 0 ? filtered : raw);
   }, [list, profile]);
+
+  // Auto-expand first category when snacks drawer opens
+  React.useEffect(() => {
+    if (open && list === "snacks") {
+      const firstSnackCategory = Object.keys(snackIngredients)[0];
+      setActiveCategory(firstSnackCategory as any);
+    } else if (open && list !== "snacks") {
+      setActiveCategory(null);
+    }
+  }, [open, list]);
 
   if (!open || !list) return null;
 
@@ -155,8 +165,8 @@ export function MealPickerDrawer({
 
           {/* Category Buttons */}
           <div className="mt-2">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-            {(["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
+            <div className="flex overflow-x-auto space-x-2 pb-2">
+            {(list === "snacks" ? Object.keys(snackIngredients) : ["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
               (cat) => (
                 <button
                   key={cat}
