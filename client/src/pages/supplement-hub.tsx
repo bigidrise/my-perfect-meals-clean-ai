@@ -205,7 +205,7 @@ export default function SupplementHub() {
                 href={AFFILIATE.storeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-white text-slate-800 hover:bg-white/90 transition-all duration-200"
+                className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 transition-all duration-200"
               >
                 Shop Now
               </a>
