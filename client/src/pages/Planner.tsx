@@ -44,10 +44,10 @@ export default function Planner() {
       testId: "card-glp1-hub",
     },
     {
-      title: "Anti-Inflammatory (Clinical)",
-      description: "Autoimmune & inflammation-friendly meal planning with medical guardrails",
-      icon: ListChecks,
-      route: "/anti-inflammatory-menu-board",
+      title: "Anti-Inflammatory Hub",
+      description: "Autoimmune support, joint relief, inflammation guardrails with AI meal creation",
+      icon: Pill,
+      route: "/anti-inflammatory-meal-board",
       testId: "card-anti-inflammatory",
     },
     {
