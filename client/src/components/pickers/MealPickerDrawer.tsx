@@ -9,6 +9,7 @@ import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 import { fruitIngredients } from "@/data/fruitIngredients";
 import { antiInflammatoryIngredients } from "@/data/antiInflammatoryIngredients";
+import { antiInflammatorySnacks } from "@/data/antiInflammatory.snacks";
 
 function matchesProfile(meal: Meal, profile: any){
   const allergies: string[] = (profile?.allergies || []).map((s:string)=>s.toLowerCase());
@@ -120,7 +121,7 @@ export function MealPickerDrawer({
 
   const ingredientSource: IngredientSource =
     list === "snacks"
-      ? snackIngredients
+      ? (useAntiInflammatory ? antiInflammatorySnacks : snackIngredients)
       : useAntiInflammatory
       ? antiInflammatoryIngredients
       : {
@@ -179,7 +180,7 @@ export function MealPickerDrawer({
           {/* Category Buttons */}
           <div className="mt-2">
             <div className="flex flex-nowrap overflow-x-auto space-x-2 w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
-            {(list === "snacks" ? Object.keys(snackIngredients) : ["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
+            {(list === "snacks" ? Object.keys(useAntiInflammatory ? antiInflammatorySnacks : snackIngredients) : ["Proteins", "Starchy Carbs", "Fibrous Carbs", "Fats", "Fruit"] as const).map(
               (cat) => (
                 <button
                   key={cat}
