@@ -37,6 +37,7 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
     { name: "Weekly Meal Board", desc: "Everyday balanced meal planning.", route: "/weekly-meal-board" },
     { name: "Diabetic Hub", desc: "Plans that stabilize blood sugar.", route: "/diabetic-hub" },
     { name: "GLP-1 Hub", desc: "Small, high-nutrient meals for GLP-1 users.", route: "/glp1-hub" },
+    { name: "Anti-Inflammatory Hub", desc: "Autoimmune support and joint relief meals.", route: "/anti-inflammatory-menu-builder" },
     { name: "Competition Hub", desc: "Advanced meal building for athletes.", route: "/athlete-board" },
   ];
 
