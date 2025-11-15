@@ -89,6 +89,7 @@ import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import GLP1Hub from "@/pages/physician/GLP1Hub";
 import GLP1MealBuilder from "@/pages/physician/GLP1MealBuilder";
 import MedicalDietsHub from "@/pages/physician/MedicalDietsHub";
+import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
 
 // Craving pages
 import CravingHub from "@/pages/CravingHub";
@@ -155,6 +156,7 @@ export default function Router() {
     '/craving-presets',
     '/glp1-meal-builder',
     '/diabetic-menu-builder',
+    '/anti-inflammatory-meal-board',
     '/toddler-meals',
     '/kids-meals',
     '/alcohol/lean-and-social',
@@ -295,6 +297,7 @@ export default function Router() {
         <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
         <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
         <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
+        <Route path="/anti-inflammatory-meal-board" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
 
         {/* Craving Creator Routes */}
         <Route path="/craving-creator-landing" component={CravingCreatorLanding} />
