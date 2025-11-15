@@ -234,30 +234,7 @@ export default function SupplementHub() {
           </div>
         </CardShell>
 
-        {/* Lanes explainer (keeps the distinction obvious) */}
-        <CardShell className="p-4 mb-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <h4 className="text-white font-semibold mb-1">
-                Nutraceuticals Lane
-              </h4>
-              <p className="text-sm text-white/80">
-                Built for clinicians and functional-wellness practices:
-                therapeutic dosing, clinical resources, and professional
-                accounts.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-1">
-                Sports Nutrition Lane
-              </h4>
-              <p className="text-sm text-white/80">
-                Performance-oriented formulas (pre-workout, protein, BCAAs) with
-                gym-culture branding and athlete appeal.
-              </p>
-            </div>
-          </div>
-        </CardShell>
+        
 
         {/* Coming Soon / Future Partners */}
         <section className="space-y-4">
