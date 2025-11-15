@@ -100,7 +100,6 @@ export const SNACK_CATEGORIES: SnackCategory[] = [
       "Energy bites (oats + protein)",
       "Greek yogurt with granola",
       "High-protein cookie",
-      "Kefir drink",
       "Kefir smoothie",
       "Mini tuna salad cup",
       "Nut butter packet",
