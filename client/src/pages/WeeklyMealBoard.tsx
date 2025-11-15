@@ -901,7 +901,7 @@ export default function WeeklyMealBoard() {
                 ‹
               </button>
               <div className="text-sm font-medium text-white/90">
-                {weekStartISO ? `Week ${formatWeekLabel(weekStartISO)}` : 'Loading…'}
+                {weekStartISO ? formatWeekLabel(weekStartISO) : 'Loading…'}
               </div>
               <button
                 type="button"
