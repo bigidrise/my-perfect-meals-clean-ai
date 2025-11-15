@@ -44,6 +44,13 @@ export default function Planner() {
       testId: "card-glp1-hub",
     },
     {
+      title: "Anti-Inflammatory (Clinical)",
+      description: "Autoimmune & inflammation-friendly meal planning with medical guardrails",
+      icon: ListChecks,
+      route: "/anti-inflammatory-menu-board",
+      testId: "card-anti-inflammatory",
+    },
+    {
       title: "Beach Body / Hard Body",
       description: "Contest prep meal planning with strategic macro timing",
       icon: Trophy,
@@ -51,6 +58,7 @@ export default function Planner() {
       testId: "card-competition-beachbody",
     },
   ];
+
 
   const handleCardClick = (route: string) => {
     setLocation(route);
