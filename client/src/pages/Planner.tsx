@@ -47,7 +47,7 @@ export default function Planner() {
       title: "Anti-Inflammatory Hub",
       description: "Autoimmune support, joint relief, inflammation guardrails with AI meal creation",
       icon: Pill,
-      route: "/anti-inflammatory-meal-board",
+      route: "/anti-inflammatory-menu-builder",
       testId: "card-anti-inflammatory",
     },
     {

@@ -155,7 +155,7 @@ export default function Router() {
     '/craving-presets',
     '/glp1-meal-builder',
     '/diabetic-menu-builder',
-    '/anti-inflammatory-meal-board',
+    '/anti-inflammatory-menu-builder',
     '/toddler-meals',
     '/kids-meals',
     '/alcohol/lean-and-social',
