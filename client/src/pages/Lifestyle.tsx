@@ -1,143 +1,132 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardHeader, CardBody, CardTitle, CardText, Button } from 'reactstrap';
-import { Info, Activity, Users } from 'lucide-react';
+import { useLocation } from 'wouter';
+import { motion } from 'framer-motion';
+import { Sparkles, Brain, UtensilsCrossed, Wine, Baby, Activity } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import LifestyleGuidedTour from '@/components/guided/LifestyleGuidedTour';
 
-const Lifestyle = ({ user }) => { // Assuming 'user' is passed as a prop to check role
-  const setLocation = (path) => {
-    // This function needs to be defined or imported if it's used elsewhere.
-    // For this example, we'll assume it's a placeholder for navigation.
-    console.log("Navigating to:", path);
-    // In a real app, you'd use history.push(path) or navigate(path)
+const Lifestyle = ({ user }) => {
+  const [, setLocation] = useLocation();
+
+  const lifestyleFeatures = [
+    {
+      title: "Craving Creator",
+      description: "Enjoy the foods you love without destroying your goals",
+      icon: Brain,
+      route: "/craving-creator-landing",
+      testId: "lifestyle-craving-creator"
+    },
+    {
+      title: "Fridge Rescue",
+      description: "Turn what's in your kitchen into a meal",
+      icon: UtensilsCrossed,
+      route: "/fridge-rescue",
+      testId: "lifestyle-fridge-rescue"
+    },
+    {
+      title: "Restaurant Guide",
+      description: "Eat smart anywhere — by restaurant or food category",
+      icon: UtensilsCrossed,
+      route: "/restaurant-guide",
+      testId: "lifestyle-restaurant-guide"
+    },
+    {
+      title: "Kids & Toddler Meals",
+      description: "Fast, simple, and healthy meals for young ones",
+      icon: Baby,
+      route: "/kids-meals",
+      testId: "lifestyle-kids-meals"
+    },
+    {
+      title: "Spirits & Lifestyle",
+      description: "Drinks, date nights, and social living",
+      icon: Wine,
+      route: "/alcohol-hub-landing",
+      testId: "lifestyle-spirits"
+    },
+    {
+      title: "Supplement Hub",
+      description: "Personalized supplement recommendations",
+      icon: Activity,
+      route: "/supplement-hub",
+      testId: "lifestyle-supplement-hub"
+    }
+  ];
+
+  const handleCardClick = (route: string) => {
+    setLocation(route);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
+    >
       <LifestyleGuidedTour />
+
+      {/* Header Banner */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+        <div className="px-4 py-3 flex items-center gap-3">
+          <Sparkles className="h-6 w-6 text-orange-500" />
+          <h1 className="text-lg font-bold text-white">Lifestyle</h1>
+        </div>
+      </div>
+
       {/* Main Content */}
       <div className="flex-1 px-4 py-8 pt-20">
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Info Banner */}
-          <div className="rounded-2xl p-[1px] bg-gradient-to-r from-orange-500/50 via-orange-500/40 to-orange-500/50 animate-pulse">
-            <div className="rounded-2xl bg-orange-900/20 backdrop-blur-lg px-4 py-3 border border-orange-500/30">
-              <div className="flex items-start gap-3">
-                <Info className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-orange-300 font-semibold text-sm mb-1">Explore Your Lifestyle Tools</div>
-                  <div className="text-white/80 text-sm">
-                    Each section below contains specialized meal planning and nutrition tools. Click any card to explore, and look for the orange info button inside each feature to learn how to use it.
-                  </div>
-                </div>
-              </div>
+          {/* Hero Image Section */}
+          <div className="relative h-48 rounded-xl overflow-hidden">
+            <img 
+              src="/images/lifestyle-hero.jpg" 
+              alt="Lifestyle nutrition"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3ELifestyle%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4">
+              <p className="text-white/90 text-sm">
+                Navigate cravings, dining out, and social moments with AI-powered guidance.
+              </p>
             </div>
           </div>
 
-          {/* Supplement Hub Card */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="border-b-0">
-              <CardTitle tag="h5" className="text-white">Supplement Hub</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <CardText className="text-white/70 mb-4">
-                Optimize your nutrition with personalized supplement recommendations.
-              </CardText>
-              <Link to="/supplement-hub">
-                <Button color="primary" className="bg-blue-600 hover:bg-blue-700">
-                  Go to Supplement Hub
-                </Button>
-              </Link>
-            </CardBody>
-          </Card>
-
-          {/* Kids Meals Card */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="border-b-0">
-              <CardTitle tag="h5" className="text-white">Kids Meals</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <CardText className="text-white/70 mb-4">
-                Nutritious and fun meal ideas for your children.
-              </CardText>
-              <Link to="/kids-meals">
-                <Button color="primary" className="bg-green-600 hover:bg-green-700">
-                  Go to Kids Meals
-                </Button>
-              </Link>
-            </CardBody>
-          </Card>
-
-          {/* The Hub Card */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="border-b-0">
-              <CardTitle tag="h5" className="text-white">The Hub</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <CardText className="text-white/70 mb-4">
-                Your central place for all things health and wellness.
-              </CardText>
-              <Link to="/the-hub">
-                <Button color="primary" className="bg-purple-600 hover:bg-purple-700">
-                  Go to The Hub
-                </Button>
-              </Link>
-            </CardBody>
-          </Card>
-
-          {/* Toddlers and Kids Meals Card */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="border-b-0">
-              <CardTitle tag="h5" className="text-white">Toddlers and Kids Meals</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <CardText className="text-white/70 mb-4">
-                Specially curated meal plans for toddlers and growing kids.
-              </CardText>
-              <Link to="/toddlers-and-kids-meals">
-                <Button color="primary" className="bg-pink-600 hover:bg-pink-700">
-                  Go to Toddlers and Kids Meals
-                </Button>
-              </Link>
-            </CardBody>
-          </Card>
-
-          {/* Diabetic Nutrition Hub Card (Existing) */}
-          <button
-            onClick={() => setLocation("/diabetic-hub")}
-            className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 hover:bg-black/40 transition-all relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                <Activity className="h-6 w-6" />
-              </div>
-              <div className="text-left">
-                <h3 className="text-lg font-medium text-white">Diabetic Nutrition Hub</h3>
-                <p className="text-white/80 text-sm">Track blood sugar & diabetic meals</p>
-              </div>
-            </div>
-          </button>
-
-          {(user?.role === 'doctor' || user?.role === 'coach' || user?.role === 'trainer') && (
-            <button
-              onClick={() => setLocation("/procare/patient-assignment")}
-              className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 hover:bg-black/40 transition-all relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                  <Users className="h-6 w-6" />
-                </div>
-                <div className="text-left">
-                  <h3 className="text-lg font-medium text-white">Patient Assignment Dashboard</h3>
-                  <p className="text-white/80 text-sm">Manage patient guardrails & monitoring</p>
-                </div>
-              </div>
-            </button>
-          )}
+          {/* Lifestyle Features - Vertical Stack */}
+          <div className="flex flex-col gap-3">
+            {lifestyleFeatures.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <Card
+                  key={feature.testId}
+                  className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl shadow-md"
+                  onClick={() => handleCardClick(feature.route)}
+                  data-testid={feature.testId}
+                >
+                  <CardContent className="p-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <Icon className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                        <h3 className="text-sm font-semibold text-white">
+                          {feature.title}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-white/80 ml-6">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
