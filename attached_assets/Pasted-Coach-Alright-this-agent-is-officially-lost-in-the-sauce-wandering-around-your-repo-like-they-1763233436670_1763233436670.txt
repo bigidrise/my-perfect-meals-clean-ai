@@ -1,0 +1,181 @@
+Coach…
+Alright, this agent is officially **lost in the sauce**, wandering around your repo like they’re searching for Easter eggs.
+
+Here’s how we fix this **cleanly, directly, and with zero wiggle room.**
+
+You’ve already built a **meal-builder system** that **ABSOLUTELY DOES** use meals — the Diabetes builder uses them through **its own file**, NOT through the ingredient drawers.
+
+The agent is confusing TWO DIFFERENT SYSTEMS:
+
+---
+
+# 🚨 **SYSTEM A — INGREDIENT PICKERS (MealIngredientPicker / MealPickerDrawer)**
+
+These are for:
+
+* AI meal generation
+* Fridge Rescue
+* Craving Creator
+* Raw ingredient selection
+
+**This system DOES NOT use 40/40/40 meals.
+It uses ingredients only.**
+
+That part is fine.
+
+---
+
+# 🚨 **SYSTEM B — MENU BUILDERS (DiabeticMenuBuilder, AntiInflammatoryMenuBuilder, GLP1MenuBuilder)**
+
+These pages DO use:
+
+* The **40 breakfasts**
+* The **40 lunches**
+* The **40 dinners**
+* The **100 snacks**
+
+**These are used in:**
+
+* **Replace Meal**
+* **Preset Meal Cards**
+* **Generate Random Meal**
+* **Auto Populate**
+* **Shopping List**
+* **Board Builder (Weekly Board)**
+* **Meal Card Rendering**
+
+The agent is literally looking in the wrong components.
+
+---
+
+# 🔥 **THE RIGHT FILE TO CONNECT MEALS**
+
+The correct place is:
+
+```
+client/src/pages/AntiInflammatoryMenuBuilder.tsx
+```
+
+NOT:
+
+* MealIngredientPicker
+* MealPickerDrawer
+* AI Creator
+* Ingredient-based systems
+
+The 40/40/40 meals + 100 snacks plug into the **Meal Builder**, not the ingredient system.
+
+---
+
+# 🔥 **HERE IS THE EXACT PROMPT YOU HAND TO THE AGENT**
+
+Copy/paste this **exactly**:
+
+---
+
+# 🚨 **AGENT — STOP. YOU ARE LOOKING IN THE WRONG SYSTEM. READ CAREFULLY.**
+
+You are checking MealIngredientPicker and MealPickerDrawer —
+**those are NOT used by the Menu Builder pages.**
+
+The following file **IS** the one that must import and use all Anti-Inflammatory meals:
+
+```
+client/src/pages/AntiInflammatoryMenuBuilder.tsx
+```
+
+This file is a direct duplicate of:
+
+```
+client/src/pages/DiabeticMenuBuilder.tsx
+```
+
+Therefore your job is simple and MUST follow the Diabetic pattern exactly.
+
+---
+
+# ✅ **1. These are the EXACT Anti-Inflammatory Meal Files already created**
+
+```
+client/src/data/antiInflammatoryMenu.breakfast.ts
+client/src/data/antiInflammatoryMenu.lunch.ts
+client/src/data/antiInflammatoryMenu.dinner.ts
+client/src/data/antiInflammatoryMenu.snacks.ts
+```
+
+Use these files.
+Do NOT search for anything else.
+Do NOT attempt new systems.
+
+---
+
+# ✅ **2. Import them EXACTLY like the Diabetic Menu Builder imports its meals**
+
+In **AntiInflammatoryMenuBuilder.tsx**, add:
+
+```ts
+import { antiInflammatoryBreakfasts } from "@/data/antiInflammatoryMenu.breakfast";
+import { antiInflammatoryLunches } from "@/data/antiInflammatoryMenu.lunch";
+import { antiInflammatoryDinners } from "@/data/antiInflammatoryMenu.dinner";
+import { antiInflammatorySnacks } from "@/data/antiInflammatoryMenu.snacks";
+```
+
+---
+
+# ✅ **3. Connect them to the picker arrays EXACTLY like Diabetes**
+
+Find where the Diabetic builder sets:
+
+```ts
+const breakfastMeals = diabeticBreakfasts;
+const lunchMeals = diabeticLunches;
+const dinnerMeals = diabeticDinners;
+const snackMeals = diabeticSnacks;
+```
+
+You MUST create the Anti-Inflammatory equivalents:
+
+```ts
+const breakfastMeals = antiInflammatoryBreakfasts;
+const lunchMeals = antiInflammatoryLunches;
+const dinnerMeals = antiInflammatoryDinners;
+
+const snackMeals = [
+  ...antiInflammatorySnacks.sweet,
+  ...antiInflammatorySnacks.savory,
+  ...antiInflammatorySnacks.crunchy,
+  ...antiInflammatorySnacks.creamy,
+  ...antiInflammatorySnacks.highProtein
+];
+```
+
+---
+
+# ✅ **4. Verify the UI picks up ALL meals immediately**
+
+* Breakfast picker → 40 meals
+* Lunch picker → 40 meals
+* Dinner picker → 40 meals
+* Snack picker → 100 snacks
+* Replace Meal → shows meals
+* Weekly Board → uses meals
+* Shopping List → uses meals
+
+If ANY of these do not work:
+**You wired it incorrectly. Fix it.**
+
+---
+
+# ❗ **DO NOT CHECK MealIngredientPicker. DO NOT CHECK MealPickerDrawer.**
+
+Those are NOT part of this system.
+
+Your job is ONLY to connect the 40/40/40/100 meals in **AntiInflammatoryMenuBuilder.tsx** using the SAME pattern Diabetes uses.
+
+---
+
+# END PROMPT
+
+---
+
+Coach — hand them that and they will stop wandering around the repo like Scooby-Doo in a haunted mansion.

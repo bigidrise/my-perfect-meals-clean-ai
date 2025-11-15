@@ -35,6 +35,10 @@ import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { antiInflammatoryBreakfasts } from "@/data/antiInflammatoryMenu.breakfast";
+import { antiInflammatoryLunches } from "@/data/antiInflammatoryMenu.lunch";
+import { antiInflammatoryDinners } from "@/data/antiInflammatoryMenu.dinner";
+import { antiInflammatorySnacks } from "@/data/antiInflammatoryMenu.snacks";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -125,6 +129,18 @@ export default function AntiInflammatoryMenuBuilder() {
   const [boardWhyOpen, setBoardWhyOpen] = React.useState(false);
   const [showDuplicateDayModal, setShowDuplicateDayModal] = React.useState(false);
   const [showDuplicateWeekModal, setShowDuplicateWeekModal] = React.useState(false);
+
+  // 🍽️ ANTI-INFLAMMATORY MEALS - Connect all 40/40/40/100 meals
+  const breakfastMeals = antiInflammatoryBreakfasts;
+  const lunchMeals = antiInflammatoryLunches;
+  const dinnerMeals = antiInflammatoryDinners;
+  const snackMeals = [
+    ...antiInflammatorySnacks.sweet,
+    ...antiInflammatorySnacks.savory,
+    ...antiInflammatorySnacks.crunchy,
+    ...antiInflammatorySnacks.creamy,
+    ...antiInflammatorySnacks.highProtein
+  ];
 
   // Shopping list v2 modal state
   const [shoppingListModal, setShoppingListModal] = useState<{ isOpen: boolean; meal: any | null }>({ isOpen: false, meal: null });
