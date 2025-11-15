@@ -297,7 +297,7 @@ export default function Router() {
         <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
         <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
         <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
-        <Route path="/anti-inflammatory-meal-board" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
+        <Route path="/anti-inflammatory-menu-builder" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
 
         {/* Craving Creator Routes */}
         <Route path="/craving-creator-landing" component={CravingCreatorLanding} />
