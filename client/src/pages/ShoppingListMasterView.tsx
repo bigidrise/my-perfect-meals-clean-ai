@@ -265,27 +265,53 @@ export default function ShoppingListMasterView() {
                       ?
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white">
+                  <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white max-h-[500px] overflow-y-auto">
                     <div className="space-y-3">
                       <h3 className="font-semibold text-orange-400 flex items-center gap-2">
                         <Info className="h-4 w-4 text-orange-400" />
                         How to Use Your Shopping List
                       </h3>
-                      <div className="text-sm text-white/90 space-y-2">
-                        <p>
-                          You can add items from your meal plans and other grocery lists here. Use this list to go grocery shopping—either check items off as you shop in-store or use one of the grocery delivery services.
-                        </p>
-                        <p>
-                          Add your other groceries using the "Add Other Items" section so you have one complete list. Send your grocery list to a delivery service and have your groceries come right to your house.
-                        </p>
-                        <p>
-                          <strong>Tips:</strong>
-                        </p>
-                        <ul className="list-disc list-inside space-y-1 text-white/80">
-                          <li>Delete items you already have at home</li>
-                          <li>Keep items you need to pick up on the list</li>
-                          <li>Check items off as you buy them—they'll move to the bottom</li>
-                        </ul>
+                      <div className="text-sm text-white/90 space-y-3">
+                        <div>
+                          <p className="font-semibold text-white mb-2">4 Ways to Add Items:</p>
+                          <ul className="space-y-2 text-white/80">
+                            <li>
+                              <strong className="text-white">Enter Barcode</strong> — Type barcode numbers manually (no camera needed). Great for products with barcodes.
+                            </li>
+                            <li>
+                              <strong className="text-white">Voice Add</strong> — Speak multiple items naturally: "milk, eggs, chicken breast." Hands-free and fast!
+                            </li>
+                            <li>
+                              <strong className="text-white">Bulk Add</strong> — Paste entire grocery lists from notes or emails. Supports newlines and commas.
+                            </li>
+                            <li>
+                              <strong className="text-white">Add Other Items</strong> — Detailed form for specific brands, quantities, and notes. Perfect for "Charmin toilet paper" or "Heinz ketchup."
+                            </li>
+                          </ul>
+                        </div>
+                        
+                        <div className="border-t border-white/10 pt-2">
+                          <p className="font-semibold text-white mb-1">Meal Ingredients:</p>
+                          <p className="text-white/80">
+                            Items from your meal plans automatically appear here. Add household items using the methods above for one complete list.
+                          </p>
+                        </div>
+
+                        <div className="border-t border-white/10 pt-2">
+                          <p className="font-semibold text-white mb-1">Shop at Walmart:</p>
+                          <p className="text-white/80">
+                            Click "Shop at Walmart" to open Walmart's website with all your unchecked items pre-searched. Perfect for online ordering or price checking!
+                          </p>
+                        </div>
+
+                        <div className="border-t border-white/10 pt-2">
+                          <p className="font-semibold text-white mb-1">Tips:</p>
+                          <ul className="list-disc list-inside space-y-1 text-white/80">
+                            <li>Delete items you already have at home</li>
+                            <li>Check items off as you shop—they move to the bottom</li>
+                            <li>Use "Clear Purchased" to remove checked items</li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </PopoverContent>
