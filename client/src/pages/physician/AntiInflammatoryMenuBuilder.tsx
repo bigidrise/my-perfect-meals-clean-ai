@@ -368,9 +368,9 @@ export default function AntiInflammatoryMenuBuilder() {
 
     const items = ingredients.map(i => ({
       name: i.name,
-      quantity: i.quantity,
+      qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
       unit: i.unit,
-      notes: planningMode === 'day' && activeDayISO 
+      note: planningMode === 'day' && activeDayISO 
         ? `${new Date(activeDayISO + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'long' })} Meal Plan`
         : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`
     }));
@@ -424,9 +424,9 @@ export default function AntiInflammatoryMenuBuilder() {
 
     const items = ingredients.map(i => ({
       name: i.name,
-      quantity: i.quantity,
+      qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
       unit: i.unit,
-      notes: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
+      note: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
     }));
 
     useShoppingListStore.getState().addItems(items);
