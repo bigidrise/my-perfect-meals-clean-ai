@@ -109,8 +109,6 @@ export function MealPickerDrawer({
       }
     } else {
       setActiveCategory(null);
-      // Clear selections when drawer closes
-      setSelectedIngredients([]);
     }
   }, [open, list, useAntiInflammatory]);
 
