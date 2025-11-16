@@ -2,7 +2,7 @@
 import React from "react";
 
 interface BadgeDotProps {
-  variant?: "safe" | "warning" | "alert" | "info" | "neutral";
+  variant?: "safe" | "warning" | "alert" | "info" | "neutral" | "medical" | "premium";
   className?: string;
 }
 
@@ -11,7 +11,9 @@ const DOT_COLORS = {
   warning: "bg-yellow-500",
   alert: "bg-red-500 animate-pulse",
   info: "bg-blue-500",
-  neutral: "bg-white/70"
+  neutral: "bg-white/70",
+  medical: "bg-yellow-500",
+  premium: "bg-purple-500"
 };
 
 export default function BadgeDot({ variant = "neutral", className = "" }: BadgeDotProps) {
