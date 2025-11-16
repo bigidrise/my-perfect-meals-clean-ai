@@ -40,7 +40,6 @@ export default function HealthBadgesPopover({
           <MedicalBadgeButton 
             data-testid="button-medical-badges"
             title={label}
-            size={20}
             showPulse={hasCritical}
           />
         </PopoverTrigger>

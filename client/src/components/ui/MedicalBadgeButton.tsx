@@ -1,5 +1,5 @@
 
-import { Shield, Plus } from "lucide-react";
+import { Eye } from "lucide-react";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 
 interface MedicalBadgeButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -9,7 +9,7 @@ interface MedicalBadgeButtonProps extends ButtonHTMLAttributes<HTMLButtonElement
 }
 
 const MedicalBadgeButton = forwardRef<HTMLButtonElement, MedicalBadgeButtonProps>(
-  ({ title = "Medical badges", className = "", size = 20, showPulse = false, ...props }, ref) => {
+  ({ title = "Medical badges", className = "", size = 28, showPulse = false, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -17,11 +17,10 @@ const MedicalBadgeButton = forwardRef<HTMLButtonElement, MedicalBadgeButtonProps
         className={`
           relative
           bg-amber-500 hover:bg-amber-600
-          border-2 border-amber-300
+          ${showPulse ? "border-2 border-red-500 flash-border-critical ring-2 ring-red-500 ring-offset-1" : "border-2 border-amber-300"}
           text-black rounded-xl
           flex items-center justify-center
           transition-colors
-          ${showPulse ? "ring-2 ring-red-500 ring-offset-1" : ""}
           ${className}
         `}
         style={{
@@ -30,9 +29,13 @@ const MedicalBadgeButton = forwardRef<HTMLButtonElement, MedicalBadgeButtonProps
         }}
         {...props}
       >
-        <div className="relative w-full h-full flex items-center justify-center">
-          <Shield className="w-4 h-4 text-black" strokeWidth={2} />
-          <Plus className="w-2 h-2 text-red-600 absolute" strokeWidth={3} />
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-6 h-6 rounded-full bg-amber-400/30 border border-amber-600/40" />
+          <Eye 
+            className="w-5 h-5 text-black relative z-10" 
+            strokeWidth={2.5}
+            style={{ filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.35))' }}
+          />
         </div>
         {showPulse && (
           <span className="absolute inset-0 rounded-xl border-2 border-red-500 shadow-glow-red animate-ping pointer-events-none" />
