@@ -233,6 +233,14 @@ export default function AntiInflammatoryMenuBuilder() {
     if (savedStep === "breakfast" || savedStep === "lunch" || savedStep === "dinner" || savedStep === "snacks" || savedStep === "complete") {
       setTourStep(savedStep);
     }
+
+    // Listen for co-pilot requests to show info
+    const handleCopilotShowInfo = () => {
+      setShowInfoModal(true);
+    };
+
+    window.addEventListener('copilot:show-info', handleCopilotShowInfo);
+    return () => window.removeEventListener('copilot:show-info', handleCopilotShowInfo);
   }, []);
 
   // Handle info modal close - start the guided tour
@@ -940,7 +948,17 @@ export default function AntiInflammatoryMenuBuilder() {
             </div>
 
             <button
-              onClick={() => setShowInfoModal(true)}
+              onClick={() => {
+                setShowInfoModal(true);
+                // Notify co-pilot system that help was requested
+                window.dispatchEvent(new CustomEvent('copilot:help-requested', {
+                  detail: {
+                    page: 'anti-inflammatory-meal-board',
+                    context: 'How to use Anti-Inflammatory Menu Builder',
+                    timestamp: new Date().toISOString()
+                  }
+                }));
+              }}
               className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
               aria-label="How to use"
             >

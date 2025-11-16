@@ -18,26 +18,26 @@ const dangerRe = /(chest pain|heart attack|fainting|passing out|blood in stool|e
 
 export function classify(utterance: string): Intent {
   const text = utterance.trim();
-  
+
   // Safety first - block dangerous medical content
   if (dangerRe.test(text)) return "BLOCKED";
-  
+
   // Navigation intent
   if (navRe.test(text)) return "NAVIGATE";
-  
+
   // Action intent
   if (doAddRe.test(text) || doActionRe.test(text)) return "DO";
-  
+
   // Health/nutrition questions
   if (proteinRe.test(text) || nutritionRe.test(text) || fitnessRe.test(text) || mindsetRe.test(text)) {
     return "QNA_HEALTH";
   }
-  
+
   // Greetings and small talk
   if (/^(hi|hello|hey|thanks|thank you|bye|goodbye)$/i.test(text)) {
     return "SMALLTALK";
   }
-  
+
   // Default to health Q&A for most queries
   return "QNA_HEALTH";
 }
@@ -46,13 +46,13 @@ export function classify(utterance: string): Intent {
 export function parseAddToList(utterance: string) {
   const match = doAddRe.exec(utterance);
   if (!match) return null;
-  
+
   const qtyUnit = (match[2] || "").trim(); // "2 lb" etc.
   const item = (match[4] || "").trim();
-  
+
   let qty: number | undefined;
   let unit: string | undefined;
-  
+
   if (qtyUnit) {
     const qtyMatch = /([\d\.]+)\s*(\w+)/.exec(qtyUnit);
     if (qtyMatch) {
@@ -60,39 +60,20 @@ export function parseAddToList(utterance: string) {
       unit = qtyMatch[2];
     }
   }
-  
+
   return { item, qty, unit };
 }
 
 // Extract navigation targets - Enhanced FitBrain Rush detection
-export function parseNavigation(utterance: string) {
-  const text = utterance.toLowerCase().trim();
-  
-  // High-confidence FitBrain Rush trigger phrases
-  const fitbrainPhrases = [
-    "fitbrain rush",
-    "fitbrain",
-    "open fitbrain",
-    "open the game",
-    "open the trivia",
-    "play fitbrain",
-    "play the game",
-    "start the trivia",
-    "start the game",
-    "go to the trivia",
-    "go to fitbrain",
-    "launch fitbrain",
-    "trivia game",
-    "the trivia",
-    "the game"
-  ];
-  
-  if (fitbrainPhrases.some(phrase => text.includes(phrase))) return "/fitbrain-rush";
-  if (/shopping\s*list/i.test(utterance)) return "/shopping-list";
-  if (/meal\s*calendar|calendar/i.test(utterance)) return "/weekly-meal-calendar";
-  if (/craving/i.test(utterance)) return "/craving-creator";
-  if (/blood\s*sugar|glucose|diabetes/i.test(utterance)) return "/blood-sugar-hub";
-  if (/water|hydration/i.test(utterance)) return "/log-water";
-  if (/log|meal.*log/i.test(utterance)) return "/log-meals";
+export function parseNavigation(prompt: string): string | null {
+  const p = prompt.toLowerCase();
+  if (/(open|show|go to|navigate).*(fitbrain|fit brain|brain game|rush)/i.test(p)) return "/fitbrain-rush";
+  if (/(open|show|go to|navigate).*(planner|meal plan)/i.test(p)) return "/planner";
+  if (/(open|show|go to|navigate).*(biometric|my biometric)/i.test(p)) return "/my-biometrics";
+  if (/(open|show|go to|navigate).*(profile|settings)/i.test(p)) return "/profile";
+
+  // Anti-Inflammatory help requests
+  if (/(help|how|guide|info|tutorial).*(anti.*inflammatory|menu builder)/i.test(p)) return "help:anti-inflammatory";
+
   return null;
 }

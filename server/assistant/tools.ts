@@ -18,13 +18,13 @@ async function getUserProfile(userId: string) {
   }
 }
 
-export type ToolResult = { ok: boolean; data?: any; message?: string; navigateTo?: string };
+export type ToolResult = { ok: boolean; data?: any; message?: string; navigateTo?: string; action?: string; page?: string };
 
 export const Tools = {
   navigate: async (_userId: string, to: string): Promise<ToolResult> => ({ ok: true, navigateTo: to }),
-  
-  openFitBrainRush: async (): Promise<ToolResult> => ({ ok: true, navigateTo: "/fitbrain-rush" }),
-  
+
+  openFitBrainRush: async (): Promise<ToolResult> => ({ ok: true, message: "Opening FitBrain Rush...", navigateTo: "/fitbrain-rush" }),
+
   showShoppingList: async (userId: string): Promise<ToolResult> => {
     try {
       const items: string[] = []; // TODO: load from your shopping list table when available
@@ -33,7 +33,7 @@ export const Tools = {
       return { ok: true, data: { items: [] }, message: "Shopping list feature coming soon!" };
     }
   },
-  
+
   addToShoppingList: async (userId: string, item: string, qty?: number, unit?: string): Promise<ToolResult> => {
     try {
       // TODO: insert into shopping list table when available
@@ -43,7 +43,7 @@ export const Tools = {
       return { ok: true, message: `Noted: ${item} for your shopping list` };
     }
   },
-  
+
   estimateProteinTarget: async (userId: string): Promise<ToolResult> => {
     try {
       const p = await getUserProfile(userId);
@@ -57,7 +57,7 @@ export const Tools = {
       return { ok: true, data: { range: [120, 150], target: 135, weightLbs: 170, goal: "maintenance" } };
     }
   },
-  
+
   getDailyChallenge: async (userId: string): Promise<ToolResult> => {
     try {
       const today = new Date().toISOString().slice(0,10);
@@ -69,7 +69,7 @@ export const Tools = {
       return { ok: true, data: null, message: "No challenge available today" };
     }
   },
-  
+
   completeDailyChallenge: async (userId: string, id: string): Promise<ToolResult> => {
     try {
       await db.update(userDailyChallenges)
@@ -82,12 +82,22 @@ export const Tools = {
   },
 
   openMealCalendar: async (): Promise<ToolResult> => ({ ok: true, navigateTo: "/weekly-meal-calendar" }),
-  
+
   openCravingCreator: async (): Promise<ToolResult> => ({ ok: true, navigateTo: "/craving-creator" }),
-  
+
   openMealLogging: async (): Promise<ToolResult> => ({ ok: true, navigateTo: "/log-meals" }),
-  
+
   openWaterTracking: async (): Promise<ToolResult> => ({ ok: true, navigateTo: "/log-water" }),
+
+  async showAntiInflammatoryHelp() {
+    // Trigger the info modal on the Anti-Inflammatory Meal Board
+    return { 
+      ok: true, 
+      message: "Here's how to use the Anti-Inflammatory Menu Builder. The info panel will guide you through creating your first meal.",
+      action: "show-info",
+      page: "anti-inflammatory-meal-board"
+    };
+  },
 
 } as const;
 

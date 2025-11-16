@@ -75,6 +75,9 @@ export async function processAssistantRequest(req: AssistantRequest): Promise<As
         const toolResult = await Tools.openFitBrainRush();
         navigateTo = toolResult.navigateTo;
         toolResponses.push({ name: "openFitBrainRush", result: toolResult });
+      } else if (route === "help:anti-inflammatory") {
+        const toolResult = await Tools.showAntiInflammatoryHelp();
+        toolResponses.push({ name: "showAntiInflammatoryHelp", result: toolResult });
       } else {
         const toolResult = await Tools.navigate(userId, route);
         navigateTo = toolResult.navigateTo;
