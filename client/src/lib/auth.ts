@@ -3,49 +3,84 @@ export interface User {
   id: string;
   email: string;
   name?: string;
+  username?: string;
   entitlements?: string[];
   planLookupKey?: string | null;
 }
 
-// Simple localStorage-based auth (for demo purposes)
-export function signUp(email: string, password: string): User {
+// API-based authentication with database persistence
+export async function signUp(email: string, password: string): Promise<User> {
   if (password.length < 6) {
     throw new Error("Password must be at least 6 characters");
   }
-  
-  const users = JSON.parse(localStorage.getItem("mpm_users") || "[]");
-  
-  // Check if user already exists
-  if (users.find((u: User) => u.email === email)) {
-    throw new Error("User already exists");
+
+  try {
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to create account");
+    }
+
+    const userData = await response.json();
+    
+    const user: User = {
+      id: userData.id,
+      email: userData.email,
+      name: userData.username,
+    };
+
+    // Save to localStorage for offline access
+    localStorage.setItem("mpm_current_user", JSON.stringify(user));
+    localStorage.setItem("userId", user.id);
+    localStorage.setItem("isAuthenticated", "true");
+
+    console.log("✅ User created and saved:", user.email, "ID:", user.id);
+
+    return user;
+  } catch (error: any) {
+    console.error("Signup failed:", error);
+    throw error;
   }
-  
-  const user: User = {
-    id: Date.now().toString(),
-    email,
-    name: email.split("@")[0] // Use email prefix as default name
-  };
-  
-  users.push(user);
-  localStorage.setItem("mpm_users", JSON.stringify(users));
-  localStorage.setItem("mpm_current_user", JSON.stringify(user));
-  localStorage.setItem("userId", user.id); // Set userId for API authentication
-  
-  return user;
 }
 
-export function login(email: string, password: string): User {
-  const users = JSON.parse(localStorage.getItem("mpm_users") || "[]");
-  const user = users.find((u: User) => u.email === email);
-  
-  if (!user) {
-    throw new Error("User not found");
+export async function login(email: string, password: string): Promise<User> {
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to login");
+    }
+
+    const userData = await response.json();
+    
+    const user: User = {
+      id: userData.id,
+      email: userData.email,
+      name: userData.username,
+    };
+
+    // Save to localStorage for offline access
+    localStorage.setItem("mpm_current_user", JSON.stringify(user));
+    localStorage.setItem("userId", user.id);
+    localStorage.setItem("isAuthenticated", "true");
+
+    console.log("✅ User logged in:", user.email, "ID:", user.id);
+
+    return user;
+  } catch (error: any) {
+    console.error("Login failed:", error);
+    throw error;
   }
-  
-  // For demo purposes, we'll accept any password for existing users
-  localStorage.setItem("mpm_current_user", JSON.stringify(user));
-  localStorage.setItem("userId", user.id); // Set userId for API authentication
-  return user;
 }
 
 export function logout(): void {

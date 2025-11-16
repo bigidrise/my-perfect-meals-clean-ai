@@ -16,8 +16,9 @@ export default function Auth() {
     e.preventDefault();
     setErr(null);
     try {
-      const u =
-        mode === "signup" ? signUp(email.trim(), pwd) : login(email.trim(), pwd);
+      const u = await (mode === "signup" 
+        ? signUp(email.trim(), pwd) 
+        : login(email.trim(), pwd));
       setUser(u);
       
       // Mark as authenticated
