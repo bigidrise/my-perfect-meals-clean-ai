@@ -109,17 +109,22 @@ export function MealPickerDrawer({
       }
     } else {
       setActiveCategory(null);
+      // Clear selections when drawer closes
+      setSelectedIngredients([]);
     }
   }, [open, list, useAntiInflammatory]);
 
   if (!open || !list) return null;
 
   const toggleIngredient = (ingredientName: string) => {
-    setSelectedIngredients((prev) =>
-      prev.includes(ingredientName)
-        ? prev.filter((i) => i !== ingredientName)
-        : [...prev, ingredientName]
-    );
+    setSelectedIngredients((prev) => {
+      const isSelected = prev.some((i) => i.toLowerCase() === ingredientName.toLowerCase());
+      if (isSelected) {
+        return prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase());
+      } else {
+        return [...prev, ingredientName];
+      }
+    });
   };
 
   type IngredientSource = Record<string, string[] | any[]>;
