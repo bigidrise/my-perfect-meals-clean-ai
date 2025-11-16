@@ -1,8 +1,7 @@
 import { useMemo } from "react";
-import { CircleHelp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { normalizeBadges } from "./healthBadges";
+import MedicalBadgeButton from "@/components/ui/MedicalBadgeButton";
 
 const CRITICAL_BADGE_KEYS = [
   "cardiac",
@@ -38,21 +37,12 @@ export default function HealthBadgesPopover({
     <div className={className}>
       <Popover>
         <PopoverTrigger asChild>
-          <button
-            className={`relative w-5 h-5 flex items-center justify-center text-sm font-bold rounded-xl 
-              ${
-                hasCritical
-                  ? "bg-red-600 hover:bg-red-700 border-2 border-red-500 shadow-glow-red"
-                  : "bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white"
-              }`}
+          <MedicalBadgeButton 
             data-testid="button-medical-badges"
             title={label}
-          >
-            ?
-            {hasCritical && (
-              <span className="absolute inset-0 rounded-xl border-2 border-red-500 shadow-glow-red animate-ping" />
-            )}
-          </button>
+            size={20}
+            showPulse={hasCritical}
+          />
         </PopoverTrigger>
         <PopoverContent
           align={align}
