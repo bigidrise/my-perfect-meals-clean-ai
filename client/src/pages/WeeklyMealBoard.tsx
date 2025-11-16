@@ -91,9 +91,9 @@ export default function WeeklyMealBoard() {
   React.useEffect(() => {
     if (hookBoard) {
       setBoard(hookBoard);
-      setLoading(hookLoading);
+      setLoading(false);
     }
-  }, [hookBoard, hookLoading]);
+  }, [hookBoard]);
 
   // Wrapper to save with idempotent IDs
   const saveBoard = React.useCallback(async (updatedBoard: WeekBoard) => {
