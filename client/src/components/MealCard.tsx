@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 import MacroBridgeButton from "@/components/biometrics/MacroBridgeButton";
 import TrashButton from "@/components/ui/TrashButton";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 
 // Keep your Meal type colocated here (WeeklyMealBoard imports from this file)
 export type Meal = {
@@ -185,7 +186,7 @@ export function MealCard({
           </div>
         )}
 
-        {/* Ingredients (EXACT COPY FROM FRIDGE RESCUE) */}
+        {/* Ingredients */}
         {Array.isArray(meal?.ingredients) && meal.ingredients.length > 0 && (
           <div className="mt-3 space-y-2">
             <h4 className="text-sm font-semibold text-white">Ingredients:</h4>
@@ -202,10 +203,16 @@ export function MealCard({
                 const name = ing.name || ing.item || "Ingredient";
                 const qty = ing.quantity || ing.amount || "";
                 const unit = ing.unit || "";
+                
+                // Use formatIngredientWithGrams for proper display
+                const displayText = qty && unit 
+                  ? formatIngredientWithGrams(qty, unit, name)
+                  : name;
+                
                 return (
                   <li key={i} className="flex items-start">
                     <span className="text-green-400 mr-1">•</span>
-                    <span>{qty ? `${qty} ${unit} ${name}`.trim() : name}</span>
+                    <span>{displayText}</span>
                   </li>
                 );
               })}
