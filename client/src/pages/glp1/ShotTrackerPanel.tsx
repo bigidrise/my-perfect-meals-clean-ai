@@ -105,7 +105,7 @@ export default function ShotTrackerPanel({ onClose, userId }: { onClose: () => v
               <label className="text-white/80 text-sm">Dose (mg)</label>
               <input
                 type="number" inputMode="decimal" step="0.1" min="0" max="20"
-                value={doseMg} onChange={(e) => setDoseMg(Number(e.target.value))}
+                value={doseMg || ""} onChange={(e) => setDoseMg(Number(e.target.value))}
                 placeholder="e.g., 2.5, 5, 7.5, 10, 12.5, 15"
                 className="w-full mt-1 rounded-md border border-white/20 bg-black/40 text-white p-2"
               />
