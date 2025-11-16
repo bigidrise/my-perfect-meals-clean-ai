@@ -78,9 +78,9 @@ export default function ReplacePicker({
             {meal.archetype}
           </span>
         </div>
-        
+
         <p className="text-white/80 text-sm line-clamp-2">{meal.summary}</p>
-        
+
         {/* Nutrition (scaled to current servings) */}
         {meal.nutritionPerServing ? (
           <div className="grid grid-cols-4 gap-2 text-center">
@@ -117,7 +117,7 @@ export default function ReplacePicker({
             ))}
           </div>
         )}
-        
+
         <Button 
           size="sm" 
           className="w-full bg-purple-600 hover:bg-purple-700 text-white"

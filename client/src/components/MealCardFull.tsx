@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Clock, Users, Shield, AlertTriangle, CheckCircle, X, Plus } from "lucide-react";
+import { RotateCcw, Clock, Users, Shield, AlertTriangle, CheckCircle, X, Plus, Eye } from "lucide-react";
 import { useState } from "react";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
 // Shopping list functionality removed - import eliminated

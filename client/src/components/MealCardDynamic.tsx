@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, AlertTriangle, RotateCcw, Plus, Clock, Users } from "lucide-react";
+import { CheckCircle, AlertTriangle, RotateCcw, Plus, Clock, Users, Eye } from "lucide-react";
 import { Meal, UserProfile } from "@/services/mealEngineService";
 import TrashButton from "@/components/ui/TrashButton";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
@@ -15,12 +15,12 @@ interface MedicalBadge {
 // Dynamic Medical Badge System - generates badges based on onboarding data
 function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): MedicalBadge[] {
   const badges: MedicalBadge[] = [];
-  
+
   const allergies = userProfile?.allergies || [];
   const healthConditions = userProfile?.healthConditions || [];
   const dietaryRestrictions = userProfile?.dietaryRestrictions || [];
   const mealIngredients = meal.ingredients?.map(i => (i.item || '').toLowerCase()) || [];
-  
+
   // Allergy Checks
   allergies.forEach((allergy: string) => {
     const hasAllergen = mealIngredients.some(ingredient => 
@@ -28,7 +28,7 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
       (allergy.toLowerCase().includes('dairy') && ['milk', 'cheese', 'butter', 'cream'].some(dairy => ingredient.includes(dairy))) ||
       (allergy.toLowerCase().includes('nuts') && ['peanut', 'almond', 'walnut', 'cashew'].some(nut => ingredient.includes(nut)))
     );
-    
+
     if (hasAllergen) {
       badges.push({
         badge: `Contains ${allergy}`,
@@ -43,7 +43,7 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
       });
     }
   });
-  
+
   // Health Condition Checks
   healthConditions.forEach((condition: string) => {
     if (condition.toLowerCase().includes('diabetes')) {
@@ -63,14 +63,14 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
       }
     }
   });
-  
+
   // Dietary Restriction Checks
   dietaryRestrictions.forEach((restriction: string) => {
     if (restriction.toLowerCase().includes('vegetarian')) {
       const hasMeat = mealIngredients.some(ingredient => 
         ['chicken', 'beef', 'pork', 'fish', 'turkey', 'lamb', 'meat'].some(meat => ingredient.includes(meat))
       );
-      
+
       badges.push({
         badge: hasMeat ? 'Contains Meat' : 'Vegetarian',
         explanation: hasMeat 
@@ -79,12 +79,12 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
         type: hasMeat ? 'alert' : 'safe'
       });
     }
-    
+
     if (restriction.toLowerCase().includes('gluten')) {
       const hasGluten = mealIngredients.some(ingredient => 
         ['wheat', 'bread', 'flour', 'pasta', 'barley', 'rye'].some(gluten => ingredient.includes(gluten))
       );
-      
+
       badges.push({
         badge: hasGluten ? 'Contains Gluten' : 'Gluten-Free',
         explanation: hasGluten
@@ -94,7 +94,7 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
       });
     }
   });
-  
+
   return badges;
 }
 
@@ -122,7 +122,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
 
   // Generate dynamic medical badges based on user's onboarding profile
   const medicalBadges = generateDynamicMedicalBadges(meal, userProfile);
-  
+
   // Debug: Check if medical badges are being generated
   console.log("MealCardDynamic - Medical badges for", meal.name, ":", medicalBadges);
 
@@ -146,7 +146,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
                <AlertTriangle className="w-3 h-3" />}
               {badgeData.badge}
             </Badge>
-            
+
             {/* Hover Explanation Tooltip */}
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
               <div className="relative">
@@ -183,13 +183,13 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
             </Badge>
           )}
         </div>
-        
+
         {meal.description && (
           <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
             {meal.description}
           </p>
         )}
-        
+
         {/* Dynamic Medical Badges with Hover Explanations */}
         {renderMedicalBadges()}
       </div>
@@ -234,7 +234,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
             <Users className="w-4 h-4" />
@@ -313,7 +313,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
             )}
           </Button>
         )}
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -333,7 +333,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
             </>
           )}
         </Button>
-        
+
         <TrashButton
           size="sm"
           onClick={() => onDelete(meal.id)}

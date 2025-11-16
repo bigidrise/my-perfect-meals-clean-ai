@@ -861,7 +861,7 @@ const FridgeRescuePage = () => {
       {/* Info Modal */}
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+          <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
             <h3 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h3>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <p>

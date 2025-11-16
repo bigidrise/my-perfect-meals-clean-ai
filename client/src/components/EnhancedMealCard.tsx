@@ -133,10 +133,10 @@ export default function EnhancedMealCard({ meal, userProfile, onReplace, isRepla
     <Card className="w-full p-6 bg-white dark:bg-slate-800 shadow-lg rounded-2xl mb-6 relative">
       {onReplace && (
         <button 
-          className={`absolute top-4 right-4 px-3 py-1 rounded-lg text-white text-sm font-bold transition-all shadow-md border z-10 flex items-center gap-1 ${
+          className={`absolute top-4 right-4 px-3 py-1 rounded-xl text-white text-sm font-bold transition-all shadow-md border z-10 flex items-center gap-1 ${
             isReplacing 
               ? "bg-gray-400 cursor-not-allowed border-gray-300" 
-              : "bg-purple-500 hover:bg-purple-600 transform hover:scale-105 border-purple-300"
+              : "bg-black/30 hover:bg-black/50 border-white/20 backdrop-blur-lg"
           }`} 
           onClick={() => !isReplacing && onReplace()}
           disabled={isReplacing}
