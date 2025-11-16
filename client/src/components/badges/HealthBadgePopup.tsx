@@ -1,6 +1,19 @@
 import { useState } from "react";
 import { HelpCircle } from "lucide-react";
 
+const CRITICAL_BADGE_TEXT_MATCHES = [
+  "cardiac",
+  "heart",
+  "heart-healthy",
+  "low sodium",
+  "renal",
+  "kidney",
+  "glp-1",
+  "glp1",
+  "diabetes",
+  "diabetic",
+];
+
 const MAP: Record<string, { label: string; desc: string }> = {
   heart:        { label: "Heart-friendly",    desc: "Better for heart health" },
   sugar_low:    { label: "Lower sugar",       desc: "Lower in added sugar" },
@@ -39,8 +52,10 @@ export default function HealthBadgePopup({
 }) {
   const [showPopup, setShowPopup] = useState(false);
   const items = normalize(badges);
-  
+
   if (items.length === 0) return null;
+
+  const isCritical = (key: string) => CRITICAL_BADGE_TEXT_MATCHES.some(match => key.includes(match));
 
   return (
     <div className={`relative inline-block ${className}`}>
@@ -61,12 +76,12 @@ export default function HealthBadgePopup({
           data-testid="popup-health-badges"
         >
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black/30" />
-          
+
           <h4 className="text-white font-semibold text-sm mb-2">Health Badges</h4>
           <div className="space-y-2">
             {items.map(item => (
               <div key={item.key} className="flex items-start gap-2" data-testid={`badge-row-${item.key}`}>
-                <span className="inline-flex h-2 w-2 rounded-full bg-blue-400 mt-1.5 flex-shrink-0" />
+                <span className={`inline-flex h-2 w-2 rounded-full ${isCritical(item.key) ? 'bg-red-400 animate-pulse' : 'bg-blue-400'} mt-1.5 flex-shrink-0`} />
                 <div>
                   <div className="font-medium text-white text-xs" data-testid={`text-badge-label-${item.key}`}>{item.label}</div>
                   {item.desc && <div className="text-white/70 text-xs" data-testid={`text-badge-desc-${item.key}`}>{item.desc}</div>}

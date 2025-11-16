@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes medicalGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(190, 242, 100, 0.0);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 14px 3px rgba(190, 242, 100, 0.45);
+    border-color: rgba(190, 242, 100, 0.75);
+  }
+}
+
+.medical-critical-card {
+  animation: medicalGlow 2.4s ease-in-out infinite;
+}
+
 /* Guided Tour Animations - All Lime Green */
 @keyframes pulseLime {
   0%, 100% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.8); }

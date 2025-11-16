@@ -1,5 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import { HeartPulse, X } from 'lucide-react';
+import { HeartPulse, X, Shield, Plus } from 'lucide-react';
+
+const CRITICAL_BADGE_LABEL_MATCHES = [
+  "cardiac",
+  "heart",
+  "heart-healthy",
+  "low sodium",
+  "renal",
+  "kidney",
+  "glp-1",
+  "glp1",
+  "diabetes",
+  "diabetic",
+];
 
 interface MedicalBadge {
   id: string;
@@ -36,6 +49,9 @@ export default function MedicalInfoBubble({ badges, description }: MedicalInfoBu
   // Auto-generate description if not provided
   const autoDescription = description || 
     "This recipe supports your health goals and dietary needs.";
+
+  const isCriticalBadge = (label: string) => 
+    CRITICAL_BADGE_LABEL_MATCHES.some(match => label.toLowerCase().includes(match));
 
   return (
     <div className="relative inline-block" ref={popoverRef}>
@@ -84,7 +100,11 @@ export default function MedicalInfoBubble({ badges, description }: MedicalInfoBu
             {badges.map((badge) => (
               <span
                 key={badge.id}
-                className="px-3 py-1.5 text-xs rounded-full bg-white/10 border border-white/20 hover:bg-white/15 transition-colors"
+                className={`px-3 py-1.5 text-xs rounded-full border border-white/20 transition-colors 
+                  ${isCriticalBadge(badge.label) 
+                    ? 'bg-red-500/20 hover:bg-red-500/30 animate-pulse' 
+                    : 'bg-white/10 hover:bg-white/15'}`
+                }
                 title={badge.description || badge.label}
               >
                 {badge.label}
