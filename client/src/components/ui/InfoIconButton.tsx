@@ -14,9 +14,9 @@ const InfoIconButton = forwardRef<HTMLButtonElement, InfoIconButtonProps>(
         ref={ref}
         title={title}
         className={`
-          bg-sky-600 hover:bg-sky-700
-          border-2 border-sky-400
-          text-white rounded-xl
+          bg-yellow-500 hover:bg-yellow-600
+          border-2 border-yellow-400
+          text-black rounded-xl
           flex items-center justify-center
           transition-colors
           ${className}
