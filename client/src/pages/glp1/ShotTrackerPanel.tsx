@@ -205,7 +205,7 @@ export default function ShotTrackerPanel({ onClose, userId }: { onClose: () => v
                     ) : (
                       <div className="flex items-center justify-between">
                         <div className="min-w-0 flex-1">
-                          <div className="font-semibold truncate flex items-center gap-2">
+                          <div className="text-xs font-normal truncate flex items-center gap-2">
                             <span>{new Date(s.dateUtc).toLocaleDateString()} — {s.doseMg} mg</span>
                             {s.location && (
                               <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-600/30 border border-emerald-400/50 text-emerald-300">

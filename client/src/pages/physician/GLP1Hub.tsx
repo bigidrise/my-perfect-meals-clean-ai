@@ -124,7 +124,7 @@ export default function GLP1Hub() {
             <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
               aria-label="How to use GLP-1 Hub"
             >
               ?
@@ -162,7 +162,7 @@ export default function GLP1Hub() {
         {/* Shot Tracker - Database-backed */}
         <section className="bg-black/60 border border-purple-300/20 rounded-xl p-4 backdrop-blur">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg text-white font-medium">GLP-1 Shot Tracker</h2>
+            <h2 className="text-lg text-white font-normal">GLP-1 Shot Tracker</h2>
             <Button
               onClick={() => setShotTrackerOpen(!shotTrackerOpen)}
               className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-4 py-2"
