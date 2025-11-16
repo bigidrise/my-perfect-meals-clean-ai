@@ -17,13 +17,13 @@ export default function ProCareGuidedTour() {
 
   return (
     <>
-      {/* Flashing question mark icon */}
+      {/* Flashing info icon */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-[60] bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+        className="fixed top-4 right-4 z-[60] bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-3xl font-bold flash-border"
         title="Open guided overview"
       >
-        ?
+        I
       </button>
 
       {open && <ProCareOverlay onClose={() => setOpen(false)} />}

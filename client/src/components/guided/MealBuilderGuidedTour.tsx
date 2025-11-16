@@ -59,15 +59,15 @@ export default function MealBuilderGuidedTour() {
         </div>
       )}
 
-      {/* When picker is open, show question mark help */}
+      {/* When picker is open, show info help */}
       {pickerOpen && (
         <>
           <button
             onClick={() => setShowHelp(true)}
-            className="fixed top-4 right-4 z-[80] bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center border border-white/20 backdrop-blur-sm flash-white"
+            className="fixed top-4 right-4 z-[80] bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-3xl font-bold backdrop-blur-sm flash-border"
             title="How it works"
           >
-            ?
+            I
           </button>
 
           {showHelp && <PickerHelpOverlay onClose={() => setShowHelp(false)} />}
