@@ -83,17 +83,20 @@ export default function WeeklyMealBoard() {
 
   // Local mutable board state for optimistic updates
   const [board, setBoard] = React.useState<WeekBoard | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const boardRef = React.useRef<WeekBoard | null>(null);
   const [saving, setSaving] = React.useState(false);
   const [justSaved, setJustSaved] = React.useState(false);
 
-  // Sync hook board to local state
+  // Sync hook board to local state only after loading completes
   React.useEffect(() => {
-    if (hookBoard) {
+    if (!hookLoading && !Object.is(boardRef.current, hookBoard)) {
       setBoard(hookBoard);
-      setLoading(false);
+      boardRef.current = hookBoard;
     }
-  }, [hookBoard]);
+  }, [hookBoard, hookLoading]);
+  
+  // Use hook's loading state directly (no local copy needed)
+  const loading = hookLoading;
 
   // Wrapper to save with idempotent IDs
   const saveBoard = React.useCallback(async (updatedBoard: WeekBoard) => {
@@ -247,6 +250,7 @@ export default function WeeklyMealBoard() {
       const targetSlot = cached.slot || "breakfast"; // Fallback to breakfast for old cached data
       const existingSlotMeals = dayLists[targetSlot].filter(m => !m.id.startsWith('ai-meal-'));
       const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
+      const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
 
       setBoard(updatedBoard);
@@ -688,19 +692,16 @@ export default function WeeklyMealBoard() {
     }
   }, [board, weekStartISO, planningMode, activeDayISO]);
 
-  // Week navigation handlers
+  // Week navigation handlers (hook manages loading state automatically)
   const gotoWeek = useCallback(async (targetISO: string) => {
-    setLoading(true);
     try {
       const { weekStartISO: ws, week } = await getWeekBoardByDate(targetISO);
       setWeekStartISO(ws);
       setBoard(week);
     } catch (error) {
       console.error("Failed to load week:", error);
-    } finally {
-      setLoading(false);
     }
-  }, [setLoading, setWeekStartISO, setBoard]);
+  }, []);
 
   const onPrevWeek = useCallback(() => {
     if (!weekStartISO) return;
