@@ -317,7 +317,7 @@ export default function MacroCounter() {
             </p>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
+              className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 border border-white/20 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold backdrop-blur-lg flash-border"
               title="Macro Calculator info"
             >
               ?
@@ -663,7 +663,7 @@ export default function MacroCounter() {
       {/* Info Modal */}
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+          <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
             <h3 className="text-xl font-bold text-white mb-4">About Macro Calculator</h3>
             
             <div className="space-y-4 text-white/90 text-sm">
