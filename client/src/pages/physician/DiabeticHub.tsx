@@ -524,35 +524,6 @@ export default function DiabeticHub() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 relative z-10 mb-6">
-              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-6 border border-green-400/30">
-                <h3 className="text-white font-medium text-sm mb-3">Low-Carb Options</h3>
-                <ul className="text-white/90 space-y-2 text-sm">
-                  <li>• Grilled salmon with vegetables</li>
-                  <li>• Chicken salad with avocado</li>
-                  <li>• Cauliflower rice stir-fry</li>
-                </ul>
-              </div>
-
-              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-6 border border-green-400/30">
-                <h3 className="text-white font-medium text-sm mb-3">Balanced Meals</h3>
-                <ul className="text-white/90 space-y-2 text-sm">
-                  <li>• Quinoa bowl with lean protein</li>
-                  <li>• Sweet potato with black beans</li>
-                  <li>• Greek yogurt with berries</li>
-                </ul>
-              </div>
-
-              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-6 border border-green-400/30">
-                <h3 className="text-white font-medium text-sm mb-3">Snack Ideas</h3>
-                <ul className="text-white/90 space-y-2 text-sm">
-                  <li>• Apple slices with almond butter</li>
-                  <li>• Mixed nuts and seeds</li>
-                  <li>• Celery with cream cheese</li>
-                </ul>
-              </div>
-            </div>
-
             <button
               onClick={() => setLocation("/diabetic-menu-builder")}
               className="w-full px-8 py-4 rounded-xl bg-green-500/90 backdrop-blur-sm hover:bg-green-600/90 text-white font-semibold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border border-white/20 relative overflow-hidden"
