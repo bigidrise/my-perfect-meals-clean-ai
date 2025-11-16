@@ -914,10 +914,10 @@ export default function WeeklyMealBoard() {
             </div>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold"
+              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
               aria-label="How to use Weekly Meal Board"
             >
-              <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white/60 text-lg">I</span>
+              ?
             </button>
           </div>
 

@@ -20,10 +20,10 @@ export default function LifestyleGuidedTour() {
       {/* Flashing info icon */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-[60] bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold flash-border"
+        className="fixed top-4 right-4 z-[60] bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold text-xl flash-border"
         title="Open guided overview"
       >
-        <span className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white/60 text-lg">I</span>
+        ?
       </button>
 
       {open && <LifestyleOverlay onClose={() => setOpen(false)} />}
