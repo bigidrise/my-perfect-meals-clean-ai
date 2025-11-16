@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { Eye } from "lucide-react";
 
 const CRITICAL_BADGE_TEXT_MATCHES = [
   "cardiac",
@@ -56,6 +56,7 @@ export default function HealthBadgePopup({
   if (items.length === 0) return null;
 
   const isCritical = (key: string) => CRITICAL_BADGE_TEXT_MATCHES.some(match => key.includes(match));
+  const hasCriticalBadge = items.some(item => isCritical(item.key));
 
   return (
     <div className={`relative inline-block ${className}`}>
@@ -63,11 +64,25 @@ export default function HealthBadgePopup({
         type="button"
         onClick={() => setShowPopup(!showPopup)}
         onBlur={() => setTimeout(() => setShowPopup(false), 200)}
-        className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center hover:bg-blue-500/30 transition-all touch-manipulation"
+        className={`
+          w-10 h-10 rounded-xl flex items-center justify-center transition-all touch-manipulation
+          bg-amber-500 hover:bg-amber-600
+          ${hasCriticalBadge 
+            ? 'border-2 border-red-500 flash-border-critical ring-2 ring-red-500 ring-offset-1' 
+            : 'border-2 border-amber-300'
+          }
+        `}
         aria-label="View health badges"
         data-testid="button-health-badge-popup"
       >
-        <HelpCircle className="w-4 h-4 text-blue-400" />
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-8 h-8 rounded-full bg-amber-400/30 border border-amber-600/40" />
+          <Eye 
+            className="w-6 h-6 text-black relative z-10" 
+            strokeWidth={2.5}
+            style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}
+          />
+        </div>
       </button>
 
       {showPopup && (

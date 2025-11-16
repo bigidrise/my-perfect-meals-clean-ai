@@ -52,7 +52,7 @@ export default function BadgeGroup({
           {showIcons && (
             <BadgeIcon
               type={badge.label}
-              size={28}
+              size={48}
               className="mt-0.5"
             />
           )}
