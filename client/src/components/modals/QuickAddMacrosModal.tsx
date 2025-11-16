@@ -171,7 +171,7 @@ export default function QuickAddMacrosModal({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="protein" className="text-white/80">
-              Protein (g)
+              Protein grams
             </Label>
             <Input
               id="protein"
@@ -185,7 +185,7 @@ export default function QuickAddMacrosModal({
 
           <div>
             <Label htmlFor="carbs" className="text-white/80">
-              Carbs (g)
+              Carb grams
             </Label>
             <Input
               id="carbs"
@@ -199,7 +199,7 @@ export default function QuickAddMacrosModal({
 
           <div>
             <Label htmlFor="fat" className="text-white/80">
-              Fat (g)
+              Fat grams
             </Label>
             <Input
               id="fat"
@@ -213,7 +213,7 @@ export default function QuickAddMacrosModal({
 
           <div>
             <Label htmlFor="alcohol" className="text-white/80">
-              Alcohol (g)
+              Alcohol grams
             </Label>
             <Input
               id="alcohol"
@@ -227,7 +227,7 @@ export default function QuickAddMacrosModal({
 
           <div>
             <Label htmlFor="fiber" className="text-white/80">
-              Fiber (g) <span className="text-white/50">(optional)</span>
+              Fiber grams <span className="text-white/50">(optional)</span>
             </Label>
             <Input
               id="fiber"

@@ -123,7 +123,7 @@ export function ManualMealModal({ open, onClose, onSave }: ManualMealModalProps)
               />
             </div>
             <div>
-              <Label htmlFor="protein">Protein (g)</Label>
+              <Label htmlFor="protein">Protein grams</Label>
               <Input
                 id="protein"
                 type="number"
@@ -134,7 +134,7 @@ export function ManualMealModal({ open, onClose, onSave }: ManualMealModalProps)
               />
             </div>
             <div>
-              <Label htmlFor="carbs">Carbs (g)</Label>
+              <Label htmlFor="carbs">Carb grams</Label>
               <Input
                 id="carbs"
                 type="number"
@@ -145,7 +145,7 @@ export function ManualMealModal({ open, onClose, onSave }: ManualMealModalProps)
               />
             </div>
             <div>
-              <Label htmlFor="fat">Fat (g)</Label>
+              <Label htmlFor="fat">Fat grams</Label>
               <Input
                 id="fat"
                 type="number"

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { logMacros } from "@/lib/macros";
+import { logMacrosToBiometrics } from "@/lib/macrosApi";
 
 export default function QuickAddMacros({ userId }: { userId: string }) {
   const [kcal, setKcal] = useState<string>(""); const [p, setP] = useState<string>("");
@@ -10,10 +10,9 @@ export default function QuickAddMacros({ userId }: { userId: string }) {
 
   async function save() {
     if (!kcal || !p || !c || !f) return;
-    await logMacros(userId, {
+    await logMacrosToBiometrics({
       mealType: mealType || undefined,
-      kcal: Number(kcal), protein: Number(p), carbs: Number(c), fat: Number(f),
-      source: "manual",
+      calories: Number(kcal), protein: Number(p), carbs: Number(c), fat: Number(f),
     });
     setKcal(""); setP(""); setC(""); setF(""); setMealType("");
     // toast.success("Macros logged");
@@ -23,9 +22,9 @@ export default function QuickAddMacros({ userId }: { userId: string }) {
     <div className="rounded-xl p-4 bg-white/5 border border-white/20">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Input placeholder="Calories" inputMode="numeric" value={kcal} onChange={e=>setKcal(e.target.value)} className="bg-black/30 border-white/30" />
-        <Input placeholder="Protein (g)" inputMode="numeric" value={p} onChange={e=>setP(e.target.value)} className="bg-black/30 border-white/30" />
-        <Input placeholder="Carbs (g)" inputMode="numeric" value={c} onChange={e=>setC(e.target.value)} className="bg-black/30 border-white/30" />
-        <Input placeholder="Fat (g)" inputMode="numeric" value={f} onChange={e=>setF(e.target.value)} className="bg-black/30 border-white/30" />
+        <Input placeholder="Protein grams" inputMode="numeric" value={p} onChange={e=>setP(e.target.value)} className="bg-black/30 border-white/30" />
+        <Input placeholder="Carb grams" inputMode="numeric" value={c} onChange={e=>setC(e.target.value)} className="bg-black/30 border-white/30" />
+        <Input placeholder="Fat grams" inputMode="numeric" value={f} onChange={e=>setF(e.target.value)} className="bg-black/30 border-white/30" />
         <Input placeholder="Meal Type (optional)" value={mealType} onChange={e=>setMealType(e.target.value as any)} className="bg-black/30 border-white/30" />
       </div>
       <div className="mt-3">

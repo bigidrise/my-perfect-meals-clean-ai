@@ -224,7 +224,7 @@ export function AddSnackModal({
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm text-white/90 font-medium">Protein (g)</label>
+                  <label className="text-sm text-white/90 font-medium">Protein grams</label>
                   <input 
                     type="number" 
                     min={0} 
@@ -235,7 +235,7 @@ export function AddSnackModal({
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm text-white/90 font-medium">Carbs (g)</label>
+                  <label className="text-sm text-white/90 font-medium">Carb grams</label>
                   <input 
                     type="number" 
                     min={0} 
@@ -250,7 +250,7 @@ export function AddSnackModal({
               {/* Fat and Macro Calculator */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <label className="text-sm text-white/90 font-medium">Fat (g)</label>
+                  <label className="text-sm text-white/90 font-medium">Fat grams</label>
                   <input 
                     type="number" 
                     min={0} 
