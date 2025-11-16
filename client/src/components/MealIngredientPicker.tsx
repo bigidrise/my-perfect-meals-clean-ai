@@ -306,12 +306,6 @@ export default function MealIngredientPicker({
 
   const handleCategorySelect = (category: string) => {
     setActiveCategory(category as any);
-    const categoryItems = ingredientSource[category as keyof typeof ingredientSource];
-    if (Array.isArray(categoryItems)) {
-      setSelectedIngredients(prev => 
-        prev.filter(ing => categoryItems.includes(ing))
-      );
-    }
   };
 
   const getCategoryLabel = (category: string) => {
@@ -495,12 +489,12 @@ export default function MealIngredientPicker({
                   const nameB = typeof b === "string" ? b : b.name;
                   return nameA.localeCompare(nameB);
                 });
-                return sortedItems.map((ingredient: string | any) => {
+                return sortedItems.map((ingredient: string | any, index: number) => {
                   const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
                   const isSelected = selectedIngredients.includes(ingredientName);
                   return (
                     <div
-                      key={ingredientName}
+                      key={`${activeCategory}-${ingredientName}-${index}`}
                       onClick={() => toggleIngredient(ingredientName)}
                       className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
                     >
