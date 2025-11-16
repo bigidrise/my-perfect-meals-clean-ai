@@ -285,7 +285,20 @@ export default function MyBiometrics() {
     setP(""); setC(""); setF(""); setK("");
     // if (SYNC_ENDPOINT) fetch(SYNC_ENDPOINT+"/macros", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ day: today, P,C,F,K })}).catch(()=>{});
   };
-  const resetToday = () => setMacroRows(prev => prev.filter(r=>r.day!==today));
+  
+  const resetToday = () => {
+    setMacroRows(prev => prev.filter(r => r.day !== today));
+    // Clear any input fields too
+    setP(""); 
+    setC(""); 
+    setF(""); 
+    setK("");
+    // Show confirmation toast
+    toast({
+      title: "Reset Complete",
+      description: "Today's macros have been cleared.",
+    });
+  };
 
   // Photo upload for AI macro estimation
   const handlePhotoUpload = async () => {
