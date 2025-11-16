@@ -93,10 +93,16 @@ const VoiceConciergeInner = () => {
 
     switch (action) {
       case 'navigate':
-        if (data && typeof data === 'string') {
-          console.log('🎤 Navigating to:', data);
-          setLocation(data);
-        }
+        if (data.navigateTo) {
+        console.log("🧭 Navigating to:", data.navigateTo);
+        setLocation(data.navigateTo);
+      }
+
+      // Dispatch client events if specified
+      if (data.clientEvent) {
+        console.log("📡 Dispatching client event:", data.clientEvent);
+        window.dispatchEvent(new Event(data.clientEvent));
+      }
         break;
 
       case 'logMeal':

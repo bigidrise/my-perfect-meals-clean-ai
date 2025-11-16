@@ -95,7 +95,8 @@ export const Tools = {
       ok: true, 
       message: "Here's how to use the Anti-Inflammatory Menu Builder. The info panel will guide you through creating your first meal.",
       action: "show-info",
-      page: "anti-inflammatory-meal-board"
+      page: "anti-inflammatory-meal-board",
+      clientEvent: "copilot:show-info"
     };
   },
 

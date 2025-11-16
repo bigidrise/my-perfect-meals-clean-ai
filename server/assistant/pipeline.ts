@@ -168,12 +168,14 @@ export async function processAssistantRequest(req: AssistantRequest): Promise<As
     responseText = "I'm having trouble connecting right now. Please try again in a moment.";
   }
 
-  // 6) Return formatted response
+  // 6) Return formatted response with any client events
   const finalText = responseText || "Done.";
+  const clientEvent = toolResponses.find(t => t.result?.clientEvent)?.result?.clientEvent;
   
   return {
     text: finalText,
     captions: finalText,
-    navigateTo: navigateTo
+    navigateTo: navigateTo,
+    clientEvent: clientEvent
   };
 }
