@@ -7,7 +7,7 @@ interface InfoIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 
 const InfoIconButton = forwardRef<HTMLButtonElement, InfoIconButtonProps>(
   ({ size = 32, className = "", title = "More information", ...props }, ref) => {
-    const iconSize = size * 0.65;
+    const iconSize = size * 0.75;
     
     return (
       <button
