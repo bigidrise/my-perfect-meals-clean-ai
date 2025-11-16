@@ -29,14 +29,11 @@ const MedicalBadgeButton = forwardRef<HTMLButtonElement, MedicalBadgeButtonProps
         }}
         {...props}
       >
-        <div className="relative flex items-center justify-center">
-          <div className="absolute w-6 h-6 rounded-full bg-amber-400/30 border border-amber-600/40" />
-          <Eye 
-            className="w-5 h-5 text-black relative z-10" 
-            strokeWidth={2.5}
-            style={{ filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.35))' }}
-          />
-        </div>
+        <Eye 
+          className="text-black" 
+          size={size * 0.7}
+          strokeWidth={2.5}
+        />
         {showPulse && (
           <span className="absolute inset-0 rounded-xl border-2 border-red-500 shadow-glow-red animate-ping pointer-events-none" />
         )}
