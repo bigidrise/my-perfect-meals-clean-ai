@@ -59,6 +59,7 @@ import foundersRoutes from "./routes/foundersRoutes";
 import physicianReportsRoutes from "./routes/physicianReports";
 import mealFinderRouter from "./routes/mealFinder";
 import { registerAdminSql } from "./adminSql";
+import glp1ShotsRoutes from "./routes/glp1Shots"; // Added import for glp1ShotsRoutes
 
 // Helper function to determine features by subscription plan
 function getFeaturesByPlan(plan: string) {
@@ -1876,7 +1877,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Scale ingredients and macros by serving size if > 1
       if (validatedServings > 1) {
         const meal = generatedMeal as any; // Type assertion for dynamic properties
-        
+
         // Scale ingredient quantities
         if (meal.ingredients && Array.isArray(meal.ingredients)) {
           meal.ingredients = meal.ingredients.map((ing: any) => {
@@ -2133,7 +2134,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let user = null;
       if (userId) {
         try {
-          const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+          const [dbUser] = await db.select().from(users).where(eq(dbUser.id, userId)).limit(1);
           user = dbUser || null;
         } catch (error) {
           console.log("Could not fetch user for weekly meals:", error);
@@ -2484,7 +2485,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Check if this is the new beer pairing format
       const { type, mealType, cuisine, mainIngredient, occasion, priceRange, preferences, abvRange } = req.body;
-      
+
       if (type === "beer" && mealType) {
         // New beer pairing format - use OpenAI
         if (!process.env.OPENAI_API_KEY) {
@@ -3451,8 +3452,6 @@ function getMealIngredientsDatabase() {
     }
   });
 
-  // Enhanced Shopping List API - with barcode support
-
   // ==== BARCODE SCANNING API ENDPOINTS (MyFitnessPal-Style) ====
 
   // 1. Lookup barcode - main scanning endpoint
@@ -4390,11 +4389,13 @@ Provide a single exceptional meal recommendation in JSON format with the followi
   app.use("/api", biometricsRoutes);
   // Deleted: glp1ShotsRoutes route
 
+  // Mount glp1Shots routes
+  app.use("/api", glp1ShotsRoutes); // Mounted glp1ShotsRoutes here
 
   // Add meal boards routes
   const mealBoardsRoutes = (await import("./routes/mealBoards")).default;
   app.use("/api", mealBoardsRoutes);
-  
+
   app.use("/api/care-team", careTeamRoutes);
   app.use("/api/pro", procareRoutes);
   app.use("/api/founders", foundersRoutes);
