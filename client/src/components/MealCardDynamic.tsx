@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertTriangle, RotateCcw, Plus, Clock, Users } from "lucide-react";
 import { Meal, UserProfile } from "@/services/mealEngineService";
 import TrashButton from "@/components/ui/TrashButton";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 
 interface MedicalBadge {
   badge: string;
@@ -254,7 +255,7 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
         <ul className="list-disc pl-6 space-y-1">
           {meal.ingredients && meal.ingredients.slice(0, showFullIngredients ? meal.ingredients.length : 5).map((ingredient, index) => (
             <li key={index} className="text-sm text-slate-700 dark:text-slate-300">
-              {ingredient.amount} {ingredient.unit} {ingredient.item}
+              {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
               {ingredient.notes && <span className="text-slate-500"> — {ingredient.notes}</span>}
             </li>
           ))}

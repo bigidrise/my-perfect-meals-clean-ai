@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 
 // Centralized macro data availability check
 function macroDataAvailable(meal: any): boolean {
@@ -233,8 +234,11 @@ function CookingInstructionsModal({ meal, open, onClose }: { meal: any, open: bo
             <div className="grid gap-2">
               {hydratedMeal?.ingredients?.map((ingredient: any, idx: number) => (
                 <div key={idx} className="flex justify-between items-center bg-white/5 rounded-lg p-3">
-                  <span className="text-zinc-200">{ingredient.name}</span>
-                  <span className="text-zinc-400 text-sm">{ingredient.amount || '—'}</span>
+                  <span className="text-zinc-200">
+                    {ingredient.amount && ingredient.unit && ingredient.name 
+                      ? formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.name)
+                      : `${ingredient.amount || '—'} ${ingredient.name}`}
+                  </span>
                 </div>
               )) || (
                 <div className="text-zinc-400 text-center py-4">

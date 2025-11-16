@@ -5,6 +5,7 @@ import { Sparkles, Users, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import MedicalBadges from "./MedicalBadges";
 import { getUserMedicalProfile } from "@/utils/medicalPersonalization";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 
 interface WeeklyMealCardProps {
   dateISO: string;
@@ -133,8 +134,8 @@ export default function WeeklyMealCard({ dateISO, slot, meal, time, onRegenerate
                 <li key={i}>
                   {ingredient.displayText || 
                    (ingredient.amount && ingredient.unit ? 
-                    `${ingredient.amount} ${ingredient.unit} ${ingredient.name}` : 
-                    ingredient.name)
+                    formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.name || ingredient.item) : 
+                    (ingredient.name || ingredient.item))
                   }
                 </li>
               ))}

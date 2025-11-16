@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Clock, Users, Shield, AlertTriangle, CheckCircle, X, Plus } from "lucide-react";
 import { useState } from "react";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 // Shopping list functionality removed - import eliminated
 
 export interface Ingredient {
@@ -335,7 +336,7 @@ export default function MealCardFull({
               <li key={i} className="flex items-start gap-2">
                 <span className="w-2 h-2 bg-slate-400 rounded-full shrink-0 mt-2"></span>
                 <span>
-                  {ingredient.amount} {ingredient.unit} {ingredient.item}
+                  {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
                   {ingredient.notes && (
                     <span className="text-slate-500 dark:text-slate-400">
                       {" "}— {ingredient.notes}

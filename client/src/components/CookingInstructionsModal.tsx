@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { formatIngredientWithGrams } from '@/utils/unitConversions';
 
 export default function CookingInstructionsModal({ 
   meal, 
@@ -49,7 +50,9 @@ export default function CookingInstructionsModal({
             <ul className="list-disc ml-5 text-sm space-y-1">
               {(hydrated?.ingredients || meal.ingredients || []).map((i: any, idx: number) => (
                 <li key={idx} className="text-zinc-200">
-                  <span className="font-medium">{i.amount ?? '—'}</span> — {i.name}
+                  {i.amount && i.unit && i.name 
+                    ? formatIngredientWithGrams(i.amount, i.unit, i.name)
+                    : `${i.amount ?? '—'} — ${i.name}`}
                 </li>
               ))}
             </ul>

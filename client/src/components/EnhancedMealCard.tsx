@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
+import { formatIngredientWithGrams } from "@/utils/unitConversions";
 
 // User profile interface (from onboarding data)
 interface UserProfile {
@@ -197,7 +198,7 @@ export default function EnhancedMealCard({ meal, userProfile, onReplace, isRepla
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
               {meal.ingredients.map((ingredient, index) => (
                 <li key={index} className="text-sm">
-                  {ingredient.amount} {ingredient.unit} {ingredient.item}
+                  {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
                   {ingredient.notes && <span className="text-gray-500 ml-1">({ingredient.notes})</span>}
                 </li>
               ))}
