@@ -335,7 +335,7 @@ export default function AlcoholLeanAndSocial() {
             <h1 className="text-2xl font-bold text-white">Lean & Social</h1>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-lg font-bold flash-border"
               aria-label="How to use Lean & Social"
             >
               ?
