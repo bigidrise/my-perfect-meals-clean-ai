@@ -789,6 +789,16 @@ export default function ProClientDashboard() {
             >
               💉 GLP-1 Meal Builder
             </Button>
+            <Button
+              onClick={() => {
+                localStorage.setItem("pro-client-id", clientId);
+                setLocation(`/anti-inflammatory-menu-builder?clientId=${clientId}`);
+              }}
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
+              data-testid="button-anti-inflammatory-hub"
+            >
+              🌿 Anti-Inflammatory Menu Builder
+            </Button>
           </CardContent>
         </Card>
 
