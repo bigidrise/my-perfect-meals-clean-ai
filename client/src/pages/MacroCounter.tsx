@@ -599,6 +599,10 @@ export default function MacroCounter() {
                   <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
                 </h3>
                 <div className="space-y-3">
+                  <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-950/40 p-4">
+                    <div className="text-base font-bold text-emerald-300">Total Calories</div>
+                    <div className="text-2xl font-bold text-emerald-300">{results.macros.calories} kcal</div>
+                  </div>
                   <MacroRow label="Protein" grams={results.macros.protein.g} />
                   <MacroRow 
                     label="Carbs - Starchy" 
