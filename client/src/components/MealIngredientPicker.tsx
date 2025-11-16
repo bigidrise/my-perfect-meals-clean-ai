@@ -387,7 +387,7 @@ export default function MealIngredientPicker({
                   {/* Protein Input */}
                   <div>
                     <label className="text-white/80 text-xs font-medium block mb-1">
-                      Protein (g)
+                      Protein grams
                     </label>
                     <Input
                       type="number"
@@ -408,7 +408,7 @@ export default function MealIngredientPicker({
                   {/* Carbs Input */}
                   <div>
                     <label className="text-white/80 text-xs font-medium block mb-1">
-                      Carbs (g)
+                      Carb grams
                     </label>
                     <Input
                       type="number"
@@ -429,7 +429,7 @@ export default function MealIngredientPicker({
                   {/* Fat Input */}
                   <div>
                     <label className="text-white/80 text-xs font-medium block mb-1">
-                      Fat (g)
+                      Fat grams
                     </label>
                     <Input
                       type="number"
