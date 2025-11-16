@@ -595,13 +595,13 @@ export default function MacroCounter() {
           <>
             <Card className="bg-zinc-900/80 border border-white/30 text-white">
               <CardContent className="p-5">
-                <h3 className="text-xl font-semibold flex items-center mb-4">
+                <h3 className="text-lg font-semibold flex items-center mb-4">
                   <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-950/40 p-4">
-                    <div className="text-md font-bold text-emerald-300">Total Calories</div>
-                    <div className="text-xl font-bold text-emerald-300">{results.macros.calories} kcal</div>
+                  <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 mb-2">
+                    <div className="text-base font-bold text-white">Total Calories</div>
+                    <div className="text-2xl font-bold text-emerald-300">{results.target} kcal</div>
                   </div>
                   <MacroRow label="Protein" grams={results.macros.protein.g} />
                   <MacroRow 
