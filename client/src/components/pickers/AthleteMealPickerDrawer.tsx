@@ -89,7 +89,7 @@ export function AthleteMealPickerDrawer({
     React.useState<AthleteMeal["category"]>(DEFAULT_CATEGORY);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
 
-  // Reset category when drawer opens
+  // Auto-expand first category when drawer opens
   React.useEffect(() => {
     if (open) {
       setCategory(DEFAULT_CATEGORY);

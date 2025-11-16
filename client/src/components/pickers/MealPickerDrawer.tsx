@@ -107,7 +107,7 @@ export function MealPickerDrawer({
         // For breakfast, lunch, dinner - auto-expand "Proteins"
         setActiveCategory("Proteins");
       }
-    } else if (!open) {
+    } else {
       setActiveCategory(null);
     }
   }, [open, list, useAntiInflammatory]);
