@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { normalizeBadges } from "./healthBadges";
 import MedicalBadgeButton from "@/components/ui/MedicalBadgeButton";
+import InfoIconButton from "@/components/ui/InfoIconButton";
 
 const CRITICAL_BADGE_KEYS = [
   "cardiac",
@@ -36,13 +37,23 @@ export default function HealthBadgesPopover({
   return (
     <div className={className}>
       <Popover>
-        <PopoverTrigger asChild>
+        <div className="flex items-center gap-2">
+          <PopoverTrigger asChild>
+            <InfoIconButton 
+              data-testid="button-medical-info"
+              title={label}
+              size={32}
+            />
+          </PopoverTrigger>
+          
           <MedicalBadgeButton 
-            data-testid="button-medical-badges"
+            data-testid="button-medical-badge"
             title={label}
             showPulse={hasCritical}
+            size={32}
           />
-        </PopoverTrigger>
+        </div>
+        
         <PopoverContent
           align={align}
           side={side}
