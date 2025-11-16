@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerHeaderProps, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import type { Meal } from "@/components/MealCard";
 import { TEMPLATE_SETS } from "@/data/templateSets";
@@ -149,6 +149,9 @@ export function MealPickerDrawer({
       })
     : [];
 
+  const handleCategorySelect = (category: string) => {
+    setActiveCategory(category as any);
+  };
 
   return (
     <>
@@ -189,7 +192,7 @@ export function MealPickerDrawer({
               (cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => handleCategorySelect(cat)}
                   className={cn(
                     "flex-shrink-0 rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
                     activeCategory === cat
