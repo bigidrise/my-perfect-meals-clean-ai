@@ -888,26 +888,19 @@ export default function AntiInflammatoryMenuBuilder() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
     >
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={() => setLocation("/planner")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-      Planner
-      </Button>
-
-      {/* Fixed Client Dashboard Button - Top Right (when accessed from ProCare) */}
+      {/* Conditional Back Button - Changes based on navigation source */}
       {(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const clientId = urlParams.get('clientId');
+        
+        // If coming from ProCare (has clientId), show "Client Dashboard"
         if (clientId) {
           return (
             <Button
+              variant="ghost"
               size="sm"
               onClick={() => setLocation(`/pro/clients/${clientId}`)}
-              className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+              className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
               data-testid="button-client-dashboard"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -915,7 +908,19 @@ export default function AntiInflammatoryMenuBuilder() {
             </Button>
           );
         }
-        return null;
+        
+        // Otherwise, show "Planner" (default navigation from Planner page)
+        return (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setLocation("/planner")}
+            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Planner
+          </Button>
+        );
       })()}
 
       <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
