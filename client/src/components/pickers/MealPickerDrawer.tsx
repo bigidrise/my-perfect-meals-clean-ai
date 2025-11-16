@@ -97,15 +97,20 @@ export function MealPickerDrawer({
     setTemplates(filtered.length > 0 ? filtered : raw);
   }, [list, profile]);
 
-  // Auto-expand first category when snacks drawer opens
+  // Auto-expand first category when drawer opens
   React.useEffect(() => {
-    if (open && list === "snacks") {
-      const firstSnackCategory = Object.keys(snackIngredients)[0];
-      setActiveCategory(firstSnackCategory as any);
-    } else if (open && list !== "snacks") {
+    if (open && list) {
+      if (list === "snacks") {
+        const firstSnackCategory = Object.keys(useAntiInflammatory ? antiInflammatorySnacks : snackIngredients)[0];
+        setActiveCategory(firstSnackCategory as any);
+      } else {
+        // For breakfast, lunch, dinner - auto-expand "Proteins"
+        setActiveCategory("Proteins");
+      }
+    } else if (!open) {
       setActiveCategory(null);
     }
-  }, [open, list]);
+  }, [open, list, useAntiInflammatory]);
 
   if (!open || !list) return null;
 
