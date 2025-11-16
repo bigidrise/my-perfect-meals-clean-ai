@@ -231,14 +231,38 @@ export default function MealIngredientPicker({
     setGenerating(true);
 
     try {
-      const allIngredients = [...selectedIngredients];
+      // STEP 1 — Start with selected ingredients
+      let allIngredients = [...selectedIngredients];
 
+      // STEP 2 — Include custom ingredients (comma-separated)
       if (customIngredients.trim()) {
-        allIngredients.push(...customIngredients.split(',').map(i => i.trim()).filter(Boolean));
+        allIngredients.push(
+          ...customIngredients.split(',').map(i => i.trim()).filter(Boolean)
+        );
       }
 
+      // STEP 3 — Apply cooking styles
+      const allIngredientsWithStyles = allIngredients.map((name) => {
+        const style = cookingStyles[name];
+        if (!style) return name;
+
+        // Eggs formatting
+        if (name.toLowerCase().includes("egg")) {
+          return `${style} ${name.toLowerCase() === "eggs" ? "eggs" : name}`;
+        }
+
+        // Steaks formatting
+        return `${name} (${style})`;
+      });
+
+      // STEP 4 — Macro targets if enabled
       let macroTargets = null;
-      if (macroTargetingEnabled && targetProtein !== '' && targetCarbs !== '' && targetFat !== '') {
+      if (
+        macroTargetingEnabled &&
+        targetProtein !== '' &&
+        targetCarbs !== '' &&
+        targetFat !== ''
+      ) {
         macroTargets = {
           protein: Number(targetProtein),
           carbs: Number(targetCarbs),
@@ -246,14 +270,16 @@ export default function MealIngredientPicker({
         };
       }
 
+      // STEP 5 — Build payload including rewritten ingredients
       const requestPayload = {
-        fridgeItems: allIngredients,
+        fridgeItems: allIngredientsWithStyles,
         userId: 1,
         mealSlot: mealSlot,
         ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
         ...(dietType && { dietType })
       };
 
+      // STEP 6 — API call
       const data = await apiRequest('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -266,6 +292,7 @@ export default function MealIngredientPicker({
         throw new Error('No meal generated');
       }
 
+      // STEP 7 — Add default image
       const mealWithImage = {
         ...generatedMeal,
         imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
@@ -278,8 +305,10 @@ export default function MealIngredientPicker({
         })
       };
 
+      // STEP 8 — Send result back up
       onMealGenerated(mealWithImage);
 
+      // STEP 9 — Reset UI state
       setSelectedIngredients([]);
       setCustomIngredients('');
       setActiveCategory('');
@@ -290,6 +319,7 @@ export default function MealIngredientPicker({
       saveMacroTargetsCache(false, '', '', '');
       onOpenChange(false);
 
+      // STEP 10 — Macro accuracy toast
       if (macroTargets) {
         const proteinDiff = Math.abs(generatedMeal.protein - macroTargets.protein);
         const carbsDiff = Math.abs(generatedMeal.carbs - macroTargets.carbs);
@@ -306,7 +336,7 @@ export default function MealIngredientPicker({
           description: withinTolerance 
             ? `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f ✓`
             : `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f\n${missedMacros.join(', ')}`,
-          variant: withinTolerance ? "default" : "default",
+          variant: "default",
         });
       } else {
         toast({
