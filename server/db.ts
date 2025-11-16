@@ -10,11 +10,17 @@ import { builderPlans } from "./db/schema/builderPlans";
 function getDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL;
   
+  // Log environment info for debugging
+  const env = process.env.REPLIT_DEPLOYMENT ? 'PRODUCTION' : 'DEVELOPMENT';
+  console.log(`[DB] Environment: ${env}`);
+  console.log(`[DB] DATABASE_URL is ${databaseUrl ? 'SET' : 'NOT SET'}`);
+  
   // If DATABASE_URL points to Railway (which may be unavailable), use Neon credentials instead
   if (databaseUrl?.includes('railway.app') || databaseUrl?.includes('rlwy.net')) {
     const { PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE } = process.env;
     if (PGUSER && PGPASSWORD && PGHOST && PGPORT && PGDATABASE) {
-      console.log('ℹ️ Using Neon database credentials instead of Railway DATABASE_URL');
+      console.log('[DB] Using Neon credentials instead of Railway DATABASE_URL');
+      console.log(`[DB] Connecting to: ${PGHOST}`);
       return `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`;
     }
   }
