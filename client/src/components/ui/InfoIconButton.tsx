@@ -1,4 +1,4 @@
-import { Eye } from "lucide-react";
+import { Info } from "lucide-react";
 import { forwardRef } from "react";
 
 interface InfoIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -27,7 +27,7 @@ const InfoIconButton = forwardRef<HTMLButtonElement, InfoIconButtonProps>(
         }}
         {...props}
       >
-        <Eye 
+        <Info 
           style={{ width: iconSize, height: iconSize }}
           strokeWidth={2.5}
         />

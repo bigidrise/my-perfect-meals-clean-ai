@@ -19,7 +19,7 @@ import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
 import { todayISOInTZ } from "@/utils/midnight";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info, Calendar, Eye } from "lucide-react";
+import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info, Calendar } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -917,7 +917,7 @@ export default function WeeklyMealBoard() {
               className="absolute right-0 flex items-center justify-center h-8 w-8 rounded-2xl bg-lime-700 hover:bg-lime-800 border border-lime-600 text-white"
               aria-label="How to use Weekly Meal Board"
             >
-              <Eye className="h-4 w-4" />
+              <Info className="h-4 w-4" />
             </button>
           </div>
 
