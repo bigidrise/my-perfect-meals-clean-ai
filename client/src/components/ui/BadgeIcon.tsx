@@ -1,21 +1,13 @@
 
 import React from "react";
-import { Heart, Droplet, Activity, AlertCircle, Brain, Apple } from "lucide-react";
+import { getBadgeIcon, getBadgeType } from "./BadgeRegistry";
 
 interface BadgeIconProps {
-  type?: "heart" | "diabetes" | "kidney" | "alert" | "brain" | "nutrition";
+  type: string;
+  size?: number;
   variant?: "default" | "critical" | "positive" | "info" | "warning";
   className?: string;
 }
-
-const ICON_MAP = {
-  heart: Heart,
-  diabetes: Activity,
-  kidney: Droplet,
-  alert: AlertCircle,
-  brain: Brain,
-  nutrition: Apple
-};
 
 const VARIANT_COLORS = {
   default: "text-white/70",
@@ -26,16 +18,20 @@ const VARIANT_COLORS = {
 };
 
 export default function BadgeIcon({ 
-  type = "heart", 
-  variant = "default",
+  type, 
+  size = 16,
+  variant,
   className = "" 
 }: BadgeIconProps) {
-  const IconComponent = ICON_MAP[type];
-  const colorClass = VARIANT_COLORS[variant];
+  const IconComponent = getBadgeIcon(type);
+  
+  // Auto-determine variant from registry if not specified
+  const autoVariant = variant || (getBadgeType(type) === "critical" ? "critical" : "default");
+  const colorClass = VARIANT_COLORS[autoVariant];
 
   return (
     <div className={`flex-shrink-0 ${className}`}>
-      <IconComponent className={`w-4 h-4 ${colorClass}`} />
+      <IconComponent className={`${colorClass}`} size={size} strokeWidth={2} />
     </div>
   );
 }
