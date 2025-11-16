@@ -57,10 +57,10 @@ export default function HealthBadgePopup({
 
       {showPopup && (
         <div
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-64 rounded-lg bg-black/95 border border-white/20 p-3 shadow-2xl"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-64 rounded-lg bg-black/30 backdrop-blur-lg border border-white/20 p-3 shadow-2xl"
           data-testid="popup-health-badges"
         >
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black/95" />
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black/30" />
           
           <h4 className="text-white font-semibold text-sm mb-2">Health Badges</h4>
           <div className="space-y-2">

@@ -55,7 +55,7 @@ export default function MedicalInfoBubble({ badges, description }: MedicalInfoBu
       {/* Popover */}
       {isOpen && (
         <div 
-          className="absolute z-50 right-0 top-9 w-72 bg-black/70 text-white rounded-2xl shadow-2xl backdrop-blur-lg border border-white/15 p-4 animate-fadeIn"
+          className="absolute z-50 right-0 top-9 w-72 bg-black/30 text-white rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 p-4 animate-fadeIn"
           onClick={(e) => e.stopPropagation()}
           data-testid="popover-medical-info"
         >
