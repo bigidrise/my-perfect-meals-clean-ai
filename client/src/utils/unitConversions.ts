@@ -1,24 +1,88 @@
-// Utility for converting common cooking measurements to grams for clarity
-// Helps users with grocery shopping and meal prep accuracy
 
+import { INGREDIENT_MACROS } from "@/data/ingredients.nutrition";
+
+// Convert oz to grams (weight)
 const ozToGrams = (oz: number) => Math.round(oz * 28.35);
-const lbToGrams = (lb: number) => Math.round(lb * 453.59);
-const cupToGrams = (cups: number, ingredient: string = '') => {
-  // Rough estimates for common ingredients
-  const lowerIngredient = ingredient.toLowerCase();
-  if (lowerIngredient.includes('flour')) return Math.round(cups * 120);
-  if (lowerIngredient.includes('sugar')) return Math.round(cups * 200);
-  if (lowerIngredient.includes('rice')) return Math.round(cups * 185);
-  if (lowerIngredient.includes('oats')) return Math.round(cups * 80);
-  return Math.round(cups * 240); // default for liquids
-};
+
+// Convert common units to grams for nutrition lookup
+function convertToGrams(amount: number, unit: string): number {
+  const unitLower = unit.toLowerCase();
+  
+  if (unitLower === 'g' || unitLower === 'grams' || unitLower === 'gram') {
+    return amount;
+  }
+  if (unitLower === 'oz' || unitLower === 'ounce' || unitLower === 'ounces') {
+    return ozToGrams(amount);
+  }
+  if (unitLower === 'lb' || unitLower === 'lbs' || unitLower === 'pound' || unitLower === 'pounds') {
+    return amount * 453.59;
+  }
+  // For cups, use rough estimates - will vary by ingredient
+  if (unitLower === 'cup' || unitLower === 'cups') {
+    return amount * 240; // default for liquids
+  }
+  
+  return amount; // fallback
+}
+
+// Find matching ingredient in nutrition database
+function findIngredientNutrition(ingredientName: string) {
+  const searchName = ingredientName.toLowerCase().trim();
+  
+  // Direct match
+  if (INGREDIENT_MACROS[searchName]) {
+    return INGREDIENT_MACROS[searchName];
+  }
+  
+  // Partial match - find first ingredient that contains the search term
+  for (const [key, value] of Object.entries(INGREDIENT_MACROS)) {
+    if (key.includes(searchName) || searchName.includes(key)) {
+      return value;
+    }
+  }
+  
+  return null;
+}
+
+// Determine which macro to display (protein for proteins, carbs for carbs, fat for fats)
+function getPrimaryMacro(ingredientName: string, nutrition: any): { macro: string; value: number } | null {
+  const name = ingredientName.toLowerCase();
+  
+  // Protein sources
+  if (name.includes('chicken') || name.includes('turkey') || name.includes('beef') || 
+      name.includes('fish') || name.includes('salmon') || name.includes('cod') ||
+      name.includes('shrimp') || name.includes('tofu') || name.includes('egg')) {
+    return { macro: 'protein', value: nutrition.protein };
+  }
+  
+  // Carb sources
+  if (name.includes('rice') || name.includes('quinoa') || name.includes('pasta') || 
+      name.includes('potato') || name.includes('yam') || name.includes('oat') ||
+      name.includes('bread') || name.includes('tortilla')) {
+    return { macro: 'carbs', value: nutrition.carbs };
+  }
+  
+  // Fat sources
+  if (name.includes('oil') || name.includes('avocado') || name.includes('butter') ||
+      name.includes('nut') || name.includes('almond')) {
+    return { macro: 'fat', value: nutrition.fat };
+  }
+  
+  // Default to highest macro
+  const maxMacro = Math.max(nutrition.protein, nutrition.carbs, nutrition.fat);
+  if (maxMacro === nutrition.protein) return { macro: 'protein', value: nutrition.protein };
+  if (maxMacro === nutrition.carbs) return { macro: 'carbs', value: nutrition.carbs };
+  if (maxMacro === nutrition.fat) return { macro: 'fat', value: nutrition.fat };
+  
+  return null;
+}
 
 /**
- * Format ingredient measurement with gram equivalent for clarity
+ * Format ingredient with macro content in parentheses
  * Examples:
- * - "4 oz chicken" → "4 oz. (113g) chicken"
- * - "1 lb beef" → "1 lb. (454g) beef"
- * - "2 cups rice" → "2 cups (370g) rice"
+ * - "4 oz chicken" → "4 oz chicken (28g protein)"
+ * - "8 oz yams" → "8 oz yams (50g carbs)"
+ * - "1 tbsp olive oil" → "1 tbsp olive oil (14g fat)"
  */
 export function formatIngredientWithGrams(
   amount: string | number,
@@ -26,37 +90,35 @@ export function formatIngredientWithGrams(
   item: string
 ): string {
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-  const unitLower = unit?.toLowerCase() || '';
   
-  // Skip if no amount/unit or already in grams
+  // Skip if no amount/unit
   if (!amount || !unit || isNaN(numAmount)) {
     return `${amount || ''} ${unit || ''} ${item}`.trim();
   }
   
-  if (unitLower === 'g' || unitLower === 'grams' || unitLower === 'gram') {
-    return `${amount}g ${item}`;
+  // Find nutrition data for this ingredient
+  const nutrition = findIngredientNutrition(item);
+  
+  if (!nutrition) {
+    // No nutrition data - just return formatted string
+    return `${amount} ${unit} ${item}`;
   }
-
-  let grams: number | null = null;
-  let formattedUnit = unit;
-
-  // Convert common units to grams
-  if (unitLower === 'oz' || unitLower === 'ounce' || unitLower === 'ounces') {
-    grams = ozToGrams(numAmount);
-    formattedUnit = 'oz.';
-  } else if (unitLower === 'lb' || unitLower === 'lbs' || unitLower === 'pound' || unitLower === 'pounds') {
-    grams = lbToGrams(numAmount);
-    formattedUnit = 'lb.';
-  } else if (unitLower === 'cup' || unitLower === 'cups') {
-    grams = cupToGrams(numAmount, item);
-    formattedUnit = unitLower;
+  
+  // Convert amount to grams for calculation
+  const gramsAmount = convertToGrams(numAmount, unit);
+  
+  // Calculate macro content (nutrition is per 100g)
+  const factor = gramsAmount / 100;
+  
+  // Determine which macro to display
+  const primaryMacro = getPrimaryMacro(item, nutrition);
+  
+  if (!primaryMacro) {
+    return `${amount} ${unit} ${item}`;
   }
-
-  // Format with gram conversion if available
-  if (grams !== null) {
-    return `${amount} ${formattedUnit} (${grams}g) ${item}`;
-  }
-
-  // Otherwise return as-is
-  return `${amount} ${unit} ${item}`;
+  
+  const macroContent = Math.round(primaryMacro.value * factor);
+  
+  // Format the output
+  return `${amount} ${unit} ${item} (${macroContent}g ${primaryMacro.macro})`;
 }
