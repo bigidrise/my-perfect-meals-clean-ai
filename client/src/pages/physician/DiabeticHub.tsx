@@ -195,7 +195,7 @@ export default function DiabeticHub() {
               </h1>
               <button
                 onClick={() => setShowInfoModal(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border relative z-10"
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border relative z-10"
                 aria-label="How to use Diabetic Nutrition Hub"
               >
                 ?
@@ -377,7 +377,7 @@ export default function DiabeticHub() {
 
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-6 border border-orange-400/30">
                 <div className="text-white font-medium text-sm mb-2">Last Reading</div>
-                <div className="text-2xl font-medium text-white mb-2">
+                <div className="text-xl font-medium text-white mb-2">
                   {latestReading ? `${lastValue} mg/dL` : "No readings yet"}
                 </div>
                 {latestReading && (
@@ -392,7 +392,7 @@ export default function DiabeticHub() {
                     )}
                   </>
                 )}
-                <div className="text-white/80 text-sm mt-2">
+                <div className="text-white/80 text-base mt-2">
                   Target: {targetMin}-{targetMax} mg/dL
                 </div>
               </div>
@@ -449,21 +449,21 @@ export default function DiabeticHub() {
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-emerald-500/20 backdrop-blur-sm rounded-xl p-4 border border-emerald-400/30">
                     <div className="text-emerald-200 text-xs mb-1">7-Day Average</div>
-                    <div className="text-white text-2xl font-bold">
+                    <div className="text-white text-lg font-semi-bold">
                       {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
                     </div>
                   </div>
 
                   <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30">
                     <div className="text-blue-200 text-xs mb-1">Target Range</div>
-                    <div className="text-white text-lg font-bold">
+                    <div className="text-white text-lg font-semi-bold">
                       {targetMin}-{targetMax} mg/dL
                     </div>
                   </div>
 
                   <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-4 border border-purple-400/30">
                     <div className="text-purple-200 text-xs mb-1">In Range</div>
-                    <div className="text-white text-2xl font-bold">
+                    <div className="text-white text-lg font-semi-bold">
                       {Math.round((glucoseLogs.data.slice(0, 7).filter((log: any) => log.valueMgdl >= targetMin && log.valueMgdl <= targetMax).length / Math.min(7, glucoseLogs.data.length)) * 100)}%
                     </div>
                   </div>
@@ -472,7 +472,7 @@ export default function DiabeticHub() {
                 {/* Recent Readings Table */}
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
                   <div className="px-4 py-3 bg-white/10 border-b border-white/20">
-                    <h3 className="text-white font-semibold">Recent Readings</h3>
+                    <h3 className="text-white font-semi-bold">Recent Readings</h3>
                   </div>
                   <div className="divide-y divide-white/10">
                     {glucoseLogs.data.slice(0, 7).map((log: any, index: number) => {
@@ -480,7 +480,7 @@ export default function DiabeticHub() {
                       return (
                         <div key={index} className="px-4 py-3 flex justify-between items-center hover:bg-white/5">
                           <div>
-                            <span className={`text-lg font-bold ${isInRange ? 'text-green-400' : 'text-orange-400'}`}>
+                            <span className={`text-lg font-semi-bold ${isInRange ? 'text-green-400' : 'text-orange-400'}`}>
                               {log.valueMgdl} mg/dL
                             </span>
                             <span className="text-white/60 text-sm ml-2">({log.context})</span>
