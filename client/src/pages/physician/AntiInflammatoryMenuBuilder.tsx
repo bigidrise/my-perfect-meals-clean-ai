@@ -964,7 +964,7 @@ export default function AntiInflammatoryMenuBuilder() {
                   }
                 }));
               }}
-              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
+              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-lg font-bold"
               aria-label="How to use"
             >
               ?
