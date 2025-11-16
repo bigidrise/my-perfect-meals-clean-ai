@@ -389,7 +389,7 @@ export default function ProClientDashboard() {
                 Save Targets
               </Button>
               <Button
-                onClick={() => {
+                onClick={async () => {
                   if (t.kcal < 100) {
                     toast({
                       title: "Cannot Set Empty Macros",
@@ -399,27 +399,34 @@ export default function ProClientDashboard() {
                     return;
                   }
 
-                  // Save macros to localStorage with "anon" user (default biometrics key)
-                  import("@/lib/dailyLimits").then(({ setMacroTargets }) => {
-                    setMacroTargets({
+                  try {
+                    // Save macros to localStorage AND database for this client
+                    const { setMacroTargets } = await import("@/lib/dailyLimits");
+                    await setMacroTargets({
                       calories: t.kcal,
                       protein_g: t.protein,
                       carbs_g: t.carbs,
                       fat_g: t.fat,
+                    }, clientId);
+
+                    // Link the client ID for ProCare integration
+                    const { linkUserToClient } = await import("@/lib/macroResolver");
+                    linkUserToClient(clientId, clientId);
+
+                    toast({
+                      title: "✅ Macros Set to Biometrics!",
+                      description: `${t.kcal} kcal coach-set targets saved for ${client?.name}`,
                     });
-                  });
 
-                  // Link the current user to this clientId for ProCare integration
-                  import("@/lib/macroResolver").then(({ linkUserToClient }) => {
-                    linkUserToClient("anon", clientId);
-                  });
-
-                  toast({
-                    title: "Macros Set to Biometrics!",
-                    description: `${t.kcal} kcal coach-set targets saved`,
-                  });
-
-                  setLocation("/my-biometrics");
+                    setLocation("/my-biometrics");
+                  } catch (error) {
+                    console.error("Failed to set macros:", error);
+                    toast({
+                      title: "Failed to Set Macros",
+                      description: "Please try again",
+                      variant: "destructive",
+                    });
+                  }
                 }}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 flash-border"
                 data-testid="button-set-macros-biometrics-red"
