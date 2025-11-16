@@ -70,6 +70,13 @@ export default function HealthyKidsMeals() {
               <Baby className="h-6 w-6 text-orange-400" />
               <h1 className="text-xl font-bold text-white">Healthy Kids Meals</h1>
             </div>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="ml-auto flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
+              aria-label="How to use Healthy Kids Meals"
+            >
+              ?
+            </button>
           </div>
         </div>
       </div>
