@@ -247,7 +247,6 @@ export default function WeeklyMealBoard() {
       const targetSlot = cached.slot || "breakfast"; // Fallback to breakfast for old cached data
       const existingSlotMeals = dayLists[targetSlot].filter(m => !m.id.startsWith('ai-meal-'));
       const updatedSlotMeals = [...existingSlotMeals, ...cached.meals];
-      const updatedDayLists = { ...dayLists, [targetSlot]: updatedSlotMeals };
       const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
 
       setBoard(updatedBoard);
@@ -888,7 +887,7 @@ export default function WeeklyMealBoard() {
 
       <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
         <div className="px-4 py-4 flex flex-col gap-3">
-          
+
           {/* ROW 1: Week Navigation + Info Button */}
           <div className="flex items-center justify-center relative">
             <div className="flex items-center gap-3">
@@ -914,10 +913,10 @@ export default function WeeklyMealBoard() {
             </div>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 flex items-center justify-center h-8 w-8 rounded-2xl bg-lime-700 hover:bg-lime-800 border border-lime-600 text-white"
+              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
               aria-label="How to use Weekly Meal Board"
             >
-              <Info className="h-4 w-4" />
+              <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white/60">I</span>
             </button>
           </div>
 
@@ -930,7 +929,7 @@ export default function WeeklyMealBoard() {
           {FEATURES.dayPlanning === 'alpha' && (
             <div className="flex items-center justify-between gap-3">
               <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
-              
+
               {planningMode === 'day' && (
                 <Button
                   size="sm"
@@ -1052,9 +1051,9 @@ export default function WeeklyMealBoard() {
                     </Button>
 
                     {/* Plus button for manual entry */}
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -1138,9 +1137,9 @@ export default function WeeklyMealBoard() {
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
                 {/* Plus button for manual entry */}
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="text-white/80 hover:bg-white/10"
                   onClick={() => openManualModal(key)}
                 >
@@ -1524,7 +1523,7 @@ export default function WeeklyMealBoard() {
             <div className="space-y-4 text-white/90 text-sm">
               <p>Create your day or week by starting with breakfast.</p>
               <p className="text-white/80">
-                Click the "Create with AI" button on each meal section to build your plan. 
+                Click the "Create with AI" button on each meal section to build your plan.
                 You can create one day and duplicate it across the week, or create each day individually.
               </p>
               <p className="text-white/80">
@@ -1592,7 +1591,7 @@ export default function WeeklyMealBoard() {
                   💡 Pro Tip: Macro Tracking
                 </p>
                 <p className="text-orange-100/80 text-xs">
-                  Send just ONE day to macros at a time (not the whole week). 
+                  Send just ONE day to macros at a time (not the whole week).
                   This way, if you change meals on other days, you won't have outdated data.
                 </p>
               </div>
@@ -1603,7 +1602,7 @@ export default function WeeklyMealBoard() {
                   Shopping List Ready
                 </p>
                 <p className="text-white/70 text-xs">
-                  You CAN send your entire week to the shopping list! 
+                  You CAN send your entire week to the shopping list!
                   This consolidates all ingredients for easy grocery shopping.
                   Click "Send Entire Week" at the bottom.
                 </p>
