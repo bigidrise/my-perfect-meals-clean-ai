@@ -47,10 +47,10 @@ export default function HealthBadgesPopover({
           </PopoverTrigger>
           
           <ShieldPlus 
-            className={`${
+            className={`text-red-500 ${
               hasCritical 
-                ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]' 
-                : 'text-amber-500'
+                ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]' 
+                : ''
             }`}
             size={28}
             strokeWidth={2}
