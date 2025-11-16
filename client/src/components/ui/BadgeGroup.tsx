@@ -1,4 +1,3 @@
-
 import React from "react";
 import BadgeRow from "./BadgeRow";
 import BadgeIcon from "./BadgeIcon";
@@ -17,7 +16,7 @@ interface BadgeGroupProps {
   sortByPriority?: boolean;
 }
 
-export default function BadgeGroup({ 
+export default function BadgeGroup({
   badges,
   className = "",
   showIcons = true,
@@ -32,7 +31,7 @@ export default function BadgeGroup({
   const enriched = unique.map(badge => {
     const definition = findBadgeDefinition(badge.label);
     const priorityMap = { critical: 0, important: 1, info: 2, default: 3 };
-    
+
     return {
       ...badge,
       desc: badge.desc || getBadgeDescription(badge.label),
@@ -42,7 +41,7 @@ export default function BadgeGroup({
   });
 
   // Sort by priority if enabled
-  const sorted = sortByPriority 
+  const sorted = sortByPriority
     ? enriched.sort((a, b) => a.priority - b.priority)
     : enriched;
 
@@ -53,7 +52,7 @@ export default function BadgeGroup({
           {showIcons && (
             <BadgeIcon
               type={badge.label}
-              size={20}
+              size={28}
               className="mt-0.5"
             />
           )}
