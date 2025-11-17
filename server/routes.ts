@@ -2319,6 +2319,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Smart Restaurant Guide endpoint (with craving context)
+  app.post("/api/restaurants/guide", async (req, res) => {
+    try {
+      const { restaurantName, craving, cuisine, userId } = req.body;
+      
+      if (!restaurantName || !craving) {
+        return res.status(400).json({ 
+          error: "Restaurant name and craving are required" 
+        });
+      }
+
+      console.log(`🍽️ Smart Restaurant Guide: ${craving} at ${restaurantName} (${cuisine} cuisine)`);
+      
+      let user = null;
+      if (userId) {
+        try {
+          const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+          user = dbUser || null;
+        } catch (error) {
+          console.log("Could not fetch user for restaurant meal personalization:", error);
+        }
+      }
+
+      const { generateRestaurantMealsAI } = await import("./services/restaurantMealGeneratorAI");
+      const recommendations = await generateRestaurantMealsAI({
+        restaurantName: restaurantName,
+        cuisine: cuisine || "International",
+        cravingContext: craving,
+        user: user || undefined
+      });
+
+      console.log(`✅ Generated ${recommendations.length} craving-specific recommendations`);
+
+      res.json({
+        recommendations,
+        restaurantName,
+        craving,
+        cuisine,
+        generatedAt: new Date().toISOString()
+      });
+    } catch (error: any) {
+      console.error("❌ Smart Restaurant Guide error:", error);
+      res.status(500).json({ error: "Failed to generate restaurant recommendations" });
+    }
+  });
+
   app.post("/api/restaurants/analyze-menu", async (req, res) => {
     try {
       const { restaurantName, cuisine, userId } = req.body;

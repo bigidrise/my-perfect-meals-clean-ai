@@ -74,7 +74,7 @@ import manualMacrosRouter from "./routes/manualMacros";
 import { testimonialsRouter } from "./routes/testimonials";
 import { USE_FACEBOOK } from "./config";
 import { facebookRouter } from "./routes/facebook";
-import restaurantsRouter from "./routes/restaurants";
+import restaurantRoutes from "./routes/restaurants.js";
 import abTestingMealPlansRouter from "./routes/mealPlans";
 import { templateRouter } from "./routes/mealTemplates";
 import { userMealPrefsRouter } from "./routes/userMealPrefs";
@@ -341,7 +341,8 @@ app.use("/api/games", gamesRouter);
 app.use("/api/testimonials", testimonialsRouter);
 
 // Restaurant Guide System - with Google Places API cuisine enrichment
-app.use("/api/restaurants", resolveCuisineMiddleware, restaurantsRouter);
+app.use("/api/restaurants", resolveCuisineMiddleware, restaurantRoutes);
+console.log("✅ Restaurant routes mounted at /api/restaurants");
 
 // Shopping List V2 - Split into public preview and protected routes (imported at top)
 app.use("/api/shopping-list-v2", shoppingPreviewRouter); // Preview endpoint (no auth)
