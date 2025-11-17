@@ -407,7 +407,7 @@ export default function RestaurantGuidePage() {
             </p>
             <Button
               onClick={() => setLocation("/meal-finder")}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-xl text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
             >
               <MapPin className="h-4 w-4 mr-2" />
               Find Meals Near Me
@@ -417,7 +417,7 @@ export default function RestaurantGuidePage() {
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between text-lg text-white">
+            <CardTitle className="flex items-center justify-between text-xl text-white">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
                 Smart Restaurant Guide
@@ -431,14 +431,12 @@ export default function RestaurantGuidePage() {
               </button>
             </CardTitle>
             <CardDescription className="text-white/80">
-              Pick your craving and restaurant to get AI-powered healthy choices.
+              
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
             <p className="mb-4 text-sm text-white/90">
-              Tell us <strong>what you're craving</strong> (e.g., chicken, salmon, pasta) and
-              <strong> where you're eating</strong> (e.g., Cheesecake Factory, P.F. Chang's). We'll recommend
-              <em>real menu picks</em> with healthier ways to order.
+              
             </p>
 
             <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
@@ -698,10 +696,10 @@ export default function RestaurantGuidePage() {
               <div className="text-center py-8">
                 <div className="text-6xl mb-4">🔍</div>
                 <p className="text-white mb-2">
-                  Enter a <strong>craving</strong> (e.g., "chicken") and a <strong>restaurant</strong> (e.g., "Cheesecake Factory") above.
+                  
                 </p>
                 <p className="text-sm text-white">
-                  Tip: You'll get specific dish ideas plus healthy order tweaks.
+                  
                 </p>
               </div>
             )}

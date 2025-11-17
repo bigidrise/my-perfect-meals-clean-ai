@@ -45,21 +45,36 @@ interface StructuredIngredient {
 }
 
 // Convert grams to ounces for American shopping measurements
-function convertToAmericanUnits(quantity: number | string, unit: string, ingredientName: string): { quantity: string; unit: string } {
-  const numQuantity = typeof quantity === 'string' ? parseFloat(quantity) : quantity;
+function convertToAmericanUnits(
+  quantity: number | string,
+  unit: string,
+  ingredientName: string,
+): { quantity: string; unit: string } {
+  const numQuantity =
+    typeof quantity === "string" ? parseFloat(quantity) : quantity;
   if (isNaN(numQuantity)) return { quantity: String(quantity), unit };
 
   const name = ingredientName.toLowerCase();
 
   // Convert grams to ounces for meat, cheese, and other ingredients Americans buy by weight
-  if (unit?.toLowerCase() === 'g' || unit?.toLowerCase() === 'grams') {
+  if (unit?.toLowerCase() === "g" || unit?.toLowerCase() === "grams") {
     // Meat and protein conversion
-    if (name.includes('chicken') || name.includes('beef') || name.includes('pork') ||
-        name.includes('turkey') || name.includes('fish') || name.includes('salmon') ||
-        name.includes('shrimp') || name.includes('meat') || name.includes('steak') ||
-        name.includes('bacon') || name.includes('ham') || name.includes('sausage') ||
-        name.includes('cheese') || name.includes('butter')) {
-
+    if (
+      name.includes("chicken") ||
+      name.includes("beef") ||
+      name.includes("pork") ||
+      name.includes("turkey") ||
+      name.includes("fish") ||
+      name.includes("salmon") ||
+      name.includes("shrimp") ||
+      name.includes("meat") ||
+      name.includes("steak") ||
+      name.includes("bacon") ||
+      name.includes("ham") ||
+      name.includes("sausage") ||
+      name.includes("cheese") ||
+      name.includes("butter")
+    ) {
       const ounces = numQuantity / 28.35; // 1 oz = 28.35g
 
       // If more than 16 oz, convert to pounds
@@ -67,23 +82,30 @@ function convertToAmericanUnits(quantity: number | string, unit: string, ingredi
         const pounds = ounces / 16;
         return {
           quantity: pounds >= 1 ? pounds.toFixed(1) : pounds.toFixed(2),
-          unit: 'lb'
+          unit: "lb",
         };
       }
 
       return {
         quantity: ounces >= 1 ? ounces.toFixed(1) : ounces.toFixed(2),
-        unit: 'oz'
+        unit: "oz",
       };
     }
   }
 
   // Convert ml to fl oz for liquids
-  if (unit?.toLowerCase() === 'ml' || unit?.toLowerCase() === 'milliliters') {
-    if (name.includes('milk') || name.includes('cream') || name.includes('oil') ||
-        name.includes('broth') || name.includes('stock') || name.includes('juice') ||
-        name.includes('water') || name.includes('sauce') || name.includes('vinegar')) {
-
+  if (unit?.toLowerCase() === "ml" || unit?.toLowerCase() === "milliliters") {
+    if (
+      name.includes("milk") ||
+      name.includes("cream") ||
+      name.includes("oil") ||
+      name.includes("broth") ||
+      name.includes("stock") ||
+      name.includes("juice") ||
+      name.includes("water") ||
+      name.includes("sauce") ||
+      name.includes("vinegar")
+    ) {
       const flOz = numQuantity / 29.57; // 1 fl oz = 29.57ml
 
       // If more than 32 fl oz, show in cups
@@ -91,13 +113,13 @@ function convertToAmericanUnits(quantity: number | string, unit: string, ingredi
         const cups = flOz / 8;
         return {
           quantity: cups.toFixed(1),
-          unit: 'cups'
+          unit: "cups",
         };
       }
 
       return {
         quantity: flOz >= 1 ? flOz.toFixed(1) : flOz.toFixed(2),
-        unit: 'fl oz'
+        unit: "fl oz",
       };
     }
   }
@@ -141,7 +163,6 @@ const FridgeRescuePage = () => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
 
-
   // Auto-open instructions on first visit in coach mode
   useEffect(() => {
     const coachMode = localStorage.getItem("coachMode");
@@ -169,7 +190,7 @@ const FridgeRescuePage = () => {
           "Turn leftover items into meals",
           "1–3 quick suggestions, step-by-step",
           "Nutrition estimates per serving",
-          "AI-powered ingredient optimization"
+          "AI-powered ingredient optimization",
         ]}
         ctaText="Unlock Upgrade Plan"
         ctaHref="/pricing"
@@ -186,7 +207,9 @@ const FridgeRescuePage = () => {
   const [expandedInstructions, setExpandedInstructions] = useState<string[]>(
     [],
   );
-  const [isReplacing, setIsReplacing] = useState<{ [key: string]: boolean }>({});
+  const [isReplacing, setIsReplacing] = useState<{ [key: string]: boolean }>(
+    {},
+  );
 
   // Development user ID - consistent across app (UUID format)
   const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -335,14 +358,14 @@ const FridgeRescuePage = () => {
       setMeals(mealsArray);
       setShowResults(true);
 
-        setTimeout(() => {
-          if (resultsRef.current) {
-            resultsRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        }, 100);
+      setTimeout(() => {
+        if (resultsRef.current) {
+          resultsRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
     } catch (error) {
       console.error("Error generating meals:", error);
       stopProgressTicker();
@@ -396,7 +419,10 @@ const FridgeRescuePage = () => {
       fat: meal.fat || 0,
       badges: meal.medicalBadges?.map((b: any) => b.badge) || [],
       ingredients: meal.ingredients || [],
-      instructions: typeof meal.instructions === "string" ? [meal.instructions] : meal.instructions || [],
+      instructions:
+        typeof meal.instructions === "string"
+          ? [meal.instructions]
+          : meal.instructions || [],
       source: "fridge-rescue",
     };
 
@@ -411,11 +437,21 @@ const FridgeRescuePage = () => {
   }
 
   // Quick generate then replace for calendar slot
-  async function quickReplaceFromFridge(ingredients: string, selectedGoal?: string) {
+  async function quickReplaceFromFridge(
+    ingredients: string,
+    selectedGoal?: string,
+  ) {
     const resp = await fetch("/api/meals/fridge-rescue", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fridgeItems: ingredients.trim().split(",").map(i => i.trim()).filter(i => i), goal: selectedGoal }),
+      body: JSON.stringify({
+        fridgeItems: ingredients
+          .trim()
+          .split(",")
+          .map((i) => i.trim())
+          .filter((i) => i),
+        goal: selectedGoal,
+      }),
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
@@ -428,7 +464,7 @@ const FridgeRescuePage = () => {
   const replaceMeal = async (mealId: string) => {
     if (!ingredients.trim()) return;
 
-    setIsReplacing(prev => ({ ...prev, [mealId]: true }));
+    setIsReplacing((prev) => ({ ...prev, [mealId]: true }));
 
     try {
       // If in replace mode, use quick replace function
@@ -460,436 +496,450 @@ const FridgeRescuePage = () => {
         if (!next.imageUrl) {
           next.imageUrl = "/assets/meals/default-dinner.jpg"; // fallback image
         }
-        setMeals(prev => prev.map(meal =>
-          meal.id === mealId ? { ...next, id: mealId } : meal
-        ));
+        setMeals((prev) =>
+          prev.map((meal) =>
+            meal.id === mealId ? { ...next, id: mealId } : meal,
+          ),
+        );
         console.log("✅ Meal replaced locally:", next.name);
       }
     } catch (error) {
       console.error("Replace meal error:", error);
       alert("Failed to replace meal. Please try again.");
     } finally {
-      setIsReplacing(prev => ({ ...prev, [mealId]: false }));
+      setIsReplacing((prev) => ({ ...prev, [mealId]: false }));
     }
   };
 
   return (
     <PhaseGate phase="PHASE_1_CORE" feature="fridge-rescue">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
       >
         <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: "instant" });
-            setLocation("/lifestyle");
-          }}
-          className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/20 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        >
-          <ArrowLeft className="h-4 w-4" />
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "instant" });
+              setLocation("/lifestyle");
+            }}
+            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/20 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
 
-        </button>
-
-        <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 mb-8 mt-12">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-white">
-              🧊 Fridge Rescue
-            </h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-              aria-label="How to use Fridge Rescue"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-white text-sm">
-            Don't know what to cook? Tell us what's in your fridge, and we'll
-            help you make a meal fast.
-          </p>
-        </div>
-
-        <div className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-2xl mx-auto">
-          <div className="space-y-4">
-            <div className="text-center">
-              <h2 className="text-lg font-bold text-white mb-4">
-                What's in your fridge?
-              </h2>
-              <p className="text-sm text-white/80 mb-6">
-                Tell us what ingredients you have available, and we'll create 3
-                delicious meal recipes you can make right now.
-              </p>
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 mb-8 mt-12">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-2xl font-bold text-white">
+                🧊 Fridge Rescue
+              </h1>
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
+                aria-label="How to use Fridge Rescue"
+              >
+                ?
+              </button>
             </div>
+            <p className="text-white text-sm">
+              Don't know what to cook? Tell us what's in your fridge, and we'll
+              help you make a meal fast.
+            </p>
+          </div>
 
+          <div className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-2xl mx-auto">
             <div className="space-y-4">
-              <div className="space-y-3">
-                <label
-                  htmlFor="ingredients"
-                  className="block text-sm font-medium text-white"
-                >
-                  Enter your ingredients (separated by commas):
-                </label>
-                <div className="relative">
-                  <textarea
-                    id="ingredients"
-                    value={ingredients}
-                    onChange={(e) => setIngredients(e.target.value)}
-                    placeholder="e.g., chicken breast, broccoli, rice, onions, eggs"
-                    className="w-full p-3 pr-10 border border-white/20 bg-black/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 text-sm text-white"
-                    rows={3}
-                  />
-                  {ingredients.trim() && (
-                    <TrashButton
-                      onClick={() => setIngredients("")}
-                      size="sm"
-                      ariaLabel="Clear ingredients"
-                      title="Clear ingredients"
-                      data-testid="button-clear-ingredients"
-                      className="absolute top-2 right-2"
+              <div className="text-center">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  What's in your fridge?
+                </h2>
+                <p className="text-sm text-white/80 mb-6"></p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <label
+                    htmlFor="ingredients"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Enter your ingredients:
+                  </label>
+                  <div className="relative">
+                    <textarea
+                      id="ingredients"
+                      value={ingredients}
+                      onChange={(e) => setIngredients(e.target.value)}
+                      placeholder="e.g., chicken breast, broccoli, rice, onions, eggs"
+                      className="w-full p-3 pr-10 border border-white/20 bg-black/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 text-sm text-white"
+                      rows={3}
                     />
-                  )}
+                    {ingredients.trim() && (
+                      <TrashButton
+                        onClick={() => setIngredients("")}
+                        size="sm"
+                        ariaLabel="Clear ingredients"
+                        title="Clear ingredients"
+                        data-testid="button-clear-ingredients"
+                        className="absolute top-2 right-2"
+                      />
+                    )}
+                  </div>
+                  <p className="text-xs text-white mt-1 text-center">
+                    Use keyboard or speech-to-text for input
+                  </p>
                 </div>
-                <p className="text-xs text-white/70 mt-1 text-center">
-                  Use keyboard or speech-to-text for input
+
+                {/* 🔋 Loading State with Restaurant Guide Style Progress Bar */}
+                {isLoading && (
+                  <div className="text-center py-6 mb-4">
+                    <div className="flex items-center justify-center gap-2 text-green-600 mb-4">
+                      <Sparkles className="h-6 w-6 animate-spin" />
+                      <span className="text-lg font-medium">
+                        Rescuing your fridge ingredients...
+                      </span>
+                    </div>
+
+                    {/* 🔋 Animated Progress Bar (Restaurant Guide Style) */}
+                    <div className="max-w-md mx-auto mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-white/80">
+                          AI Analysis Progress
+                        </span>
+                        <span className="text-sm text-white/80">
+                          {Math.round(progress)}%
+                        </span>
+                      </div>
+                      <Progress
+                        value={progress}
+                        className="h-3 bg-black/30 border border-white/20"
+                      />
+                    </div>
+
+                    <p className="text-gray-400 text-sm">
+                      This may take 30-60 seconds
+                    </p>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleGenerateMeals}
+                  disabled={isLoading}
+                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="h-5 w-5 animate-spin" />
+                      Creating... (~30 seconds)
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5" />
+                      🍽️ Generate 3 Meals
+                    </div>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {showResults && meals.length > 0 && (
+            <div
+              ref={resultsRef}
+              className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-6xl mx-auto mt-8"
+            >
+              <div className="text-center mb-8">
+                <h2 className="text-xl font-bold text-white mb-2">
+                  🍽️ Your Fridge Rescue Meals
+                </h2>
+                <p className="text-sm text-white/80">
+                  Here are 3 delicious meals you can make with your ingredients
                 </p>
               </div>
 
-              {/* 🔋 Loading State with Restaurant Guide Style Progress Bar */}
-              {isLoading && (
-                <div className="text-center py-6 mb-4">
-                  <div className="flex items-center justify-center gap-2 text-green-600 mb-4">
-                    <Sparkles className="h-6 w-6 animate-spin" />
-                    <span className="text-lg font-medium">
-                      Rescuing your fridge ingredients...
-                    </span>
-                  </div>
-
-                  {/* 🔋 Animated Progress Bar (Restaurant Guide Style) */}
-                  <div className="max-w-md mx-auto mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-white/80">AI Analysis Progress</span>
-                      <span className="text-sm text-white/80">{Math.round(progress)}%</span>
-                    </div>
-                    <Progress
-                      value={progress}
-                      className="h-3 bg-black/30 border border-white/20"
-                    />
-                  </div>
-
-                  <p className="text-gray-400 text-sm">
-                    This may take 30-60 seconds
-                  </p>
-                </div>
-              )}
-
-              <button
-                onClick={handleGenerateMeals}
-                disabled={isLoading}
-                className="w-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                    Creating... (~30 seconds)
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    🍽️ Generate 3 Meals
-                  </div>
-                )}
-              </button>
-            </div>
-
-            <div className="mt-8 p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl">
-              <h3 className="font-semibold text-white mb-2">How it works:</h3>
-              <ol className="text-sm text-white/80 space-y-1">
-                <li>1. Tell us what ingredients you have available</li>
-                <li>
-                  2. We'll analyze your ingredients and dietary preferences
-                </li>
-                <li>3. Get 3 complete recipes with cooking instructions</li>
-                <li>4. Choose and cook your favorite meal with confidence!</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-
-        {showResults && meals.length > 0 && (
-          <div
-            ref={resultsRef}
-            className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-6xl mx-auto mt-8"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-xl font-bold text-white mb-2">
-                🍽️ Your Fridge Rescue Meals
-              </h2>
-              <p className="text-sm text-white/80">
-                Here are 3 delicious meals you can make with your ingredients
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {meals.map((meal, index) => (
-                <Card
-                  key={meal.id}
-                  className="overflow-hidden bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl flex flex-col h-full"
-                >
-                  <div className="relative">
-                    <img
-                      src={
-                        meal.imageUrl ||
-                        `https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&h=300&fit=crop&auto=format`
-                      }
-                      alt={meal.name}
-                      className="w-full h-48 object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = `https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&h=300&fit=crop&auto=format`;
-                      }}
-                    />
-                    <div className="absolute top-3 left-3">
-                      <Badge
-                        variant={
-                          meal.difficulty === "Easy" ? "default" : "secondary"
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {meals.map((meal, index) => (
+                  <Card
+                    key={meal.id}
+                    className="overflow-hidden bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl flex flex-col h-full"
+                  >
+                    <div className="relative">
+                      <img
+                        src={
+                          meal.imageUrl ||
+                          `https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&h=300&fit=crop&auto=format`
                         }
-                        className="bg-white/10 border border-white/20 text-white"
-                      >
-                        <ChefHat className="h-3 w-3 mr-1" />
-                        {meal.difficulty}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-3 right-3">
-                      <Badge variant="outline" className="bg-white">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {meal.cookingTime}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-white">
-                      {meal.name}
-                    </CardTitle>
-                    <CardDescription className="text-sm text-white/80">
-                      {meal.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4 flex-1 flex flex-col">
-                    {/* Medical Badges */}
-                    {meal.medicalBadges && meal.medicalBadges.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        <HealthBadgesPopover badges={meal.medicalBadges.map(b => b.badge)} className="mt-2" />
+                        alt={meal.name}
+                        className="w-full h-48 object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = `https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&h=300&fit=crop&auto=format`;
+                        }}
+                      />
+                      <div className="absolute top-3 left-3">
+                        <Badge
+                          variant={
+                            meal.difficulty === "Easy" ? "default" : "secondary"
+                          }
+                          className="bg-white/10 border border-white/20 text-white"
+                        >
+                          <ChefHat className="h-3 w-3 mr-1" />
+                          {meal.difficulty}
+                        </Badge>
                       </div>
-                    )}
-
-                    {/* Nutrition Grid */}
-                    <div className="grid grid-cols-4 gap-2 text-center">
-                      <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
-                        <div className="text-sm font-bold text-green-400">
-                          {meal.calories}
-                        </div>
-                        <div className="text-xs text-white/70">Cal</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
-                        <div className="text-sm font-bold text-blue-400">
-                          {meal.protein}g
-                        </div>
-                        <div className="text-xs text-white/70">Protein</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
-                        <div className="text-sm font-bold text-orange-400">
-                          {meal.carbs}g
-                        </div>
-                        <div className="text-xs text-white/70">Carbs</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
-                        <div className="text-sm font-bold text-purple-400">
-                          {meal.fat}g
-                        </div>
-                        <div className="text-xs text-white/70">Fat</div>
+                      <div className="absolute top-3 right-3">
+                        <Badge variant="outline" className="bg-white">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {meal.cookingTime}
+                        </Badge>
                       </div>
                     </div>
 
-                    {/* Ingredients */}
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-semibold text-white">
-                        Ingredients:
-                      </h4>
-                      <ul className="text-xs text-white/80 space-y-1">
-                        {meal.ingredients.slice(0, 4).map((ingredient, i) => {
-                          if (typeof ingredient === "string") {
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg text-white">
+                        {meal.name}
+                      </CardTitle>
+                      <CardDescription className="text-sm text-white/80">
+                        {meal.description}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4 flex-1 flex flex-col">
+                      {/* Medical Badges */}
+                      {meal.medicalBadges && meal.medicalBadges.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          <HealthBadgesPopover
+                            badges={meal.medicalBadges.map((b) => b.badge)}
+                            className="mt-2"
+                          />
+                        </div>
+                      )}
+
+                      {/* Nutrition Grid */}
+                      <div className="grid grid-cols-4 gap-2 text-center">
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
+                          <div className="text-sm font-bold text-green-400">
+                            {meal.calories}
+                          </div>
+                          <div className="text-xs text-white/70">Cal</div>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
+                          <div className="text-sm font-bold text-blue-400">
+                            {meal.protein}g
+                          </div>
+                          <div className="text-xs text-white/70">Protein</div>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
+                          <div className="text-sm font-bold text-orange-400">
+                            {meal.carbs}g
+                          </div>
+                          <div className="text-xs text-white/70">Carbs</div>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-2 rounded-md">
+                          <div className="text-sm font-bold text-purple-400">
+                            {meal.fat}g
+                          </div>
+                          <div className="text-xs text-white/70">Fat</div>
+                        </div>
+                      </div>
+
+                      {/* Ingredients */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-white">
+                          Ingredients:
+                        </h4>
+                        <ul className="text-xs text-white/80 space-y-1">
+                          {meal.ingredients.slice(0, 4).map((ingredient, i) => {
+                            if (typeof ingredient === "string") {
+                              return (
+                                <li key={i} className="flex items-start">
+                                  <span className="text-green-400 mr-1">•</span>
+                                  <span>{ingredient}</span>
+                                </li>
+                              );
+                            }
+
+                            // Convert measurements to American units
+                            const converted = convertToAmericanUnits(
+                              ingredient.quantity || "",
+                              ingredient.unit || "",
+                              ingredient.name,
+                            );
+
                             return (
                               <li key={i} className="flex items-start">
                                 <span className="text-green-400 mr-1">•</span>
-                                <span>{ingredient}</span>
+                                <span>
+                                  {`${converted.quantity} ${converted.unit} ${ingredient.name}`.trim()}
+                                </span>
                               </li>
                             );
-                          }
-
-                          // Convert measurements to American units
-                          const converted = convertToAmericanUnits(
-                            ingredient.quantity || "",
-                            ingredient.unit || "",
-                            ingredient.name
-                          );
-
-                          return (
-                            <li key={i} className="flex items-start">
-                              <span className="text-green-400 mr-1">•</span>
-                              <span>
-                                {`${converted.quantity} ${converted.unit} ${ingredient.name}`.trim()}
-                              </span>
+                          })}
+                          {meal.ingredients.length > 4 && (
+                            <li className="text-xs text-white/60">
+                              + {meal.ingredients.length - 4} more...
                             </li>
-                          );
-                        })}
-                        {meal.ingredients.length > 4 && (
-                          <li className="text-xs text-white/60">
-                            + {meal.ingredients.length - 4} more...
-                          </li>
-                        )}
-                      </ul>
-                    </div>
+                          )}
+                        </ul>
+                      </div>
 
-                    {/* Cooking Instructions */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <h4 className="text-sm font-semibold text-white">
-                          Instructions:
-                        </h4>
-                        <div className="flex gap-2">
-                          {replaceCtx && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => addMealToPlan(meal)}
-                              className="border-white/20 text-white bg-white/10 hover:bg-white/20"
-                              data-testid={`button-add-to-meal-plan-${meal.name?.toLowerCase().replace(/\s+/g, '-') || 'meal'}`}
-                            >
-                              Add to Meal Plan
-                            </Button>
+                      {/* Cooking Instructions */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-sm font-semibold text-white">
+                            Instructions:
+                          </h4>
+                          <div className="flex gap-2">
+                            {replaceCtx && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => addMealToPlan(meal)}
+                                className="border-white/20 text-white bg-white/10 hover:bg-white/20"
+                                data-testid={`button-add-to-meal-plan-${meal.name?.toLowerCase().replace(/\s+/g, "-") || "meal"}`}
+                              >
+                                Add to Meal Plan
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-xs text-white/80">
+                          {meal.instructions.length > 120 ? (
+                            <div>
+                              <p className="mb-2">
+                                {expandedInstructions.includes(meal.id)
+                                  ? meal.instructions
+                                  : `${meal.instructions.substring(0, 120)}...`}
+                              </p>
+                              <button
+                                onClick={() => toggleInstructions(meal.id)}
+                                className="flex items-center gap-1 text-green-400 hover:text-green-300 text-xs font-medium"
+                              >
+                                {expandedInstructions.includes(meal.id) ? (
+                                  <>
+                                    <ChevronUp className="h-3 w-3" />
+                                    Show Less
+                                  </>
+                                ) : (
+                                  <>
+                                    <ChevronDown className="h-3 w-3" />
+                                    Show Full Instructions
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          ) : (
+                            <p>{meal.instructions}</p>
                           )}
                         </div>
                       </div>
-                      <div className="text-xs text-white/80">
-                        {meal.instructions.length > 120 ? (
-                          <div>
-                            <p className="mb-2">
-                              {expandedInstructions.includes(meal.id)
-                                ? meal.instructions
-                                : `${meal.instructions.substring(0, 120)}...`}
-                            </p>
-                            <button
-                              onClick={() => toggleInstructions(meal.id)}
-                              className="flex items-center gap-1 text-green-400 hover:text-green-300 text-xs font-medium"
-                            >
-                              {expandedInstructions.includes(meal.id) ? (
-                                <>
-                                  <ChevronUp className="h-3 w-3" />
-                                  Show Less
-                                </>
-                              ) : (
-                                <>
-                                  <ChevronDown className="h-3 w-3" />
-                                  Show Full Instructions
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        ) : (
-                          <p>{meal.instructions}</p>
-                        )}
+
+                      {/* Action Buttons */}
+                      <div className="mt-auto pt-4">
+                        <MacroBridgeButton
+                          meal={{
+                            protein: meal.protein || 0,
+                            carbs: meal.carbs || 0,
+                            fat: meal.fat || 0,
+                            calories: meal.calories || 0,
+                          }}
+                          source="fridge-rescue"
+                        />
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-auto pt-4">
-                      <MacroBridgeButton
-                        meal={{
-                          protein: meal.protein || 0,
-                          carbs: meal.carbs || 0,
-                          fat: meal.fat || 0,
-                          calories: meal.calories || 0,
-                        }}
-                        source="fridge-rescue"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <div className="text-center">
+                <button
+                  onClick={handleNewSearch}
+                  className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
+                >
+                  🔄 Create More Meals
+                </button>
+              </div>
             </div>
+          )}
+        </div>
 
-            <div className="text-center">
+        {/* Instructions Modal - Auto-opens on first visit */}
+        {showInstructions && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">
+                How to Use Fridge Rescue
+              </h3>
+              <div className="space-y-3 text-white/90 text-sm">
+                <p>
+                  <strong>1. Add ingredients:</strong> List what's in your
+                  fridge
+                </p>
+                <p>
+                  <strong>2. Set servings:</strong> Choose how many people to
+                  feed (1-10)
+                </p>
+                <p>
+                  <strong>3. Generate meal:</strong> AI creates a recipe from
+                  your ingredients
+                </p>
+                <p>
+                  <strong>4. Review & cook:</strong> Get full instructions and
+                  nutrition info
+                </p>
+              </div>
               <button
-                onClick={handleNewSearch}
-                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
+                onClick={() => {
+                  setShowInstructions(false);
+                  localStorage.setItem("hasSeenFridgeInfo", "true");
+                }}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
               >
-                🔄 Create More Meals
+                Got it!
               </button>
             </div>
           </div>
         )}
-      </div>
 
-      {/* Instructions Modal - Auto-opens on first visit */}
-      {showInstructions && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h3>
-            <div className="space-y-3 text-white/90 text-sm">
-              <p><strong>1. Add ingredients:</strong> List what's in your fridge</p>
-              <p><strong>2. Set servings:</strong> Choose how many people to feed (1-10)</p>
-              <p><strong>3. Generate meal:</strong> AI creates a recipe from your ingredients</p>
-              <p><strong>4. Review & cook:</strong> Get full instructions and nutrition info</p>
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
+              <h3 className="text-xl font-bold text-white mb-4">
+                How to Use Fridge Rescue
+              </h3>
+              <div className="space-y-3 text-white/90 text-sm mb-6">
+                <p>
+                  <strong>1. Enter Your Ingredients:</strong> List what you have
+                  in your fridge, separated by commas.
+                </p>
+                <p>
+                  <strong>2. Generate Meals:</strong> Click the button to create
+                  3 delicious, healthy meals using your ingredients.
+                </p>
+                <p>
+                  <strong>3. Choose Your Meal:</strong> Browse the generated
+                  recipes with full nutrition info and cooking instructions.
+                </p>
+                <p>
+                  <strong>4. Log to Macros:</strong> Track your meal directly to
+                  your daily macro counter.
+                </p>
+                <p className="text-lime-400 font-medium mt-4">
+                  💡 Tip: The more specific you are with ingredients, the better
+                  your meal suggestions will be!
+                </p>
+              </div>
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+              >
+                Got It!
+              </button>
             </div>
-            <button
-              onClick={() => {
-                setShowInstructions(false);
-                localStorage.setItem("hasSeenFridgeInfo", "true");
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
           </div>
-        </div>
-      )}
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Fridge Rescue</h3>
-            <div className="space-y-3 text-white/90 text-sm mb-6">
-              <p>
-                <strong>1. Enter Your Ingredients:</strong> List what you have in your fridge, separated by commas.
-              </p>
-              <p>
-                <strong>2. Generate Meals:</strong> Click the button to create 3 delicious, healthy meals using your ingredients.
-              </p>
-              <p>
-                <strong>3. Choose Your Meal:</strong> Browse the generated recipes with full nutrition info and cooking instructions.
-              </p>
-              <p>
-                <strong>4. Log to Macros:</strong> Track your meal directly to your daily macro counter.
-              </p>
-              <p className="text-lime-400 font-medium mt-4">
-                💡 Tip: The more specific you are with ingredients, the better your meal suggestions will be!
-              </p>
-            </div>
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-            >
-              Got It!
-            </button>
-          </div>
-        </div>
-      )}
-    </motion.div>
+        )}
+      </motion.div>
     </PhaseGate>
   );
 };

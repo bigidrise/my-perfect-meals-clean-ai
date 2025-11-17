@@ -536,7 +536,7 @@ export default function CravingCreator() {
                       />
                     )}
                   </div>
-                  <p className="text-xs text-white/70 mt-1 text-center">
+                  <p className="text-xs text-white mt-1 text-center">
                     Use keyboard or voice texting for input.
                   </p>
                   <p className="text-xs text-white/70 mt-1 text-right">
@@ -612,7 +612,7 @@ export default function CravingCreator() {
                       <SelectItem value="10">10 servings</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-white/70 mt-1">
+                  <p className="text-xs text-white mt-1">
                     Ingredients and nutrition will be scaled for {servings} {servings === 1 ? 'serving' : 'servings'}
                   </p>
                 </div>
@@ -654,9 +654,7 @@ export default function CravingCreator() {
 
                 {!replaceId && (
                   <p className="text-white/80 text-sm mt-2 text-center">
-                    ⏱️ Generation takes 15-30 seconds - our AI analyzes your
-                    health profile, checks ingredient safety, calculates
-                    nutrition, and creates personalized recipes with medical
+                    ⏱️ Generation takes 15-30 seconds 
                     compliance
                   </p>
                 )}
