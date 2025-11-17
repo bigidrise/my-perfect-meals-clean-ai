@@ -37,7 +37,7 @@ export async function startCheckout(
     }
 
     const { url } = await res.json();
-    window.location.href = url;
+    window.open(url, '_blank');
   } catch (error) {
     console.error("[Checkout Error]", error);
     throw error;
@@ -61,7 +61,7 @@ export async function openCustomerPortal(customerId: string, returnUrl?: string)
     }
 
     const { url } = await res.json();
-    window.location.href = url;
+    window.open(url, '_blank');
   } catch (error) {
     console.error("[Portal Error]", error);
     throw error;
