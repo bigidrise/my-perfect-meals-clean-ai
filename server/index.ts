@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config(); // Load .env file FIRST before anything else
+
 import "./bootstrap-fetch"; // Ensure fetch is available
 import express, {
   type Request,
