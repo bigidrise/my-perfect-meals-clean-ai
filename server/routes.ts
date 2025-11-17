@@ -245,19 +245,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-
-  // Middleware
-  app.use(requestId);
-  app.use(logger);
-  app.use(cors({ origin: true, credentials: true }));
-  app.use(cookieParser());
-
-  // Stripe webhook MUST come BEFORE express.json()
-  app.use("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhookRouter);
-
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-
   // Mount auth session and alcohol log
   app.use(authSessionRouter);
   app.use(alcoholLogRouter);
