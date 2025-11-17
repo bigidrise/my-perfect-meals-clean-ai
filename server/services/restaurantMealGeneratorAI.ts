@@ -124,9 +124,9 @@ export async function generateRestaurantMealsAI(request: RestaurantMealRequest):
 
 ${medicalContext}${cravingInstructions}
 
-IMPORTANT: Generate 2 UNIQUE and DIFFERENT meal recommendations. Each time this request is made, create completely different meals from previous suggestions. ${randomVarietyHint}
+IMPORTANT: Generate 3 UNIQUE and DIFFERENT meal recommendations. Each time this request is made, create completely different meals from previous suggestions. ${randomVarietyHint}
 
-Generate 2 specific meal recommendations that would realistically be available at this restaurant. Each meal should:
+Generate 3 specific meal recommendations that would realistically be available at this restaurant. Each meal should:
 1. Have a realistic name that sounds like an actual menu item from this type of restaurant
 2. Be a healthier choice (grilled, baked, or steamed options preferred)
 3. Include accurate macro estimates (calories, protein, carbs, fat)
