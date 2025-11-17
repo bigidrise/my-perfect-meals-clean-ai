@@ -106,7 +106,8 @@ async function initialize() {
     });
 
     // Serve static files from client build
-    const clientDist = path.resolve(__dirname, "client/dist");
+    // In production, __dirname is dist/, so we need to go up one level to find client/dist
+    const clientDist = path.resolve(__dirname, "../client/dist");
     console.log("📁 Serving static files from:", clientDist);
     
     app.use(express.static(clientDist, {
