@@ -736,8 +736,8 @@ export default function CravingCreator() {
                     )}
 
                     {/* Serving Size Display - ALWAYS SHOW */}
-                    <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg">
-                      <div className="flex items-center gap-2 text-sm text-blue-700">
+                    <div className="mb-4 p-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg">
+                      <div className="flex items-center gap-2 text-sm text-white">
                         <Users className="h-4 w-4" />
                         <span className="font-medium">Serving Size:</span>{" "}
                         {meal.servingSize || "1 serving"}
@@ -746,8 +746,8 @@ export default function CravingCreator() {
 
                     {/* Per-Serving Info for Multiple Servings */}
                     {servings > 1 && (
-                      <div className="mb-3 p-2 bg-black/20 rounded-lg border border-white/10">
-                        <div className="text-xs text-yellow-700 text-center">
+                      <div className="mb-3 p-2 bg-black/40 backdrop-blur-md rounded-lg border border-white/20">
+                        <div className="text-xs text-white text-center">
                           <strong>Total nutrition below is for {servings} servings.</strong>
                           <br />
                           Per serving: {Math.round((meal.nutrition?.calories || meal.calories || 0) / servings)} cal |
