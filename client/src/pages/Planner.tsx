@@ -24,48 +24,52 @@ export default function Planner() {
   const plannerFeatures: PlannerFeature[] = [
     {
       title: "My Weekly Meal Builder",
-      description: "AI generated meal plans for users that want to eat healthier meals their way",
+      description:
+        "AI generated meal plans for users that want to eat healthier meals their way",
       icon: Calendar,
       route: "/weekly-meal-board",
       testId: "card-weekly-meal-board",
     },
     {
-      title: "Diabetic Hub",
-      description: "Blood sugar monitoring and meal AI created meal plans for diabetics",
+      title: "Diabetic Hub and Meal Builder",
+      description:
+        "Blood sugar monitoring and meal AI created meal plans for diabetics",
       icon: Activity,
       route: "/diabetic-hub",
       testId: "card-diabetic-hub",
     },
     {
       title: "GLP-1 Hub and Meal Builder",
-      description: "Shot, location logging and specialized AI created meal plans for GLP-1 users",
+      description:
+        "Shot, location logging and specialized AI created meal plans for GLP-1 users",
       icon: Pill,
       route: "/glp1-hub",
       testId: "card-glp1-hub",
     },
     {
-      title: "Anti-Inflammatory Builder",
-      description: "Autoimmune support, joint relief, inflammation guardrails with AI created meal plans",
+      title: "Anti-Inflammatory Meal Builder",
+      description:
+        "Autoimmune support, joint relief, inflammation guardrails with AI created meal plans",
       icon: Pill,
       route: "/anti-inflammatory-menu-builder",
       testId: "card-anti-inflammatory",
     },
     {
-      title: "Beach Body / Hard Body Builder",
-      description: "Contest prep and leaning out AI created meal plans designed for rapid change",
+      title: "Beach Body / Hard Body Meal Builder",
+      description:
+        "Contest prep and leaning out AI created meal plans designed for rapid change",
       icon: Trophy,
       route: "/beach-body-meal-board",
       testId: "card-competition-beachbody",
     },
   ];
 
-
   const handleCardClick = (route: string) => {
     setLocation(route);
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -85,12 +89,13 @@ export default function Planner() {
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-48 rounded-xl overflow-hidden">
-            <img 
-              src="/images/planner-hero.jpg" 
+            <img
+              src="/images/planner-hero.jpg"
               alt="Medical meal planning"
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EPlanner%3C/text%3E%3C/svg%3E";
+                e.currentTarget.src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EPlanner%3C/text%3E%3C/svg%3E";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
