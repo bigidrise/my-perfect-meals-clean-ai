@@ -763,25 +763,25 @@ export default function CravingCreator() {
                         <div className="text-lg font-bold text-white">
                           {meal.nutrition?.calories || meal.calories || 0}
                         </div>
-                        <div className="text-xs text-white/80">Calories</div>
+                        <div className="text-xs text-white">Calories</div>
                       </div>
                       <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
                         <div className="text-lg font-bold text-white">
                           {meal.nutrition?.protein || meal.protein || 0}g
                         </div>
-                        <div className="text-xs text-white/80">Protein</div>
+                        <div className="text-xs text-white">Protein</div>
                       </div>
                       <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
                         <div className="text-lg font-bold text-white">
                           {meal.nutrition?.carbs || meal.carbs || 0}g
                         </div>
-                        <div className="text-xs text-white/80">Carbs</div>
+                        <div className="text-xs text-white">Carbs</div>
                       </div>
                       <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
                         <div className="text-lg font-bold text-white">
                           {meal.nutrition?.fat || meal.fat || 0}g
                         </div>
-                        <div className="text-xs text-white/80">Fat</div>
+                        <div className="text-xs text-white">Fat</div>
                       </div>
                     </div>
 
