@@ -444,8 +444,8 @@ export default function RestaurantGuidePage() {
             <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
               <p className="text-sm text-blue-200">
                 <Clock className="inline h-4 w-4 mr-1" />
-                <strong>Generation Time:</strong> AI is reviewing popular dishes and healthier order tips.
-                This can take 60–90 seconds. Your results will auto-save here.
+                <strong>Generation Time:</strong> AI is finding healthy options at this restaurant.
+                This usually takes 15-30 seconds. Your results will auto-save here.
               </p>
             </div>
 
@@ -662,8 +662,8 @@ export default function RestaurantGuidePage() {
                 </div>
 
                 <p className="text-white/60 text-sm">
-                  AI searching for Meal recommendations can take 60-90 seconds
-                  to generate. Please be patient.
+                  Finding the best healthy options at this restaurant...
+                  Usually takes 15-30 seconds.
                 </p>
               </div>
             )}

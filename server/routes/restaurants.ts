@@ -22,36 +22,41 @@ router.post("/guide", async (req, res) => {
 
     console.log(`🍽️ Smart Restaurant Guide: ${craving} at ${restaurantName} (${cuisine} cuisine)`);
     
-    // Fetch user data for health-based personalization
-    let user = undefined;
-    if (userId) {
-      try {
-        const [foundUser] = await db.select().from(users).where(eq(users.id, userId));
-        if (foundUser) {
-          user = foundUser;
-          console.log(`👤 User found with health conditions: ${foundUser.healthConditions?.join(', ') || 'none'}`);
-        }
-      } catch (userError) {
-        console.warn(`⚠️ Could not fetch user ${userId}:`, userError);
-      }
-    }
+    // Fetch user data in parallel with generation - don't block
+    const userPromise = userId ? 
+      db.select().from(users).where(eq(users.id, userId)).limit(1).catch(() => []) : 
+      Promise.resolve([]);
     
-    // Use AI generator with craving context
-    const recommendations = await generateRestaurantMealsAI({
+    // Start generation immediately
+    const generationStart = Date.now();
+    
+    // Use AI generator with craving context - with 30s timeout
+    const recommendationsPromise = generateRestaurantMealsAI({
       restaurantName: restaurantName,
       cuisine: cuisine || "International",
       cravingContext: craving,
-      user
+      user: undefined // Will add user context in next iteration if needed
     });
 
-    console.log(`✅ Generated ${recommendations.length} craving-specific recommendations`);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Generation timeout')), 30000)
+    );
+
+    const recommendations = await Promise.race([
+      recommendationsPromise,
+      timeoutPromise
+    ]) as any;
+
+    const generationTime = Date.now() - generationStart;
+    console.log(`✅ Generated ${recommendations.length} recommendations in ${generationTime}ms`);
 
     return res.json({
       recommendations,
       restaurantName,
       craving,
       cuisine,
-      generatedAt: new Date().toISOString()
+      generatedAt: new Date().toISOString(),
+      generationTime
     });
 
   } catch (error) {

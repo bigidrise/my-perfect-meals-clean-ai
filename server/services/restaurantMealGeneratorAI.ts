@@ -154,7 +154,7 @@ Return ONLY a JSON array of 3 meals with this exact structure:
 Make the meals sound authentic to ${restaurantName}. Vary the protein sources and preparation methods across the 3 meals.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o-mini", // 10x faster than gpt-4
       messages: [
         {
           role: "system",
@@ -165,8 +165,8 @@ Make the meals sound authentic to ${restaurantName}. Vary the protein sources an
           content: prompt
         }
       ],
-      temperature: 0.9, // Higher temperature for more variety
-      max_tokens: 1500,
+      temperature: 0.7, // Lower for faster, more consistent responses
+      max_tokens: 1200, // Reduced for speed
     });
 
     const responseText = completion.choices[0]?.message?.content?.trim();
