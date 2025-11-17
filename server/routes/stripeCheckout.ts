@@ -38,10 +38,15 @@ router.post("/checkout", async (req, res) => {
       });
     }
 
+    console.log(`📋 Checkout request - Lookup Key: ${lookupKey}`);
+    console.log(`📋 Resolved Price ID: "${priceId}"`);
+    console.log(`📋 Price ID length: ${priceId.length} characters`);
+
     const appUrl = process.env.APP_URL 
       || (process.env.RAILWAY_STATIC_URL ? `https://${process.env.RAILWAY_STATIC_URL}` : null)
       || "http://localhost:5000";
 
+    console.log(`📋 Sending to Stripe - Price ID: "${priceId}"`);
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
