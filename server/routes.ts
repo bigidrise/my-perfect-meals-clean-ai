@@ -4378,8 +4378,8 @@ Provide a single exceptional meal recommendation in JSON format with the followi
   // Mount Stripe webhook BEFORE express.json() with raw body
   app.use(stripeWebhookRouter);
   
-  // Mount Stripe checkout router
-  app.use(stripeCheckoutRouter);
+  // Mount Stripe checkout router with correct prefix
+  app.use("/api/stripe", stripeCheckoutRouter);
 
   return httpServer;
 }
