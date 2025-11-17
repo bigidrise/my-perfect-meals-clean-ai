@@ -37,7 +37,15 @@ export async function startCheckout(
     }
 
     const { url } = await res.json();
-    window.open(url, '_blank');
+    
+    // Check if we're in an iframe (Replit dev environment)
+    if (window.self !== window.top) {
+      // In iframe - open in new tab to bypass iframe restrictions
+      window.open(url, '_blank');
+    } else {
+      // Not in iframe - redirect normally
+      window.location.href = url;
+    }
   } catch (error) {
     console.error("[Checkout Error]", error);
     throw error;
@@ -61,7 +69,15 @@ export async function openCustomerPortal(customerId: string, returnUrl?: string)
     }
 
     const { url } = await res.json();
-    window.open(url, '_blank');
+    
+    // Check if we're in an iframe (Replit dev environment)
+    if (window.self !== window.top) {
+      // In iframe - open in new tab to bypass iframe restrictions
+      window.open(url, '_blank');
+    } else {
+      // Not in iframe - redirect normally
+      window.location.href = url;
+    }
   } catch (error) {
     console.error("[Portal Error]", error);
     throw error;
