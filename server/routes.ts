@@ -2134,7 +2134,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let user = null;
       if (userId) {
         try {
-          const [dbUser] = await db.select().from(users).where(eq(dbUser.id, userId)).limit(1);
+          const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
           user = dbUser || null;
         } catch (error) {
           console.log("Could not fetch user for weekly meals:", error);
@@ -2319,86 +2319,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Smart Restaurant Guide endpoint (with craving context)
-  app.post("/api/restaurants/guide", async (req, res) => {
-    try {
-      const { restaurantName, craving, cuisine, userId } = req.body;
-      
-      if (!restaurantName || !craving) {
-        return res.status(400).json({ 
-          error: "Restaurant name and craving are required" 
-        });
-      }
-
-      console.log(`🍽️ Smart Restaurant Guide: ${craving} at ${restaurantName} (${cuisine} cuisine)`);
-      
-      let user = null;
-      if (userId) {
-        try {
-          const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
-          user = dbUser || null;
-        } catch (error) {
-          console.log("Could not fetch user for restaurant meal personalization:", error);
-        }
-      }
-
-      const { generateRestaurantMealsAI } = await import("./services/restaurantMealGeneratorAI");
-      const recommendations = await generateRestaurantMealsAI({
-        restaurantName: restaurantName,
-        cuisine: cuisine || "International",
-        cravingContext: craving,
-        user: user || undefined
-      });
-
-      console.log(`✅ Generated ${recommendations.length} craving-specific recommendations`);
-
-      res.json({
-        recommendations,
-        restaurantName,
-        craving,
-        cuisine,
-        generatedAt: new Date().toISOString()
-      });
-    } catch (error: any) {
-      console.error("❌ Smart Restaurant Guide error:", error);
-      res.status(500).json({ error: "Failed to generate restaurant recommendations" });
-    }
-  });
-
-  app.post("/api/restaurants/analyze-menu", async (req, res) => {
-    try {
-      const { restaurantName, cuisine, userId } = req.body;
-
-      if (!restaurantName && !cuisine) {
-        return res.status(400).json({ error: "Missing restaurantName or cuisine" });
-      }
-
-      // Get user data for medical personalization
-      let user = null;
-      if (userId) {
-        try {
-          const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
-          user = dbUser || null;
-        } catch (error) {
-          console.log("Could not fetch user for restaurant meal personalization:", error);
-        }
-      }
-
-      const { generateRestaurantMeals } = await import("./services/restaurantMealGenerator");
-      const recommendations = await generateRestaurantMeals({
-        restaurantName: restaurantName || `${cuisine} Restaurant`,
-        cuisine: cuisine || "International",
-        user: user || undefined
-      });
-
-      console.log("🍽️ Restaurant meals generated:", recommendations.length);
-
-      res.json({ recommendations });
-    } catch (error: any) {
-      console.error("❌ Restaurant meal generation error:", error);
-      res.status(500).json({ error: "Failed to generate restaurant meals" });
-    }
-  });
+  // NOTE: Restaurant routes (/api/restaurants/guide, /api/restaurants/analyze-menu) 
+  // are now handled by the dedicated router in server/routes/restaurants.ts
+  // mounted at app.use("/api/restaurants", ...) in server/index.ts
+  // Duplicate handlers removed to fix production 404 errors
 
   // Meal Reminder API Routes
   app.post("/api/users/:userId/reminders", async (req, res) => {

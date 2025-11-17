@@ -220,10 +220,10 @@ Make the meals sound authentic to ${restaurantName}. Vary the protein sources an
 
     console.log(`✅ AI generated ${meals.length} restaurant-specific meals for ${restaurantName}`);
 
-    // Generate images for all meals
-    for (const meal of meals) {
+    // Generate images in parallel for ALL meals at once (10x faster!)
+    console.log(`🖼️ Generating images for all ${meals.length} meals in parallel...`);
+    const imagePromises = meals.map(async (meal) => {
       try {
-        console.log(`🖼️ Generating image for ${meal.name}...`);
         const imageUrl = await generateImage({
           name: meal.name,
           description: meal.description,
@@ -238,7 +238,11 @@ Make the meals sound authentic to ${restaurantName}. Vary the protein sources an
       } catch (error) {
         console.error(`❌ Failed to generate image for ${meal.name}:`, error);
       }
-    }
+    });
+
+    // Wait for all images to complete
+    await Promise.all(imagePromises);
+    console.log(`🎉 All ${meals.length} images generated!`);
 
     return meals;
 
