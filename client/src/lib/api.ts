@@ -17,7 +17,7 @@ function normalize(u?: string | null) {
  * If VITE_API_BASE_URL is set, it wins.
  */
 export const API_BASE = normalize(
-  ENV_BASE || (isDev ? `http://${location.hostname}:5000` : location.origin),
+  ENV_BASE || (isDev ? `http://${location.hostname}:5000` : ""),
 );
 
 // Build a full URL safely
