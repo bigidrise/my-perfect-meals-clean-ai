@@ -759,29 +759,29 @@ export default function CravingCreator() {
                     )}
 
                     <div className="grid grid-cols-4 gap-4 mb-4 text-center">
-                      <div className="bg-orange-100 p-3 rounded-md">
-                        <div className="text-lg font-bold text-orange-600">
+                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                        <div className="text-lg font-bold text-white">
                           {meal.nutrition?.calories || meal.calories || 0}
                         </div>
-                        <div className="text-xs text-gray-500">Calories</div>
+                        <div className="text-xs text-white/80">Calories</div>
                       </div>
-                      <div className="bg-black/20 border border-white/10 p-3 rounded-md">
-                        <div className="text-lg font-bold text-blue-600">
+                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                        <div className="text-lg font-bold text-white">
                           {meal.nutrition?.protein || meal.protein || 0}g
                         </div>
-                        <div className="text-xs text-gray-500">Protein</div>
+                        <div className="text-xs text-white/80">Protein</div>
                       </div>
-                      <div className="bg-black/20 border border-white/10 p-3 rounded-md">
-                        <div className="text-lg font-bold text-green-600">
+                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                        <div className="text-lg font-bold text-white">
                           {meal.nutrition?.carbs || meal.carbs || 0}g
                         </div>
-                        <div className="text-xs text-gray-500">Carbs</div>
+                        <div className="text-xs text-white/80">Carbs</div>
                       </div>
-                      <div className="bg-purple-100 p-3 rounded-md">
-                        <div className="text-lg font-bold text-purple-600">
+                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                        <div className="text-lg font-bold text-white">
                           {meal.nutrition?.fat || meal.fat || 0}g
                         </div>
-                        <div className="text-xs text-gray-500">Fat</div>
+                        <div className="text-xs text-white/80">Fat</div>
                       </div>
                     </div>
 
