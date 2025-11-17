@@ -15,7 +15,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (error) => {
   console.error('🚨 UNCAUGHT EXCEPTION:', error);
-  // Don't exit in production - log and continue for stability
 });
 
 // Import your main server setup
@@ -30,8 +29,7 @@ const app = express();
 // Trust proxy for correct IP handling in Railway/Replit
 app.set('trust proxy', 1);
 
-// CRITICAL: Health check MUST be first, before any async operations
-// Autoscale deployment needs immediate HTTP response
+// CRITICAL: Health check MUST be first
 app.get("/healthz", (_req, res) => res.status(200).send("ok"));
 app.get("/api/health", (_req, res) => res.json({ 
   ok: true, 
@@ -40,7 +38,7 @@ app.get("/api/health", (_req, res) => res.json({
   hasDatabase: !!process.env.DATABASE_URL
 }));
 
-// Version endpoint to verify deployments
+// Version endpoint
 app.get("/__version", (_req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.json({ 
@@ -50,14 +48,14 @@ app.get("/__version", (_req, res) => {
   });
 });
 
-// Create rate limiter ONCE at app initialization (after trust proxy is set)
+// Create rate limiter
 const apiRateLimit = createApiRateLimit();
 
 // Production middleware
 app.use(requestId);
 app.use(logger);
 
-// CORS headers with credentials support
+// CORS headers
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   const allowedOrigins = [
@@ -65,7 +63,6 @@ app.use((req, res, next) => {
     process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null,
   ].filter(Boolean);
 
-  // Allow requests with no origin (same-origin) or from allowed origins
   if (!origin || allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin || allowedOrigins[0] || '*');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -95,19 +92,10 @@ app.use((req, res, next) => {
 
 app.use("/api", apiRateLimit);
 
-// Listen on PORT immediately, BEFORE async registerRoutes
-// This ensures health checks work during deployment
-const port = Number(process.env.PORT || 5000);
-const server = app.listen(port, "0.0.0.0", () => {
-  console.log(`🚀 Production server running on port ${port}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || "production"}`);
-  console.log(`🔗 Database: ${process.env.DATABASE_URL ? "Connected" : "Not configured"}`);
-});
-
-// Register routes asynchronously AFTER server is listening
-async function registerAppRoutes() {
+// Register routes and static files BEFORE starting server
+async function initialize() {
   try {
-    // Register all API routes (async operation)
+    console.log("📋 Registering API routes...");
     await registerRoutes(app);
     console.log("✅ Routes registered successfully");
 
@@ -117,26 +105,22 @@ async function registerAppRoutes() {
       res.status(404).type("application/json").send(JSON.stringify({ error: "API endpoint not found" }));
     });
 
-    // Serve static files from client build with proper cache control
-    const clientDist = path.resolve(__dirname, "../client/dist");
+    // Serve static files from client build
+    const clientDist = path.resolve(__dirname, "client/dist");
     console.log("📁 Serving static files from:", clientDist);
     
-    // Cache hashed assets aggressively, no-cache for HTML
     app.use(express.static(clientDist, {
       setHeaders: (res, filePath) => {
-        // Cache hashed assets aggressively (safe: filenames change on each build)
         if (/\.(js|css|png|jpg|jpeg|gif|svg|woff2?)$/i.test(filePath)) {
           res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
         } else {
-          // Default for other assets
           res.setHeader("Cache-Control", "public, max-age=3600");
         }
       }
     }));
 
-    // SPA fallback - serve index.html for all non-API routes
+    // SPA fallback
     app.get("*", (_req, res) => {
-      // Ensure index.html is never cached
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
@@ -145,11 +129,20 @@ async function registerAppRoutes() {
 
     // Error handler LAST
     app.use(errorHandler);
+
+    // NOW start the server
+    const port = Number(process.env.PORT || 5000);
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`🚀 Production server running on port ${port}`);
+      console.log(`📍 Environment: ${process.env.NODE_ENV || "production"}`);
+      console.log(`🔗 Database: ${process.env.DATABASE_URL ? "Connected" : "Not configured"}`);
+    });
+
   } catch (error) {
-    console.error("❌ Route registration failed:", error);
-    // Don't exit - server is already running for health checks
+    console.error("❌ Server initialization failed:", error);
+    process.exit(1); // Exit on failure so deployment restarts
   }
 }
 
-// Start route registration (non-blocking)
-registerAppRoutes();
+// Start initialization
+initialize();
