@@ -60,8 +60,8 @@ import physicianReportsRoutes from "./routes/physicianReports";
 import mealFinderRouter from "./routes/mealFinder";
 import { registerAdminSql } from "./adminSql";
 import glp1ShotsRoutes from "./routes/glp1Shots"; // Added import for glp1ShotsRoutes
-import stripeCheckoutRouter from "./routes/stripe.checkout"; // Added import for stripeCheckoutRouter
-import stripeWebhookRouter from "./routes/stripe.webhook"; // Added import for stripeWebhookRouter
+import stripeCheckoutRouter from "./routes/stripeCheckout"; // Added import for stripeCheckoutRouter
+import stripeWebhookRouter from "./routes/stripeWebhook"; // Added import for stripeWebhookRouter
 
 // Helper function to determine features by subscription plan
 function getFeaturesByPlan(plan: string) {
