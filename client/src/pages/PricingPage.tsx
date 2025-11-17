@@ -97,10 +97,10 @@ export default function PricingPage() {
 
   const legacyFeatures = {
     basic: [
-      "* Weekly Meal Builder",
-      "* GLP-1 Hub and Meal Builder",
-      "* Diabetic Hub and Meal Builder",
-      "* Anti-Inflammatory Meal Bulider",
+      "Weekly Meal Builder",
+      "GLP-1 Hub and Meal Builder",
+      "Diabetic Hub and Meal Builder",
+      "Anti-Inflammatory Meal Bulider",
       "Daily Macro Calculator",
       "Supplement Hub",
       "Biometrics",
