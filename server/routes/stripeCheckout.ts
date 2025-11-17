@@ -19,12 +19,23 @@ function getUserId(req: any): string {
 
 router.post("/api/stripe/checkout", async (req, res) => {
   try {
-    const { sku, context } = req.body as { sku: LookupKey; context?: string };
+    const { sku, priceLookupKey, context } = req.body;
     const userId = getUserId(req);
 
-    const priceId = STRIPE_PRICE_IDS[sku];
+    // Accept either 'sku' or 'priceLookupKey' for compatibility
+    const lookupKey = (sku || priceLookupKey) as LookupKey;
+    
+    if (!lookupKey) {
+      return res.status(400).json({ error: "Missing SKU or priceLookupKey" });
+    }
+
+    const priceId = STRIPE_PRICE_IDS[lookupKey];
     if (!priceId) {
-      return res.status(400).json({ error: "Invalid SKU" });
+      return res.status(400).json({ 
+        error: "Invalid SKU", 
+        receivedKey: lookupKey,
+        validKeys: Object.keys(STRIPE_PRICE_IDS)
+      });
     }
 
     const appUrl = process.env.APP_URL 
@@ -44,12 +55,12 @@ router.post("/api/stripe/checkout", async (req, res) => {
       cancel_url: `${appUrl}/billing/cancel`,
       metadata: {
         userId,
-        sku,
+        sku: lookupKey,
         context: context ?? "unknown",
       },
     });
 
-    console.log(`✅ Created checkout session for user ${userId}, plan ${sku}`);
+    console.log(`✅ Created checkout session for user ${userId}, plan ${lookupKey}`);
     return res.json({ url: session.url });
   } catch (err: any) {
     console.error("❌ Stripe checkout error:", err);
