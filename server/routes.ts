@@ -60,6 +60,8 @@ import physicianReportsRoutes from "./routes/physicianReports";
 import mealFinderRouter from "./routes/mealFinder";
 import { registerAdminSql } from "./adminSql";
 import glp1ShotsRoutes from "./routes/glp1Shots"; // Added import for glp1ShotsRoutes
+import stripeCheckoutRouter from "./routes/stripe.checkout"; // Added import for stripeCheckoutRouter
+import stripeWebhookRouter from "./routes/stripe.webhook"; // Added import for stripeWebhookRouter
 
 // Helper function to determine features by subscription plan
 function getFeaturesByPlan(plan: string) {
@@ -243,6 +245,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+
+  // Middleware
+  app.use(requestId);
+  app.use(logger);
+  app.use(cors({ origin: true, credentials: true }));
+  app.use(cookieParser());
+
+  // Stripe webhook MUST come BEFORE express.json()
+  app.use("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhookRouter);
+
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
   // Mount auth session and alcohol log
   app.use(authSessionRouter);
@@ -4373,6 +4387,9 @@ Provide a single exceptional meal recommendation in JSON format with the followi
 
   // Mount builder plans routes
   app.use(builderPlansRoutes);
+
+  // Mount Stripe checkout router
+  app.use(stripeCheckoutRouter);
 
   return httpServer;
 }

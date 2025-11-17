@@ -13,7 +13,7 @@ export async function startCheckout(
     // Get current user for security validation
     const userStr = localStorage.getItem("mpm_current_user");
     const user = userStr ? JSON.parse(userStr) : null;
-    
+
     if (!user?.id) {
       throw new Error("Please log in to checkout");
     }

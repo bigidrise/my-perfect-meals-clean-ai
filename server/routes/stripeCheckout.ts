@@ -1,0 +1,60 @@
+
+import { Router } from "express";
+import Stripe from "stripe";
+import { STRIPE_PRICE_IDS } from "../config/stripePrices";
+import type { LookupKey } from "../../client/src/data/planSkus";
+
+const router = Router();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2024-06-20",
+});
+
+function getUserId(req: any): string {
+  if (req.session?.userId) return req.session.userId as string;
+  const headerUserId = req.headers["x-user-id"] as string;
+  if (headerUserId) return headerUserId;
+  return "00000000-0000-0000-0000-000000000001";
+}
+
+router.post("/api/stripe/checkout", async (req, res) => {
+  try {
+    const { sku, context } = req.body as { sku: LookupKey; context?: string };
+    const userId = getUserId(req);
+
+    const priceId = STRIPE_PRICE_IDS[sku];
+    if (!priceId) {
+      return res.status(400).json({ error: "Invalid SKU" });
+    }
+
+    const appUrl = process.env.APP_URL 
+      || (process.env.RAILWAY_STATIC_URL ? `https://${process.env.RAILWAY_STATIC_URL}` : null)
+      || "http://localhost:5000";
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: `${appUrl}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/billing/cancel`,
+      metadata: {
+        userId,
+        sku,
+        context: context ?? "unknown",
+      },
+    });
+
+    console.log(`✅ Created checkout session for user ${userId}, plan ${sku}`);
+    return res.json({ url: session.url });
+  } catch (err: any) {
+    console.error("❌ Stripe checkout error:", err);
+    return res.status(500).json({ error: "Failed to create checkout session" });
+  }
+});
+
+export default router;

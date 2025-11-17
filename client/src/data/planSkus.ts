@@ -80,7 +80,7 @@ export const PLAN_SKUS: PlanSku[] = [
   {
     sku: "mpm_family_base_monthly",
     label: "Family Base",
-    price: 29.99,
+    price: 39.99,
     seats: 4,
     group: "family",
     blurb: "One household, 4 profiles, shared menus & shopping",
@@ -96,7 +96,7 @@ export const PLAN_SKUS: PlanSku[] = [
   {
     sku: "mpm_family_all_premium_monthly",
     label: "Family All-Premium",
-    price: 44.99,
+    price: 49.99,
     seats: 4,
     group: "family",
     blurb: "All 4 seats include Premium features",
@@ -111,7 +111,7 @@ export const PLAN_SKUS: PlanSku[] = [
   {
     sku: "mpm_family_all_ultimate_monthly",
     label: "Family All-Ultimate",
-    price: 74.99,
+    price: 79.99,
     seats: 4,
     group: "family",
     blurb: "All 4 seats include Ultimate features",
