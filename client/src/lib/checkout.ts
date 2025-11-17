@@ -18,7 +18,7 @@ export async function startCheckout(
       throw new Error("Please log in to checkout");
     }
 
-    const res = await fetch("/api/stripe/create-checkout-session", {
+    const res = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

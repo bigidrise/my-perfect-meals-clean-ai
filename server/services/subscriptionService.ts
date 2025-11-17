@@ -18,7 +18,6 @@ export async function updateUserSubscription(opts: {
       planLookupKey: lookupKey,
       stripeCustomerId: stripeCustomerId ?? undefined,
       stripeSubscriptionId: stripeSubscriptionId ?? undefined,
-      updatedAt: new Date(),
     })
     .where(eq(users.id, userId));
 
@@ -31,7 +30,6 @@ export async function cancelUserSubscription(userId: string) {
     .set({
       planLookupKey: null,
       stripeSubscriptionId: null,
-      updatedAt: new Date(),
     })
     .where(eq(users.id, userId));
 

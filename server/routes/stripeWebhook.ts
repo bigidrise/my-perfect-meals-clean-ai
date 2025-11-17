@@ -7,19 +7,19 @@ import type { LookupKey } from "../../client/src/data/planSkus";
 const router = Router();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-09-30.clover",
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 
-router.post("/api/stripe/webhook", async (req, res) => {
+router.post("/webhook", async (req, res) => {
   const sig = req.headers["stripe-signature"] as string;
 
   let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(
-      (req as any).rawBody,
+      req.body,
       sig,
       webhookSecret
     );

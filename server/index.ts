@@ -79,6 +79,8 @@ import abTestingMealPlansRouter from "./routes/mealPlans";
 import { templateRouter } from "./routes/mealTemplates";
 import { userMealPrefsRouter } from "./routes/userMealPrefs";
 import stripeRouter from "./routes/stripe";
+import stripeCheckoutRouter from "./routes/stripeCheckout";
+import stripeWebhookRouter from "./routes/stripeWebhook";
 import builderPlansRouter from "./routes/builderPlans";
 import passwordResetRouter from "./routes/password-reset";
 
@@ -173,6 +175,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Stripe webhook MUST come BEFORE express.json() to preserve raw body for signature verification
+app.use("/api/stripe", express.raw({ type: "application/json" }), stripeWebhookRouter);
+
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false }));
 
@@ -253,7 +258,10 @@ app.use("/api", keepaliveRouter);
 // Password reset routes (public, no auth required)
 app.use(passwordResetRouter);
 
-// Stripe checkout and billing
+// Stripe checkout route (after express.json())
+app.use("/api/stripe", stripeCheckoutRouter);
+
+// Stripe checkout and billing (legacy routes)
 app.use("/api/stripe", stripeRouter);
 
 // Food Logs System - Register BEFORE mealsRouter to prevent route conflict with /api/macros/log

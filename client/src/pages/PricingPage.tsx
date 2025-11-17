@@ -230,7 +230,7 @@ export default function PricingPage() {
                       }`}
                       size="lg"
                       onClick={() => handleSelectPlan(plan.sku)}
-                      disabled={true}
+                      disabled={user?.planLookupKey === plan.sku}
                       data-testid={`button-select-${plan.sku}`}
                     >
                       {getButtonText(plan.sku)}
@@ -289,7 +289,7 @@ export default function PricingPage() {
                     className="w-full bg-white/5 hover:bg-white/10 border border-white/20 text-white"
                     size="lg"
                     onClick={() => handleSelectPlan(plan.sku)}
-                    disabled={true}
+                    disabled={user?.planLookupKey === plan.sku}
                     data-testid={`button-select-${plan.sku}`}
                   >
                     {getButtonText(plan.sku)}

@@ -7,7 +7,7 @@ import type { LookupKey } from "../../client/src/data/planSkus";
 const router = Router();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-09-30.clover",
 });
 
 function getUserId(req: any): string {
@@ -17,7 +17,7 @@ function getUserId(req: any): string {
   return "00000000-0000-0000-0000-000000000001";
 }
 
-router.post("/api/stripe/checkout", async (req, res) => {
+router.post("/checkout", async (req, res) => {
   try {
     const { sku, context } = req.body as { sku: LookupKey; context?: string };
     const userId = getUserId(req);
