@@ -28,7 +28,7 @@ export const PLAN_SKUS: PlanSku[] = [
     label: "Basic",
     price: 9.99,
     group: "consumer",
-    blurb: "Essential meal tracking and planning",
+    blurb: "$9.99 / month (Access to ONE meal builder only)",
     features: [
       "Macro calculator",
       "Smart Menu Builder (basic)",
