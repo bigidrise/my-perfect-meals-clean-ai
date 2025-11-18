@@ -187,16 +187,16 @@ export default function MealPremadePicker({
           </DialogTitle>
         </DialogHeader>
 
-        {/* Category Tabs - Purple Style (Matching Snack Picker) */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+        {/* Category Tabs - Purple Style (Matching Meal Ingredient Picker) */}
+        <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
+              className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                 activeCategory === category
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
+                  : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
               }`}
             >
               {category}
@@ -204,31 +204,30 @@ export default function MealPremadePicker({
           ))}
         </div>
 
-        {/* Meal Cards - Purple Style (Matching Snack Picker) */}
-        <div className="space-y-3 overflow-y-auto max-h-[50vh] pr-2">
-          {currentMeals.map((meal) => (
-            <button
-              key={meal.id}
-              onClick={() => handleSelectPremade(meal, activeCategory)}
-              disabled={generating}
-              className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-purple-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <h4 className="font-semibold text-white text-base mb-2">
-                {meal.name}
-              </h4>
-              <div className="space-y-1">
-                {meal.ingredients.map((ing, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-sm text-white/70">
-                    <span className="text-purple-400 font-bold">•</span>
-                    <span>
+        {/* Meal Grid - Clean Style (Matching Meal Ingredient Picker) */}
+        <div className="overflow-y-auto max-h-[50vh] mb-3 min-h-0">
+          <div className="grid grid-cols-1 gap-3">
+            {currentMeals.map((meal) => (
+              <button
+                key={meal.id}
+                onClick={() => handleSelectPremade(meal, activeCategory)}
+                disabled={generating}
+                className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-purple-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <h4 className="font-semibold text-white text-base mb-3">
+                  {meal.name}
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {meal.ingredients.map((ing, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm">
+                      <span className="text-purple-400 font-bold text-xs">✓</span>
                       <span className="text-white/90">{ing.item}</span>
-                      <span className="text-white/50"> - {ing.preparation}</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </button>
-          ))}
+                    </div>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {generating && (
