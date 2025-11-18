@@ -95,15 +95,46 @@ const breakfastPremades = {
   ]
 };
 
+// Lunch premade meals organized by category
+const lunchPremades = {
+  'Category 1': [],
+  'Category 2': [],
+  'Category 3': []
+};
+
+// Dinner premade meals organized by category
+const dinnerPremades = {
+  'Category 1': [],
+  'Category 2': [],
+  'Category 3': []
+};
+
 export default function MealPremadePicker({
   open,
   onClose,
   onMealSelect,
   mealType = 'breakfast'
 }: MealPremadePickerProps) {
-  const [activeCategory, setActiveCategory] = useState<string>('All Protein');
+  // Determine which premade set to use based on meal type
+  const premadeData = mealType === 'breakfast' 
+    ? breakfastPremades 
+    : mealType === 'lunch' 
+    ? lunchPremades 
+    : dinnerPremades;
+
+  const [activeCategory, setActiveCategory] = useState<string>('');
   const [generating, setGenerating] = useState(false);
   const { toast } = useToast();
+
+  // Set initial category when modal opens or meal type changes
+  React.useEffect(() => {
+    if (open) {
+      const firstCategory = Object.keys(premadeData)[0];
+      if (firstCategory) {
+        setActiveCategory(firstCategory);
+      }
+    }
+  }, [open, mealType]);
 
   const handleSelectPremade = async (meal: any, category: string) => {
     setGenerating(true);
@@ -160,7 +191,7 @@ export default function MealPremadePicker({
       
       toast({
         title: 'Meal Added!',
-        description: `${meal.name} has been added to your breakfast`,
+        description: `${meal.name} has been added to your ${mealType}`,
       });
       
       onClose();
@@ -176,15 +207,15 @@ export default function MealPremadePicker({
     }
   };
 
-  const categories = Object.keys(breakfastPremades);
-  const currentMeals = breakfastPremades[activeCategory] || [];
+  const categories = Object.keys(premadeData);
+  const currentMeals = premadeData[activeCategory] || [];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] bg-gradient-to-br from-zinc-900 via-zinc-800 to-black border border-white/20 rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-white text-xl font-semibold">
-            Breakfast Premades
+            {mealType.charAt(0).toUpperCase() + mealType.slice(1)} Premades
           </DialogTitle>
         </DialogHeader>
 
