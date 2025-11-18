@@ -6,6 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  AI_PREMADE_BREAKFAST_MEALS, 
+  getBreakfastMealsByCategory,
+  type BreakfastCategory 
+} from '@/data/aiPremadeBreakfast';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -14,85 +19,29 @@ interface MealPremadePickerProps {
   mealType?: 'breakfast' | 'lunch' | 'dinner';
 }
 
-// Breakfast premade meals organized by category
+// Map category names to display names
+const categoryDisplayNames: Record<BreakfastCategory, string> = {
+  'all-protein': 'All Protein',
+  'protein-carb': 'Protein + Carb',
+  'egg-based': 'Egg-Based Meals'
+};
+
+// Build breakfast premades from AI data
 const breakfastPremades = {
-  'All Protein': [
-    {
-      id: 'egg-whites-turkey-bacon',
-      name: 'Egg Whites + Turkey Bacon',
-      ingredients: [
-        { item: 'Egg Whites', amount: '4 egg whites', preparation: 'pan-cooked, fluffy, lightly seasoned' },
-        { item: 'Turkey Bacon', amount: '3 slices', preparation: 'crispy, oven-baked' }
-      ]
-    },
-    {
-      id: 'chicken-breast-egg-whites',
-      name: 'Chicken Breast + Egg Whites',
-      ingredients: [
-        { item: 'Chicken Breast', amount: '4 oz', preparation: 'grilled, sliced' },
-        { item: 'Egg Whites', amount: '3 egg whites', preparation: 'scrambled, soft' }
-      ]
-    },
-    {
-      id: 'protein-shake-egg-whites',
-      name: 'Protein Shake + Egg Whites',
-      ingredients: [
-        { item: 'Protein Shake', amount: '1 scoop', preparation: 'blended, vanilla flavor' },
-        { item: 'Egg Whites', amount: '4 egg whites', preparation: 'cooked in pan, lightly browned' }
-      ]
-    }
-  ],
-  'Protein + Carb': [
-    {
-      id: 'scrambled-eggs-toast',
-      name: 'Scrambled Eggs + Toast',
-      ingredients: [
-        { item: 'Eggs', amount: '3 eggs', preparation: 'scrambled, fluffy' },
-        { item: 'Toast', amount: '2 slices', preparation: 'whole grain, lightly toasted' }
-      ]
-    },
-    {
-      id: 'protein-shake-banana',
-      name: 'Protein Shake + Banana',
-      ingredients: [
-        { item: 'Protein Shake', amount: '1 scoop', preparation: 'chocolate or vanilla, blended' },
-        { item: 'Banana', amount: '1 medium', preparation: 'sliced' }
-      ]
-    },
-    {
-      id: 'eggs-potatoes',
-      name: 'Eggs + Potatoes',
-      ingredients: [
-        { item: 'Eggs', amount: '2 eggs', preparation: 'over-medium' },
-        { item: 'Potatoes', amount: '1 cup', preparation: 'pan-fried, diced' }
-      ]
-    }
-  ],
-  'Egg-Based Meals': [
-    {
-      id: 'omelette-veggies',
-      name: 'Omelette + Veggies',
-      ingredients: [
-        { item: 'Omelette', amount: '3 eggs', preparation: 'folded, golden edges' },
-        { item: 'Veggies', amount: '1/2 cup', preparation: 'sautéed peppers + onions' }
-      ]
-    },
-    {
-      id: 'scrambled-eggs-turkey-sausage',
-      name: 'Scrambled Eggs + Turkey Sausage',
-      ingredients: [
-        { item: 'Eggs', amount: '3 eggs', preparation: 'scrambled soft' },
-        { item: 'Turkey Sausage', amount: '2 links', preparation: 'pan-seared' }
-      ]
-    },
-    {
-      id: 'egg-muffins',
-      name: 'Egg Muffins',
-      ingredients: [
-        { item: 'Egg Muffins', amount: '3 muffins', preparation: 'baked, mixed vegetables' }
-      ]
-    }
-  ]
+  'All Protein': getBreakfastMealsByCategory('all-protein').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    ingredients: [
+      { 
+        item: meal.name, 
+        amount: '1 serving', 
+        preparation: meal.defaultCookingMethod || 'prepared as preferred' 
+      }
+    ]
+  })),
+  'Protein + Carb': [], // Will be populated in Phase 2
+  'Egg-Based Meals': [] // Will be populated in Phase 2
 };
 
 // Lunch premade meals organized by category
