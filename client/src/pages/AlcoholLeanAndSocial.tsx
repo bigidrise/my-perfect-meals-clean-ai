@@ -391,7 +391,7 @@ export default function AlcoholLeanAndSocial() {
         {/* Detail Modal */}
         {selected && (
           <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
             onClick={() => setSelectedDrink(null)}
           >
             <Card
