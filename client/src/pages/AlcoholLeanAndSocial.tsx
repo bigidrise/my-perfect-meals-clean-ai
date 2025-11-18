@@ -320,7 +320,7 @@ export default function AlcoholLeanAndSocial() {
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto pb-32">
         <Button
           variant="ghost"
           onClick={() => setLocation("/alcohol-hub")}
