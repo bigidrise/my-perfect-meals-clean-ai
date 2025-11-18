@@ -4,6 +4,7 @@ import { X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 
 interface MealPremadePickerProps {
@@ -204,28 +205,23 @@ export default function MealPremadePicker({
           ))}
         </div>
 
-        {/* Meal Grid - Clean Style (Matching Meal Ingredient Picker) */}
+        {/* Meal Grid - Checkbox Style (Matching Meal Ingredient Picker) */}
         <div className="overflow-y-auto max-h-[50vh] mb-3 min-h-0">
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
             {currentMeals.map((meal) => (
-              <button
+              <div
                 key={meal.id}
                 onClick={() => handleSelectPremade(meal, activeCategory)}
-                disabled={generating}
-                className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-purple-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
               >
-                <h4 className="font-semibold text-white text-base mb-3">
+                <Checkbox
+                  checked={false}
+                  className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
+                />
+                <span className="text-[11px] group-hover:text-emerald-300 transition-colors text-center">
                   {meal.name}
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {meal.ingredients.map((ing, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <span className="text-purple-400 font-bold text-xs">✓</span>
-                      <span className="text-white/90">{ing.item}</span>
-                    </div>
-                  ))}
-                </div>
-              </button>
+                </span>
+              </div>
             ))}
           </div>
         </div>
