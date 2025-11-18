@@ -232,7 +232,7 @@ export default function CravingPresetsPage() {
               className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/50 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.2)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <CardContent className="p-6">
+              <CardContent className="p-6 pb-32">
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-3xl font-bold text-white">{selected.name}</h2>
                   <Button
