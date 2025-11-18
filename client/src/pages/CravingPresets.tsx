@@ -9,6 +9,7 @@ import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { CRAVING_PRESETS, type CravingPreset, type Ingredient } from "@/data/cravingsPresetsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const SERVING_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -259,7 +260,18 @@ export default function CravingPresetsPage() {
                 {/* Health Badges */}
                 {selected.badges && selected.badges.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="font-bold text-lg mb-2 text-white">Health Benefits</h3>
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <h3 className="font-bold text-lg text-white">Health Benefits</h3>
+                      <CopyRecipeButton recipe={{
+                        name: selected.name,
+                        ingredients: scaledIngs.map(ing => ({
+                          name: ing.name,
+                          amount: formatQty(ing.quantity),
+                          unit: pluralize(ing.unit, ing.quantity)
+                        })),
+                        instructions: selected.instructions
+                      }} />
+                    </div>
                     <HealthBadgesPopover badges={selected.badges} className="mt-2" />
                   </div>
                 )}

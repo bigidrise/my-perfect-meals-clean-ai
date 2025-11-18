@@ -39,6 +39,7 @@ import {
   getUserMedicalProfile,
 } from "@/utils/medicalPersonalization";
 import { post } from "@/lib/api";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 import { ProDietaryDirectives } from "@/components/ProDietaryDirectives";
 import PhaseGate from "@/components/PhaseGate";
 
@@ -822,9 +823,22 @@ export default function CravingCreator() {
 
                       return medicalBadges && medicalBadges.length > 0 ? (
                         <div className="mb-4">
-                          <h3 className="font-semibold mb-2 text-white">
-                            Medical Safety
-                          </h3>
+                          <div className="flex items-center justify-between gap-3 mb-2">
+                            <h3 className="font-semibold text-white">
+                              Medical Safety
+                            </h3>
+                            <CopyRecipeButton recipe={{
+                              name: meal.name,
+                              ingredients: (meal.ingredients ?? []).map((ing: any) => ({
+                                name: ing.item || ing.name,
+                                amount: ing.amount || ing.quantity,
+                                unit: ing.unit
+                              })),
+                              instructions: Array.isArray(meal.instructions) 
+                                ? meal.instructions 
+                                : (meal.instructions ? meal.instructions.split('\n').filter((s: string) => s.trim()) : [])
+                            }} />
+                          </div>
                           <HealthBadgesPopover badges={medicalBadges.map((b: any) => b.badge)} className="mt-2" />
                         </div>
                       ) : null;

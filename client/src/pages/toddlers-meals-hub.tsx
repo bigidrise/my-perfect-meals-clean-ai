@@ -9,6 +9,7 @@ import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { toddlersMeals, type ToddlersMeal } from "@/data/toddlersMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const SERVING_OPTIONS = [1, 2, 3, 4] as const;
 
@@ -292,9 +293,20 @@ export default function ToddlersMealsHub() {
 
                 {/* Health Badges */}
                 <div className="mb-4">
-                  <h3 className="font-bold text-lg mb-2 text-white">
-                    Health Benefits
-                  </h3>
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <h3 className="font-bold text-lg text-white">
+                      Health Benefits
+                    </h3>
+                    <CopyRecipeButton recipe={{
+                      name: selected.name,
+                      ingredients: scaledIngs.map(ing => ({
+                        name: ing.item,
+                        amount: formatQty(ing.quantity),
+                        unit: pluralize(ing.unit, ing.quantity)
+                      })),
+                      instructions: selected.instructions
+                    }} />
+                  </div>
                   <HealthBadgesPopover
                     badges={selected.healthBadges}
                     className="mt-2"
