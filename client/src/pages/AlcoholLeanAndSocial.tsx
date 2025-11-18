@@ -311,6 +311,18 @@ export default function AlcoholLeanAndSocial() {
     }
   }, []);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedDrink) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedDrink]);
+
   const handleInfoModalClose = () => {
     setShowInfoModal(false);
     localStorage.setItem("hasSeenAlcoholLeanInfo", "true");

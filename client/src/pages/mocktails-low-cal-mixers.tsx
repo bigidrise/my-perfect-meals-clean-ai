@@ -24,6 +24,18 @@ export default function MocktailsLowCalMixersPage() {
     }
   }, []);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedMocktail) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedMocktail]);
+
   const handleInfoModalClose = () => {
     setShowInfoModal(false);
     localStorage.setItem("hasSeenMocktailsInfo", "true");
