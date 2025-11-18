@@ -48,22 +48,22 @@ export default function MealPremadePicker({
 
           <TabsContent value="breakfast" className="mt-4">
             <div className="text-center py-12 text-white/60 bg-black/20 rounded-xl border border-white/10">
-              <p className="text-lg">Breakfast premade options will appear here</p>
-              <p className="text-sm mt-2">Phase 3 will add actual meal options</p>
+              <p className="text-lg">Breakfast Premade Options Coming Soon</p>
+              <p className="text-sm mt-2 text-white/40">Phase 3 will add actual meal options</p>
             </div>
           </TabsContent>
 
           <TabsContent value="lunch" className="mt-4">
             <div className="text-center py-12 text-white/60 bg-black/20 rounded-xl border border-white/10">
               <p className="text-lg">Lunch premade options will appear here</p>
-              <p className="text-sm mt-2">Phase 3 will add actual meal options</p>
+              <p className="text-sm mt-2 text-white/40">Phase 3 will add actual meal options</p>
             </div>
           </TabsContent>
 
           <TabsContent value="dinner" className="mt-4">
             <div className="text-center py-12 text-white/60 bg-black/20 rounded-xl border border-white/10">
               <p className="text-lg">Dinner premade options will appear here</p>
-              <p className="text-sm mt-2">Phase 3 will add actual meal options</p>
+              <p className="text-sm mt-2 text-white/40">Phase 3 will add actual meal options</p>
             </div>
           </TabsContent>
         </Tabs>
