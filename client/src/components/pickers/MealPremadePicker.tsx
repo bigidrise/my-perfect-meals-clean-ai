@@ -187,7 +187,7 @@ export default function MealPremadePicker({
           </DialogTitle>
         </DialogHeader>
 
-        {/* Category Tabs - Matching Snack Picker Style */}
+        {/* Category Tabs - Purple Style (Matching Snack Picker) */}
         <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
           {categories.map((category) => (
             <button
@@ -195,7 +195,7 @@ export default function MealPremadePicker({
               onClick={() => setActiveCategory(category)}
               className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
                 activeCategory === category
-                  ? 'bg-orange-600 text-white shadow-lg'
+                  ? 'bg-purple-600 text-white shadow-lg'
                   : 'bg-white/10 text-white/70 hover:bg-white/20'
               }`}
             >
@@ -204,14 +204,14 @@ export default function MealPremadePicker({
           ))}
         </div>
 
-        {/* Meal Cards - Matching Snack Picker Tile Style */}
+        {/* Meal Cards - Purple Style (Matching Snack Picker) */}
         <div className="space-y-3 overflow-y-auto max-h-[50vh] pr-2">
           {currentMeals.map((meal) => (
             <button
               key={meal.id}
               onClick={() => handleSelectPremade(meal, activeCategory)}
               disabled={generating}
-              className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-orange-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-purple-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <h4 className="font-semibold text-white text-base mb-2">
                 {meal.name}
@@ -219,7 +219,7 @@ export default function MealPremadePicker({
               <div className="space-y-1">
                 {meal.ingredients.map((ing, idx) => (
                   <div key={idx} className="flex items-start gap-2 text-sm text-white/70">
-                    <span className="text-orange-400 font-bold">•</span>
+                    <span className="text-purple-400 font-bold">•</span>
                     <span>
                       <span className="text-white/90">{ing.item}</span>
                       <span className="text-white/50"> - {ing.preparation}</span>
