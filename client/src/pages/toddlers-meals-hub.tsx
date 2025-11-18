@@ -357,6 +357,7 @@ export default function ToddlersMealsHub() {
             }))}
             source={`${selected.name} (${selectedServings} servings)`}
             sourceSlug="toddler-meals"
+            hideCopyButton={true}
           />
         )}
 

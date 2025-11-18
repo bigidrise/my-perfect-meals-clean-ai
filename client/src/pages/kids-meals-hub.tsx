@@ -322,6 +322,7 @@ export default function KidsMealsHub() {
             }))}
             source={`${selected.name} (${selectedServings} servings)`}
             sourceSlug="kids-meals"
+            hideCopyButton={true}
           />
         )}
 

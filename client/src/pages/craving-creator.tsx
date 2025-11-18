@@ -938,6 +938,7 @@ export default function CravingCreator() {
             }))
           )}
           source="Craving Creator"
+          hideCopyButton={true}
         />
       )}
 

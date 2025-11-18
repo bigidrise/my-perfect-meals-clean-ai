@@ -16,6 +16,7 @@ type Props = {
   source?: string;
   sourceSlug?: string;
   bottomPadding?: string;
+  hideCopyButton?: boolean;
 };
 
 function formatQty(qty?: number | string): string {
@@ -28,7 +29,7 @@ function formatQty(qty?: number | string): string {
   return rounded.toString().replace(/\.?0+$/, '');
 }
 
-export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, bottomPadding = "pb-20" }: Props) {
+export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, bottomPadding = "pb-20", hideCopyButton = false }: Props) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [copying, setCopying] = useState(false);
@@ -86,7 +87,7 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
     setLocation(url);
   }
 
-  if (ingredients.length === 0) return null;
+  if (!ingredients || ingredients.length === 0) return null;
 
   return (
     <div className={`fixed left-0 right-0 bottom-0 z-[60] bg-black/80 backdrop-blur-xl border-t border-white/20 shadow-2xl`}>
@@ -97,15 +98,17 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
             <div className="text-xs sm:text-sm text-white/80">{ingredients.length} ingredients</div>
           </div>
           <div className="flex gap-2">
-            <Button
-              onClick={onCopyList}
-              disabled={copying}
-              className="flex-1 sm:flex-none min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white border border-white/30"
-              data-testid="button-copy-shopping-list"
-            >
-              <Copy className="h-5 w-5 sm:mr-2" />
-              <span className="hidden sm:inline">Copy List</span>
-            </Button>
+            {!hideCopyButton && (
+              <Button
+                onClick={onCopyList}
+                disabled={copying}
+                className="flex-1 sm:flex-none min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white border border-white/30"
+                data-testid="button-copy-shopping-list"
+              >
+                <Copy className="h-5 w-5 sm:mr-2" />
+                <span className="hidden sm:inline">Copy List</span>
+              </Button>
+            )}
             <Button
               onClick={onAddToList}
               className="flex-1 sm:flex-none min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"

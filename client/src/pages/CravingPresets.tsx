@@ -332,6 +332,7 @@ export default function CravingPresetsPage() {
             }))}
             source={`${selected.name} (${selectedServings} servings)`}
             sourceSlug="craving-presets"
+            hideCopyButton={true}
           />
         )}
 
