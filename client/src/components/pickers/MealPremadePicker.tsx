@@ -100,7 +100,7 @@ export default function MealPremadePicker({
   onMealSelect,
   mealType = 'breakfast'
 }: MealPremadePickerProps) {
-  const [activeTab, setActiveTab] = useState(mealType);
+  const [activeCategory, setActiveCategory] = useState<string>('All Protein');
   const [generating, setGenerating] = useState(false);
   const { toast } = useToast();
 
@@ -175,92 +175,68 @@ export default function MealPremadePicker({
     }
   };
 
+  const categories = Object.keys(breakfastPremades);
+  const currentMeals = breakfastPremades[activeCategory] || [];
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-zinc-900 via-zinc-800 to-black border-white/20">
+      <DialogContent className="max-w-2xl max-h-[85vh] bg-gradient-to-br from-zinc-900 via-zinc-800 to-black border border-white/20 rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between text-white">
-            <span>AI Premades - Quick Meal Options</span>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
+          <DialogTitle className="text-white text-xl font-semibold">
+            Breakfast Premades
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-black/30">
-            <TabsTrigger value="breakfast" className="text-white data-[state=active]:bg-orange-600">
-              Breakfast
-            </TabsTrigger>
-            <TabsTrigger value="lunch" className="text-white data-[state=active]:bg-orange-600">
-              Lunch
-            </TabsTrigger>
-            <TabsTrigger value="dinner" className="text-white data-[state=active]:bg-orange-600">
-              Dinner
-            </TabsTrigger>
-          </TabsList>
+        {/* Category Tabs - Matching Snack Picker Style */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
+                activeCategory === category
+                  ? 'bg-orange-600 text-white shadow-lg'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
 
-          <TabsContent value="breakfast" className="mt-4">
-            <div className="space-y-6">
-              {Object.entries(breakfastPremades).map(([category, meals]) => (
-                <div key={category} className="space-y-3">
-                  <h3 className="text-lg font-semibold text-white/90 border-b border-white/10 pb-2">
-                    {category}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {meals.map((meal) => (
-                      <button
-                        key={meal.id}
-                        onClick={() => handleSelectPremade(meal, category)}
-                        disabled={generating}
-                        className="text-left p-4 bg-black/20 hover:bg-black/30 border border-white/10 hover:border-orange-500/50 rounded-xl transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <h4 className="font-medium text-white group-hover:text-orange-400 mb-2">
-                          {meal.name}
-                        </h4>
-                        <ul className="space-y-1 text-sm text-white/60">
-                          {meal.ingredients.map((ing, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <span className="text-orange-400 mt-1">•</span>
-                              <span>
-                                {ing.item} ({ing.preparation})
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </button>
-                    ))}
+        {/* Meal Cards - Matching Snack Picker Tile Style */}
+        <div className="space-y-3 overflow-y-auto max-h-[50vh] pr-2">
+          {currentMeals.map((meal) => (
+            <button
+              key={meal.id}
+              onClick={() => handleSelectPremade(meal, activeCategory)}
+              disabled={generating}
+              className="w-full text-left p-4 bg-zinc-800/50 hover:bg-zinc-700/50 border border-white/10 hover:border-orange-500/50 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <h4 className="font-semibold text-white text-base mb-2">
+                {meal.name}
+              </h4>
+              <div className="space-y-1">
+                {meal.ingredients.map((ing, idx) => (
+                  <div key={idx} className="flex items-start gap-2 text-sm text-white/70">
+                    <span className="text-orange-400 font-bold">•</span>
+                    <span>
+                      <span className="text-white/90">{ing.item}</span>
+                      <span className="text-white/50"> - {ing.preparation}</span>
+                    </span>
                   </div>
-                </div>
-              ))}
-              
-              {generating && (
-                <div className="flex items-center justify-center py-8 text-white/60">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  <span>Generating meal image...</span>
-                </div>
-              )}
-            </div>
-          </TabsContent>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div>
 
-          <TabsContent value="lunch" className="mt-4">
-            <div className="text-center py-12 text-white/60 bg-black/20 rounded-xl border border-white/10">
-              <p className="text-lg">Lunch premade options will appear here</p>
-              <p className="text-sm mt-2 text-white/40">Phase 4 will add actual meal options</p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="dinner" className="mt-4">
-            <div className="text-center py-12 text-white/60 bg-black/20 rounded-xl border border-white/10">
-              <p className="text-lg">Dinner premade options will appear here</p>
-              <p className="text-sm mt-2 text-white/40">Phase 5 will add actual meal options</p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        {generating && (
+          <div className="flex items-center justify-center py-6 text-white/60">
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+            <span className="text-sm">Generating meal image...</span>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
