@@ -32,6 +32,48 @@ My Perfect Meals is an AI-powered nutrition application designed to provide pers
 
 **The mission: Show foodies they can have their cake (teriyaki chicken, BBQ salmon, Greek salads) and eat it too (while losing weight).**
 
+# Core Product Philosophy
+
+**⭐ PERMANENT DOCTRINE - ALL FUTURE WORK MUST FOLLOW THIS ⭐**
+
+## 1. Built for FOODIES, not dieters
+Our users LOVE food. They think about food constantly. They get emotional about food. They're excited by flavor combinations, textures, and cooking styles. **We design for passion, not efficiency.**
+
+## 2. Healthy eating must feel exciting, indulgent, and flavorful
+Most people believe healthy food is boring. This app exists to destroy that belief. Every interaction must say: **"You can eat healthy AND it can taste amazing."** This is not a diet app. This is a pleasure app that happens to produce healthy outcomes.
+
+## 3. Flavor exploration is NOT friction — it IS the product
+We do NOT minimize cooking-style choices. We highlight them. Every popup, modal, and tile is an opportunity to spark excitement and dopamine. **Users do not get "modal fatigue." Users get bored when they don't see enough options.**
+
+## 4. The app must inspire, not instruct
+Users don't want to be told "what they can't have." They want to be shown "how delicious healthy food can be." All UI elements must feel like:
+- A chef's tasting menu
+- A concierge suggestion
+- A flavor guide
+- A personal food stylist
+- **Not a form.**
+
+## 5. The modal cooking-style selector is a centerpiece of the experience
+This is not a minor detail. It is the emotional moment where healthy food transforms into something craveable. Therefore:
+- The modal pops immediately
+- Tappable flavor tiles
+- No dropdowns
+- No buried UI
+- No delays
+- No batching
+**The moment they tap an ingredient is the moment the flavor imagination begins.**
+
+## 6. We optimize for emotional reward, not speed
+Speed is not the priority. Emotional engagement is. If it takes a user an extra 20–40 seconds to enjoy this process, that is GOOD UX — not bad UX. **Foodies savor the experience.**
+
+## 7. Apple App Store standards align with this philosophy
+Apple rewards: beautiful modals, rich micro-interactions, tactile choices, immediate clarity, elegance, delight. **The cooking-style modal is EXACTLY this.**
+
+## 8. Every future feature must ask one question:
+**"Does this make food more exciting, more flavorful, or more emotionally rewarding?"**
+- If the answer is no, we do not build it.
+- If the answer is yes, we enhance it.
+
 # User Preferences
 Preferred communication style: Simple, everyday language.
 Demo shortcuts: User prefers quick access to app features without filling out lengthy forms.
