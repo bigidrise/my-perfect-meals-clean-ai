@@ -153,7 +153,7 @@ export default function ToddlersMealsHub() {
         <ArrowLeft className="h-4 w-4" />
       </Button>
 
-      <div className="max-w-6xl mx-auto pt-16 pb-32">
+      <div className="max-w-6xl mx-auto pt-16">
         {/* Header */}
         <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-4">
