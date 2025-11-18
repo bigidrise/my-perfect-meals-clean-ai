@@ -24,7 +24,7 @@ export function DayWeekToggle({ mode, onModeChange }: DayWeekToggleProps) {
         variant="ghost"
         size="sm"
         onClick={() => onModeChange('week')}
-        className={`px-4 py-1 rounded-md transition-all text-xs ${
+        className={`hidden px-4 py-1 rounded-md transition-all text-xs ${
           mode === 'week'
             ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
             : 'text-white/70 hover:text-white hover:bg-white/5'
