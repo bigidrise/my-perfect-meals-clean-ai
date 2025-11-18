@@ -9,7 +9,6 @@ import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { kidsMeals, type KidsMeal } from "@/data/kidsMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const SERVING_OPTIONS = [1, 2, 4, 6, 8] as const;
 
@@ -117,20 +116,6 @@ export default function KidsMealsHub() {
 
   const selected = meals.find(m => m.id === selectedMeal);
   const scaledIngs = selected ? scaleIngredients(selected.ingredients, selected.baseServings, selectedServings, rounding) : [];
-
-  // Preparing the selectedRecipe object for CopyRecipeButton
-  const selectedRecipe = selected ? {
-    name: selected.name,
-    ingredients: scaledIngs.map(ing => `${formatQty(ing.quantity)} ${pluralize(ing.unit, ing.quantity) || ''} ${ing.item}`.trim()).filter(Boolean),
-    instructions: selected.instructions || [],
-    funFact: selected.funFact,
-    description: selected.description,
-    prepTime: selected.prepTime,
-    cookTime: selected.cookTime,
-    totalTime: selected.totalTime,
-    servings: selectedServings,
-    healthBadges: selected.healthBadges
-  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6">
@@ -320,13 +305,6 @@ export default function KidsMealsHub() {
                   <div className="mb-4 p-4 bg-orange-600/20 border border-orange-400/40 rounded-lg">
                     <h4 className="font-bold text-white mb-2">Fun Fact!</h4>
                     <p className="text-white/90 text-sm">{selected.funFact}</p>
-                  </div>
-                )}
-
-                {/* Copy Recipe Button */}
-                {selectedRecipe && (
-                  <div className="mt-4">
-                    <CopyRecipeButton recipe={selectedRecipe} />
                   </div>
                 )}
               </CardContent>

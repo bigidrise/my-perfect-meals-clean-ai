@@ -98,6 +98,15 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
           </div>
           <div className="flex gap-2">
             <Button
+              onClick={onCopyList}
+              disabled={copying}
+              className="flex-1 sm:flex-none min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white border border-white/30"
+              data-testid="button-copy-shopping-list"
+            >
+              <Copy className="h-5 w-5 sm:mr-2" />
+              <span className="hidden sm:inline">Copy List</span>
+            </Button>
+            <Button
               onClick={onAddToList}
               className="flex-1 sm:flex-none min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"
               data-testid="button-go-to-shopping-list"

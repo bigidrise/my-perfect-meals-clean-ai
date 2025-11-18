@@ -9,7 +9,6 @@ import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { CRAVING_PRESETS, type CravingPreset, type Ingredient } from "@/data/cravingsPresetsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const SERVING_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -108,13 +107,6 @@ export default function CravingPresetsPage() {
 
   const selected = meals.find(m => m.id === selectedMeal);
   const scaledIngs = selected ? scaleIngredients(selected.ingredients, selected.baseServings, selectedServings, rounding) : [];
-
-  const selectedRecipe = selected ? {
-    name: selected.name,
-    summary: selected.summary,
-    ingredients: scaledIngs,
-    instructions: selected.instructions,
-  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6">
