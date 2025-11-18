@@ -27,13 +27,19 @@ export default function MealIngredientPicker({
   dietType
 }: MealIngredientPickerProps) {
 
-  // 🔥🔥🔥 ADDED: Cooking style state (Option A)
+  // 🔥🔥🔥 Cooking style state
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
 
-  // 🔥🔥🔥 ADDED: Ingredients that support cooking styles
+  // 🔥🔥🔥 Preparation modal state
+  const [prepModalIngredient, setPrepModalIngredient] = useState<string | null>(null);
+  const [prepModalStyle, setPrepModalStyle] = useState<string>("");
+
+  // 🔥🔥🔥 Ingredients that support cooking styles
   const COOKING_STYLE_ENABLED: Record<string, string[]> = {
     // Eggs
     "Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
+    "Egg Whites": ["Scrambled", "Omelet", "Poached", "Hard Boiled"],
+    "Whole Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
 
     // Generic steak label
     "Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
@@ -65,6 +71,44 @@ export default function MealIngredientPicker({
     "Kobe Beef": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Wagyu Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Wagyu Beef": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+
+    // Chicken
+    "Chicken Breast": ["Grilled", "Grilled (BBQ)", "Grilled (Lemon Pepper)", "Teriyaki", "Pan-Seared", "Air-Fried", "Baked"],
+    "Chicken Thighs": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Ground Chicken": ["Pan-Seared", "Crumbled & Seasoned"],
+
+    // Turkey
+    "Turkey Breast": ["Grilled", "Pan-Seared", "Lemon Pepper", "Taco-Seasoned", "Air-Fried"],
+    "Ground Turkey": ["Pan-Seared", "Taco-Seasoned"],
+    "Turkey Sausage": ["Pan-Seared", "Air-Fried"],
+
+    // Fish
+    "Salmon": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Tilapia": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Cod": ["Baked", "Pan-Seared"],
+    "Tuna Steak": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
+
+    // Potatoes
+    "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
+    "Red Potatoes": ["Roasted Cubes", "Air-Fried", "Boiled"],
+    "Sweet Potato": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
+    "Yam": ["Baked", "Mashed", "Roasted Cubes"],
+
+    // Vegetables
+    "Broccoli": ["Steamed", "Sautéed", "Roasted", "Air-Fried", "Seasoned"],
+    "Asparagus": ["Steamed", "Grilled", "Roasted"],
+    "Green Beans": ["Steamed", "Sautéed", "Seasoned"],
+    "Mixed Vegetables": ["Steamed", "Sautéed", "Seasoned"],
+
+    // Salads / greens
+    "Romaine Lettuce": ["Garden Salad", "Caesar Style (Light)", "Cobb Style", "Greek Style", "Simple Salad (Olive Oil + Lemon)"],
+    "Spring Mix": ["Garden Salad", "Cobb Style", "Simple Salad (Olive Oil + Lemon)"],
+    "Spinach": ["Steamed", "Sautéed", "Salad Style"],
+
+    // Raw veggies
+    "Carrots": ["Raw", "Sliced", "Julienned", "Seasoned (Salt/Lemon)"],
+    "Celery": ["Raw", "Sticks"],
+    "Cucumber": ["Raw", "Sliced", "Seasoned (Salt/Lemon)"],
   };
 
 
@@ -373,6 +417,24 @@ export default function MealIngredientPicker({
     }
   };
 
+  const handleIngredientClick = (ingredientName: string) => {
+    const options = COOKING_STYLE_ENABLED[ingredientName];
+
+    if (options && options.length > 0) {
+      setPrepModalIngredient(ingredientName);
+      setPrepModalStyle(
+        cookingStyles[ingredientName] || options[0]
+      );
+      return;
+    }
+
+    setSelectedIngredients(prev =>
+      prev.includes(ingredientName)
+        ? prev.filter(i => i !== ingredientName)
+        : [...prev, ingredientName]
+    );
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -542,12 +604,12 @@ export default function MealIngredientPicker({
                     return (
                       <div
                         key={`${activeCategory}-${ingredientName}-${index}`}
-                        onClick={() => toggleIngredient(ingredientName)}
+                        onClick={() => handleIngredientClick(ingredientName)}
                         className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
                       >
                         <Checkbox
                           checked={isSelected}
-                          onCheckedChange={() => toggleIngredient(ingredientName)}
+                          onCheckedChange={() => handleIngredientClick(ingredientName)}
                           className="h-1.5 w-1.5 border-white/30 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500 pointer-events-none"
                         />
                         <span 
@@ -583,45 +645,6 @@ export default function MealIngredientPicker({
                 <p className="text-emerald-300 text-xs">
                   ✓ {selectedIngredients.length} ingredient{selectedIngredients.length !== 1 ? 's' : ''} selected
                 </p>
-              </div>
-            )}
-
-            {/* 🔥🔥🔥 ADDED: Cooking Styles UI */}
-            {selectedIngredients.length > 0 && (
-              <div className="space-y-3 mb-4">
-                {selectedIngredients.map((ingredient) => {
-                  const options = COOKING_STYLE_ENABLED[ingredient];
-                  if (!options) return null;
-
-                  return (
-                    <div 
-                      key={ingredient}
-                      className="p-3 bg-black/30 border border-white/10 rounded-lg"
-                    >
-                      <p className="text-white text-xs font-semibold mb-1">
-                        {ingredient}
-                      </p>
-
-                      <select
-                        value={cookingStyles[ingredient] || ""}
-                        onChange={(e) =>
-                          setCookingStyles((prev) => ({
-                            ...prev,
-                            [ingredient]: e.target.value
-                          }))
-                        }
-                        className="w-full bg-black/50 text-white text-xs border border-white/20 rounded-md px-2 py-1"
-                      >
-                        <option value="">Select cooking style</option>
-                        {options.map((style) => (
-                          <option key={style} value={style}>
-                            {style}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  );
-                })}
               </div>
             )}
 
@@ -725,6 +748,85 @@ export default function MealIngredientPicker({
           >
             Got it!
           </button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Preparation Modal — opens when an ingredient with cooking styles is tapped */}
+      <Dialog
+        open={!!prepModalIngredient}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setPrepModalIngredient(null);
+            setPrepModalStyle("");
+          }
+        }}
+      >
+        <DialogContent className="bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-white text-base">
+              Select Cooking Style
+            </DialogTitle>
+            <DialogDescription className="text-white/60 text-xs">
+              {prepModalIngredient
+                ? `How do you want your ${prepModalIngredient.toLowerCase()} prepared?`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          {prepModalIngredient && (
+            <div className="mt-3 space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                {COOKING_STYLE_ENABLED[prepModalIngredient]?.map((style) => (
+                  <button
+                    key={style}
+                    type="button"
+                    onClick={() => setPrepModalStyle(style)}
+                    className={`px-2 py-2 rounded-xl text-xs font-semibold border transition-all 
+                      ${
+                        prepModalStyle === style
+                          ? "bg-emerald-600/70 border-emerald-400 text-white shadow-lg"
+                          : "bg-black/50 border-white/20 text-white/80 hover:bg-white/10"
+                      }`}
+                  >
+                    {style}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-4 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setPrepModalIngredient(null);
+                setPrepModalStyle("");
+              }}
+              className="bg-black/40 border-white/20 text-white hover:bg-white/10"
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={!prepModalIngredient || !prepModalStyle}
+              onClick={() => {
+                if (!prepModalIngredient || !prepModalStyle) return;
+                setCookingStyles((prev) => ({
+                  ...prev,
+                  [prepModalIngredient]: prepModalStyle,
+                }));
+                setSelectedIngredients((prev) =>
+                  prev.includes(prepModalIngredient)
+                    ? prev
+                    : [...prev, prepModalIngredient]
+                );
+                setPrepModalIngredient(null);
+                setPrepModalStyle("");
+              }}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Use This Style
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>
