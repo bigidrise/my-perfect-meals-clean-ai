@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import PreparationModal from '@/components/PreparationModal';
 import { 
   AI_PREMADE_BREAKFAST_MEALS, 
   getBreakfastMealsByCategory,
@@ -95,7 +96,22 @@ export default function MealPremadePicker({
 
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [generating, setGenerating] = useState(false);
+  const [prepModalOpen, setPrepModalOpen] = useState(false);
+  const [currentIngredient, setCurrentIngredient] = useState('');
+  const [pendingMeal, setPendingMeal] = useState<any>(null);
+  const [pendingCategory, setPendingCategory] = useState<string>('');
+  const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
   const { toast } = useToast();
+
+  // List of ingredients that need cooking style selection
+  const NEEDS_PREP = [
+    'Eggs', 'Egg Whites', 'Whole Eggs',
+    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon',
+    'Chicken Breast', 'Chicken Thighs',
+    'Broccoli', 'Spinach', 'Asparagus', 'Brussels Sprouts',
+    'Potato', 'Sweet Potato', 'Yam',
+    'Lettuce', 'Spring Mix'
+  ];
 
   // Set initial category when modal opens or meal type changes
   React.useEffect(() => {
@@ -107,14 +123,49 @@ export default function MealPremadePicker({
     }
   }, [open, mealType]);
 
-  const handleSelectPremade = async (meal: any, category: string) => {
+  const handleSelectPremade = (meal: any, category: string) => {
+    // Detect if meal name contains ingredients that need prep selection
+    const mealNameLower = meal.name.toLowerCase();
+    const needsPrepIngredient = NEEDS_PREP.find(ing => 
+      mealNameLower.includes(ing.toLowerCase())
+    );
+
+    if (needsPrepIngredient) {
+      // Show prep modal first
+      setPendingMeal(meal);
+      setPendingCategory(category);
+      setCurrentIngredient(needsPrepIngredient);
+      setPrepModalOpen(true);
+    } else {
+      // No prep needed, generate immediately
+      generateMealImage(meal, category, {});
+    }
+  };
+
+  const handlePrepSelect = (ingredient: string, style: string) => {
+    const updatedStyles = { ...cookingStyles, [ingredient]: style };
+    setCookingStyles(updatedStyles);
+    
+    // Generate meal with selected style
+    if (pendingMeal) {
+      generateMealImage(pendingMeal, pendingCategory, updatedStyles);
+      setPendingMeal(null);
+      setPendingCategory('');
+    }
+  };
+
+  const generateMealImage = async (meal: any, category: string, styles: Record<string, string>) => {
     setGenerating(true);
     
     try {
-      // Generate DALL·E prompt from ingredients with preparation details
-      const ingredientList = meal.ingredients
-        .map((ing: any) => `- ${ing.item} (${ing.preparation})`)
-        .join('\n');
+      // Build ingredient list with cooking styles
+      let ingredientList = meal.name;
+      if (Object.keys(styles).length > 0) {
+        const styleDescriptions = Object.entries(styles)
+          .map(([ing, style]) => `${style} ${ing}`)
+          .join(', ');
+        ingredientList = `${meal.name} (${styleDescriptions})`;
+      }
       
       const dallePrompt = `Generate a clean, realistic overhead food photo of:\n${ingredientList}\n\nMake the food look fresh, well-lit, and placed on a single plate or bowl.`;
       
@@ -137,16 +188,13 @@ export default function MealPremadePicker({
         title: meal.name,
         name: meal.name,
         servings: 1,
-        ingredients: meal.ingredients.map((ing: any) => ({
-          item: ing.item,
-          amount: ing.amount
-        })),
-        instructions: meal.ingredients.map((ing: any) => 
-          `Prepare ${ing.item}: ${ing.preparation}`
+        ingredients: [{ item: meal.name, amount: '1 serving' }],
+        instructions: Object.entries(styles).map(([ing, style]) => 
+          `Prepare ${ing}: ${style}`
         ),
         imageUrl: imageUrl,
         nutrition: {
-          calories: 350, // Default values - could be calculated
+          calories: 350,
           protein: 30,
           carbs: 20,
           fat: 15
@@ -166,6 +214,7 @@ export default function MealPremadePicker({
       });
       
       onClose();
+      setCookingStyles({});
     } catch (error) {
       console.error('Error generating premade meal:', error);
       toast({
@@ -235,6 +284,14 @@ export default function MealPremadePicker({
           </div>
         )}
       </DialogContent>
+
+      {/* Preparation Style Modal */}
+      <PreparationModal
+        open={prepModalOpen}
+        ingredientName={currentIngredient}
+        onClose={() => setPrepModalOpen(false)}
+        onSelect={handlePrepSelect}
+      />
     </Dialog>
   );
 }
