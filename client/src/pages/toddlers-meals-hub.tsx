@@ -9,6 +9,7 @@ import { Users, ChefHat, ArrowLeft } from "lucide-react";
 import { toddlersMeals, type ToddlersMeal } from "@/data/toddlersMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const SERVING_OPTIONS = [1, 2, 3, 4] as const;
 
@@ -128,6 +129,18 @@ export default function ToddlersMealsHub() {
         rounding,
       )
     : [];
+
+  // Construct the selectedRecipe object for CopyRecipeButton
+  const selectedRecipe = selected ? {
+    name: selected.name,
+    ingredients: scaledIngs,
+    instructions: selected.instructions,
+    funFact: selected.funFact,
+    healthBadges: selected.healthBadges,
+    description: selected.description,
+    servings: selectedServings,
+    rounding: rounding,
+  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6">
@@ -254,7 +267,7 @@ export default function ToddlersMealsHub() {
         </div>
 
         {/* Detail Modal */}
-        {selected && (
+        {selected && selectedRecipe && (
           <div
             className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setSelectedMeal(null)}
@@ -342,6 +355,12 @@ export default function ToddlersMealsHub() {
                     <p className="text-white/90 text-sm">{selected.funFact}</p>
                   </div>
                 )}
+
+                {/* Copy Recipe Button */}
+                <div className="mt-4">
+                  <CopyRecipeButton recipe={selectedRecipe} />
+                </div>
+
               </CardContent>
             </Card>
           </div>

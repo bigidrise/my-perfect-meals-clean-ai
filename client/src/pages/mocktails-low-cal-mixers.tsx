@@ -5,6 +5,7 @@ import { ArrowLeft, Home, Sparkles } from "lucide-react";
 import { mocktailsData } from "@/data/mocktailsData";
 import { useState, useEffect } from "react";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 export default function MocktailsLowCalMixersPage() {
   const [, setLocation] = useLocation();
@@ -45,7 +46,7 @@ export default function MocktailsLowCalMixersPage() {
         {/* Header */}
         <div className="text-center mb-8 mt-14 bg-black/20 backdrop-blur-lg border border-emerald-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
           <div className="flex items-center justify-center gap-3 mb-4">
-            
+
             <h1 className="text-2xl font-bold text-white">
               🍹 Mocktails & Low-Cal Mixers
             </h1>
@@ -206,11 +207,17 @@ export default function MocktailsLowCalMixersPage() {
 
         {/* Shopping Bar - Fixed at bottom when modal is open */}
         {selected && (
+          <div className="mt-4">
+            <CopyRecipeButton recipe={selected} />
+          </div>
+        )}
+
+        {selected && (
           <ShoppingAggregateBar
-            ingredients={selected.ingredients.map((ing) => ({
-              name: ing.name,
-              qty: ing.quantity,
-              unit: ing.unit,
+            items={selected.ingredients.map((i) => ({
+              name: i.name,
+              qty: i.quantity,
+              unit: i.unit,
             }))}
             source={selected.name}
             sourceSlug="mocktails"
@@ -222,7 +229,7 @@ export default function MocktailsLowCalMixersPage() {
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
               <h3 className="text-xl font-bold text-white mb-4">How to Use Mocktails</h3>
-              
+
               <div className="space-y-4 text-white/90 text-sm">
                 <p>Discover delicious alcohol-free drinks that are perfect for any occasion while keeping your nutrition on track.</p>
                 <div>

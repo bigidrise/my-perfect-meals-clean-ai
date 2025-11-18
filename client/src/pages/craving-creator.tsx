@@ -42,50 +42,6 @@ import { post } from "@/lib/api";
 import { ProDietaryDirectives } from "@/components/ProDietaryDirectives";
 import PhaseGate from "@/components/PhaseGate";
 
-// Development user ID - consistent across all components (UUID format)
-const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
-
-interface StructuredIngredient {
-  name: string;
-  quantity?: string | number;
-  unit?: string;
-  category?: string;
-}
-
-interface MealData {
-  id: string;
-  name: string;
-  description: string;
-  ingredients: StructuredIngredient[];
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  nutrition?: {
-    calories?: number;
-    protein?: number;
-    carbs?: number;
-    fat?: number;
-    protein_g?: number;
-    carbs_g?: number;
-    fat_g?: number;
-  };
-  instructions: string;
-  cookingInstructions?: string[];
-  reasoning: string;
-  servingSize: string;
-  medicalBadges: Array<{
-    condition: string;
-    compatible: boolean;
-    reason: string;
-    color: string;
-  }>;
-  imageUrl?: string;
-}
-import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import { setQuickView } from "@/lib/macrosQuickView";
-import TrashButton from "@/components/ui/TrashButton";
-
 // ---- Persist the generated meal so it never "disappears" ----
 const CACHE_KEY = "cravingCreator.cache.v1";
 
@@ -133,6 +89,51 @@ function getMealNutrition(meal: any) {
   };
 }
 
+// Development user ID - consistent across all components (UUID format)
+const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
+
+interface StructuredIngredient {
+  name: string;
+  quantity?: string | number;
+  unit?: string;
+  category?: string;
+}
+
+interface MealData {
+  id: string;
+  name: string;
+  description: string;
+  ingredients: StructuredIngredient[];
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  nutrition?: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
+    protein_g?: number;
+    carbs_g?: number;
+    fat_g?: number;
+  };
+  instructions: string;
+  cookingInstructions?: string[];
+  reasoning: string;
+  servingSize: string;
+  medicalBadges: Array<{
+    condition: string;
+    compatible: boolean;
+    reason: string;
+    color: string;
+  }>;
+  imageUrl?: string;
+}
+import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import GlassCard from "@/components/glass/GlassCard";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
+import { setQuickView } from "@/lib/macrosQuickView";
+
 export default function CravingCreator() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -165,7 +166,7 @@ export default function CravingCreator() {
   useEffect(() => {
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenCravingInfo = localStorage.getItem("hasSeenCravingInfo");
-    
+
     if (coachMode === "guided" && !hasSeenCravingInfo) {
       // Small delay to let page render first
       setTimeout(() => {
@@ -654,7 +655,7 @@ export default function CravingCreator() {
 
                 {!replaceId && (
                   <p className="text-white/80 text-sm mt-2 text-center">
-                    ⏱️ Generation takes 15-30 seconds 
+                    ⏱️ Generation takes 15-30 seconds
                     compliance
                   </p>
                 )}

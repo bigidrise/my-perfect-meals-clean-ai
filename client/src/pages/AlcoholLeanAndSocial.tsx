@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Wine } from "lucide-react";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 type Drink = {
   id: string;
@@ -444,6 +445,11 @@ export default function AlcoholLeanAndSocial() {
         )}
 
         {/* Shopping Bar - Fixed at bottom when modal is open */}
+        {selected && (
+          <div className="mt-4">
+            <CopyRecipeButton recipe={selected} />
+          </div>
+        )}
         {selected && (
           <ShoppingAggregateBar
             ingredients={selected.ingredients.map(ing => ({
