@@ -16,6 +16,7 @@ import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import {
   GlassButton,
+  GlassCard,
 } from "@/components/glass";
 import {
   Select,
@@ -41,6 +42,10 @@ import {
 import { post } from "@/lib/api";
 import { ProDietaryDirectives } from "@/components/ProDietaryDirectives";
 import PhaseGate from "@/components/PhaseGate";
+import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
+import { setQuickView } from "@/lib/macrosQuickView";
+import TrashButton from "@/components/ui/TrashButton";
 
 // ---- Persist the generated meal so it never "disappears" ----
 const CACHE_KEY = "cravingCreator.cache.v1";
@@ -129,10 +134,6 @@ interface MealData {
   }>;
   imageUrl?: string;
 }
-import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
-import GlassCard from "@/components/glass/GlassCard";
-import CopyRecipeButton from "@/components/CopyRecipeButton";
-import { setQuickView } from "@/lib/macrosQuickView";
 
 export default function CravingCreator() {
   const [, setLocation] = useLocation();
