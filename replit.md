@@ -1,6 +1,37 @@
 # Overview
 My Perfect Meals is an AI-powered nutrition application designed to provide personalized meal plans, comprehensive nutrition tracking, and advanced food preference management. Its core purpose is to simplify healthy eating through intelligent automation, focusing on a 4-step AI meal creator and automatic weekly meal plan generation. The project's vision is to make healthy eating accessible, enjoyable, and sustainable through personalized nutrition.
 
+# Target Audience: The Foodie Mindset
+
+**THIS APP IS BUILT FOR FOODIES - NEVER FORGET THIS.**
+
+## Who Are Foodies?
+- They think about food ALL DAY LONG: thinking about lunch while eating breakfast, thinking about snacks while eating lunch, thinking about dinner while eating snacks
+- They wake up thinking about food, go to bed thinking about food, dream about food while sleeping
+- They think about FLAVORS constantly - food is their entertainment, their joy, their fun
+- They get GIDDY when food arrives at their table - they literally light up with excitement
+- They order 3-4 different dishes at restaurants just to experience different flavors
+- They view eating as FUN, as an experience, not just fuel
+
+## The Critical Misconception
+**Foodies believe healthy eating is boring, nasty, and means giving up flavor.**
+- They don't know you can have teriyaki chicken and still be healthy
+- They don't know you can have amazing flavors without eating garbage
+- When shown they can eat flavorful food AND lose weight, they're SHOCKED
+- They eat shitty food NOT because they want to be unhealthy, but because they think it's the only way to get flavor
+- They think "eating healthy = no fun"
+
+## Design Philosophy Impact
+**This is WHY we build features the way we do:**
+- 50+ cooking preparation options (teriyaki, BBQ, lemon pepper, etc.) - foodies want FLAVOR VARIETY
+- Apple-style browsing modals for cooking methods - foodies want to EXPLORE and get INSPIRED
+- High-quality food presentation over speed/efficiency - foodies want to SEE their options
+- No optimization for "quick meal planning" - foodies don't get fatigued, they get EXCITED
+- Focus on showing them they CAN have amazing flavors while being healthy
+- Never assume they want simple/boring - they want OPTIONS and VARIETY
+
+**The mission: Show foodies they can have their cake (teriyaki chicken, BBQ salmon, Greek salads) and eat it too (while losing weight).**
+
 # User Preferences
 Preferred communication style: Simple, everyday language.
 Demo shortcuts: User prefers quick access to app features without filling out lengthy forms.
