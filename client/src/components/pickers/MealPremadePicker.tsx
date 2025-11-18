@@ -40,8 +40,19 @@ const breakfastPremades = {
       }
     ]
   })),
-  'Protein + Carb': [], // Will be populated in Phase 2
-  'Egg-Based Meals': [] // Will be populated in Phase 2
+  'Protein + Carb': getBreakfastMealsByCategory('protein-carb').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    ingredients: [
+      { 
+        item: meal.name, 
+        amount: '1 serving', 
+        preparation: meal.defaultCookingMethod || 'prepared as preferred' 
+      }
+    ]
+  })),
+  'Egg-Based Meals': [] // Will be populated in Phase 3
 };
 
 // Lunch premade meals organized by category
