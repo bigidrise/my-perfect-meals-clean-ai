@@ -164,7 +164,8 @@ export default function MocktailsLowCalMixersPage() {
                   <ul className="list-disc list-inside space-y-1">
                     {selected.ingredients.map((ingredient, idx) => (
                       <li key={idx} className="text-white/90">
-                        {ingredient}
+                        {ingredient.quantity} {ingredient.unit} {ingredient.name}
+                        {ingredient.notes && ` (${ingredient.notes})`}
                       </li>
                     ))}
                   </ul>
@@ -207,9 +208,9 @@ export default function MocktailsLowCalMixersPage() {
         {selected && (
           <ShoppingAggregateBar
             ingredients={selected.ingredients.map((ing) => ({
-              name: ing,
-              qty: 1,
-              unit: "serving",
+              name: ing.name,
+              qty: ing.quantity,
+              unit: ing.unit,
             }))}
             source={selected.name}
             sourceSlug="mocktails"
