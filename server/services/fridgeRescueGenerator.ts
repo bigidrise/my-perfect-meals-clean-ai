@@ -358,23 +358,27 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
 
     console.log("✅ Fridge rescue meals generated successfully with images");
     
-    // PHASE 3A: Map to UnifiedMeal format
-    const unifiedMeals: UnifiedMeal[] = [];
-    for (const meal of processedMeals) {
-      try {
-        const unified = mapFridgeRescueToUnified(meal);
-        validateUnifiedMeal(unified);
-        unifiedMeals.push(unified);
-      } catch (err) {
-        console.warn(
-          "[UnifiedMeal][FridgeRescue] Validation failed for meal:",
-          { mealId: meal.id, error: (err as Error).message }
-        );
-        // Continue - don't break legacy response
-      }
+    // PHASE 3A: Return best meal (first one) in standardized single format
+    const bestMeal = processedMeals[0];
+    let unifiedMeal: UnifiedMeal | null = null;
+    
+    try {
+      unifiedMeal = mapFridgeRescueToUnified(bestMeal);
+      validateUnifiedMeal(unifiedMeal);
+    } catch (err) {
+      console.warn(
+        "[UnifiedMeal][FridgeRescue] Validation failed for meal:",
+        { mealId: bestMeal.id, error: (err as Error).message }
+      );
     }
     
-    return { meals: processedMeals, unifiedMeals };
+    // Return single meal format for consistency with Craving Creator
+    return { 
+      meal: bestMeal, 
+      unifiedMeal,
+      // Include alternates for future use
+      alternates: processedMeals.slice(1)
+    };
 
   } catch (error: any) {
     console.error('OpenAI API error for fridge rescue meals:', error);
@@ -443,22 +447,24 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
       }
     ];
 
-    // PHASE 3A: Map fallback meals to UnifiedMeal format
-    const unifiedMeals: UnifiedMeal[] = [];
-    for (const meal of fallbackMeals) {
-      try {
-        const unified = mapFridgeRescueToUnified(meal);
-        validateUnifiedMeal(unified);
-        unifiedMeals.push(unified);
-      } catch (err) {
-        console.warn(
-          "[UnifiedMeal][FridgeRescue] Validation failed for fallback meal:",
-          { mealId: meal.id, error: (err as Error).message }
-        );
-        // Continue - don't break legacy response
-      }
+    // PHASE 3A: Return best fallback meal in standardized format
+    const bestMeal = fallbackMeals[0];
+    let unifiedMeal: UnifiedMeal | null = null;
+    
+    try {
+      unifiedMeal = mapFridgeRescueToUnified(bestMeal);
+      validateUnifiedMeal(unifiedMeal);
+    } catch (err) {
+      console.warn(
+        "[UnifiedMeal][FridgeRescue] Validation failed for fallback meal:",
+        { mealId: bestMeal.id, error: (err as Error).message }
+      );
     }
     
-    return { meals: fallbackMeals, unifiedMeals };
+    return { 
+      meal: bestMeal, 
+      unifiedMeal,
+      alternates: fallbackMeals.slice(1)
+    };
   }
 }

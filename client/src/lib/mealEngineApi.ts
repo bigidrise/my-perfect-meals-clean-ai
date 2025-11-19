@@ -117,8 +117,29 @@ export function normalizeGeneratorInput(payload: any) {
 }
 
 // GLOBAL RESPONSE NORMALIZER FOR UNIFIED MEAL
+// All AI endpoints now return: {meal: {...}, unifiedMeal: {...}}
 export function normalizeUnifiedMealOutput(meal: any) {
   if (!meal) return meal;
+  
+  // Ensure consistent shape across all sources
+  const normalized = {
+    id: meal.id,
+    name: meal.name,
+    description: meal.description || '',
+    ingredients: meal.ingredients || [],
+    instructions: meal.instructions || '',
+    calories: meal.calories || meal.nutrition?.calories || 0,
+    protein: meal.protein || meal.nutrition?.protein || 0,
+    carbs: meal.carbs || meal.nutrition?.carbs || 0,
+    fat: meal.fat || meal.nutrition?.fat || 0,
+    imageUrl: meal.imageUrl,
+    cookingTime: meal.cookingTime,
+    difficulty: meal.difficulty,
+    servingSize: meal.servingSize || '1 serving',
+    medicalBadges: meal.medicalBadges || []
+  };
+  
+  return normalized;
 
   return {
     ...meal,

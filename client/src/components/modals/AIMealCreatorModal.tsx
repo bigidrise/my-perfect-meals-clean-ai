@@ -82,19 +82,14 @@ export default function AIMealCreatorModal({
       const data = await response.json();
       console.log("🍳 AI Meal Creator received data:", data);
 
-      // Handle both response formats: {meals: [...]} or {meal: {...}}
-      let rawMeal;
-      if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        rawMeal = data.meals[0]; // Take first meal
-      } else if (data.meal) {
-        rawMeal = data.meal;
-      } else {
+      // Standardized single meal format
+      if (!data.meal) {
         console.error("❌ Invalid data structure:", data);
         throw new Error("No meal found in response");
       }
 
       // Normalize UnifiedMeal response to frontend format
-      const meal = normalizeUnifiedMealOutput(rawMeal);
+      const meal = normalizeUnifiedMealOutput(data.meal);
 
       // Ensure meal has required fields
       if (!meal.imageUrl) {
