@@ -1,0 +1,150 @@
+🚀 PHASE 3C — Restaurant Guide Hybrid Output
+
+This is the exact same pattern we used for Fridge Rescue + Craving Creator, but with Restaurant Guide’s unique structure.
+
+You’re going to tell the architect:
+
+Add unifiedMeal(s) to ALL Restaurant Guide routes, but do not break legacy fields.
+
+Below is the optimized prompt.
+
+🛠️ PROMPT FOR REPLIT ARCHITECT — PHASE 3C (RESTAURANT GUIDE HYBRID)
+
+Paste this into your dev/architect chat:
+
+🚀 PHASE 3C — Enable UnifiedMeal HYBRID response for ALL Restaurant Guide endpoints
+
+We are extending the UnifiedMeal hybrid migration to the Restaurant Guide system.
+
+Rules (unchanged):
+
+DO NOT change or remove any legacy response fields.
+
+DO NOT modify existing frontend expectations.
+
+DO NOT restructure RestaurantMeal objects.
+
+This update is strictly additive.
+
+All mapping MUST use the unification layer created in Phase 2.
+
+1️⃣ Identify Restaurant Guide routes
+
+Apply hybrid unification to the following:
+
+Primary routes
+
+POST /api/restaurants/guide
+
+POST /api/restaurants/analyze-menu
+
+These are located in:
+
+server/routes/restaurants.ts
+
+2️⃣ Import Unification Tools
+
+At the top of the file:
+
+import {
+  UnifiedMeal,
+  validateUnifiedMeal
+} from "../services/unification";
+
+import { mapRestaurantGuideMeal } from "../services/unification/mappers/restaurantGuideMapper";
+
+
+Update import paths based on actual folder structure.
+
+3️⃣ Add unifiedMeals to ARRAY responses
+
+Most Restaurant Guide responses are like:
+
+return res.json({
+  recommendations,
+  restaurantName,
+  craving,
+  cuisine,
+  generatedAt,
+  generationTime
+});
+
+
+Modify response to include unifiedMeals:
+
+const unifiedMeals: UnifiedMeal[] = [];
+
+for (const meal of recommendations) {
+  try {
+    const unified = mapRestaurantGuideMeal(meal, restaurantName, cuisine);
+    validateUnifiedMeal(unified);
+    unifiedMeals.push(unified);
+  } catch (err) {
+    console.warn("[UnifiedMeal][RestaurantGuide] Validation failed:", err);
+  }
+}
+
+return res.json({
+  recommendations, // legacy
+  restaurantName,
+  craving,
+  cuisine,
+  generatedAt,
+  generationTime,
+  unifiedMeals     // new
+});
+
+4️⃣ Add unifiedMeal for single-meal responses (if any)
+
+If any Restaurant Guide route returns a single meal:
+
+return res.json({ meal });
+
+
+Replace with:
+
+return res.json({
+  meal,
+  unifiedMeal
+});
+
+
+Use the same pattern:
+
+let unifiedMeal = null;
+
+try {
+  unifiedMeal = mapRestaurantGuideMeal(meal, restaurantName, cuisine);
+  validateUnifiedMeal(unifiedMeal);
+} catch (err) {
+  console.warn("[UnifiedMeal][RestaurantGuide] Failed to map:", err);
+}
+
+5️⃣ Logging Safety
+
+Use:
+
+[UnifiedMeal][RestaurantGuide]
+
+
+Never throw.
+
+Never modify legacy response bodies.
+
+6️⃣ Acceptance Criteria
+
+The update is complete when:
+
+All Restaurant Guide routes still return their legacy format identically.
+
+New field unifiedMeals is included on array responses.
+
+New field unifiedMeal appears on single-meal responses (if applicable).
+
+Validation errors do NOT break the response.
+
+No TypeScript errors.
+
+No frontend changes required.
+
+End of Prompt
