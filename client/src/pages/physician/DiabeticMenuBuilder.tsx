@@ -134,6 +134,7 @@ export default function DiabeticMenuBuilder() {
   const saveBoard = React.useCallback(
     async (updatedBoard: WeekBoard) => {
       setSaving(true);
+      setJustSaved(false); // Reset success state when starting new save
       try {
         // Type assertion needed because ExtendedMeal has optional title, but schema requires it
         await saveToHook(updatedBoard as any, uuidv4());

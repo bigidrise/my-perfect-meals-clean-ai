@@ -102,6 +102,7 @@ export default function WeeklyMealBoard() {
   // Wrapper to save with idempotent IDs
   const saveBoard = React.useCallback(async (updatedBoard: WeekBoard) => {
     setSaving(true);
+    setJustSaved(false); // Reset success state when starting new save
     try {
       // Type assertion needed because ExtendedMeal has optional title, but schema requires it
       await saveToHook(updatedBoard as any, uuidv4());
@@ -1073,8 +1074,12 @@ export default function WeeklyMealBoard() {
             </Button>
 
             <Button
-              onClick={handleSave}
-              disabled={saving || justSaved}
+              onClick={async () => {
+                if (board) {
+                  await saveBoard(board);
+                }
+              }}
+              disabled={saving || justSaved || !board}
               size="sm"
               className={`${
                 justSaved

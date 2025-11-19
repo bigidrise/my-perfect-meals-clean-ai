@@ -184,6 +184,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   const saveBoard = React.useCallback(
     async (updatedBoard: WeekBoard) => {
       setSaving(true);
+      setJustSaved(false); // Reset success state when starting new save
       try {
         await saveToHook(updatedBoard as any, uuidv4());
         setJustSaved(true);
