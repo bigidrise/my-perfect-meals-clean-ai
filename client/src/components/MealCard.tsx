@@ -8,6 +8,8 @@ import { queryClient } from "@/lib/queryClient";
 import MacroBridgeButton from "@/components/biometrics/MacroBridgeButton";
 import TrashButton from "@/components/ui/TrashButton";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
+import type { UnifiedMeal } from "@/types/unifiedMeal";
+import { mapToViewMeal } from "@/utils/mealViewAdapter";
 
 // Keep your Meal type colocated here (WeeklyMealBoard imports from this file)
 export type Meal = {
@@ -43,21 +45,24 @@ function MacroPill({ label, value, suffix = "" }: { label: string; value: number
 }
 
 export function MealCard({
-  date, slot, meal, onUpdated,
+  date, slot, meal, unifiedMeal, onUpdated,
 }: {
   date: string; // "board" or "YYYY-MM-DD"
   slot: Slot;
   meal: Meal;
+  unifiedMeal?: UnifiedMeal | null;
   onUpdated: (m: Meal | null) => void; // null = delete
 }) {
   const { toast } = useToast();
   const [macrosLogged, setMacrosLogged] = React.useState(false);
   
-  const title = meal.title || meal.name || "Meal";
-  const kcal = meal.nutrition?.calories ?? 0;
-  const protein = meal.nutrition?.protein ?? 0;
-  const carbs = meal.nutrition?.carbs ?? 0;
-  const fat = meal.nutrition?.fat ?? 0;
+  const viewMeal = mapToViewMeal({ legacyMeal: meal, unifiedMeal });
+  
+  const title = viewMeal.name;
+  const kcal = viewMeal.calories ?? 0;
+  const protein = viewMeal.protein ?? 0;
+  const carbs = viewMeal.carbs ?? 0;
+  const fat = viewMeal.fat ?? 0;
 
   const onDelete = () => { if (confirm("Remove this meal from the board?")) onUpdated(null); };
 
@@ -96,10 +101,10 @@ export function MealCard({
   return (
     <div className="relative rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl overflow-hidden hover:bg-white/10 transition-colors">
       {/* Image at top if available (EXACT COPY FROM FRIDGE RESCUE) */}
-      {(meal as any).imageUrl && (
+      {viewMeal.imageUrl && (
         <div className="relative">
           <img
-            src={(meal as any).imageUrl}
+            src={viewMeal.imageUrl}
             alt={title}
             className="w-full h-48 object-cover"
             onError={(e) => {
@@ -136,18 +141,27 @@ export function MealCard({
           </h3>
           
           {/* Description (EXACT COPY FROM FRIDGE RESCUE) */}
-          {(meal as any).description && (
-            <p className="text-sm text-white/80 mt-1">{(meal as any).description}</p>
+          {viewMeal.description && (
+            <p className="text-sm text-white/80 mt-1">{viewMeal.description}</p>
           )}
 
-          {/* Medical Badges - RESTORED DROPDOWN (EXACT COPY FROM FRIDGE RESCUE) */}
+          {/* Medical Badges - Use viewMeal badges if available, otherwise generate */}
           {(() => {
+            if (viewMeal.medicalBadges && viewMeal.medicalBadges.length > 0) {
+              const badgeIds = viewMeal.medicalBadges.map(b => b.label);
+              return (
+                <div className="mt-2">
+                  <HealthBadgesPopover badges={badgeIds} />
+                </div>
+              );
+            }
+            
             const userProfile = getUserMedicalProfile(1);
             const mealForBadges = {
               name: title,
-              nutrition: meal.nutrition,
-              ingredients: meal.ingredients || [],
-              description: meal.description || ''
+              nutrition: { calories: kcal, protein, carbs, fat },
+              ingredients: viewMeal.ingredients || [],
+              description: viewMeal.description || ''
             };
             const medicalBadges = generateMedicalBadges(mealForBadges, userProfile);
             const badgeIds = medicalBadges.map(b => b.badge);
@@ -179,35 +193,23 @@ export function MealCard({
             </div>
           </div>
         
-        {(meal.brand || meal.servingDesc) && (
+        {viewMeal.servingSize && (
           <div className="mt-2 text-[11px] text-white/60">
-            {meal.brand && <span className="mr-2">{meal.brand}</span>}
-            {meal.servingDesc && <span>• {meal.servingDesc}</span>}
+            <span>• {viewMeal.servingSize}</span>
           </div>
         )}
 
         {/* Ingredients */}
-        {Array.isArray(meal?.ingredients) && meal.ingredients.length > 0 && (
+        {Array.isArray(viewMeal.ingredients) && viewMeal.ingredients.length > 0 && (
           <div className="mt-3 space-y-2">
             <h4 className="text-sm font-semibold text-white">Ingredients:</h4>
             <ul className="text-xs text-white/80 space-y-1">
-              {meal.ingredients.slice(0, 4).map((ing: any, i: number) => {
-                if (typeof ing === "string") {
-                  return (
-                    <li key={i} className="flex items-start">
-                      <span className="text-green-400 mr-1">•</span>
-                      <span>{ing}</span>
-                    </li>
-                  );
-                }
-                const name = ing.name || ing.item || "Ingredient";
-                const qty = ing.quantity || ing.amount || "";
-                const unit = ing.unit || "";
-                
-                // Use formatIngredientWithGrams for proper display
-                const displayText = qty && unit 
-                  ? formatIngredientWithGrams(qty, unit, name)
-                  : name;
+              {viewMeal.ingredients.slice(0, 4).map((ing, i: number) => {
+                const displayText = ing.displayQuantity
+                  ? `${ing.displayQuantity} ${ing.name}`
+                  : ing.amount && ing.unit
+                  ? formatIngredientWithGrams(ing.amount, ing.unit, ing.name)
+                  : ing.name;
                 
                 return (
                   <li key={i} className="flex items-start">
@@ -216,24 +218,26 @@ export function MealCard({
                   </li>
                 );
               })}
-              {meal.ingredients.length > 4 && (
+              {viewMeal.ingredients.length > 4 && (
                 <li className="text-xs text-white/60">
-                  + {meal.ingredients.length - 4} more...
+                  + {viewMeal.ingredients.length - 4} more...
                 </li>
               )}
             </ul>
           </div>
         )}
 
-        {/* Cooking Instructions (EXACT COPY FROM FRIDGE RESCUE) */}
-        {typeof meal?.instructions === "string" && meal.instructions ? (
+        {/* Cooking Instructions */}
+        {viewMeal.instructions && viewMeal.instructions.length > 0 && (
           <div className="mt-3 space-y-2">
             <h4 className="text-sm font-semibold text-white">Instructions:</h4>
             <div className="text-xs text-white/80">
-              <p>{meal.instructions}</p>
+              {viewMeal.instructions.map((step, i) => (
+                <p key={i}>{step}</p>
+              ))}
             </div>
           </div>
-        ) : null}
+        )}
 
         {/* Add to Macros Button - Only show when we have a valid date (day mode) */}
         {date !== "board" && (
@@ -246,7 +250,7 @@ export function MealCard({
                 calories: kcal || 0,
                 dateISO: date,
                 mealSlot: slot === "snacks" ? "snack" : slot,
-                servings: meal.servings || 1,
+                servings: viewMeal.servings || 1,
               }}
               label="Add to Macros"
             />

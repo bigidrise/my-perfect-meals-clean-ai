@@ -3,6 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
+import type { UnifiedMeal } from "@/types/unifiedMeal";
+import { mapToViewMeal } from "@/utils/mealViewAdapter";
 
 // User profile interface (from onboarding data)
 interface UserProfile {
@@ -32,6 +34,7 @@ export interface Meal {
 
 interface MealCardProps {
   meal: Meal;
+  unifiedMeal?: UnifiedMeal | null;
   userProfile?: UserProfile;
   onReplace?: () => void;
   isReplacing?: boolean;
@@ -125,9 +128,11 @@ const generateMedicalBadges = (meal: Meal, userProfile?: UserProfile) => {
   }];
 };
 
-export default function EnhancedMealCard({ meal, userProfile, onReplace, isReplacing, errorMessage }: MealCardProps) {
-  // Generate the medical badges dynamically based on the meal and user profile
-  const medicalBadges = generateMedicalBadges(meal, userProfile);
+export default function EnhancedMealCard({ meal, unifiedMeal, userProfile, onReplace, isReplacing, errorMessage }: MealCardProps) {
+  const viewMeal = mapToViewMeal({ legacyMeal: meal, unifiedMeal });
+  
+  // Use UnifiedMeal badges if available, otherwise generate from legacy meal
+  const medicalBadges = unifiedMeal?.medicalBadges || generateMedicalBadges(meal, userProfile);
 
   return (
     <Card className="w-full p-6 bg-white dark:bg-slate-800 shadow-lg rounded-2xl mb-6 relative">
@@ -155,63 +160,70 @@ export default function EnhancedMealCard({ meal, userProfile, onReplace, isRepla
       
       <CardHeader className="mb-4">
         {/* Centered meal type and time at top */}
-        {(meal.mealType || meal.suggestedTime) && (
+        {(viewMeal.mealType || viewMeal.suggestedTime) && (
           <div className="flex flex-col items-center mb-3">
-            {meal.mealType && (
+            {viewMeal.mealType && (
               <Badge className={`mb-1 text-sm font-bold px-3 py-1 ${
-                meal.mealType === 'breakfast' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' :
-                meal.mealType === 'lunch' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                meal.mealType === 'dinner' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                viewMeal.mealType === 'breakfast' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' :
+                viewMeal.mealType === 'lunch' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                viewMeal.mealType === 'dinner' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
                 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
               }`}>
-                {meal.mealType.charAt(0).toUpperCase() + meal.mealType.slice(1)}
+                {viewMeal.mealType.charAt(0).toUpperCase() + viewMeal.mealType.slice(1)}
               </Badge>
             )}
-            {meal.suggestedTime && (
+            {viewMeal.suggestedTime && (
               <span className="text-sm text-gray-600 dark:text-gray-400 font-semibold">
-                🕐 {meal.suggestedTime}
+                🕐 {viewMeal.suggestedTime}
               </span>
             )}
           </div>
         )}
         
         {/* Meal title centered */}
-        <CardTitle className="text-xl font-semibold text-indigo-700 dark:text-indigo-300 text-center mb-2">{meal.name}</CardTitle>
-        {meal.description && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 text-center">{meal.description}</p>
+        <CardTitle className="text-xl font-semibold text-indigo-700 dark:text-indigo-300 text-center mb-2">{viewMeal.name}</CardTitle>
+        {viewMeal.description && (
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 text-center">{viewMeal.description}</p>
         )}
       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Portion Guide */}
-        {meal.portionGuide && (
+        {viewMeal.servingSize && (
           <div>
             <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-1">Portion Guide:</h3>
-            <p className="text-gray-700 dark:text-gray-300 italic text-sm">{meal.portionGuide}</p>
+            <p className="text-gray-700 dark:text-gray-300 italic text-sm">{viewMeal.servingSize}</p>
           </div>
         )}
 
         {/* Ingredients */}
-        {meal.ingredients && meal.ingredients.length > 0 && (
+        {viewMeal.ingredients && viewMeal.ingredients.length > 0 && (
           <div>
             <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-1">Ingredients:</h3>
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
-              {meal.ingredients.map((ingredient, index) => (
-                <li key={index} className="text-sm">
-                  {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
-                  {ingredient.notes && <span className="text-gray-500 ml-1">({ingredient.notes})</span>}
-                </li>
-              ))}
+              {viewMeal.ingredients.map((ingredient, index) => {
+                const displayText = ingredient.displayQuantity
+                  ? `${ingredient.displayQuantity} ${ingredient.name}`
+                  : ingredient.amount && ingredient.unit
+                  ? formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.name)
+                  : ingredient.name;
+                return (
+                  <li key={index} className="text-sm">
+                    {displayText}
+                    {ingredient.notes && <span className="text-gray-500 ml-1">({ingredient.notes})</span>}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
 
         {/* Instructions */}
-        {meal.instructions && meal.instructions.length > 0 && (
+        {viewMeal.instructions && viewMeal.instructions.length > 0 && (
           <div>
             <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-1">Instructions:</h3>
             <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-1">
-              {meal.instructions.map((step, index) => (
+              {viewMeal.instructions.map((step, index) => (
                 <li key={index} className="text-sm">{step}</li>
               ))}
             </ol>
@@ -220,10 +232,10 @@ export default function EnhancedMealCard({ meal, userProfile, onReplace, isRepla
 
         {/* Nutrition Badges */}
         <div className="flex flex-wrap gap-2 mt-2">
-          <Badge variant="outline" className="text-sm">Calories: {meal.nutrition.calories}</Badge>
-          <Badge variant="outline" className="text-sm">Protein: {meal.nutrition.protein_g}g</Badge>
-          <Badge variant="outline" className="text-sm">Carbs: {meal.nutrition.carbs_g}g</Badge>
-          <Badge variant="outline" className="text-sm">Fat: {meal.nutrition.fat_g}g</Badge>
+          <Badge variant="outline" className="text-sm">Calories: {viewMeal.calories}</Badge>
+          <Badge variant="outline" className="text-sm">Protein: {viewMeal.protein}g</Badge>
+          <Badge variant="outline" className="text-sm">Carbs: {viewMeal.carbs}g</Badge>
+          <Badge variant="outline" className="text-sm">Fat: {viewMeal.fat}g</Badge>
         </div>
 
         {/* Medical Badges */}

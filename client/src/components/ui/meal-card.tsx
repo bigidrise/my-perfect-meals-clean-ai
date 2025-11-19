@@ -5,9 +5,12 @@ import { Clock, Users, Zap } from "lucide-react";
 import type { Recipe } from "@shared/schema";
 import MedicalInfoBubble from "@/components/MedicalInfoBubble";
 import { generateMedicalBadges, getUserMedicalProfile } from "@/utils/medicalPersonalization";
+import type { UnifiedMeal } from "@/types/unifiedMeal";
+import { mapToViewMeal } from "@/utils/mealViewAdapter";
 
 interface MealCardProps {
   recipe?: Recipe;
+  unifiedMeal?: UnifiedMeal | null;
   compact?: boolean;
   onSelect?: () => void;
   onViewRecipe?: () => void;
@@ -16,8 +19,8 @@ interface MealCardProps {
   onReplace?: () => void;
 }
 
-export default function MealCard({ recipe, compact = false, onSelect, onViewRecipe, onSendToShoppingList, onCreateMeal, onReplace }: MealCardProps) {
-  if (!recipe) {
+export default function MealCard({ recipe, unifiedMeal, compact = false, onSelect, onViewRecipe, onSendToShoppingList, onCreateMeal, onReplace }: MealCardProps) {
+  if (!recipe && !unifiedMeal) {
     return (
       <Card className="border-dashed">
         <CardContent className={`${compact ? 'p-3' : 'p-4'} text-center`}>
@@ -32,9 +35,32 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
     );
   }
 
+  // Map recipe to legacy meal shape if present
+  const legacyMeal = recipe ? {
+    id: recipe.id || '',
+    name: recipe.name,
+    description: recipe.description,
+    nutrition: {
+      calories: recipe.calories || 0,
+      protein: recipe.protein || 0,
+      carbs: recipe.carbs || 0,
+      fat: recipe.fat || 0
+    },
+    ingredients: recipe.ingredients || [],
+    instructions: recipe.instructions || [],
+    imageUrl: recipe.imageUrl,
+    servingSize: recipe.servingSize,
+    servings: recipe.servings,
+    mealType: recipe.mealType,
+    cookingTime: recipe.prepTime?.toString(),
+    medicalBadges: []
+  } : null;
+
+  const viewMeal = mapToViewMeal({ legacyMeal, unifiedMeal });
+
   // Generate medical badges based on user profile
   const userProfile = getUserMedicalProfile(1); // Replace with actual user ID
-  const medicalBadges = generateMedicalBadges(recipe, userProfile);
+  const medicalBadges = unifiedMeal?.medicalBadges || (recipe ? generateMedicalBadges(recipe, userProfile) : []);
   
   return (
     <Card className="shadow-lg hover:shadow-green-500/50 hover:shadow-xl transition-all duration-300 cursor-pointer" onClick={onSelect}>
@@ -43,14 +69,14 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 flex-1">
             <h3 className={`font-medium text-foreground ${compact ? 'text-sm' : 'text-base'}`}>
-              {recipe.name}
+              {viewMeal.name}
             </h3>
             {/* Medical Info Bubble - positioned near title */}
             {!compact && <MedicalInfoBubble badges={medicalBadges} description="This recipe supports your health goals and dietary needs." />}
           </div>
-          {recipe.mealType && (
+          {viewMeal.mealType && (
             <span className="text-sm text-green-600 dark:text-green-400 font-medium capitalize px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded-full">
-              {recipe.mealType}
+              {viewMeal.mealType}
             </span>
           )}
         </div>
@@ -58,50 +84,50 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
         {/* Recipe Stats */}
         <div className={`flex items-center justify-between mb-2 ${compact ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
           <div className="flex items-center space-x-3">
-            {recipe.prepTime && (
+            {viewMeal.cookingTime && (
               <div className="flex items-center">
                 <Clock className="h-3 w-3 mr-1" />
-                <span>{recipe.prepTime}m</span>
+                <span>{viewMeal.cookingTime}m</span>
               </div>
             )}
-            {recipe.servings && (
+            {viewMeal.servings && (
               <div className="flex items-center">
                 <Users className="h-3 w-3 mr-1" />
-                <span>{recipe.servings}</span>
+                <span>{viewMeal.servings}</span>
               </div>
             )}
           </div>
-          {recipe.calories && (
+          {viewMeal.calories && (
             <div className="flex items-center">
               <Zap className="h-3 w-3 mr-1" />
-              <span className="font-medium">{recipe.calories} cal</span>
+              <span className="font-medium">{viewMeal.calories} cal</span>
             </div>
           )}
         </div>
 
         {/* Serving Size - ALWAYS DISPLAY */}
         <div className={`mb-2 ${compact ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-          <span className="font-medium text-foreground">Serving:</span> {(recipe as any).servingSize || recipe.servings || '1 serving'}
+          <span className="font-medium text-foreground">Serving:</span> {viewMeal.servingSize || '1 serving'}
         </div>
         
         {/* Nutrition Info */}
         {!compact && (
           <div className="grid grid-cols-3 gap-2 mb-3 text-xs">
-            {recipe.protein && (
+            {viewMeal.protein && (
               <div className="text-center">
-                <div className="font-medium text-foreground">{recipe.protein}g</div>
+                <div className="font-medium text-foreground">{viewMeal.protein}g</div>
                 <div className="text-muted-foreground">Protein</div>
               </div>
             )}
-            {recipe.carbs && (
+            {viewMeal.carbs && (
               <div className="text-center">
-                <div className="font-medium text-foreground">{recipe.carbs}g</div>
+                <div className="font-medium text-foreground">{viewMeal.carbs}g</div>
                 <div className="text-muted-foreground">Carbs</div>
               </div>
             )}
-            {recipe.fat && (
+            {viewMeal.fat && (
               <div className="text-center">
-                <div className="font-medium text-foreground">{recipe.fat}g</div>
+                <div className="font-medium text-foreground">{viewMeal.fat}g</div>
                 <div className="text-muted-foreground">Fat</div>
               </div>
             )}
@@ -109,7 +135,7 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
         )}
         
         {/* Tags */}
-        {recipe.tags && recipe.tags.length > 0 && (
+        {recipe?.tags && recipe.tags.length > 0 && (
           <div className={`flex flex-wrap gap-1 mb-3 ${compact ? 'hidden' : ''}`}>
             {recipe.tags.slice(0, compact ? 2 : 3).map((tag, index) => (
               <Badge key={index} variant="secondary" className="text-xs">
@@ -120,7 +146,7 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
         )}
         
         {/* Dietary Restrictions */}
-        {recipe.dietaryRestrictions && recipe.dietaryRestrictions.length > 0 && (
+        {recipe?.dietaryRestrictions && recipe.dietaryRestrictions.length > 0 && (
           <div className={`flex flex-wrap gap-1 mb-3 ${compact ? 'hidden' : ''}`}>
             {recipe.dietaryRestrictions.slice(0, 2).map((restriction, index) => (
               <Badge key={index} variant="outline" className="text-xs capitalize">
@@ -131,26 +157,32 @@ export default function MealCard({ recipe, compact = false, onSelect, onViewReci
         )}
         
         {/* Full Ingredients List */}
-        {!compact && recipe.ingredients && (
+        {!compact && viewMeal.ingredients && viewMeal.ingredients.length > 0 && (
           <div className="mb-4">
             <h4 className="text-sm font-medium text-foreground mb-2">Ingredients:</h4>
             <div className="space-y-1 text-xs text-muted-foreground max-h-32 overflow-y-auto">
-              {recipe.ingredients.map((ingredient, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>{ingredient.name}</span>
-                  <span className="font-medium">{ingredient.amount} {ingredient.unit}</span>
-                </div>
-              ))}
+              {viewMeal.ingredients.map((ingredient, index) => {
+                const displayText = ingredient.displayQuantity
+                  ? `${ingredient.displayQuantity} ${ingredient.name}`
+                  : ingredient.amount && ingredient.unit
+                  ? `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`
+                  : ingredient.name;
+                return (
+                  <div key={index} className="flex justify-between">
+                    <span>{displayText}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
         {/* Full Cooking Instructions */}
-        {!compact && recipe.instructions && (
+        {!compact && viewMeal.instructions && viewMeal.instructions.length > 0 && (
           <div className="mb-4">
             <h4 className="text-sm font-medium text-foreground mb-2">Cooking Instructions:</h4>
             <div className="text-xs text-muted-foreground space-y-2 max-h-40 overflow-y-auto">
-              {recipe.instructions.map((instruction, index) => (
+              {viewMeal.instructions.map((instruction, index) => (
                 <div key={index} className="flex">
                   <span className="mr-2 text-primary font-medium min-w-[16px]">{index + 1}.</span>
                   <span>{instruction}</span>
