@@ -170,7 +170,8 @@ export default function MealPremadePicker({
     const updatedStyles = { ...cookingStyles, [ingredient]: style };
     setCookingStyles(updatedStyles);
     
-    // Generate meal with selected style
+    // AI PREMADES: Meals are pre-defined, so we can generate immediately after prep selection
+    // (Unlike AI Meal Creator which must wait for user to click Generate button)
     if (pendingMeal) {
       generateMealImage(pendingMeal, pendingCategory, updatedStyles);
       setPendingMeal(null);

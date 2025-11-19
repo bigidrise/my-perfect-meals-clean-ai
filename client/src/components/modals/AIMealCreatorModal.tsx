@@ -11,6 +11,7 @@ import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
+import PreparationModal from "./PreparationModal"; // Assuming PreparationModal is in the same directory
 
 interface AIMealCreatorModalProps {
   open: boolean;
@@ -29,6 +30,11 @@ export default function AIMealCreatorModal({
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
+
+  // State for Preparation Modal
+  const [prepModalOpen, setPrepModalOpen] = useState(false);
+  const [currentIngredient, setCurrentIngredient] = useState("");
+  const [prepStyles, setPrepStyles] = useState({}); // Stores preparation styles for ingredients
 
   const startProgressTicker = () => {
     if (tickerRef.current) return;
@@ -58,6 +64,33 @@ export default function AIMealCreatorModal({
       return;
     }
 
+    // For AI Meal Creator, we need to open the preparation modal first.
+    // For AI Premades, generation should start immediately if no prep is needed,
+    // or after prep styles are selected.
+    // This logic needs to be refined based on the specific meal generation flow.
+
+    // For now, let's assume AI Meal Creator always opens the prep modal.
+    // If this were AI Premades, we'd check if prep is needed and potentially open it.
+    if (mealSlot !== "snacks") { // Assuming AI Meal Creator is used for non-snack slots
+      const ingredientList = ingredients
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+
+      // Check if any ingredient requires preparation style selection
+      const needsPreparation = ingredientList.some(
+        (ingredient) =>
+          ["eggs", "red meat", "rice", "vegetables"].includes(ingredient.toLowerCase())
+      );
+
+      if (needsPreparation) {
+        setCurrentIngredient(ingredientList[0]); // Set the first ingredient that needs prep
+        setPrepModalOpen(true);
+        return; // Stop here, wait for prep modal to resolve
+      }
+    }
+
+    // If no preparation is needed or if it's AI Premades and it's ready to go
     setIsLoading(true);
     startProgressTicker();
     try {
@@ -72,6 +105,8 @@ export default function AIMealCreatorModal({
             .map((i) => i.trim())
             .filter((i) => i),
           userId: 1,
+          // Pass preparation styles if available
+          prepStyles: Object.keys(prepStyles).length > 0 ? prepStyles : undefined,
         }),
       });
 
@@ -101,10 +136,11 @@ export default function AIMealCreatorModal({
 
       console.log("✅ Generated meal:", meal.name);
       stopProgressTicker();
-      
+
       // Pass meal to parent and close modal
       onMealGenerated(meal);
       setIngredients("");
+      setPrepStyles({}); // Reset prep styles
       onOpenChange(false);
     } catch (error) {
       console.error("Error generating meal:", error);
@@ -114,6 +150,37 @@ export default function AIMealCreatorModal({
       setIsLoading(false);
     }
   };
+
+  // Handler for when a preparation style is selected in the modal
+  const handlePrepSelect = (ingredient: string, style: string) => {
+    setPrepStyles((prev) => ({ ...prev, [ingredient]: style }));
+    setPrepModalOpen(false);
+    // After selecting a style, we might want to automatically proceed to generation
+    // or allow the user to select styles for other ingredients.
+    // For now, let's assume we proceed if all needed ingredients have styles.
+
+    const ingredientList = ingredients
+      .split(",")
+      .map((i) => i.trim())
+      .filter((i) => i);
+
+    const remainingIngredientsNeedingPrep = ingredientList.filter(
+      (ing) =>
+        ["eggs", "red meat", "rice", "vegetables"].includes(ing.toLowerCase()) &&
+        !prepStyles[ing.toLowerCase()] && // Check if style is already selected
+        ing.toLowerCase() !== ingredient.toLowerCase() // Exclude the one just selected
+    );
+
+    if (remainingIngredientsNeedingPrep.length === 0) {
+      // All necessary preparations are done, trigger meal generation
+      handleGenerateMeal();
+    } else {
+      // Set the next ingredient that needs preparation
+      setCurrentIngredient(remainingIngredientsNeedingPrep[0]);
+      setPrepModalOpen(true);
+    }
+  };
+
 
   // Cleanup ticker on unmount
   useEffect(() => {
@@ -150,7 +217,7 @@ export default function AIMealCreatorModal({
             >
               Available Ingredients (separated by commas):
             </label>
-            
+
             {/* Snack Category Suggestions */}
             {mealSlot === "snacks" && !isLoading && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -171,7 +238,7 @@ export default function AIMealCreatorModal({
                 ))}
               </div>
             )}
-            
+
             <div className="relative">
               <textarea
                 id="ai-ingredients"
@@ -245,6 +312,14 @@ export default function AIMealCreatorModal({
           </Button>
         </div>
       </DialogContent>
+
+      {/* Preparation Style Modal */}
+      <PreparationModal
+        open={prepModalOpen}
+        ingredientName={currentIngredient}
+        onClose={() => setPrepModalOpen(false)}
+        onSelect={handlePrepSelect}
+      />
     </Dialog>
   );
 }
