@@ -36,6 +36,7 @@ import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -474,24 +475,21 @@ export default function WeeklyMealBoard() {
 
     console.log("🤖 AI Meal Generated - Replacing old meals with new one:", generatedMeal, "for slot:", aiMealSlot);
 
-    // Transform API response to match Meal type structure (copy Fridge Rescue format)
+    // Normalize UnifiedMeal response to frontend format
+    const normalized = normalizeUnifiedMealOutput(generatedMeal);
+    
+    // Transform API response to match Meal type structure
     const transformedMeal: Meal = {
+      ...normalized,
       id: `ai-meal-${Date.now()}`,
-      name: generatedMeal.name,
-      title: generatedMeal.name,
-      description: generatedMeal.description,
-      ingredients: generatedMeal.ingredients || [],
-      instructions: generatedMeal.instructions || '',
+      title: normalized.name,
       servings: 1,
-      imageUrl: generatedMeal.imageUrl,
-      cookingTime: generatedMeal.cookingTime,
-      difficulty: generatedMeal.difficulty,
-      medicalBadges: generatedMeal.medicalBadges || [],
+      instructions: normalized.instructions || '',
       nutrition: {
-        calories: generatedMeal.calories || 0,
-        protein: generatedMeal.protein || 0,
-        carbs: generatedMeal.carbs || 0,
-        fat: generatedMeal.fat || 0,
+        calories: normalized.calories || 0,
+        protein: normalized.protein || 0,
+        carbs: normalized.carbs || 0,
+        fat: normalized.fat || 0,
       },
     };
 

@@ -124,9 +124,12 @@ export function normalizeUnifiedMealOutput(meal: any) {
     ...meal,
     name: meal.title || meal.name,
     ingredients: meal.ingredients?.map((i: any) => ({
-      item: i.name || i.item,
+      name: i.name || i.item,  // Backward compatibility: keep 'name' field
+      item: i.name || i.item,  // UnifiedMeal compatibility: keep 'item' field
       amount: i.amount,
-      unit: i.unit ?? null
+      unit: i.unit ?? null,
+      quantity: i.quantity ?? i.amount,  // Legacy support
+      category: i.category ?? null
     })) ?? [],
     instructions: meal.instructions ?? [],
     calories: meal.macros?.calories ?? meal.calories ?? null,
