@@ -33,7 +33,51 @@ function generateImageHash(request: MealImageRequest): string {
   return crypto.createHash('md5').update(key).digest('hex');
 }
 
-// Create deterministic prompts for consistent styling
+// Extract cooking method visual cues for premium image differentiation
+function extractCookingCues(mealName: string): string {
+  const nameLower = mealName.toLowerCase();
+  
+  // Egg preparations - highly visual differences
+  if (nameLower.includes('scrambled')) return 'fluffy scrambled texture, soft curds, slightly wet appearance';
+  if (nameLower.includes('sunny side up') || nameLower.includes('sunny-side')) return 'perfectly round yolk, white fully set, crispy edges';
+  if (nameLower.includes('over easy')) return 'glossy yolk visible through translucent white, runny center';
+  if (nameLower.includes('over hard')) return 'fully cooked yolk, firm white, no runniness';
+  if (nameLower.includes('poached')) return 'teardrop shape, silky white coating runny yolk, delicate appearance';
+  if (nameLower.includes('hard-boiled') || nameLower.includes('hard boiled')) return 'firm oval shape, sliced to show yellow yolk, smooth white';
+  if (nameLower.includes('soft-boiled') || nameLower.includes('soft boiled')) return 'halved with jammy yolk, creamy center, firm white edges';
+  if (nameLower.includes('omelette') || nameLower.includes('omelet')) return 'folded half-moon, golden surface, fluffy interior visible';
+  if (nameLower.includes('fried egg')) return 'crispy lacy edges, golden yolk, white fully cooked';
+  
+  // Meat preparations
+  if (nameLower.includes('grilled')) return 'distinct grill marks, charred edges, caramelized exterior';
+  if (nameLower.includes('pan-seared') || nameLower.includes('seared')) return 'golden-brown crust, caramelized surface, rich color';
+  if (nameLower.includes('baked')) return 'even golden color, tender appearance, no grill marks';
+  if (nameLower.includes('blackened')) return 'dark spice crust, Cajun seasoning visible, charred appearance';
+  if (nameLower.includes('roasted')) return 'deep caramelization, crispy exterior, herb-crusted';
+  if (nameLower.includes('broiled')) return 'top surface deeply browned, caramelized edges, intense color';
+  if (nameLower.includes('steamed')) return 'moist surface, tender texture, no browning';
+  
+  // Steak doneness
+  if (nameLower.includes('rare')) return 'bright red center, seared exterior, very juicy';
+  if (nameLower.includes('medium-rare')) return 'warm red center, pink throughout, perfect sear';
+  if (nameLower.includes('medium')) return 'warm pink center, browned exterior, firm texture';
+  if (nameLower.includes('well-done')) return 'fully brown throughout, no pink, firm texture';
+  
+  // Rice/grain preparations
+  if (nameLower.includes('fried rice')) return 'individual grains separated, lightly toasted, vegetables mixed throughout';
+  if (nameLower.includes('steamed rice')) return 'fluffy individual grains, pure white color, glossy surface';
+  if (nameLower.includes('pilaf')) return 'golden toasted grains, fluffy texture, herb-flecked';
+  
+  // Vegetables
+  if (nameLower.includes('steamed') && nameLower.includes('broccoli')) return 'vibrant green, tender florets, slight sheen';
+  if (nameLower.includes('roasted') && nameLower.includes('vegetables')) return 'caramelized edges, golden-brown spots, charred tips';
+  if (nameLower.includes('sautéed') || nameLower.includes('sauteed')) return 'glistening with oil, tender-crisp, lightly browned';
+  if (nameLower.includes('stir-fry') || nameLower.includes('stir fry')) return 'glossy sauce coating, vibrant colors, wok char visible';
+  
+  return ''; // No specific cooking method detected
+}
+
+// Create deterministic prompts with cooking method differentiation for premium quality
 function createImagePrompt(request: MealImageRequest): string {
   const { mealName, ingredients, style = 'overhead' } = request;
   
@@ -44,9 +88,13 @@ function createImagePrompt(request: MealImageRequest): string {
     restaurant: "professional restaurant plating, garnished, clean presentation"
   }[style];
   
-  const ingredientList = ingredients.slice(0, 4).join(', '); // Limit to avoid prompt bloat
+  const ingredientList = ingredients.slice(0, 4).join(', ');
   
-  return `${mealName} featuring ${ingredientList}, ${baseStyle}, food photography, realistic, appetizing, no text, no logos, high quality, detailed`;
+  // Extract cooking-specific visual cues for differentiation
+  const cookingCues = extractCookingCues(mealName);
+  const cookingDetails = cookingCues ? `, ${cookingCues}` : '';
+  
+  return `${mealName} featuring ${ingredientList}${cookingDetails}, ${baseStyle}, professional food photography, realistic, appetizing, high-end presentation, no text, no logos, magazine quality, highly detailed`;
 }
 
 // Generate meal image using DALL-E 3 and store permanently
