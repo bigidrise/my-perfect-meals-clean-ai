@@ -14,6 +14,11 @@ import holidayFamilyRecipeRouter from "./routes/holiday-family-recipe";
 
 import { generateCravingMeal, generateWeeklyMeals } from "./services/stableMealGenerator";
 import { generateCravingMealWithProfile } from "./services/generators/cravingCreatorWrapped";
+import { 
+  mapCravingCreatorToUnified,
+  validateUnifiedMeal,
+  type UnifiedMeal 
+} from "./services/unification";
 // Shopping list import removed - will be implemented per ChatGPT specifications
 import avatarChatRouter from "./routes/avatarChat";
 import conciergeRouter from "./routes/concierge";
@@ -1787,7 +1792,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { userId: userId || "1" }
       );
 
-      res.json(meal);
+      // PHASE 3B: Map to UnifiedMeal format
+      let unifiedMeal: UnifiedMeal | null = null;
+      try {
+        unifiedMeal = mapCravingCreatorToUnified(meal);
+        validateUnifiedMeal(unifiedMeal);
+        console.log("✅ [UnifiedMeal][CravingCreator] Validation successful");
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][CravingCreator] Validation failed:",
+          (err as Error).message
+        );
+      }
+
+      res.json({ ...meal, unifiedMeal });
     } catch (error) {
       console.error("Craving Creator generation failed:", error);
       res.status(500).json({ error: "Failed to generate meal" });
@@ -1806,7 +1824,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { userId: userId || "1" }
       );
 
-      res.json(meal);
+      // PHASE 3B: Map to UnifiedMeal format
+      let unifiedMeal: UnifiedMeal | null = null;
+      try {
+        unifiedMeal = mapCravingCreatorToUnified(meal);
+        validateUnifiedMeal(unifiedMeal);
+        console.log("✅ [UnifiedMeal][CravingCreator] Validation successful");
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][CravingCreator] Validation failed:",
+          (err as Error).message
+        );
+      }
+
+      res.json({ ...meal, unifiedMeal });
     } catch (error) {
       console.error("Craving Creator regeneration failed:", error);
       res.status(500).json({ error: "Failed to regenerate meal" });
@@ -1834,7 +1865,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       );
 
-      res.json(result);
+      // PHASE 3B: Map meals to UnifiedMeal format (GenerationResult contains meals array)
+      let unifiedMeals: UnifiedMeal[] = [];
+      try {
+        if (result.meals && Array.isArray(result.meals)) {
+          unifiedMeals = result.meals.map((meal: any) => {
+            const unified = mapCravingCreatorToUnified(meal);
+            validateUnifiedMeal(unified);
+            return unified;
+          });
+          console.log(`✅ [UnifiedMeal][CravingCreator] Mapped ${unifiedMeals.length} meals`);
+        }
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][CravingCreator] Validation failed:",
+          (err as Error).message
+        );
+      }
+
+      res.json({ ...result, unifiedMeals });
     } catch (error) {
       console.error("Generate craving meal failed:", error);
       res.status(500).json({ error: "Failed to generate meal" });
@@ -1938,7 +1987,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("🍽️ Stable craving creator generated meal:", generatedMeal.name);
       console.log("🏥 Medical badges:", generatedMeal.medicalBadges.length);
 
-      res.json({ meal: generatedMeal });
+      // PHASE 3B: Map to UnifiedMeal format
+      let unifiedMeal: UnifiedMeal | null = null;
+      try {
+        unifiedMeal = mapCravingCreatorToUnified(generatedMeal);
+        validateUnifiedMeal(unifiedMeal);
+        console.log("✅ [UnifiedMeal][CravingCreator] Validation successful");
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][CravingCreator] Validation failed:",
+          (err as Error).message
+        );
+        // Continue - don't break legacy response
+      }
+
+      res.json({ meal: generatedMeal, unifiedMeal });
     } catch (error: any) {
       console.error("❌ Craving creator error:", error);
       res.status(500).json({ message: error.message });
@@ -1959,10 +2022,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await generateCravingMealWithProfile(userId, cravingInput, overrides);
 
       console.log("✅ Medical badges applied:", result.meals[0]?.badges);
+      
+      // PHASE 3B: Map meal to UnifiedMeal format
+      let unifiedMeal: UnifiedMeal | null = null;
+      try {
+        if (result.meals && result.meals[0]) {
+          unifiedMeal = mapCravingCreatorToUnified(result.meals[0]);
+          validateUnifiedMeal(unifiedMeal);
+          console.log("✅ [UnifiedMeal][CravingCreator] Validation successful");
+        }
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][CravingCreator] Validation failed:",
+          (err as Error).message
+        );
+      }
+      
       res.json({ 
         meal: result.meals[0],
         constraints: result.constraints,
-        medicalBadges: result.meals[0]?.badges || []
+        medicalBadges: result.meals[0]?.badges || [],
+        unifiedMeal
       });
     } catch (error: any) {
       console.error("❌ Enforced craving creator error:", error);

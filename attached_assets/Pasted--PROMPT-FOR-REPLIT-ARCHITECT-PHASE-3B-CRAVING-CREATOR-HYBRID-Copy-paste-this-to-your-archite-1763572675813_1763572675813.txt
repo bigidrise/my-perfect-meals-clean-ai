@@ -1,0 +1,134 @@
+🛠️ PROMPT FOR REPLIT ARCHITECT — PHASE 3B (CRAVING CREATOR HYBRID)
+
+Copy/paste this to your architect:
+
+🚀 PHASE 3B — Enable UnifiedMeal HYBRID response for Craving Creator
+
+We are continuing Phase 3 of the UnifiedMeal migration.
+
+Rules (same as Phase 3A):
+
+Do NOT change legacy response shapes.
+
+Do NOT modify existing Craving Creator types.
+
+Do NOT touch the frontend.
+
+Only ADD new unifiedMeal / unifiedMeals fields.
+
+Use mapper + validator from the unification layer.
+
+This applies to all Craving Creator routes:
+
+/api/craving-creator/generate
+
+/api/meals/craving-creator
+
+/api/generate-craving-meal
+
+1️⃣ Import unification tools
+
+In each relevant Craving Creator service or route file:
+
+import {
+  UnifiedMeal,
+  validateUnifiedMeal
+} from "../services/unification";
+
+import { mapCravingCreatorMeal } from "../services/unification/mappers/cravingCreatorMapper";
+
+
+Adjust paths according to actual project structure.
+
+2️⃣ Update the Craving Creator service
+
+Where the service returns:
+
+return { meal };
+
+
+or:
+
+return { meals };
+
+
+Modify the service to:
+
+A. For array responses:
+const legacyMeals = meals;
+const unifiedMeals = [];
+
+for (const meal of legacyMeals) {
+  try {
+    const unified = mapCravingCreatorMeal(meal);
+    validateUnifiedMeal(unified);
+    unifiedMeals.push(unified);
+  } catch (err) {
+    console.warn("[UnifiedMeal][CravingCreator] Validation failed:", err);
+  }
+}
+
+return { meals: legacyMeals, unifiedMeals };
+
+B. For single-meal responses:
+const unifiedMeal = (() => {
+  try {
+    const u = mapCravingCreatorMeal(meal);
+    validateUnifiedMeal(u);
+    return u;
+  } catch {
+    return null;
+  }
+})();
+
+3️⃣ Update route handlers
+
+Update each Craving Creator route so instead of:
+
+return res.json({ meal });
+
+
+You now return:
+
+return res.json({
+  meal,          // legacy
+  unifiedMeal    // new
+});
+
+
+And for array routes:
+
+return res.json({
+  meals,         // legacy
+  unifiedMeals   // new
+});
+
+4️⃣ Logging
+
+Follow the same pattern as Fridge Rescue:
+
+Do NOT fail the request if unified mapping fails.
+
+Do NOT break legacy behavior.
+
+Only log warnings with prefix:
+
+[UnifiedMeal][CravingCreator]
+
+✔ Acceptance Criteria
+
+Legacy clients still receive EXACT same Craving Creator output as before.
+
+New fields appear:
+
+unifiedMeal
+
+unifiedMeals
+
+Validation does not terminate requests.
+
+No TypeScript errors.
+
+No frontend changes required.
+
+End of prompt.
