@@ -1022,7 +1022,7 @@ export default function WeeklyMealBoard() {
             <Button
               size="sm"
               variant="destructive"
-              onClick={() => {
+              onClick={async () => {
                 if (confirm("Delete all meals from this board? This action cannot be undone.")) {
                   if (board) {
                     const clearedBoard = {
@@ -1038,13 +1038,32 @@ export default function WeeklyMealBoard() {
                           dateISO,
                           { breakfast: [], lunch: [], dinner: [], snacks: [] }
                         ])
-                      ) : undefined
+                      ) : undefined,
+                      version: board.version + 1,
+                      meta: {
+                        ...board.meta,
+                        lastUpdatedAt: new Date().toISOString()
+                      }
                     };
-                    saveBoard(clearedBoard);
-                    toast({
-                      title: "All Meals Deleted",
-                      description: "Successfully cleared all meals from the board",
-                    });
+                    
+                    // Update local state immediately for instant UI feedback
+                    setBoard(clearedBoard);
+                    
+                    // Save to backend
+                    try {
+                      await saveBoard(clearedBoard);
+                      toast({
+                        title: "All Meals Deleted",
+                        description: "Successfully cleared all meals from the board",
+                      });
+                    } catch (error) {
+                      console.error("Failed to delete meals:", error);
+                      toast({
+                        title: "Error",
+                        description: "Failed to delete meals. Please try again.",
+                        variant: "destructive"
+                      });
+                    }
                   }
                 }
               }}
