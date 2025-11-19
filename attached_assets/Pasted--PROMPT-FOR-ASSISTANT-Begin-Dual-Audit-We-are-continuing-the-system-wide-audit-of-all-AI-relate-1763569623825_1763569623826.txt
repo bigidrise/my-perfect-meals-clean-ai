@@ -1,0 +1,146 @@
+📌 PROMPT FOR ASSISTANT — Begin Dual Audit
+
+We are continuing the system-wide audit of all AI-related meal-generation features.
+
+You’ve already audited:
+
+Fridge Rescue
+
+Craving Creator
+
+Now audit these two systems together in one unified dual-report:
+
+A. Restaurant Guide
+B. Find Meals Near Me
+
+Here’s what I need in the dual audit:
+
+1. FRONTEND SUMMARY for BOTH SYSTEMS
+
+For each system:
+
+File paths
+
+Components involved
+
+API endpoints being called
+
+Request payload structure
+
+Expected response shape
+
+Meal card structure
+
+Image handling
+
+Nutrition handling
+
+Medical badge handling
+
+Any fallback logic on the frontend
+
+Anything inconsistent or legacy
+
+2. BACKEND ROUTES SUMMARY (ALL ROUTES)
+
+For each system:
+
+File paths in server-side routes
+
+All API routes involved
+
+Validation patterns
+
+Which generator or service each route calls
+
+What fields the backend returns
+
+Differences between “raw restaurant item,” “meals near me result,” and “AI-generated restaurant meals” (if applicable)
+
+3. BACKEND SERVICES SUMMARY
+
+For each system, report:
+
+Whether meals are deterministic or AI-generated
+
+Nutrition source (Google Places? internal DB? estimation? AI?)
+
+Image source (Google Places? internal? AI generation?)
+
+Restaurant metadata structure
+
+Mapping between restaurant items → meal objects
+
+Any inconsistencies with other generators
+
+4. CURRENT TYPES / INTERFACES
+
+Extract:
+
+All interfaces/types used by Restaurant Guide
+
+All interfaces/types used by Find Meals Near Me
+
+Their real field names
+
+All differences between them
+
+Any nested vs flat inconsistencies
+
+Missing fields compared to UnifiedMeal
+
+Extra fields UnifiedMeal doesn’t need
+
+5. DIFF vs Craving Creator + Fridge Rescue
+
+Compare fields between:
+
+Restaurant Guide
+
+Find Meals Near Me
+
+Craving Creator
+
+Fridge Rescue
+
+Identify:
+
+Mismatched naming
+
+Missing fields
+
+Extra fields
+
+Nutrition differences
+
+Instructions differences (most restaurant items have none)
+
+Image structure differences
+
+Medical badge inconsistencies
+
+Restaurant metadata inconsistencies
+
+Null/undefined patterns
+
+Any unscalable assumptions
+
+6. FINAL SUMMARY — KEY FINDINGS
+
+Summarize the entire dual-audit:
+
+Critical mismatches
+
+Structural differences
+
+Data inconsistencies
+
+Missing fields
+
+Conversion blockers
+
+Items that will break unification
+
+Anything that must be fixed before UnifiedMeal can be applied
+
+Ranked migration priorities: HIGH / MEDIUM / LOW
