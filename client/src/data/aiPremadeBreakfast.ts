@@ -51,88 +51,431 @@ export const COOKING_METHOD_OPTIONS: CookingMethod[] = [
   "well-done",
 ];
 
-// ✅ BREAKFAST – ALL CATEGORIES (120 MEALS, ALPHABETIZED)
+// ✅ BREAKFAST – ALL CATEGORIES (120 MEALS, ALPHABETIZED BY CATEGORY)
 export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
+  // CATEGORY 1: ALL PROTEIN (40 meals, ap-01 to ap-40)
   {
-    id: "breakfast-eggbased-01",
-    name: "Avocado Egg Toast (Light Portion)",
-    category: "egg-based",
+    id: "ap-01",
+    name: "Baked Cod (Plain)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-02",
+    name: "Baked Salmon (Plain)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-03",
+    name: "Bison Patty (Lean)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Ground Bison (lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-04",
+    name: "Breakfast Sausage Patties (Turkey)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 4, unit: "links" }
+    ]
+  },
+  {
+    id: "ap-05",
+    name: "Canadian Bacon Slices",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Canadian Bacon", quantity: 4, unit: "slices" }
+    ]
+  },
+  {
+    id: "ap-06",
+    name: "Chicken Breast (Grilled)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-07",
+    name: "Chicken Sausage Links",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Sausage", quantity: 3, unit: "links" }
+    ]
+  },
+  {
+    id: "ap-08",
+    name: "Cottage Cheese Bowl (1% or Fat-Free)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Cottage Cheese (1%)", quantity: 1, unit: "cup" }
+    ]
+  },
+  {
+    id: "ap-09",
+    name: "Egg White Omelet (Veggie-Loaded)",
+    category: "all-protein",
     mealType: "breakfast",
     defaultCookingMethod: "fried",
     ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Avocado", quantity: 0.25, unit: "medium" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
+      { item: "Egg Whites", quantity: 6, unit: "large" },
+      { item: "Spinach", quantity: 1, unit: "cup" },
+      { item: "Mushrooms", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-eggbased-02",
-    name: "Bacon & Egg Scramble (Lean Portion)",
-    category: "egg-based",
+    id: "ap-10",
+    name: "Egg White Scramble (Plain)",
+    category: "all-protein",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Turkey Bacon", quantity: 2, unit: "strips" },
-    ],
+      { item: "Egg Whites", quantity: 8, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-01",
+    id: "ap-11",
+    name: "Egg Whites & Cottage Cheese Combo",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 5, unit: "large" },
+      { item: "Cottage Cheese (1%)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "ap-12",
+    name: "Egg Whites & Turkey Sausage",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 6, unit: "large" },
+      { item: "Turkey Sausage", quantity: 2, unit: "links" }
+    ]
+  },
+  {
+    id: "ap-13",
+    name: "Extra-Lean Ground Beef Patty",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Beef (93/7 or leaner)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-14",
+    name: "Extra-Lean Ground Turkey Bowl",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey (99% lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-15",
+    name: "Grilled Chicken Breast (Plain)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-16",
+    name: "Grilled Shrimp Bowl",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-17",
+    name: "Grilled Tilapia (Plain)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Tilapia", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-18",
+    name: "Ham Slices (Lean)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Ham (lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-19",
+    name: "Lean Ground Chicken Bowl",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Chicken (lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-20",
+    name: "Low-Fat Greek Yogurt Bowl (Plain)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Greek Yogurt (2%)", quantity: 1.5, unit: "cups" }
+    ]
+  },
+  {
+    id: "ap-21",
+    name: "Nonfat Greek Yogurt Bowl",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Greek Yogurt (Nonfat)", quantity: 1.5, unit: "cups" }
+    ]
+  },
+  {
+    id: "ap-22",
+    name: "Pan-Seared Pork Tenderloin (Lean)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Pork Tenderloin", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-23",
+    name: "Pan-Seared Scallops",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Scallops", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-24",
+    name: "Protein Powder Shake (Whey or Plant-Based)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Protein Powder", quantity: 2, unit: "scoops" },
+      { item: "Water", quantity: 1.5, unit: "cups" }
+    ]
+  },
+  {
+    id: "ap-25",
+    name: "Rotisserie Chicken Breast (Skinless)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Chicken Breast (rotisserie, skinless)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-26",
+    name: "Scrambled Egg Whites & Spinach",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 7, unit: "large" },
+      { item: "Spinach", quantity: 1, unit: "cup" }
+    ]
+  },
+  {
+    id: "ap-27",
+    name: "Smoked Salmon Slices",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Smoked Salmon", quantity: 4, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-28",
+    name: "Steak Bites (Sirloin or Flank)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-29",
+    name: "Steamed Crab Legs",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "steamed",
+    ingredients: [
+      { item: "Crab Legs", quantity: 8, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-30",
+    name: "Top Sirloin Steak (Lean Cut)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Sirloin Steak", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-31",
+    name: "Tuna (Canned in Water)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Tuna (canned in water)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-32",
+    name: "Turkey Bacon (5–6 Strips)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Turkey Bacon", quantity: 6, unit: "strips" }
+    ]
+  },
+  {
+    id: "ap-33",
+    name: "Turkey Breast Slices (Deli or Roasted)",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Turkey Breast (deli)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-34",
+    name: "Turkey Burger Patty (99% Lean)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Ground Turkey (99% lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-35",
+    name: "Turkey Meatballs (Lean)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Ground Turkey (99% lean)", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-36",
+    name: "Turkey Sausage Links (3–4 Links)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 4, unit: "links" }
+    ]
+  },
+  {
+    id: "ap-37",
+    name: "Venison Steak (Wild Game)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Venison Steak", quantity: 5, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-38",
+    name: "White Fish Fillet (Cod, Haddock, etc.)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "White Fish", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "ap-39",
+    name: "Whole Eggs Scrambled (With Extra Whites)",
+    category: "all-protein",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 2, unit: "large" },
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
+  },
+  {
+    id: "ap-40",
+    name: "Zero-Sugar Protein Pudding",
+    category: "all-protein",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Protein Powder", quantity: 1, unit: "scoop" },
+      { item: "Greek Yogurt (Nonfat)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  // CATEGORY 2: PROTEIN + CARB (40 meals, pc-01 to pc-40)
+  {
+    id: "pc-01",
     name: "Bagel Thin & Egg Whites",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Bagel Thin", quantity: 1, unit: "piece" },
-      { item: "Egg Whites", quantity: 5, unit: "large" },
-    ],
+      { item: "Egg Whites", quantity: 5, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-allprotein-01",
-    name: "Baked Egg White Cups",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-      { item: "Spinach", quantity: 0.5, unit: "cup" },
-      { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-02",
+    id: "pc-02",
     name: "Banana & Protein Shake",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Banana", quantity: 1, unit: "medium" },
       { item: "Protein Powder", quantity: 1, unit: "scoop" },
-      { item: "Water", quantity: 1, unit: "cup" },
-    ],
+      { item: "Water", quantity: 1, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-02",
-    name: "Boiled Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "boiled",
-    ingredients: [
-      { item: "Egg Whites", quantity: 8, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-03",
-    name: "Breakfast Bowl (Eggs + Spinach)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Spinach", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-03",
+    id: "pc-03",
     name: "Breakfast Burrito (Egg Whites + Tortilla)",
     category: "protein-carb",
     mealType: "breakfast",
@@ -140,659 +483,249 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
     ingredients: [
       { item: "Whole Wheat Tortilla", quantity: 1, unit: "large" },
       { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-    ],
+      { item: "Bell Peppers", quantity: 0.25, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-eggbased-04",
-    name: "Breakfast Burrito (Egg-Heavy)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Whole Wheat Tortilla", quantity: 1, unit: "large" },
-      { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-05",
-    name: "Breakfast Egg Sandwich (Light Bread)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-      { item: "Low-fat Cheese", quantity: 1, unit: "slice" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-06",
-    name: "Cheddar & Egg Omelet",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Cheddar Cheese", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-03",
-    name: "Chicken Breast & Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Chicken Breast", quantity: 4, unit: "oz" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-04",
+    id: "pc-04",
     name: "Chicken Breast & Oatmeal",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "grilled",
     ingredients: [
       { item: "Chicken Breast", quantity: 4, unit: "oz" },
-      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-04",
-    name: "Chicken Breast Strips",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Chicken Breast", quantity: 6, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-05",
+    id: "pc-05",
     name: "Chicken Sausage & Roasted Potatoes",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "baked",
     ingredients: [
       { item: "Chicken Sausage", quantity: 2, unit: "links" },
-      { item: "Potatoes", quantity: 4, unit: "oz" },
-    ],
+      { item: "Potatoes", quantity: 4, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-eggbased-07",
-    name: "Classic Deviled Eggs (Breakfast-Portioned)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "boiled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-06",
+    id: "pc-06",
     name: "Cottage Cheese & Pineapple",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Cottage Cheese", quantity: 1, unit: "cup" },
-      { item: "Pineapple (fresh)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Pineapple (fresh)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-05",
-    name: "Cottage Cheese Bowl (Plain)",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Cottage Cheese", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-08",
-    name: "Egg & Turkey Sausage Muffins",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Turkey Sausage", quantity: 2, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-09",
-    name: "Egg Bake (Plain Egg Casserole)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Eggs", quantity: 4, unit: "large" },
-      { item: "Low-fat Cheese", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-10",
-    name: "Egg Drop Soup (Breakfast Edition)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "boiled",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Chicken Broth", quantity: 1.5, unit: "cups" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-11",
-    name: "Egg Frittata (Simple)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-      { item: "Onions", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-12",
-    name: "Egg Patty Breakfast Stack",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-13",
-    name: "Egg Scramble with Spinach",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Spinach", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-06",
-    name: "Egg White & Turkey Crumbles",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "Ground Turkey (99% lean)", quantity: 3, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-07",
-    name: "Egg White Frittata (No Veggies)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-      { item: "Low-fat Cheese", quantity: 2, unit: "tbsp" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-07",
-    name: "Egg White Omelet & Toast",
+    id: "pc-07",
+    name: "Cream of Wheat (Plain Bowl)",
     category: "protein-carb",
     mealType: "breakfast",
-    defaultCookingMethod: "fried",
     ingredients: [
-      { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
+      { item: "Cream of Wheat (cooked)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-08",
-    name: "Egg White Patty Stack",
-    category: "all-protein",
+    id: "pc-08",
+    name: "Cream of Wheat & Egg Whites",
+    category: "protein-carb",
     mealType: "breakfast",
-    defaultCookingMethod: "fried",
     ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-    ],
+      { item: "Cream of Wheat (cooked)", quantity: 0.5, unit: "cup" },
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-allprotein-09",
-    name: "Egg White Scramble (Plain)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-08",
+    id: "pc-09",
     name: "Egg Whites & English Muffin",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "English Muffin (whole wheat)", quantity: 1, unit: "piece" },
-    ],
+      { item: "English Muffin (whole wheat)", quantity: 1, unit: "piece" }
+    ]
   },
   {
-    id: "breakfast-allprotein-10",
-    name: "Egg Whites & Smoked Salmon",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "Smoked Salmon", quantity: 3, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-09",
+    id: "pc-10",
     name: "Egg Whites & Sweet Potato Mash",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "Sweet Potato", quantity: 4, unit: "oz" },
-    ],
+      { item: "Sweet Potato", quantity: 4, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-10",
+    id: "pc-11",
     name: "Egg Whites & White Rice",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Egg Whites", quantity: 5, unit: "large" },
-      { item: "White Rice (cooked)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "White Rice (cooked)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-eggbased-14",
-    name: "Eggs Benedict (Light Version)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "poached",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "English Muffin (whole wheat)", quantity: 1, unit: "piece" },
-      { item: "Canadian Bacon", quantity: 2, unit: "slices" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-15",
-    name: "Eggs Over Easy (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-16",
-    name: "Eggs Over Hard (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-17",
-    name: "Eggs Over Medium (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-18",
-    name: "Eggs Sunny Side Up (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-19",
-    name: "French Omelet (Butter Minimal)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-20",
-    name: "Frittata Bites (Egg-Based)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Eggs", quantity: 4, unit: "large" },
-      { item: "Vegetables (mixed)", quantity: 0.5, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-11",
-    name: "Greek Yogurt (Plain, Nonfat)",
-    category: "all-protein",
+    id: "pc-12",
+    name: "Grits (Plain Bowl)",
+    category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
-      { item: "Greek Yogurt (Nonfat)", quantity: 1, unit: "cup" },
-    ],
+      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-11",
+    id: "pc-13",
+    name: "Grits & Egg Whites",
+    category: "protein-carb",
+    mealType: "breakfast",
+    ingredients: [
+      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" },
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
+  },
+  {
+    id: "pc-14",
     name: "Greek Yogurt & Banana",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Greek Yogurt (2%)", quantity: 1, unit: "cup" },
-      { item: "Banana", quantity: 1, unit: "medium" },
-    ],
+      { item: "Banana", quantity: 1, unit: "medium" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-12",
+    id: "pc-15",
     name: "Greek Yogurt & Berries",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Greek Yogurt (2%)", quantity: 1, unit: "cup" },
-      { item: "Mixed Berries", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Mixed Berries", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-13",
+    id: "pc-16",
     name: "Greek Yogurt & Granola (Light)",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Greek Yogurt (2%)", quantity: 1, unit: "cup" },
-      { item: "Granola", quantity: 0.25, unit: "cup" },
-    ],
+      { item: "Granola", quantity: 0.25, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-12",
-    name: "Grilled Chicken Medallions",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Chicken Breast", quantity: 6, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-13",
-    name: "Grilled Turkey Cutlets",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Turkey Breast", quantity: 6, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-14",
+    id: "pc-17",
     name: "Ham Slices & Toast",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Ham (lean)", quantity: 4, unit: "oz" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
+      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" }
+    ]
   },
   {
-    id: "breakfast-eggbased-21",
-    name: "Hard-Boiled Eggs (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "boiled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-22",
-    name: "Italian Egg Scramble (Egg + Herbs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Tomatoes", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-14",
-    name: "Lean Ground Beef Crumbles (96%)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Ground Beef (96% lean)", quantity: 5, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-15",
-    name: "Lean Ground Turkey & Hash Browns",
+    id: "pc-18",
+    name: "Oatmeal (Plain Bowl)",
     category: "protein-carb",
     mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
     ingredients: [
-      { item: "Ground Turkey (99% lean)", quantity: 4, unit: "oz" },
-      { item: "Potatoes (hash brown style)", quantity: 4, unit: "oz" },
-    ],
+      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
+      { item: "Water", quantity: 1, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-15",
-    name: "Lean Ground Turkey Crumbles (99%)",
-    category: "all-protein",
+    id: "pc-19",
+    name: "Oatmeal & Peanut Butter (Light)",
+    category: "protein-carb",
     mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
     ingredients: [
-      { item: "Ground Turkey (99% lean)", quantity: 5, unit: "oz" },
-    ],
+      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
+      { item: "Peanut Butter", quantity: 1, unit: "tbsp" }
+    ]
   },
   {
-    id: "breakfast-allprotein-16",
-    name: "Low-Fat Cheese Omelet (Cheese Only)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Low-fat Cheese", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-23",
-    name: "Mediterranean Egg Plate (Egg + Herbs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Spinach", quantity: 0.5, unit: "cup" },
-      { item: "Feta Cheese", quantity: 2, unit: "tbsp" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-24",
-    name: "Mushroom & Egg Omelet",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Mushrooms", quantity: 0.5, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-18",
+    id: "pc-20",
     name: "Oatmeal & Protein Scoop",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
-      { item: "Protein Powder", quantity: 1, unit: "scoop" },
-    ],
+      { item: "Protein Powder", quantity: 1, unit: "scoop" }
+    ]
   },
   {
-    id: "breakfast-eggbased-25",
-    name: "Onion & Egg Scramble",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Onions", quantity: 0.25, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-16",
+    id: "pc-21",
     name: "Over-Easy Eggs & Potatoes",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "fried",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Potatoes", quantity: 4, unit: "oz" },
-    ],
+      { item: "Potatoes", quantity: 4, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-17",
+    id: "pc-22",
     name: "Over-Hard Eggs & Whole Wheat Toast",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "fried",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
+      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" }
+    ]
   },
   {
-    id: "breakfast-allprotein-17",
-    name: "Plain Protein Shake",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Protein Powder", quantity: 1, unit: "scoop" },
-      { item: "Water", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-26",
-    name: "Poached Eggs (2–3 Eggs)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "poached",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-27",
-    name: "Poached Eggs & Spinach",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "poached",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Spinach", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-19",
+    id: "pc-23",
     name: "Protein Pancake (Oats + Egg Whites)",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "fried",
     ingredients: [
       { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-20",
+    id: "pc-24",
     name: "Protein Shake & Apple Slices",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Protein Powder", quantity: 1, unit: "scoop" },
       { item: "Apple", quantity: 1, unit: "medium" },
-      { item: "Water", quantity: 1, unit: "cup" },
-    ],
+      { item: "Water", quantity: 1, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-18",
-    name: "Protein Shake & Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Protein Powder", quantity: 1, unit: "scoop" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-      { item: "Water", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-21",
+    id: "pc-25",
     name: "Protein Shake & Rice Cake",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Protein Powder", quantity: 1, unit: "scoop" },
       { item: "Rice Cakes", quantity: 2, unit: "pieces" },
-      { item: "Water", quantity: 1, unit: "cup" },
-    ],
+      { item: "Water", quantity: 1, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-19",
-    name: "Protein Soufflé (Plain)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "baked",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-      { item: "Protein Powder", quantity: 0.5, unit: "scoop" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-22",
+    id: "pc-26",
     name: "Ricotta Cheese & Berries",
     category: "protein-carb",
     mealType: "breakfast",
     ingredients: [
       { item: "Ricotta Cheese (part-skim)", quantity: 0.75, unit: "cup" },
-      { item: "Mixed Berries", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Mixed Berries", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-20",
-    name: "Salmon Patty",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Salmon", quantity: 5, unit: "oz" },
-      { item: "Egg Whites", quantity: 1, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-23",
+    id: "pc-27",
     name: "Salmon Scramble & Potatoes",
     category: "protein-carb",
     mealType: "breakfast",
@@ -800,201 +733,502 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
       { item: "Salmon", quantity: 3, unit: "oz" },
-      { item: "Potatoes", quantity: 3, unit: "oz" },
-    ],
+      { item: "Potatoes", quantity: 3, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-allprotein-21",
-    name: "Scrambled Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-28",
-    name: "Scrambled Eggs (Classic)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-24",
+    id: "pc-28",
     name: "Scrambled Eggs & Bagel Thin",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Bagel Thin", quantity: 1, unit: "piece" },
-    ],
+      { item: "Bagel Thin", quantity: 1, unit: "piece" }
+    ]
   },
   {
-    id: "breakfast-eggbased-29",
-    name: "Scrambled Eggs & Cheese (Light)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Low-fat Cheese", quantity: 2, unit: "tbsp" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-25",
+    id: "pc-29",
     name: "Scrambled Eggs & Grits",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-26",
+    id: "pc-30",
     name: "Scrambled Eggs & Oatmeal",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-27",
+    id: "pc-31",
     name: "Scrambled Eggs & Potato Wedges",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Potatoes", quantity: 4, unit: "oz" },
-    ],
+      { item: "Potatoes", quantity: 4, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-28",
+    id: "pc-32",
     name: "Scrambled Eggs & Rice Cakes",
     category: "protein-carb",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Rice Cakes", quantity: 2, unit: "pieces" },
-    ],
+      { item: "Rice Cakes", quantity: 2, unit: "pieces" }
+    ]
   },
   {
-    id: "breakfast-eggbased-30",
-    name: "Scrambled Eggs & Salsa",
+    id: "pc-33",
+    name: "Steak Bites & Potatoes",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 4, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" }
+    ]
+  },
+  {
+    id: "pc-34",
+    name: "Sweet Potato & Turkey Sausage",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 2, unit: "links" },
+      { item: "Sweet Potato", quantity: 4, unit: "oz" }
+    ]
+  },
+  {
+    id: "pc-35",
+    name: "Tilapia & Rice (Breakfast Style)",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Tilapia", quantity: 4, unit: "oz" },
+      { item: "White Rice (cooked)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "pc-36",
+    name: "Turkey Bacon & Pancake (Light)",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Turkey Bacon", quantity: 3, unit: "strips" },
+      { item: "Pancake (whole wheat)", quantity: 1, unit: "medium" }
+    ]
+  },
+  {
+    id: "pc-37",
+    name: "Turkey Breast & Hash Browns",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 4, unit: "oz" },
+      { item: "Potatoes (hash brown style)", quantity: 4, unit: "oz" }
+    ]
+  },
+  {
+    id: "pc-38",
+    name: "Turkey Sausage & Belgian Waffle (Light)",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 2, unit: "links" },
+      { item: "Belgian Waffle (whole grain)", quantity: 1, unit: "small" }
+    ]
+  },
+  {
+    id: "pc-39",
+    name: "Turkey Sausage & Grits",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 2, unit: "links" },
+      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "pc-40",
+    name: "Turkey Sausage & Oatmeal",
+    category: "protein-carb",
+    mealType: "breakfast",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 2, unit: "links" },
+      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  // CATEGORY 3: EGG-BASED (40 meals, eb-01 to eb-40)
+  {
+    id: "eb-01",
+    name: "Avocado Egg Toast (Light Portion)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 2, unit: "large" },
+      { item: "Avocado", quantity: 0.25, unit: "medium" },
+      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" }
+    ]
+  },
+  {
+    id: "eb-02",
+    name: "Bacon & Egg Scramble (Lean Portion)",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Salsa", quantity: 0.25, unit: "cup" },
-    ],
+      { item: "Turkey Bacon", quantity: 2, unit: "strips" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-29",
-    name: "Scrambled Eggs & Sweet Potato Cubes",
-    category: "protein-carb",
+    id: "eb-03",
+    name: "Breakfast Bowl (Eggs + Spinach)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Spinach", quantity: 1, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-04",
+    name: "Breakfast Burrito (Egg-Heavy)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Whole Wheat Tortilla", quantity: 1, unit: "large" },
+      { item: "Bell Peppers", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-05",
+    name: "Breakfast Egg Sandwich (Light Bread)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 2, unit: "large" },
+      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
+      { item: "Low-fat Cheese", quantity: 1, unit: "slice" }
+    ]
+  },
+  {
+    id: "eb-06",
+    name: "Cheddar & Egg Omelet",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Cheddar Cheese", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-07",
+    name: "Classic Deviled Eggs (Breakfast-Portioned)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "boiled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-08",
+    name: "Egg & Turkey Sausage Muffins",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Turkey Sausage", quantity: 2, unit: "oz" }
+    ]
+  },
+  {
+    id: "eb-09",
+    name: "Egg Bake (Plain Egg Casserole)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Eggs", quantity: 4, unit: "large" },
+      { item: "Low-fat Cheese", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-10",
+    name: "Egg Drop Soup (Breakfast Edition)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "boiled",
+    ingredients: [
+      { item: "Eggs", quantity: 2, unit: "large" },
+      { item: "Chicken Broth", quantity: 1.5, unit: "cups" }
+    ]
+  },
+  {
+    id: "eb-11",
+    name: "Egg Frittata (Simple)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
+      { item: "Onions", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-12",
+    name: "Egg Patty Breakfast Stack",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-13",
+    name: "Egg Scramble with Spinach",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Spinach", quantity: 1, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-14",
+    name: "Egg Whites & Egg Combo (2 Whole + 4 Whites)",
+    category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Sweet Potato", quantity: 4, unit: "oz" },
-    ],
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-eggbased-31",
+    id: "eb-15",
+    name: "Eggs Benedict (Light Version)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "poached",
+    ingredients: [
+      { item: "Eggs", quantity: 2, unit: "large" },
+      { item: "English Muffin", quantity: 1, unit: "piece" },
+      { item: "Canadian Bacon", quantity: 2, unit: "slices" }
+    ]
+  },
+  {
+    id: "eb-16",
+    name: "Eggs Over Easy (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-17",
+    name: "Eggs Over Hard (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-18",
+    name: "Eggs Over Medium (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-19",
+    name: "Eggs Sunny Side Up (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-20",
+    name: "French Omelet (Butter Minimal)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-21",
+    name: "Frittata Bites (Egg-Based)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Eggs", quantity: 4, unit: "large" },
+      { item: "Vegetables (mixed)", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-22",
+    name: "Hard-Boiled Eggs (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "boiled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-23",
+    name: "Italian Egg Scramble (Egg + Herbs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Tomatoes", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-24",
+    name: "Mediterranean Egg Plate (Egg + Herbs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Spinach", quantity: 0.5, unit: "cup" },
+      { item: "Feta Cheese", quantity: 2, unit: "tbsp" }
+    ]
+  },
+  {
+    id: "eb-25",
+    name: "Mushroom & Egg Omelet",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Mushrooms", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-26",
+    name: "Onion & Egg Scramble",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Onions", quantity: 0.25, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-27",
+    name: "Poached Eggs (2–3 Eggs)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "poached",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-28",
+    name: "Poached Eggs & Spinach",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "poached",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Spinach", quantity: 1, unit: "cup" }
+    ]
+  },
+  {
+    id: "eb-29",
+    name: "Scrambled Eggs (Classic)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
+  },
+  {
+    id: "eb-30",
+    name: "Scrambled Eggs & Cheese (Light)",
+    category: "egg-based",
+    mealType: "breakfast",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Eggs", quantity: 3, unit: "large" },
+      { item: "Low-fat Cheese", quantity: 2, unit: "tbsp" }
+    ]
+  },
+  {
+    id: "eb-31",
     name: "Scrambled Eggs with Turkey Crumbles",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Ground Turkey (99% lean)", quantity: 2, unit: "oz" },
-    ],
+      { item: "Ground Turkey (99% lean)", quantity: 2, unit: "oz" }
+    ]
   },
   {
-    id: "breakfast-allprotein-22",
-    name: "Shrimp & Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Shrimp", quantity: 4, unit: "oz" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-23",
-    name: "Shrimp Omelet",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Shrimp", quantity: 3, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-30",
-    name: "Smoked Salmon & Whole Wheat Toast",
-    category: "protein-carb",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Smoked Salmon", quantity: 3, unit: "oz" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-25",
-    name: "Smoked Salmon Roll-Ups",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Smoked Salmon", quantity: 4, unit: "oz" },
-      { item: "Cream Cheese (light)", quantity: 2, unit: "tbsp" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-24",
-    name: "Smoked Turkey Slices",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Smoked Turkey Breast", quantity: 5, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-32",
+    id: "eb-32",
     name: "Soft-Boiled Eggs (2–3 Eggs)",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "boiled",
     ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
+      { item: "Eggs", quantity: 3, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-allprotein-26",
-    name: "Soft-Scramble Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-33",
+    id: "eb-33",
     name: "Spinach & Egg Whites Omelet",
     category: "egg-based",
     mealType: "breakfast",
@@ -1002,213 +1236,33 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
       { item: "Egg Whites", quantity: 3, unit: "large" },
-      { item: "Spinach", quantity: 1, unit: "cup" },
-    ],
+      { item: "Spinach", quantity: 1, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-27",
-    name: "Steak Bites (Lean)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Steak (sirloin)", quantity: 5, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-31",
-    name: "Steak Bites & Potatoes",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Steak (sirloin)", quantity: 4, unit: "oz" },
-      { item: "Potatoes", quantity: 4, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-28",
-    name: "Steamed Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "steamed",
-    ingredients: [
-      { item: "Egg Whites", quantity: 6, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-34",
-    name: "Three-Egg Omelet (Simple)",
-    category: "egg-based",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-32",
-    name: "Tilapia & Rice (Breakfast Style)",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Tilapia", quantity: 4, unit: "oz" },
-      { item: "White Rice (cooked)", quantity: 0.5, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-29",
-    name: "Tilapia Breakfast Plate",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Tilapia", quantity: 5, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-35",
+    id: "eb-34",
     name: "Tomato & Egg Scramble",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Tomatoes", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Tomatoes", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-30",
-    name: "Tuna & Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Tuna (canned in water)", quantity: 4, unit: "oz" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-36",
+    id: "eb-35",
     name: "Turkey Bacon & Eggs",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "fried",
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Turkey Bacon", quantity: 2, unit: "strips" },
-    ],
+      { item: "Turkey Bacon", quantity: 2, unit: "strips" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-33",
-    name: "Turkey Bacon & Pancake (Light)",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Turkey Bacon", quantity: 3, unit: "strips" },
-      { item: "Pancake (whole wheat)", quantity: 1, unit: "medium" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-34",
-    name: "Turkey Breast & Hash Browns",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Turkey Breast", quantity: 4, unit: "oz" },
-      { item: "Potatoes (hash brown style)", quantity: 4, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-31",
-    name: "Turkey Breast Cutlets",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "grilled",
-    ingredients: [
-      { item: "Turkey Breast", quantity: 6, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-32",
-    name: "Turkey Burger Patty (No Bun)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Ground Turkey (99% lean)", quantity: 5, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-33",
-    name: "Turkey Sausage (Lean Link)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Turkey Sausage", quantity: 3, unit: "links" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-35",
-    name: "Turkey Sausage & Belgian Waffle (Light)",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Turkey Sausage", quantity: 2, unit: "links" },
-      { item: "Belgian Waffle (whole grain)", quantity: 1, unit: "small" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-36",
-    name: "Turkey Sausage & Grits",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Turkey Sausage", quantity: 2, unit: "links" },
-      { item: "Grits (cooked)", quantity: 0.5, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-37",
-    name: "Turkey Sausage & Oatmeal",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Turkey Sausage", quantity: 2, unit: "links" },
-      { item: "Oatmeal (dry)", quantity: 0.5, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-38",
-    name: "Turkey Sausage & Potato Hash",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "pan-seared",
-    ingredients: [
-      { item: "Turkey Sausage", quantity: 2, unit: "links" },
-      { item: "Potatoes", quantity: 4, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-34",
-    name: "Turkey Scramble (Turkey Only)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Ground Turkey (99% lean)", quantity: 4, unit: "oz" },
-      { item: "Eggs", quantity: 2, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-37",
+    id: "eb-36",
     name: "Veggie Egg Muffins",
     category: "egg-based",
     mealType: "breakfast",
@@ -1216,11 +1270,11 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
       { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-      { item: "Spinach", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Spinach", quantity: 0.5, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-eggbased-38",
+    id: "eb-37",
     name: "Veggie Omelet",
     category: "egg-based",
     mealType: "breakfast",
@@ -1229,11 +1283,11 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
       { item: "Eggs", quantity: 3, unit: "large" },
       { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
       { item: "Mushrooms", quantity: 0.25, unit: "cup" },
-      { item: "Onions", quantity: 0.25, unit: "cup" },
-    ],
+      { item: "Onions", quantity: 0.25, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-eggbased-39",
+    id: "eb-38",
     name: "Western Omelet (Egg-Focused)",
     category: "egg-based",
     mealType: "breakfast",
@@ -1242,103 +1296,30 @@ export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
       { item: "Eggs", quantity: 3, unit: "large" },
       { item: "Ham (lean)", quantity: 2, unit: "oz" },
       { item: "Bell Peppers", quantity: 0.25, unit: "cup" },
-      { item: "Onions", quantity: 0.25, unit: "cup" },
-    ],
+      { item: "Onions", quantity: 0.25, unit: "cup" }
+    ]
   },
   {
-    id: "breakfast-allprotein-35",
-    name: "White Fish Omelet",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 3, unit: "large" },
-      { item: "Cod or Tilapia", quantity: 3, unit: "oz" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-36",
-    name: "Whole Eggs (2) + Extra Egg Whites",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-eggbased-40",
+    id: "eb-39",
     name: "Whole Eggs & Egg Whites Combo",
     category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
     ingredients: [
       { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
+      { item: "Egg Whites", quantity: 4, unit: "large" }
+    ]
   },
   {
-    id: "breakfast-proteincarb-39",
-    name: "Whole Eggs & French Toast (Light)",
-    category: "protein-carb",
-    mealType: "breakfast",
-    defaultCookingMethod: "fried",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
-  },
-  {
-    id: "breakfast-proteincarb-40",
-    name: "Whole Eggs & Whole Wheat Toast",
-    category: "protein-carb",
+    id: "eb-40",
+    name: "Zesty Herb Egg Scramble",
+    category: "egg-based",
     mealType: "breakfast",
     defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Whole Wheat Bread", quantity: 1, unit: "slice" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-37",
-    name: "Whole Eggs Hard-Boiled (3)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "boiled",
     ingredients: [
       { item: "Eggs", quantity: 3, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-38",
-    name: "Whole Eggs Scrambled (With Extra Whites)",
-    category: "all-protein",
-    mealType: "breakfast",
-    defaultCookingMethod: "scrambled",
-    ingredients: [
-      { item: "Eggs", quantity: 2, unit: "large" },
-      { item: "Egg Whites", quantity: 4, unit: "large" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-39",
-    name: "Zero-Fat Ricotta Bowl",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Ricotta Cheese (fat-free)", quantity: 1, unit: "cup" },
-    ],
-  },
-  {
-    id: "breakfast-allprotein-40",
-    name: "Zero-Sugar Protein Pudding",
-    category: "all-protein",
-    mealType: "breakfast",
-    ingredients: [
-      { item: "Protein Powder", quantity: 1, unit: "scoop" },
-      { item: "Greek Yogurt (Nonfat)", quantity: 0.5, unit: "cup" },
-    ],
+      { item: "Herbs (mixed)", quantity: 1, unit: "tbsp" }
+    ]
   }
 ];
 
