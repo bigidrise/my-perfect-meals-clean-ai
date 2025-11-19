@@ -27,43 +27,40 @@ const categoryDisplayNames: Record<BreakfastCategory, string> = {
   'egg-based': 'Egg-Based Meals'
 };
 
-// Build breakfast premades from AI data
+// Build breakfast premades from AI data with actual ingredients
 const breakfastPremades = {
   'All Protein': getBreakfastMealsByCategory('all-protein').map(meal => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
-    ingredients: [
-      { 
-        item: meal.name, 
-        amount: '1 serving', 
-        preparation: meal.defaultCookingMethod || 'prepared as preferred' 
-      }
-    ]
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
   })),
   'Protein + Carb': getBreakfastMealsByCategory('protein-carb').map(meal => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
-    ingredients: [
-      { 
-        item: meal.name, 
-        amount: '1 serving', 
-        preparation: meal.defaultCookingMethod || 'prepared as preferred' 
-      }
-    ]
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
   })),
   'Egg-Based Meals': getBreakfastMealsByCategory('egg-based').map(meal => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
-    ingredients: [
-      { 
-        item: meal.name, 
-        amount: '1 serving', 
-        preparation: meal.defaultCookingMethod || 'prepared as preferred' 
-      }
-    ]
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
   }))
 };
 
@@ -158,14 +155,19 @@ export default function MealPremadePicker({
     setGenerating(true);
     
     try {
-      // Build ingredient list with cooking styles
-      let ingredientList = meal.name;
-      if (Object.keys(styles).length > 0) {
-        const styleDescriptions = Object.entries(styles)
-          .map(([ing, style]) => `${style} ${ing}`)
-          .join(', ');
-        ingredientList = `${meal.name} (${styleDescriptions})`;
+      // Build ingredient list from actual meal data
+      let ingredientParts: string[] = [];
+      
+      if (meal.actualIngredients && meal.actualIngredients.length > 0) {
+        ingredientParts = meal.actualIngredients.map((ing: any) => {
+          const styleForIng = styles[ing.item] || meal.defaultCookingMethod;
+          return styleForIng ? `${styleForIng} ${ing.item}` : ing.item;
+        });
+      } else {
+        ingredientParts = [meal.name];
       }
+      
+      const ingredientList = ingredientParts.join(', ');
       
       const dallePrompt = `Generate a clean, realistic overhead food photo of:\n${ingredientList}\n\nMake the food look fresh, well-lit, and placed on a single plate or bowl.`;
       
@@ -182,16 +184,19 @@ export default function MealPremadePicker({
       
       const { imageUrl } = await imageResponse.json();
       
-      // Create meal object for the board
+      // Create meal object for the board with actual ingredients
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
         title: meal.name,
         name: meal.name,
         servings: 1,
-        ingredients: [{ item: meal.name, amount: '1 serving' }],
-        instructions: Object.entries(styles).map(([ing, style]) => 
-          `Prepare ${ing}: ${style}`
-        ),
+        ingredients: meal.ingredients || [{ item: meal.name, amount: '1 serving' }],
+        instructions: meal.actualIngredients 
+          ? meal.actualIngredients.map((ing: any) => {
+              const style = styles[ing.item] || meal.defaultCookingMethod || 'prepare';
+              return `${style} ${ing.quantity} ${ing.unit} ${ing.item}`;
+            })
+          : [`Prepare ${meal.name} as preferred`],
         imageUrl: imageUrl,
         nutrition: {
           calories: 350,
