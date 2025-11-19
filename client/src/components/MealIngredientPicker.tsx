@@ -317,7 +317,7 @@ export default function MealIngredientPicker({
       // STEP 5 — API call using normalized meal engine
       const generatedMeal = await generateSingleMeal({
         source: "fridge-rescue",
-        userId: "1",
+        userId: localStorage.getItem("userId") || "local-user",
         fridgeItems: allIngredientsWithStyles,
         ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
         ...(dietType && { dietType })
