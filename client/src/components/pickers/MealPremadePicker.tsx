@@ -155,55 +155,62 @@ export default function MealPremadePicker({
     setGenerating(true);
     
     try {
-      // Build ingredient list from actual meal data
-      let ingredientParts: string[] = [];
+      // Build ingredient list with cooking methods applied
+      let ingredientsList: string[] = [];
       
       if (meal.actualIngredients && meal.actualIngredients.length > 0) {
-        ingredientParts = meal.actualIngredients.map((ing: any) => {
+        ingredientsList = meal.actualIngredients.map((ing: any) => {
           const styleForIng = styles[ing.item] || meal.defaultCookingMethod;
-          return styleForIng ? `${styleForIng} ${ing.item}` : ing.item;
+          const fullName = styleForIng ? `${styleForIng} ${ing.item}` : ing.item;
+          return `${ing.quantity} ${ing.unit} ${fullName}`;
         });
       } else {
-        ingredientParts = [meal.name];
+        ingredientsList = [meal.name];
       }
       
-      const ingredientList = ingredientParts.join(', ');
-      
-      const prompt = `Generate a clean, realistic overhead food photo of:\n${ingredientList}\n\nMake the food look fresh, well-lit, and placed on a single plate or bowl.`;
-      
-      // Call DALL·E API to generate image
-      const imageResponse = await fetch('/api/meal-images/generate', {
+      // Use the SAME endpoint as the working AI Meal Creator
+      const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({
+          fridgeItems: ingredientsList,
+          userId: 1
+        })
       });
       
-      if (!imageResponse.ok) {
-        throw new Error('Failed to generate meal image');
+      if (!response.ok) {
+        throw new Error('Failed to generate premade meal');
       }
       
-      const { imageUrl } = await imageResponse.json();
+      const data = await response.json();
       
-      // Create meal object for the board with actual ingredients
+      // Handle both response formats
+      let generatedMeal;
+      if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
+        generatedMeal = data.meals[0];
+      } else if (data.meal) {
+        generatedMeal = data.meal;
+      } else {
+        throw new Error('No meal found in response');
+      }
+      
+      // Transform to match board format
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
-        title: meal.name,
-        name: meal.name,
+        title: generatedMeal.name || meal.name,
+        name: generatedMeal.name || meal.name,
+        description: generatedMeal.description,
         servings: 1,
-        ingredients: meal.ingredients || [{ item: meal.name, amount: '1 serving' }],
-        instructions: meal.actualIngredients 
-          ? meal.actualIngredients.map((ing: any) => {
-              const style = styles[ing.item] || meal.defaultCookingMethod || 'prepare';
-              return `${style} ${ing.quantity} ${ing.unit} ${ing.item}`;
-            })
-          : [`Prepare ${meal.name} as preferred`],
-        imageUrl: imageUrl,
-        nutrition: {
-          calories: 350,
-          protein: 30,
-          carbs: 20,
-          fat: 15
+        ingredients: generatedMeal.ingredients || meal.ingredients,
+        instructions: generatedMeal.instructions || [],
+        imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
+        nutrition: generatedMeal.nutrition || {
+          calories: generatedMeal.calories || 350,
+          protein: generatedMeal.protein || 30,
+          carbs: generatedMeal.carbs || 20,
+          fat: generatedMeal.fat || 15
         },
+        medicalBadges: generatedMeal.medicalBadges || [],
         source: 'premade',
         category: category
       };
