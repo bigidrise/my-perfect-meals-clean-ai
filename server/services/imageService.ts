@@ -37,15 +37,7 @@ export async function generateImage(options: ImageGenerationOptions): Promise<st
   try {
     console.log(`🎨 Generating image for: ${options.name}`);
     
-    // Try Lexica.art first for faster results
-    const lexicaUrl = await searchLexicaImage(options.name);
-    if (lexicaUrl) {
-      imageCache.set(cacheKey, lexicaUrl);
-      console.log(`🎨 Found Lexica image for: ${options.name}`);
-      return lexicaUrl;
-    }
-
-    // Fallback to DALL-E 3 generation if OpenAI key is available
+    // Use DALL-E 3 for high-quality, authentic food images
     if (process.env.OPENAI_API_KEY) {
       const dalleUrl = await generateDalleImage(options);
       if (dalleUrl) {
@@ -61,31 +53,6 @@ export async function generateImage(options: ImageGenerationOptions): Promise<st
     return null;
   } catch (error) {
     console.error(`❌ Image generation failed for ${options.name}:`, error);
-    return null;
-  }
-}
-
-async function searchLexicaImage(query: string): Promise<string | null> {
-  try {
-    const searchQuery = encodeURIComponent(query.toLowerCase());
-    const response = await fetch(`https://lexica.art/api/v1/search?q=${searchQuery}`);
-    
-    if (!response.ok) {
-      console.log(`⚠️ Lexica API error: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-    
-    if (data.images && data.images.length > 0) {
-      // Get the first high-quality image
-      const bestImage = data.images.find((img: any) => img.width >= 512 && img.height >= 512) || data.images[0];
-      return bestImage.src;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Lexica API error:', error);
     return null;
   }
 }
