@@ -51,7 +51,7 @@ export const COOKING_METHOD_OPTIONS: CookingMethod[] = [
   "well-done",
 ];
 
-// ✅ BREAKFAST – CATEGORY 1: ALL PROTEIN (40 MEALS, A–Z)
+// ✅ BREAKFAST – ALL CATEGORIES (120 MEALS, ALPHABETIZED)
 export const AI_PREMADE_BREAKFAST_MEALS: AiPremadeMeal[] = [
   {
     id: "breakfast-eggbased-01",
