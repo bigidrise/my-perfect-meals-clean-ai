@@ -65,26 +65,34 @@ router.post('/generate', requireAuth, async (req, res) => {
       };
     });
     
-    const generatedRecipe = {
-      title: `Healthy ${input.craving}`,
+    // Generate meal in the format expected by frontend (MealData interface)
+    const generatedMeal = {
+      id: `craving-${Date.now()}`,
+      name: `Healthy ${input.craving}`,
+      description: `A delicious and healthy version of ${input.craving} tailored to your preferences`,
       ingredients: normalizedIngredients,
-      instructions: `1. Prepare ingredients for your ${input.craving} craving\n2. Cook according to preference\n3. Season to satisfy your craving\n4. Serve and enjoy`,
+      calories: 400,
+      protein: 25,
+      carbs: 35,
+      fat: 18,
       nutrition: {
         calories: 400,
         protein: 25,
+        protein_g: 25,
         carbs: 35,
+        carbs_g: 35,
         fat: 18,
-        fiber: 6
+        fat_g: 18
       },
-      servings: input.servings,
-      prepTime: 15,
-      cookTime: 20
+      instructions: `1. Prepare ingredients for your ${input.craving} craving\n2. Cook according to preference\n3. Season to satisfy your craving\n4. Serve and enjoy`,
+      reasoning: `This meal satisfies your craving for ${input.craving} while keeping it healthy and nutritious`,
+      servingSize: `${input.servings} ${input.servings === 1 ? 'serving' : 'servings'}`,
+      medicalBadges: [],
+      imageUrl: undefined
     };
 
     res.json({
-      success: true,
-      recipe: generatedRecipe,
-      source: 'craving-creator'
+      meal: generatedMeal
     });
   } catch (error) {
     console.error("Error generating craving recipe:", error);
