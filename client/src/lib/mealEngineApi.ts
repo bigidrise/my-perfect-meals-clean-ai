@@ -81,3 +81,58 @@ export function replaceMeal(userId: string, mealId: string, dietPreference?: str
     mealType 
   });
 }
+
+// GLOBAL REQUEST NORMALIZER FOR GENERATORS
+export function normalizeGeneratorInput(payload: any) {
+  // Craving Creator conversion
+  if (payload.craving) {
+    payload.query = payload.craving;
+    delete payload.craving;
+  }
+  if (payload.dietaryRestrictions) {
+    payload.dietFlags = payload.dietaryRestrictions;
+    delete payload.dietaryRestrictions;
+  }
+
+  // Fridge Rescue conversions
+  if (payload.fridgeItems) {
+    payload.items = payload.fridgeItems;
+    delete payload.fridgeItems;
+  }
+
+  // Legacy string formats
+  if (typeof payload.ingredients === "string") {
+    payload.items = payload.ingredients
+      .split(",")
+      .map((i: string) => i.trim())
+      .filter(Boolean);
+    delete payload.ingredients;
+  }
+
+  // Default fallback fields
+  payload.servings ??= 1;
+  payload.dietFlags ??= [];
+
+  return payload;
+}
+
+// GLOBAL RESPONSE NORMALIZER FOR UNIFIED MEAL
+export function normalizeUnifiedMealOutput(meal: any) {
+  if (!meal) return meal;
+
+  return {
+    ...meal,
+    name: meal.title || meal.name,
+    ingredients: meal.ingredients?.map((i: any) => ({
+      item: i.name || i.item,
+      amount: i.amount,
+      unit: i.unit ?? null
+    })) ?? [],
+    instructions: meal.instructions ?? [],
+    calories: meal.macros?.calories ?? meal.calories ?? null,
+    protein: meal.macros?.protein ?? meal.protein ?? null,
+    carbs: meal.macros?.carbs ?? meal.carbs ?? null,
+    fat: meal.macros?.fat ?? meal.fat ?? null,
+    ounces: meal.ounces ?? null
+  };
+}

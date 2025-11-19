@@ -42,6 +42,7 @@ import { post } from "@/lib/api";
 import CopyRecipeButton from "@/components/CopyRecipeButton";
 import { ProDietaryDirectives } from "@/components/ProDietaryDirectives";
 import PhaseGate from "@/components/PhaseGate";
+import { normalizeGeneratorInput, normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 // Development user ID - consistent across all components (UUID format)
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -307,18 +308,20 @@ export default function CravingCreator() {
     setIsGenerating(true);
     startProgressTicker();
 
+    const body = normalizeGeneratorInput({
+      craving: cravingInput,
+      servings,
+      mealtime: "snack",
+      dietaryRestrictions: (selectedDiet || dietaryRestrictions)
+        ? [selectedDiet || dietaryRestrictions].filter(Boolean)
+        : [],
+      healthConditions: [],
+    });
+
     const response = await fetch("/api/craving-creator/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        craving: cravingInput, // Fixed: Changed from cravingInput to craving
-        servings: servings,
-        mealtime: "snack", // Fixed: Changed from targetMealType to mealtime (singular)
-        dietaryRestrictions: (selectedDiet || dietaryRestrictions) 
-          ? [selectedDiet || dietaryRestrictions].filter(Boolean) 
-          : [], // Fixed: Convert string to array
-        healthConditions: [], // Added: Backend expects this field
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -342,7 +345,8 @@ export default function CravingCreator() {
     }
 
     const data = await response.json();
-    const meal = data.meal || data; // Handle both response formats
+    const rawMeal = data.meal || data;
+    const meal = normalizeUnifiedMealOutput(rawMeal);
 
     stopProgressTicker();
     setGeneratedMeals([meal]);
