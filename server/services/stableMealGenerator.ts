@@ -361,16 +361,50 @@ function violatesDiet(ings: Skeleton["ingredients"], diet: string[]) {
   return false;
 }
 
-function medicalBadgesFor(s: Skeleton, flags: string[]): string[] {
+// PHASE 1 FIX: Medical badges now return rich objects instead of strings
+interface UnifiedMedicalBadge {
+  id: string;
+  label: string;
+  level: "green" | "yellow" | "red";
+  reason: string;
+  category?: "metabolic" | "digestive" | "cardiovascular" | "allergies" | "fitness" | "dietary";
+}
+
+function medicalBadgesFor(s: Skeleton, flags: string[]): UnifiedMedicalBadge[] {
   const text = (s.ingredients.map(i => i.name).join(" ") + " " + s.name).toLowerCase();
-  const badges: string[] = [];
+  const badges: UnifiedMedicalBadge[] = [];
+  
   if (flags.some(f => ["type1_diabetes","type2_diabetes","low_gi"].includes(f))) {
-    if (!/\b(syrup|candy|frosting|soda|donut|pastry)\b/.test(text)) badges.push("Diabetes-Safe");
-    badges.push("Low-GI-Cautious");
+    if (!/\b(syrup|candy|frosting|soda|donut|pastry)\b/.test(text)) {
+      badges.push({
+        id: `craving-diabetes-safe-${Date.now()}`,
+        label: "Diabetes-Safe",
+        level: "green",
+        reason: "No high-sugar ingredients detected. Uses complex carbs and lean proteins.",
+        category: "metabolic"
+      });
+    }
+    badges.push({
+      id: `craving-low-gi-${Date.now()}`,
+      label: "Low-GI-Cautious",
+      level: "yellow",
+      reason: "Meal designed with low glycemic index awareness for blood sugar management.",
+      category: "metabolic"
+    });
   }
+  
   if (flags.includes("heart_health")) {
-    if (/\b(salmon|olive oil|avocado|nuts)\b/.test(text)) badges.push("Heart-Healthy");
+    if (/\b(salmon|olive oil|avocado|nuts)\b/.test(text)) {
+      badges.push({
+        id: `craving-heart-healthy-${Date.now()}`,
+        label: "Heart-Healthy",
+        level: "green",
+        reason: "Contains heart-healthy fats from salmon, olive oil, avocado, or nuts.",
+        category: "cardiovascular"
+      });
+    }
   }
+  
   return badges;
 }
 
@@ -1008,6 +1042,12 @@ export async function generateCravingMeal(targetMealType: MealType, craving?: st
       "Cook using appropriate methods for each ingredient", 
       "Season to taste and serve hot"
     ],
+    // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
+    calories: nutrition.calories,
+    protein: nutrition.protein,
+    carbs: nutrition.carbs,
+    fat: nutrition.fat,
+    // Keep nested for backward compatibility
     nutrition,
     medicalBadges,
     flags: selected.tags,
