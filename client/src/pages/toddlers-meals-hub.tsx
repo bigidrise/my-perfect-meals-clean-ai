@@ -323,9 +323,13 @@ export default function ToddlersMealsHub() {
                   <ul className="list-disc list-inside space-y-1">
                     {scaledIngs.map((ing, idx) => {
                       const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.item);
+                      // Use ounce display if converted, otherwise use legacy format
+                      const displayText = formatted.quantityOz !== null 
+                        ? `${formatted.displayQuantity} ${ing.item}`
+                        : `${formatQty(ing.quantity)} ${pluralize(ing.unit, ing.quantity)} ${ing.item}`;
                       return (
                         <li key={idx} className="text-white/90">
-                          {formatted.displayQuantity} {ing.item}
+                          {displayText}
                         </li>
                       );
                     })}

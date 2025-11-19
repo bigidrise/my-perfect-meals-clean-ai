@@ -465,7 +465,6 @@ export function createMealHub(type: "breakfast"|"lunch"|"dinner"|"snacks", meals
                     <div className="max-h-60 overflow-auto rounded-xl border border-white/10 bg-black/30 p-4">
                       <ul className="space-y-2">
                         {scaledIngredients.map((ing, i) => {
-                          const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.item);
                           return (
                             <li key={i} className="flex items-center gap-2">
                               {editMode ? (
@@ -497,9 +496,30 @@ export function createMealHub(type: "breakfast"|"lunch"|"dinner"|"snacks", meals
                                   </Button>
                                 </div>
                               ) : (
-                                <span className="text-white/90">
-                                  <strong>{formatted.displayQuantity}</strong> {ing.item}
-                                </span>
+                                (() => {
+                                  // Only format in read-only mode to avoid edit/display conflicts
+                                  const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.item);
+                                  
+                                  if (formatted.quantityOz !== null) {
+                                    // Use ounce display for convertible units
+                                    return (
+                                      <span className="text-white/90">
+                                        <strong>{formatted.displayQuantity}</strong> {ing.item}
+                                      </span>
+                                    );
+                                  } else {
+                                    // Use legacy format for non-convertible units (with proper rounding/pluralization)
+                                    const roundedQty = Math.round(ing.quantity * 10) / 10;
+                                    const formattedQty = Number.isInteger(roundedQty) ? roundedQty.toString() : roundedQty.toFixed(1);
+                                    const pluralUnit = ing.quantity === 1 ? ing.unit.replace(/s$/i, "") : 
+                                                       (!/s$/i.test(ing.unit) && !/(oz|ml|g|kg|lb)$/i.test(ing.unit) ? `${ing.unit}s` : ing.unit);
+                                    return (
+                                      <span className="text-white/90">
+                                        <strong>{formattedQty} {pluralUnit}</strong> {ing.item}
+                                      </span>
+                                    );
+                                  }
+                                })()
                               )}
                             </li>
                           );

@@ -310,9 +310,13 @@ export default function CravingPresetsPage() {
                   <ul className="list-disc list-inside space-y-1">
                     {scaledIngs.map((ing, idx) => {
                       const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.name);
+                      // Use ounce display if converted, otherwise use legacy format
+                      const displayText = formatted.quantityOz !== null 
+                        ? `${formatted.displayQuantity} ${ing.name}`
+                        : `${formatQty(ing.quantity)} ${pluralize(ing.unit, ing.quantity)} ${ing.name}`;
                       return (
                         <li key={idx} className="text-white/90">
-                          {formatted.displayQuantity} {ing.name}
+                          {displayText}
                           {ing.notes && <span className="text-white/60 text-sm ml-1">({ing.notes})</span>}
                         </li>
                       );

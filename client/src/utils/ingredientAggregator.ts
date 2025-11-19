@@ -18,6 +18,9 @@ export type AggregatedIngredient = {
   name: string;
   totalQuantity: number | null;
   unit: string | null;
+  quantityOz: number | null;      // Ounce-normalized quantity (Phase 4B.2)
+  displayQuantity: string | null;  // Formatted display with ounces (Phase 4B.2)
+  originalUnit: string | null;     // Original unit before normalization (Phase 4B.2)
   occurrences: number;
   displayText: string;
   stableKey: string; // Stable identifier for checkbox persistence
@@ -299,16 +302,42 @@ export function aggregateIngredients(
         // Sum quantities if both have quantities (units already normalized and match via key)
         if (parsed.quantity !== null && existing.totalQuantity !== null) {
           existing.totalQuantity += parsed.quantity;
+          
+          // Re-calculate ounce normalization with updated total
+          const formatted = formatIngredientMeasurement(existing.totalQuantity, existing.unit || '', parsed.name);
+          existing.quantityOz = formatted.quantityOz;
+          existing.displayQuantity = formatted.displayQuantity;
         } else if (parsed.quantity !== null && existing.totalQuantity === null) {
           // First occurrence with a quantity
           existing.totalQuantity = parsed.quantity;
+          
+          // Calculate ounce normalization
+          const formatted = formatIngredientMeasurement(parsed.quantity, parsed.unit || '', parsed.name);
+          existing.quantityOz = formatted.quantityOz;
+          existing.displayQuantity = formatted.displayQuantity;
         }
       } else {
-        // New ingredient
+        // New ingredient - calculate ounce normalization (only if quantity exists)
+        let quantityOz: number | null = null;
+        let displayQuantity: string | null = null;
+        
+        if (parsed.quantity !== null) {
+          const formatted = formatIngredientMeasurement(
+            parsed.quantity, 
+            parsed.unit || '', 
+            parsed.name
+          );
+          quantityOz = formatted.quantityOz;
+          displayQuantity = formatted.displayQuantity;
+        }
+        
         ingredientMap.set(stableKey, {
           name: parsed.name, // Use original name for display
           totalQuantity: parsed.quantity,
           unit: parsed.unit, // Already normalized
+          quantityOz,
+          displayQuantity,
+          originalUnit: parsed.unit,
           occurrences: 1,
           displayText: formatIngredientDisplay(parsed.quantity, parsed.unit, parsed.name),
           stableKey,
