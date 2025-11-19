@@ -40,6 +40,7 @@ import {
   getUserMedicalProfile,
 } from "@/utils/medicalPersonalization";
 import PhaseGate from "@/components/PhaseGate";
+import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 // ---- Persist the generated restaurant meal so it never "disappears" ----
 const CACHE_KEY = "restaurantGuide.cache.v1";
@@ -278,7 +279,8 @@ export default function RestaurantGuidePage() {
     },
     onSuccess: (data) => {
       stopProgressTicker();
-      setGeneratedMeals(data.recommendations || []);
+      const normalized = (data.recommendations || []).map(normalizeUnifiedMealOutput);
+      setGeneratedMeals(normalized);
 
       // Immediately cache the new restaurant meals so they survive navigation/refresh
       saveRestaurantCache({

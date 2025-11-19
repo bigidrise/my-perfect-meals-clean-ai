@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
+import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 interface AIMealCreatorModalProps {
   open: boolean;
@@ -82,15 +83,18 @@ export default function AIMealCreatorModal({
       console.log("🍳 AI Meal Creator received data:", data);
 
       // Handle both response formats: {meals: [...]} or {meal: {...}}
-      let meal;
+      let rawMeal;
       if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        meal = data.meals[0]; // Take first meal
+        rawMeal = data.meals[0]; // Take first meal
       } else if (data.meal) {
-        meal = data.meal;
+        rawMeal = data.meal;
       } else {
         console.error("❌ Invalid data structure:", data);
         throw new Error("No meal found in response");
       }
+
+      // Normalize UnifiedMeal response to frontend format
+      const meal = normalizeUnifiedMealOutput(rawMeal);
 
       // Ensure meal has required fields
       if (!meal.imageUrl) {

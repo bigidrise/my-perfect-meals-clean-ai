@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
+import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 const CACHE_KEY = "mealFinder.cache.v1";
 
@@ -139,7 +140,16 @@ export default function MealFinder() {
       }
     },
     onSuccess: (data) => {
-      const newResults = data.results || [];
+      const rawResults = data.results || [];
+      const newResults = rawResults.map((result: any) => {
+        if (result.meal) {
+          return {
+            ...result,
+            meal: normalizeUnifiedMealOutput(result.meal)
+          };
+        }
+        return result;
+      });
       setResults(newResults);
 
       saveMealFinderCache({

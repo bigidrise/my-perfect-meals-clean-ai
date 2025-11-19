@@ -12,6 +12,7 @@ import {
   getBreakfastMealsByCategory,
   type BreakfastCategory 
 } from '@/data/aiPremadeBreakfast';
+import { normalizeUnifiedMealOutput } from '@/lib/mealEngineApi';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -185,44 +186,25 @@ export default function MealPremadePicker({
       const data = await response.json();
       
       // Handle both response formats
-      let generatedMeal;
+      let rawMeal;
       if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        generatedMeal = data.meals[0];
+        rawMeal = data.meals[0];
       } else if (data.meal) {
-        generatedMeal = data.meal;
+        rawMeal = data.meal;
       } else {
         throw new Error('No meal found in response');
       }
       
-      // PHASE 1 FIX: Extract flat macros (backend returns flat structure from Fridge Rescue)
-      const calories = generatedMeal.calories ?? generatedMeal.nutrition?.calories ?? 350;
-      const protein = generatedMeal.protein ?? generatedMeal.nutrition?.protein ?? 30;
-      const carbs = generatedMeal.carbs ?? generatedMeal.nutrition?.carbs ?? 20;
-      const fat = generatedMeal.fat ?? generatedMeal.nutrition?.fat ?? 15;
+      // Normalize UnifiedMeal response to frontend format
+      const normalized = normalizeUnifiedMealOutput(rawMeal);
       
       // Transform to match board format
       const premadeMeal = {
+        ...normalized,
         id: `premade-${meal.id}-${Date.now()}`,
-        title: generatedMeal.name || meal.name,
-        name: generatedMeal.name || meal.name,
-        description: generatedMeal.description,
+        title: normalized.name || meal.name,
         servings: 1,
-        ingredients: generatedMeal.ingredients || meal.ingredients,
-        instructions: generatedMeal.instructions || [],
-        imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
-        // Use flat macros for UnifiedMeal compatibility
-        calories,
-        protein,
-        carbs,
-        fat,
-        // Keep nested nutrition for backward compatibility (optional)
-        nutrition: {
-          calories,
-          protein,
-          carbs,
-          fat
-        },
-        medicalBadges: generatedMeal.medicalBadges || [],
+        imageUrl: normalized.imageUrl || '/assets/meals/default-breakfast.jpg',
         source: 'premade',
         category: category
       };
