@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { generateSingleMeal } from '@/lib/mealEngineApi';
 import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 
@@ -314,27 +314,14 @@ export default function MealIngredientPicker({
         };
       }
 
-      // STEP 5 — Build payload including rewritten ingredients
-      const requestPayload = {
+      // STEP 5 — API call using normalized meal engine
+      const generatedMeal = await generateSingleMeal({
+        source: "fridge-rescue",
+        userId: "1",
         fridgeItems: allIngredientsWithStyles,
-        userId: 1,
-        mealSlot: mealSlot,
         ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
         ...(dietType && { dietType })
-      };
-
-      // STEP 6 — API call
-      const data = await apiRequest('/api/meals/fridge-rescue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload)
       });
-
-      const generatedMeal = data.meals?.[0];
-
-      if (!generatedMeal) {
-        throw new Error('No meal generated');
-      }
 
       // STEP 7 — Add default image
       const mealWithImage = {
@@ -365,9 +352,13 @@ export default function MealIngredientPicker({
 
       // STEP 10 — Macro accuracy toast
       if (macroTargets) {
-        const proteinDiff = Math.abs(generatedMeal.protein - macroTargets.protein);
-        const carbsDiff = Math.abs(generatedMeal.carbs - macroTargets.carbs);
-        const fatDiff = Math.abs(generatedMeal.fat - macroTargets.fat);
+        const actualProtein = generatedMeal.nutrition.protein_g;
+        const actualCarbs = generatedMeal.nutrition.carbs_g;
+        const actualFat = generatedMeal.nutrition.fat_g;
+        
+        const proteinDiff = Math.abs(actualProtein - macroTargets.protein);
+        const carbsDiff = Math.abs(actualCarbs - macroTargets.carbs);
+        const fatDiff = Math.abs(actualFat - macroTargets.fat);
         const withinTolerance = proteinDiff <= 5 && carbsDiff <= 5 && fatDiff <= 5;
 
         const missedMacros = [];
@@ -378,8 +369,8 @@ export default function MealIngredientPicker({
         toast({
           title: withinTolerance ? "🎯 Perfect Macro Hit!" : "⚠️ Close to Target",
           description: withinTolerance 
-            ? `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f ✓`
-            : `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f\n${missedMacros.join(', ')}`,
+            ? `${generatedMeal.name}\nActual: ${actualProtein}p / ${actualCarbs}c / ${actualFat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f ✓`
+            : `${generatedMeal.name}\nActual: ${actualProtein}p / ${actualCarbs}c / ${actualFat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f\n${missedMacros.join(', ')}`,
           variant: "default",
         });
       } else {
