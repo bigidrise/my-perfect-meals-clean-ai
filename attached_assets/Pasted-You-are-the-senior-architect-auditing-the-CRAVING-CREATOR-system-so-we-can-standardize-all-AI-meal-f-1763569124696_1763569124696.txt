@@ -1,0 +1,156 @@
+You are the senior architect auditing the CRAVING CREATOR system so we can standardize all AI meal features on top of a single UnifiedMeal contract.
+
+⚠️ DO NOT MODIFY ANY FILES.
+This is analysis + documentation ONLY. No refactors, no “quick fixes”.
+
+OBJECTIVE:
+Give me a precise, implementation-level picture of how Craving Creator currently works on both frontend and backend, and how its meal structure compares to:
+- Fridge Rescue (our current “gold standard” AI implementation)
+- The UnifiedMeal spec below.
+
+UNIFIED MEAL TARGET (for reference):
+
+interface UnifiedMeal {
+  id: string;
+  name: string;
+  description: string;
+  ingredients: Array<{ name: string; quantity: string; unit: string }>;
+  instructions: string;
+  nutrition: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  cookingTime?: string;
+  difficulty?: string;
+  servingSize?: string;
+  imageUrl?: string;
+  medicalBadges: Array<{
+    id: string;
+    label: string;
+    level: "green" | "yellow" | "red";
+    reason: string;
+  }>;
+}
+
+========================================
+STEP 1 – FRONTEND: CRAVING CREATOR PAGE
+========================================
+
+1) Inspect:
+   - client/src/pages/craving-creator.tsx
+   - Any components it uses that are directly involved with the AI call (e.g. pickers, panels, modals).
+
+2) Document:
+   - The exact endpoint(s) it calls (full paths, e.g. POST /api/craving-creator/generate or /api/meals/craving-creator).
+   - The exact request body shape it sends:
+     - field names
+     - field types
+     - optional vs required
+   - The exact shape it EXPECTS back:
+     - Does it expect { meal: ... }, { meals: [...] }, { recipe: ... }, etc.?
+     - What fields does the UI actually use (name, description, ingredients, nutrition, imageUrl, badges, etc.)?
+   - Any differences between how Craving Creator consumes the response vs. how Fridge Rescue consumers do it.
+
+==================================
+STEP 2 – BACKEND ROUTES & WIRING
+==================================
+
+1) Search and inspect routes related to Craving Creator:
+   - server/routes/craving-creator.ts (if it exists)
+   - server/routes.ts (search “craving-creator” and “craving”)
+   - Any other router where Craving Creator is mounted.
+
+2) For EACH Craving Creator-related route, document:
+   - HTTP method + full path (e.g. POST /api/craving-creator/generate).
+   - The handler/controller function that is invoked.
+   - The service or generator file + function it calls (file + function name).
+   - Any request validation used (Zod schema, manual checks, etc.).
+   - The exact response shape sent to the client (keys and types).
+
+============================
+STEP 3 – BACKEND GENERATOR
+============================
+
+1) Inspect the main generator used by Craving Creator:
+   - Most likely: server/services/stableMealGenerator.ts, or any file/function named generateCravingMeal / generateCravingRecipe / similar.
+
+2) For this generator, document:
+   - Which OpenAI model(s) it uses (gpt-4o, gpt-4o-mini, etc.).
+   - How the prompt is constructed:
+     - Show the template string or builder function.
+     - Note any differences vs. the Fridge Rescue prompt style (if obvious).
+   - How the AI response is parsed into a JS/TS object:
+     - Where JSON is parsed.
+     - Any extract / clean / sanitize helpers used.
+   - The exact MEAL/RECIPE object shape it produces BEFORE returning (keys + types):
+     - title vs name
+     - description vs summary
+     - ingredients structure
+     - nutrition structure
+     - servingSize / servings
+     - cookingTime / prepTime / totalTime
+     - difficulty
+     - imageUrl
+     - medicalBadges
+
+3) Medical badges:
+   - Where are medical badges generated for Craving Creator?
+     - Server-side? Client-side? Both?
+   - What is the current badge structure?
+     - fields (id, label, color, textColor, category, reason, etc.)
+   - Does this structure match or differ from the UnifiedMeal badge shape?
+
+4) Image generation:
+   - Where is image generation called from in the Craving Creator flow?
+     - Which file and function?
+     - Which image service (DALL·E, imageService, etc.)?
+   - What arguments are passed (prompt, style, size, etc.)?
+   - Is image generation mandatory or best-effort / optional?
+
+=====================================
+STEP 4 – CURRENT CRAVING MEAL TYPE
+=====================================
+
+Based on everything you’ve inspected, define the EFFECTIVE current TypeScript-like interface for the “Craving Creator meal/recipe” that the backend generator is trying to produce and the frontend is consuming.
+
+Something like:
+
+interface CravingCreatorMeal {
+  // fill in from reality
+}
+
+Include ALL fields, even if optional or “extra”.
+
+=========================================
+STEP 5 – DIFF vs Fridge Rescue & Unified
+=========================================
+
+Using your previous Fridge Rescue audit as reference, compare:
+
+1) Craving Creator vs Fridge Rescue:
+   - Where they match in structure.
+   - Where field names differ (e.g. title vs name, nutrition vs flat macros).
+   - What Craving Creator has that Fridge Rescue doesn’t.
+   - What Fridge Rescue has that Craving Creator doesn’t (especially badges, images, macros).
+
+2) Craving Creator vs UnifiedMeal (above):
+   - Which fields already match 1:1.
+   - Which are missing and would need to be added.
+   - Which are named differently and would need to be mapped.
+   - Any extra fields we should consider formally supporting or dropping.
+
+=================
+OUTPUT FORMAT
+=================
+
+Return a clear, structured report with these sections:
+
+1) FRONTEND SUMMARY – Craving Creator
+2) BACKEND ROUTES SUMMARY – Craving Creator
+3) BACKEND SERVICES SUMMARY – Craving Generator
+4) CURRENT CravingCreatorMeal TYPE (what it really is today)
+5) DIFF vs FridgeRescueMeal and UnifiedMeal (field-by-field comparison)
+
+Again: DO NOT change any code. This is an analysis-only audit.
