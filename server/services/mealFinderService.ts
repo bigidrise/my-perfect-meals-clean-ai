@@ -88,7 +88,8 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
   // Step 1: Convert ZIP to coordinates
   const coords = await zipToCoordinates(zipCode);
   if (!coords) {
-    console.error('❌ Could not geocode ZIP code');
+    console.warn(`⚠️ Could not geocode ZIP code ${zipCode} - returning empty results`);
+    // Return empty array gracefully - frontend will handle the UX message
     return [];
   }
   

@@ -149,21 +149,30 @@ export default function MealFinder() {
         generatedAtISO: new Date().toISOString()
       });
 
-      const uniqueRestaurants = new Set(newResults.map((r: MealResult) => r.restaurantName)).size;
-
-      toast({
-        title: "Meals Found!",
-        description: `Found ${uniqueRestaurants} restaurants with ${newResults.length} meals`,
-      });
+      if (newResults.length === 0) {
+        // Friendly info message - not an error
+        toast({
+          title: "No Results Found",
+          description: data.message || `Nothing found near ZIP ${zipCode}. Try a nearby ZIP code or different search.`,
+          variant: "default"
+        });
+      } else {
+        const uniqueRestaurants = new Set(newResults.map((r: MealResult) => r.restaurantName)).size;
+        toast({
+          title: "Meals Found!",
+          description: `Found ${uniqueRestaurants} restaurants with ${newResults.length} meals`,
+        });
+      }
 
       setTimeout(() => setProgress(0), 500);
     },
     onError: (error: any) => {
       console.error('Meal finder error:', error);
+      // Soft error handling - no red destructive banner
       toast({
-        title: "Search Failed",
-        description: error.message || "Could not find meals. Please try a different search or ZIP code.",
-        variant: "destructive"
+        title: "Search Issue",
+        description: "Having trouble searching this area. Try a nearby ZIP code.",
+        variant: "default"
       });
       setProgress(0);
     }
@@ -422,10 +431,14 @@ export default function MealFinder() {
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🍴</div>
               <p className="text-white text-lg mb-2">
-                Enter your craving and ZIP code to get started
+                {mealQuery && zipCode 
+                  ? `No results found near ZIP ${zipCode}` 
+                  : 'Enter your craving and ZIP code to get started'}
               </p>
               <p className="text-sm text-white/60">
-                We'll find the best restaurant meals near you
+                {mealQuery && zipCode
+                  ? 'Try a nearby ZIP code or different search'
+                  : "We'll find the best restaurant meals near you"}
               </p>
             </div>
           )}
