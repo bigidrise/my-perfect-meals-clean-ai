@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { generateImage } from './imageService';
+import { generateMealImage } from './mealImageGenerator';
 import { 
   mapFridgeRescueToUnified,
   validateUnifiedMeal,
@@ -338,17 +338,16 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
         medicalBadges: getMedicalBadges(meal, userConditions)
       };
 
-      // Generate image for the meal
+      // Generate image using enhanced cooking-method-aware system
       try {
-        const imageUrl = await generateImage({
-          name: processedMeal.name,
-          description: processedMeal.description,
-          type: 'meal',
+        const imageResult = await generateMealImage({
+          mealName: processedMeal.name,
+          ingredients: processedMeal.ingredients.map(ing => ing.name),
           style: 'homemade'
         });
         
-        if (imageUrl) {
-          processedMeal.imageUrl = imageUrl;
+        if (imageResult?.url) {
+          processedMeal.imageUrl = imageResult.url;
         }
       } catch (error) {
         console.error(`Failed to generate image for ${processedMeal.name}:`, error);
