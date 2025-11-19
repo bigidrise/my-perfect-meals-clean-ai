@@ -33,16 +33,8 @@ export async function generateRecipeImage(recipeName: string): Promise<string | 
 
 // 🔒 LOCKDOWN PROTECTED: Main image generation function - DO NOT MODIFY
 export async function generateImage(options: ImageGenerationOptions): Promise<string | null> {
-  const cacheKey = `${options.type}-${options.name.toLowerCase()}`;
-  
-  // 🔒 PROTECTED: Check in-memory cache first - critical for performance
-  if (imageCache.has(cacheKey)) {
-    console.log(`📸 Using in-memory cached image for: ${options.name}`);
-    return imageCache.get(cacheKey)!;
-  }
-
   try {
-    // Generate deterministic hash for persistent cache
+    // Generate deterministic hash for both in-memory and persistent cache
     const imageHash = buildMealImageCacheKey({
       name: options.name,
       ingredients: options.ingredients,
@@ -52,6 +44,14 @@ export async function generateImage(options: ImageGenerationOptions): Promise<st
       fat: options.fat,
       description: options.description,
     });
+    
+    const cacheKey = `${options.type}-${imageHash}`;
+  
+    // 🔒 PROTECTED: Check in-memory cache first - critical for performance
+    if (imageCache.has(cacheKey)) {
+      console.log(`📸 Using in-memory cached image for: ${options.name}`);
+      return imageCache.get(cacheKey)!;
+    }
 
     // Check if image exists in permanent storage
     const existingImageUrl = await checkImageExists(imageHash);
@@ -138,16 +138,38 @@ function createImagePrompt(options: ImageGenerationOptions): string {
 // API endpoint for image generation
 export async function handleImageGeneration(req: any, res: any) {
   try {
-    const { name, description, type, style } = req.body;
+    const { name, description, type, style, ingredients, calories, protein, carbs, fat } = req.body;
     
     if (!name || !type) {
       return res.status(400).json({ error: 'Name and type are required' });
     }
 
-    const imageUrl = await generateImage({ name, description, type, style });
+    // Generate deterministic hash for cache key (same as generateImage)
+    const imageHash = buildMealImageCacheKey({
+      name,
+      ingredients,
+      calories,
+      protein,
+      carbs,
+      fat,
+      description,
+    });
+    const cacheKey = `${type}-${imageHash}`;
+
+    const imageUrl = await generateImage({ 
+      name, 
+      description, 
+      type, 
+      style,
+      ingredients,
+      calories,
+      protein,
+      carbs,
+      fat,
+    });
     
     if (imageUrl) {
-      res.json({ imageUrl, cached: imageCache.has(`${type}-${name.toLowerCase()}`) });
+      res.json({ imageUrl, cached: imageCache.has(cacheKey) });
     } else {
       res.status(500).json({ error: 'Failed to generate image' });
     }
