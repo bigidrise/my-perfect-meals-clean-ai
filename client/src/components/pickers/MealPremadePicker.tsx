@@ -169,13 +169,13 @@ export default function MealPremadePicker({
       
       const ingredientList = ingredientParts.join(', ');
       
-      const dallePrompt = `Generate a clean, realistic overhead food photo of:\n${ingredientList}\n\nMake the food look fresh, well-lit, and placed on a single plate or bowl.`;
+      const prompt = `Generate a clean, realistic overhead food photo of:\n${ingredientList}\n\nMake the food look fresh, well-lit, and placed on a single plate or bowl.`;
       
       // Call DALL·E API to generate image
       const imageResponse = await fetch('/api/meal-images/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: dallePrompt })
+        body: JSON.stringify({ prompt })
       });
       
       if (!imageResponse.ok) {
