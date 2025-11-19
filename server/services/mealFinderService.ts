@@ -20,6 +20,7 @@ interface RestaurantResult {
   rating?: number;
   photoUrl?: string;
   meal: {
+    id: string;  // PHASE 1 FIX: Add unique meal ID
     name: string;
     description: string;
     calories: number;
@@ -155,7 +156,11 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
           // Take first 2 meal suggestions
           const mealsToAdd = aiMeals.slice(0, 2);
           
-          for (const meal of mealsToAdd) {
+          for (let index = 0; index < mealsToAdd.length; index++) {
+            const meal = mealsToAdd[index];
+            // PHASE 1 FIX: Generate unique meal ID using place_id and index
+            const mealId = `meal-finder-${restaurant.place_id}-${index}-${Date.now()}`;
+            
             results.push({
               restaurantName,
               cuisine,
@@ -163,6 +168,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
               rating,
               photoUrl,
               meal: {
+                id: mealId,
                 name: meal.name,
                 description: meal.description,
                 calories: meal.calories,
@@ -177,7 +183,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
               medicalBadges: meal.medicalBadges
             });
             
-            console.log(`✅ Generated meal: ${meal.name}`);
+            console.log(`✅ Generated meal: ${meal.name} (ID: ${mealId})`);
           }
         }
       } catch (error) {
