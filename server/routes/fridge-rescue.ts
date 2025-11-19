@@ -4,6 +4,11 @@ import { z } from "zod";
 import { db } from "../db";
 import { mealInstances, userRecipes } from "@shared/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { 
+  mapFridgeRescueToUnified,
+  validateUnifiedMeal,
+  type UnifiedMeal 
+} from "../services/unification";
 
 const router = express.Router();
 
@@ -62,10 +67,24 @@ router.post('/generate', requireAuth, async (req, res) => {
       cookTime: 25
     };
 
+    // PHASE 3A: Map to UnifiedMeal format
+    let unifiedMeal: UnifiedMeal | null = null;
+    try {
+      unifiedMeal = mapFridgeRescueToUnified(generatedRecipe);
+      validateUnifiedMeal(unifiedMeal);
+      console.log("✅ [UnifiedMeal][FridgeRescue] Validation successful");
+    } catch (err) {
+      console.warn(
+        "[UnifiedMeal][FridgeRescue] Validation failed:",
+        (err as Error).message
+      );
+    }
+
     res.json({
       success: true,
       recipe: generatedRecipe,
-      source: 'fridge-rescue'
+      source: 'fridge-rescue',
+      unifiedMeal
     });
   } catch (error) {
     console.error("Error generating fridge rescue recipe:", error);

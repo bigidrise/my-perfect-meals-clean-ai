@@ -4,6 +4,11 @@
 
 import express from 'express';
 import { findMealsNearby } from '../services/mealFinderService';
+import { 
+  mapMealFinderToUnified,
+  validateUnifiedMeal,
+  type UnifiedMeal 
+} from '../services/unification';
 
 const router = express.Router();
 
@@ -48,12 +53,29 @@ router.post('/meal-finder', async (req, res) => {
       user
     });
     
+    // PHASE 3D: Map results to UnifiedMeal format
+    const unifiedMeals: UnifiedMeal[] = [];
+    for (const result of results) {
+      try {
+        const unified = mapMealFinderToUnified(result);
+        validateUnifiedMeal(unified);
+        unifiedMeals.push(unified);
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][MealFinder] Validation failed:",
+          (err as Error).message
+        );
+      }
+    }
+    console.log(`✅ [UnifiedMeal][MealFinder] Mapped ${unifiedMeals.length}/${results.length} meals`);
+    
     // Always return 200, even if no results - let frontend handle UX
     return res.json({
       success: true,
       query: mealQuery,
       zipCode,
       results,
+      unifiedMeals,
       message: results.length === 0 
         ? `No restaurants found near ZIP ${zipCode}. Try a nearby ZIP code or different search.`
         : undefined
