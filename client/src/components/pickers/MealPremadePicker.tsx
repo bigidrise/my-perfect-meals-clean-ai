@@ -194,6 +194,12 @@ export default function MealPremadePicker({
         throw new Error('No meal found in response');
       }
       
+      // PHASE 1 FIX: Extract flat macros (backend returns flat structure from Fridge Rescue)
+      const calories = generatedMeal.calories ?? generatedMeal.nutrition?.calories ?? 350;
+      const protein = generatedMeal.protein ?? generatedMeal.nutrition?.protein ?? 30;
+      const carbs = generatedMeal.carbs ?? generatedMeal.nutrition?.carbs ?? 20;
+      const fat = generatedMeal.fat ?? generatedMeal.nutrition?.fat ?? 15;
+      
       // Transform to match board format
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
@@ -204,11 +210,17 @@ export default function MealPremadePicker({
         ingredients: generatedMeal.ingredients || meal.ingredients,
         instructions: generatedMeal.instructions || [],
         imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
-        nutrition: generatedMeal.nutrition || {
-          calories: generatedMeal.calories || 350,
-          protein: generatedMeal.protein || 30,
-          carbs: generatedMeal.carbs || 20,
-          fat: generatedMeal.fat || 15
+        // Use flat macros for UnifiedMeal compatibility
+        calories,
+        protein,
+        carbs,
+        fat,
+        // Keep nested nutrition for backward compatibility (optional)
+        nutrition: {
+          calories,
+          protein,
+          carbs,
+          fat
         },
         medicalBadges: generatedMeal.medicalBadges || [],
         source: 'premade',

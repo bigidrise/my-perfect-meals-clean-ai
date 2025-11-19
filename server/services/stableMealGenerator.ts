@@ -126,8 +126,15 @@ type FinalMeal = {
   mealType: MealType;
   ingredients: { name: string; amount?: number; unit?: string; notes?: string }[];
   instructions: string[];
+  // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  // Keep nested for backward compatibility
   nutrition: { calories: number; protein: number; carbs: number; fat: number };
-  medicalBadges: string[];
+  // PHASE 1 FIX: Medical badges are now rich objects, not strings
+  medicalBadges: UnifiedMedicalBadge[];
   flags: string[];
   servingSize?: string;
   imageUrl?: string | null;
@@ -686,6 +693,12 @@ export async function generateWeeklyMeals(req: WeeklyMealReq): Promise<FinalMeal
           "Cook according to standard methods",
           "Season and serve"
         ],
+        // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
+        calories: nutrition.calories,
+        protein: nutrition.protein,
+        carbs: nutrition.carbs,
+        fat: nutrition.fat,
+        // Keep nested for backward compatibility
         nutrition,
         medicalBadges,
         flags: skeleton.tags,

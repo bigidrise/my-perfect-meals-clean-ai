@@ -7,6 +7,17 @@ import { zipToCoordinates } from './zipToCoordsService';
 import { generateRestaurantMealsAI } from './restaurantMealGeneratorAI';
 import type { User } from '@shared/schema';
 
+// PHASE 1 FIX: Deterministic ID generation using simple hash
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash).toString(36);
+}
+
 interface MealFinderRequest {
   mealQuery: string;
   zipCode: string;
@@ -158,8 +169,11 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
           
           for (let index = 0; index < mealsToAdd.length; index++) {
             const meal = mealsToAdd[index];
-            // PHASE 1 FIX: Generate unique meal ID using place_id and index
-            const mealId = `meal-finder-${restaurant.place_id}-${index}-${Date.now()}`;
+            // PHASE 1 FIX: Generate deterministic meal ID using hash of place_id + meal name
+            // Handles missing place_id gracefully
+            const placeId = restaurant.place_id || restaurantName.toLowerCase().replace(/\s+/g, '-');
+            const idSource = `${placeId}-${meal.name}-${index}`;
+            const mealId = `meal-finder-${simpleHash(idSource)}`;
             
             results.push({
               restaurantName,
