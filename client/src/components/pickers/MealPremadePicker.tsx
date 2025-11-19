@@ -8,10 +8,20 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import PreparationModal from '@/components/PreparationModal';
 import { 
-  AI_PREMADE_BREAKFAST_MEALS, 
   getBreakfastMealsByCategory,
-  type BreakfastCategory 
+  type BreakfastCategory,
+  categoryDisplayNames as breakfastDisplayNames
 } from '@/data/aiPremadeBreakfast';
+import {
+  getLunchMealsByCategory,
+  type LunchCategory,
+  lunchCategoryDisplayNames
+} from '@/data/aiPremadeLunch';
+import {
+  getDinnerMealsByCategory,
+  type DinnerCategory,
+  dinnerCategoryDisplayNames
+} from '@/data/aiPremadeDinner';
 import { normalizeUnifiedMealOutput } from '@/lib/mealEngineApi';
 
 interface MealPremadePickerProps {
@@ -21,62 +31,40 @@ interface MealPremadePickerProps {
   mealType?: 'breakfast' | 'lunch' | 'dinner';
 }
 
-// Map category names to display names
-const categoryDisplayNames: Record<BreakfastCategory, string> = {
-  'all-protein': 'All Protein',
-  'protein-carb': 'Protein + Carb',
-  'egg-based': 'Egg-Based Meals'
-};
-
-// Build breakfast premades from AI data with actual ingredients
-const breakfastPremades = {
-  'All Protein': getBreakfastMealsByCategory('all-protein').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'Protein + Carb': getBreakfastMealsByCategory('protein-carb').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'Egg-Based Meals': getBreakfastMealsByCategory('egg-based').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+// Helper to transform meals to picker format
+const transformMeals = (meals: any[]) => meals.map(meal => ({
+  id: meal.id,
+  name: meal.name,
+  defaultCookingMethod: meal.defaultCookingMethod,
+  actualIngredients: meal.ingredients,
+  ingredients: meal.ingredients.map((ing: any) => ({
+    item: ing.item,
+    amount: `${ing.quantity} ${ing.unit}`,
+    preparation: meal.defaultCookingMethod || 'as preferred'
   }))
+}));
+
+// Build breakfast premades
+const breakfastPremades = {
+  'All Protein': transformMeals(getBreakfastMealsByCategory('all-protein')),
+  'Protein + Carb': transformMeals(getBreakfastMealsByCategory('protein-carb')),
+  'Egg-Based Meals': transformMeals(getBreakfastMealsByCategory('egg-based'))
 };
 
-// Lunch premade meals organized by category
+// Build lunch premades
 const lunchPremades = {
-  'Category 1': [],
-  'Category 2': [],
-  'Category 3': []
+  'Lean Protein Plates': transformMeals(getLunchMealsByCategory('lean-plates')),
+  'Protein + Carb Bowls': transformMeals(getLunchMealsByCategory('protein-carb-bowls')),
+  'Wraps, Sandwiches & Melts': transformMeals(getLunchMealsByCategory('wraps-sandwiches')),
+  'High-Protein Salads': transformMeals(getLunchMealsByCategory('high-protein-salads'))
 };
 
-// Dinner premade meals organized by category
+// Build dinner premades
 const dinnerPremades = {
-  'Category 1': [],
-  'Category 2': [],
-  'Category 3': []
+  'Lean Protein Plates': transformMeals(getDinnerMealsByCategory('lean-plates')),
+  'Protein + Carb Bowls': transformMeals(getDinnerMealsByCategory('protein-carb-bowls')),
+  'High-Protein Pastas': transformMeals(getDinnerMealsByCategory('high-protein-pastas')),
+  'Veggie + Lean Protein Bowls': transformMeals(getDinnerMealsByCategory('veggie-lean-bowls'))
 };
 
 export default function MealPremadePicker({
