@@ -1,0 +1,335 @@
+Good. A1 is exactly the right next move.
+
+We’re going to **make the Meal Card components UnifiedMeal-ready** without breaking anything and without rewiring pages yet. Then in A2 we’ll actually start feeding them `unifiedMeal` data.
+
+Since you’re working through the Replit **agent** in STRICT MODE, here’s the prompt you can paste straight into the agent:
+
+---
+
+### 🔧 PHASE A1 – MEAL CARD UNIFIEDMEAL UPGRADE (STRICT MODE)
+
+Goal:
+Make all meal cards **capable** of rendering from `UnifiedMeal` while still fully supporting existing legacy meal shapes.
+This is **frontend-only**, **non-breaking**, and **does not touch any routes or backend code**.
+
+We already have:
+
+* Backend: all 6 systems returning hybrid payloads (legacy + `unifiedMeal(s)`).
+* Backend: `UnifiedMeal` + ounce engine in place.
+* Frontend: ounce formatter and shopping list normalization from Phase 4B.2.
+
+Now we want to:
+
+* Add **frontend `UnifiedMeal` types**.
+* Add **adapters/helpers** so cards can render from UnifiedMeal.
+* Update **MealCard components** to accept `unifiedMeal` (optional) and prefer it when present.
+
+STRICT MODE RULES (still active):
+
+1. Show all search results before touching code.
+2. Show file paths + exact snippets before edits.
+3. Only then propose a concrete plan.
+4. After I approve the plan, implement.
+5. Show diffs, restart workflow, show logs.
+6. Call architect, paste raw verdict.
+
+---
+
+## STEP 1 – DISCOVERY (NO EDITS)
+
+1. Find all **meal card–style components** that render meals with macros/ingredients/badges:
+
+   Use ripgrep like:
+
+   ```bash
+   rg -n "MealCard" client/src
+   rg -n "meal card" client/src
+   rg -n "calories" client/src/components client/src/pages
+   rg -n "medicalBadges" client/src
+   ```
+
+   Specifically check likely files:
+
+   * `client/src/components/MealCard.tsx` (or similar)
+   * Any `*MealCard.tsx` in `client/src/components` or `client/src/features`
+   * Card components used in:
+
+     * Fridge Rescue page
+     * Craving Creator page
+     * Restaurant Guide page
+     * Meal Finder page
+     * Weekly Meal Board (if it uses its own card type)
+     * AI Premades board cards if separate
+
+2. For **each card** you find, show:
+
+   * File path
+   * Component name and props interface
+   * What shape it expects now (example of `meal` fields it uses):
+
+     * `meal.name`
+     * `meal.description`
+     * `meal.calories`
+     * `meal.protein/carbs/fat`
+     * `meal.ingredients`
+     * `meal.medicalBadges`
+     * anything else (cookingTime, difficulty, restaurant fields, etc.)
+
+3. DO NOT edit anything yet. Just print a **clean discovery report**.
+
+---
+
+## STEP 2 – PLAN (NO EDITS)
+
+Based on what you find:
+
+1. Propose a **single canonical frontend UnifiedMeal type file**:
+
+   * `client/src/types/unifiedMeal.ts`
+
+   It should mirror the server `UnifiedMeal` surface, at least:
+
+   ```ts
+   export interface UnifiedIngredient {
+     name: string;
+     amount?: number;
+     unit?: string;
+     notes?: string;
+     quantityOz?: number;
+     displayQuantity?: string;
+     originalUnit?: string;
+   }
+
+   export interface UnifiedMedicalBadge {
+     id: string;
+     label: string;
+     level: 'green' | 'yellow' | 'red';
+     reason: string;
+     category?: 'metabolic' | 'digestive' | 'cardiovascular' | 'allergies' | 'fitness' | 'dietary';
+   }
+
+   export interface UnifiedRestaurantContext {
+     restaurantName: string;
+     cuisine: string;
+     address?: string;
+     rating?: number;
+     photoUrl?: string;
+     orderingTips: string;
+   }
+
+   export type MealSource =
+     | 'fridge-rescue'
+     | 'craving-creator'
+     | 'restaurant-guide'
+     | 'meal-finder'
+     | 'ai-meal-creator'
+     | 'ai-premades'
+     | 'manual';
+
+   export interface UnifiedMeal {
+     id: string;
+     name: string;
+     description: string;
+     mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+     source: MealSource;
+     ingredients: UnifiedIngredient[];
+     instructions: string | string[] | null;
+     nutrition: {
+       calories: number;
+       protein: number;
+       carbs: number;
+       fat: number;
+     };
+     cookingTime?: string;
+     difficulty?: 'Easy' | 'Medium' | 'Hard';
+     servingSize?: string;
+     servings?: number;
+     medicalBadges: UnifiedMedicalBadge[];
+     imageUrl?: string;
+     restaurantContext?: UnifiedRestaurantContext;
+     // sourceMetadata can be loosened to any for now:
+     sourceMetadata?: Record<string, unknown>;
+     createdAt?: string | Date;
+   }
+   ```
+
+   Adjust to match what the backend actually exports, but keep it compatible.
+
+2. Propose a **view adapter** util:
+
+   * `client/src/utils/mealViewAdapter.ts`
+
+   With something like:
+
+   ```ts
+   import type { UnifiedMeal } from '@/types/unifiedMeal';
+
+   export interface ViewMeal {
+     id: string;
+     name: string;
+     description: string;
+     calories: number | null;
+     protein: number | null;
+     carbs: number | null;
+     fat: number | null;
+     ingredients: {
+       name: string;
+       displayQuantity?: string;
+       amount?: number;
+       unit?: string;
+       notes?: string;
+     }[];
+     medicalBadges: {
+       label: string;
+       level?: 'green' | 'yellow' | 'red';
+       reason?: string;
+       category?: string;
+     }[];
+     imageUrl?: string;
+     restaurantContext?: {
+       restaurantName: string;
+       cuisine: string;
+       address?: string;
+       rating?: number;
+       orderingTips?: string;
+     };
+     source?: string;
+   }
+
+   // From legacy meal shape only
+   export function mapLegacyMealToView(meal: any): ViewMeal { ... }
+
+   // Prefer UnifiedMeal if present, fall back to legacy
+   export function mapToViewMeal(opts: { legacyMeal?: any; unifiedMeal?: UnifiedMeal | null }): ViewMeal { ... }
+   ```
+
+   Rules for the adapter:
+
+   * If `unifiedMeal` is provided:
+
+     * Macros come from `unifiedMeal.nutrition`.
+     * Ingredients come from `unifiedMeal.ingredients`, preferring `displayQuantity` when present.
+     * Medical badges use rich objects, but card should still work with legacy string[].
+   * If `unifiedMeal` is NOT provided:
+
+     * Use legacy `meal.calories`, `meal.protein`, etc.
+     * Use any legacy ingredient array.
+     * If badges are strings, map them to `{ label: string }`.
+
+3. Propose a **prop change** for each card component:
+
+   * Add an optional `unifiedMeal?: UnifiedMeal` OR accept `viewMeal: ViewMeal`.
+   * For A1 we will **NOT** touch pages – just the components – so they still work with existing props.
+   * Inside each card, use `mapToViewMeal({ legacyMeal: meal, unifiedMeal })` and render from `ViewMeal`.
+
+4. Wait for my explicit APPROVAL before editing any files.
+
+---
+
+## STEP 3 – IMPLEMENTATION (AFTER APPROVAL)
+
+Once I approve your plan:
+
+### A1.1 – Add frontend UnifiedMeal types
+
+* Create: `client/src/types/unifiedMeal.ts`
+* Export `UnifiedMeal`, `UnifiedIngredient`, `UnifiedMedicalBadge`, etc.
+* No imports from backend – this is a mirror type for the frontend only.
+
+### A1.2 – Add mealViewAdapter util
+
+* Create: `client/src/utils/mealViewAdapter.ts`
+* Implement:
+
+  * `mapLegacyMealToView(meal: any): ViewMeal`
+  * `mapToViewMeal({ legacyMeal, unifiedMeal }: { legacyMeal?: any; unifiedMeal?: UnifiedMeal | null }): ViewMeal`
+
+Implementation rules:
+
+* If unifiedMeal present:
+
+  * Use `unifiedMeal.nutrition` for macros.
+  * Ingredients:
+
+    * `displayQuantity = ingredient.displayQuantity ?? (amount + unit fallback if needed)`.
+  * Badges:
+
+    * Map UnifiedMedicalBadge to `{ label, level, reason, category }`.
+* If only legacy meal:
+
+  * Use legacy macros.
+  * Use legacy ingredients.
+  * If badges are strings → convert to `{ label }`.
+
+NO side effects, pure functions only.
+
+### A1.3 – Update card components to use ViewMeal
+
+For **each** card component found in STEP 1:
+
+1. Import `UnifiedMeal` (optional) and `mapToViewMeal`, `ViewMeal`.
+
+2. Update props:
+
+   Example:
+
+   ```ts
+   interface MealCardProps {
+     meal: any;
+     unifiedMeal?: UnifiedMeal | null; // NEW, optional
+     // ...rest stays the same
+   }
+   ```
+
+3. At top of component, compute:
+
+   ```ts
+   const viewMeal = mapToViewMeal({ legacyMeal: meal, unifiedMeal });
+   ```
+
+4. Replace all `meal.*` usages with `viewMeal.*`, e.g.:
+
+   * `meal.name` → `viewMeal.name`
+   * `meal.description` → `viewMeal.description`
+   * `meal.calories` → `viewMeal.calories`
+   * `meal.ingredients` loop → `viewMeal.ingredients`
+   * Badge rendering:
+
+     * Use `viewMeal.medicalBadges`
+   * Restaurant-specific fields:
+
+     * Use `viewMeal.restaurantContext?.restaurantName` etc.
+
+5. Do **not** change the external API of the card components beyond **adding** the optional `unifiedMeal` prop. All current callers will still compile and run.
+
+6. Do NOT edit any pages to pass `unifiedMeal` yet. That is Phase A2.
+
+---
+
+## STEP 4 – STRICT VERIFICATION
+
+1. Show `git status --short` and diffs for:
+
+   * `client/src/types/unifiedMeal.ts`
+   * `client/src/utils/mealViewAdapter.ts`
+   * Every `*MealCard*.tsx` file you touched.
+
+2. Restart the workflow.
+
+   * Show logs: confirm **0 TypeScript errors**, no runtime errors.
+
+3. Call the architect.
+
+   Architect must confirm:
+
+   * Frontend `UnifiedMeal` type matches backend surface closely enough.
+   * All card components still accept legacy `meal` props unchanged.
+   * New `unifiedMeal` prop is optional and unused for now (no behavior change).
+   * Rendering uses `ViewMeal` consistently.
+   * No routes or backend files were modified.
+
+ONLY after that, declare Phase A1 complete.
+
+---
+
+Start with **STEP 1 – DISCOVERY** and show me your findings before editing anything.
