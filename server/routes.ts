@@ -501,14 +501,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("[FRIDGE] valid request, items:", fridgeItems.length, "items:", fridgeItems);
 
       // Generate multiple meals with proper macros and amounts
-      const meals = await generateFridgeRescueMeals({ 
+      // PHASE 3A: Now returns both legacy meals and unifiedMeals
+      const { meals, unifiedMeals } = await generateFridgeRescueMeals({ 
         fridgeItems, 
         user: { healthConditions: [] },
         macroTargets 
       });
 
-      console.log("[FRIDGE] ok returning", meals.length, "meals");
-      res.json({ meals }); // Always return { meals: [...] }
+      console.log("[FRIDGE] ok returning", meals.length, "meals +", unifiedMeals.length, "unified meals");
+      res.json({ meals, unifiedMeals }); // PHASE 3A: Return both formats
     } catch (error: any) {
       console.error("[FRIDGE] handler error", error);
       res.status(500).json({ error: error.message || "Failed to generate fridge rescue meals" });

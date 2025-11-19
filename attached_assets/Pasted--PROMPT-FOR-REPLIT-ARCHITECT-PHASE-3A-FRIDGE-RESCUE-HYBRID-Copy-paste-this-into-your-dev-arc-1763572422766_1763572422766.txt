@@ -1,0 +1,197 @@
+🛠️ PROMPT FOR REPLIT ARCHITECT — PHASE 3A (FRIDGE RESCUE HYBRID)
+
+Copy–paste this into your dev/architect chat:
+
+🚀 PHASE 3A — Enable UnifiedMeal HYBRID response for Fridge Rescue
+
+We are now starting Phase 3 of the UnifiedMeal migration.
+
+Key constraints:
+
+Do NOT break existing consumers.
+
+Do NOT change or remove legacy fields.
+
+Do NOT touch the frontend.
+
+This phase is Fridge Rescue only (including AI Meal Creator + AI Premades, since they share the backend), nothing else.
+
+Goal:
+For all Fridge Rescue routes, add UnifiedMeal output alongside the existing legacy shape.
+
+1️⃣ Import unification layer for Fridge Rescue
+
+In the relevant server files (likely server/services/fridgeRescueGenerator.ts and the associated routes in server/routes.ts):
+
+Import the Fridge Rescue → UnifiedMeal mapper and validator from the unification layer you built in Phase 2.
+
+Example (adjust names/paths to your actual exports):
+
+import {
+  UnifiedMeal,
+  validateUnifiedMeal,
+} from "./services/unification";
+import { mapFridgeRescueMeal } from "./services/unification/mappers/fridgeRescueMapper";
+
+
+If your actual export paths/names differ, adapt accordingly.
+The important part: use the Fridge Rescue mapper + validator from the unification/ folder.
+
+2️⃣ Update Fridge Rescue service to PRODUCE UnifiedMeals (internally only)
+
+In fridgeRescueGenerator.ts (or wherever generateFridgeRescueMeals lives):
+
+After you build the array of FridgeRescueMeal objects (meals), map them into UnifiedMeal[].
+
+Example:
+
+async function generateFridgeRescueMeals(/* existing args */) {
+  // ... existing logic that builds `meals: FridgeRescueMeal[]`
+
+  const unifiedMeals: UnifiedMeal[] = [];
+
+  for (const meal of meals) {
+    try {
+      const unified = mapFridgeRescueMeal(meal);
+      validateUnifiedMeal(unified);   // throws on invalid
+      unifiedMeals.push(unified);
+    } catch (err) {
+      console.error("[UnifiedMeal][FridgeRescue] Validation failed:", err);
+      // Do NOT throw here – log and skip. Legacy response must still work.
+    }
+  }
+
+  // Return both the existing `meals` array and the new `unifiedMeals` array
+  return { meals, unifiedMeals };
+}
+
+
+Important:
+
+Do NOT change the shape of individual FridgeRescueMeal objects.
+
+Keep all existing fields exactly as they were.
+
+The return value from the service should now be { meals, unifiedMeals }.
+
+3️⃣ Update Fridge Rescue routes to include unifiedMeals / unifiedMeal
+
+Find all Fridge Rescue routes, for example:
+
+POST /api/meals/fridge-rescue (used by Fridge Rescue page + AI Meal Creator + AI Premades)
+
+Any deterministic Fridge Rescue endpoint (/api/fridge-rescue/generate if it exists and uses the same service)
+
+Update the route handlers as follows:
+
+A. Routes that return an ARRAY of meals
+
+If the route currently does:
+
+const { meals } = await generateFridgeRescueMeals(/* ... */);
+
+return res.json({ meals });
+
+
+Change it to:
+
+const { meals, unifiedMeals } = await generateFridgeRescueMeals(/* ... */);
+
+return res.json({
+  meals,         // legacy – unchanged
+  unifiedMeals,  // new – UnifiedMeal[]
+});
+
+B. Routes that return a SINGLE meal
+
+If a route currently does something like:
+
+const { meals } = await generateFridgeRescueMeals(/* ... */);
+const meal = meals[0];
+
+return res.json({ meal });
+
+
+Change it to:
+
+const { meals, unifiedMeals } = await generateFridgeRescueMeals(/* ... */);
+const meal = meals[0];
+const unifiedMeal = unifiedMeals[0];
+
+return res.json({
+  meal,         // legacy
+  unifiedMeal,  // new UnifiedMeal
+});
+
+
+Rules:
+
+If unifiedMeals is empty due to validation failure, still return meal unchanged.
+
+In that case, you can omit unifiedMeal or set it to null. Do not break legacy.
+
+4️⃣ Do NOT touch other generators yet
+
+Do NOT enable UnifiedMeal hybrid outputs for:
+
+Craving Creator
+
+Restaurant Guide
+
+Meal Finder
+
+Any other systems
+
+Phase 3A is Fridge Rescue only.
+
+We will wire the others in later phases once we’ve validated the Fridge Rescue path.
+
+5️⃣ Logging & Safety
+
+Add minimal logging when UnifiedMeal validation fails, but don’t spam:
+
+Prefix logs with [UnifiedMeal][FridgeRescue]
+
+Do not throw; log and continue.
+
+Example:
+
+console.warn(
+  "[UnifiedMeal][FridgeRescue] Skipping invalid unified meal:",
+  { mealId: meal.id, error: (err as Error).message }
+);
+
+✅ Acceptance Criteria for Phase 3A
+
+All Fridge Rescue routes still return their original shape (meal / meals) untouched.
+
+All Fridge Rescue routes now ALSO return:
+
+unifiedMeals: UnifiedMeal[] when returning arrays.
+
+unifiedMeal: UnifiedMeal | undefined when returning a single meal.
+
+No frontend code changed.
+
+No type errors.
+
+Server builds and runs cleanly.
+
+Do not move on to other generators until this is verified.
+
+End of Prompt
+👉 Your Next Moves, Coach
+
+Paste that prompt into the architect/agent.
+
+Let it implement Phase 3A.
+
+In dev, inspect the Fridge Rescue API response (and AI Meal Creator / Premades since they share it):
+
+Confirm meals still look exactly the same.
+
+Confirm unifiedMeals (and unifiedMeal where applicable) are present and valid.
+
+Once you verify it, come back and tell me:
+
+“Fridge Rescue hybrid wired. What’s next?”

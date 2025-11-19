@@ -1,5 +1,10 @@
 import OpenAI from 'openai';
 import { generateImage } from './imageService';
+import { 
+  mapFridgeRescueToUnified,
+  validateUnifiedMeal,
+  type UnifiedMeal 
+} from './unification';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -171,7 +176,10 @@ function getMedicalBadges(meal: any, userConditions: string[] = []): Array<{
   return badges;
 }
 
-export async function generateFridgeRescueMeals(request: FridgeRescueRequest): Promise<FridgeRescueMeal[]> {
+export async function generateFridgeRescueMeals(request: FridgeRescueRequest): Promise<{
+  meals: FridgeRescueMeal[];
+  unifiedMeals: UnifiedMeal[];
+}> {
   const { fridgeItems, user, macroTargets } = request;
   const userConditions = user?.healthConditions || [];
   
@@ -350,7 +358,24 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
     }
 
     console.log("✅ Fridge rescue meals generated successfully with images");
-    return processedMeals;
+    
+    // PHASE 3A: Map to UnifiedMeal format
+    const unifiedMeals: UnifiedMeal[] = [];
+    for (const meal of processedMeals) {
+      try {
+        const unified = mapFridgeRescueToUnified(meal);
+        validateUnifiedMeal(unified);
+        unifiedMeals.push(unified);
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][FridgeRescue] Validation failed for meal:",
+          { mealId: meal.id, error: (err as Error).message }
+        );
+        // Continue - don't break legacy response
+      }
+    }
+    
+    return { meals: processedMeals, unifiedMeals };
 
   } catch (error: any) {
     console.error('OpenAI API error for fridge rescue meals:', error);
@@ -419,6 +444,22 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
       }
     ];
 
-    return fallbackMeals;
+    // PHASE 3A: Map fallback meals to UnifiedMeal format
+    const unifiedMeals: UnifiedMeal[] = [];
+    for (const meal of fallbackMeals) {
+      try {
+        const unified = mapFridgeRescueToUnified(meal);
+        validateUnifiedMeal(unified);
+        unifiedMeals.push(unified);
+      } catch (err) {
+        console.warn(
+          "[UnifiedMeal][FridgeRescue] Validation failed for fallback meal:",
+          { mealId: meal.id, error: (err as Error).message }
+        );
+        // Continue - don't break legacy response
+      }
+    }
+    
+    return { meals: fallbackMeals, unifiedMeals };
   }
 }
