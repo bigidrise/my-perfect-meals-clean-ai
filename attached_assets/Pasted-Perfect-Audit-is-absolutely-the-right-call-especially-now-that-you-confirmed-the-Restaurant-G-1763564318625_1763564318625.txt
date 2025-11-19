@@ -1,0 +1,161 @@
+Perfect. **Audit is absolutely the right call** — especially now that you confirmed the Restaurant Guide is throwing a 500.
+That means something deeper is off in the backend logic, the prompt, or the request body.
+Before we unify anything, we need to **see the truth**.
+
+And we’re going to do this **surgically** — system by system.
+
+---
+
+# 🚨 **Here is exactly how we run the FULL ARCHITECT-LEVEL AUDIT**
+
+This audit will expose:
+
+* Every frontend file involved
+* Every API call it makes
+* The exact request body
+* The exact backend route it hits
+* The backend service it uses
+* The prompt builder used
+* The image generation call used
+* Any mismatches in shape or language
+* Nutrition logic
+* Badge logic
+* Return shapes
+* All error handling
+* Hidden/legacy endpoints
+* Silent failures
+* Misaligned naming conventions
+
+This is a **complete forensic teardown** of all 5 AI generators.
+
+To run this audit, you’re going to paste **ONE MASTER PROMPT** into Replit’s Architect.
+
+---
+
+# ✅ **THE MASTER AUDIT PROMPT (copy/paste into Replit)**
+
+**ARCHITECT: Perform a full forensic audit of all AI-powered meal generation systems in the project.
+For each system listed below, identify:**
+
+1. **Frontend involvement**
+
+   * All files involved (pages + components)
+   * Exact API calls (URLs + POST bodies)
+   * Any client-side preprocessing
+   * Error handling
+
+2. **Backend involvement**
+
+   * All routes hit
+   * All services called
+   * Any middleware or intermediate layers
+   * Zod or manual validation formats
+   * Type definitions returned
+
+3. **AI integration**
+
+   * Which OpenAI model is used
+   * Prompt structure used
+   * How ingredients are parsed
+   * How nutrition is generated
+   * How medical badges are generated
+   * Image generation (templateRef, style, prompts, or raw text)
+
+4. **Return shape analysis**
+
+   * Full object schema
+   * Missing or inconsistent fields
+   * Comparison against the ideal “UnifiedMeal” format
+   * Any fields not consumed by frontend
+
+5. **Error sources**
+
+   * 4XX request shape mismatches
+   * 500 backend logic failures
+   * Missing fields
+   * Undefined variables
+   * Bad prompt templates
+   * Missing routes
+   * Incorrect imports
+
+**Audit these 5 systems completely:**
+
+1. **Restaurant Guide**
+
+   * /api/restaurants/guide
+   * restaurantMealGeneratorAI.ts
+   * restaurant-guide.tsx
+
+2. **Craving Creator**
+
+   * /api/meals/craving-creator
+   * stableMealGenerator.ts (craving handler)
+   * craving-creator.tsx
+
+3. **Fridge Rescue**
+
+   * /api/meals/fridge-rescue
+   * fridgeRescueGenerator.ts
+   * fridge-rescue.tsx
+
+4. **Find Meals Near Me / Restaurant Finder**
+
+   * /api/restaurants/nearby
+   * mealFinderService.ts
+   * FindMealsNearMe.tsx
+
+5. **AI Meal Creator (your “Create AI Meal” modal)**
+
+   * AIMealCreatorModal.tsx
+   * fridgeRescueGenerator.ts
+   * imageService.ts
+
+**For each system, produce:**
+
+* A clear, human-readable report
+* A list of all inconsistencies
+* All deviations from other systems
+* Any breaking issues
+* Root causes of errors
+* Recommendations to fix
+* The exact lines of code responsible
+
+**Your final output must include:**
+
+* A master comparison table across all 5 systems
+* A list of required unification changes
+* A list of silent bugs
+* A list of required fixes before unification
+* A readiness score for each system
+* Which ones should migrate first/last
+* Any security or data validation concerns
+
+**Do not make ANY changes yet — this is audit-only.**
+Give a complete report, then wait for further instructions.
+
+---
+
+# 🎯 **After this audit finishes**
+
+We will know:
+
+* Why Restaurant Guide is failing
+* Whether Craving Creator silently drifted
+* Whether Meal Creator is the only clean system
+* Whether Premades matches anything
+* Whether imageService is consistent
+* Whether prompt styles match
+* Whether nutrition logic aligns
+* Whether badge logic is duplicated
+* Whether return shapes are breaking the frontend
+
+Then we build the unified system — **with ZERO GUESSING**.
+
+---
+
+# 👍 Coach, you made the right call
+
+This audit is going to expose the truth of your entire AI engine so we can clean it up once and for all.
+
+Paste that prompt into Replit Architect.
+When you get the results, drop them here — and we’ll move to Phase 2.
