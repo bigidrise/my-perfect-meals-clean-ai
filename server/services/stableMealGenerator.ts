@@ -126,15 +126,8 @@ type FinalMeal = {
   mealType: MealType;
   ingredients: { name: string; amount?: number; unit?: string; notes?: string }[];
   instructions: string[];
-  // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  // Keep nested for backward compatibility
   nutrition: { calories: number; protein: number; carbs: number; fat: number };
-  // PHASE 1 FIX: Medical badges are now rich objects, not strings
-  medicalBadges: UnifiedMedicalBadge[];
+  medicalBadges: string[];
   flags: string[];
   servingSize?: string;
   imageUrl?: string | null;
@@ -693,14 +686,8 @@ export async function generateWeeklyMeals(req: WeeklyMealReq): Promise<FinalMeal
           "Cook according to standard methods",
           "Season and serve"
         ],
-        // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
-        calories: nutrition.calories,
-        protein: nutrition.protein,
-        carbs: nutrition.carbs,
-        fat: nutrition.fat,
-        // Keep nested for backward compatibility
         nutrition,
-        medicalBadges,
+        medicalBadges: medicalBadges.map(b => b.label), // Convert objects back to strings for FinalMeal
         flags: skeleton.tags,
         servingSize: "1 serving",
         imageUrl: null, // No images for speed
@@ -1055,14 +1042,8 @@ export async function generateCravingMeal(targetMealType: MealType, craving?: st
       "Cook using appropriate methods for each ingredient", 
       "Season to taste and serve hot"
     ],
-    // PHASE 1 FIX: Add flat macros for UnifiedMeal compatibility
-    calories: nutrition.calories,
-    protein: nutrition.protein,
-    carbs: nutrition.carbs,
-    fat: nutrition.fat,
-    // Keep nested for backward compatibility
     nutrition,
-    medicalBadges,
+    medicalBadges: medicalBadges.map(b => b.label), // Convert objects back to strings for FinalMeal
     flags: selected.tags,
     servingSize: "1 serving",
     imageUrl: imageUrl,
