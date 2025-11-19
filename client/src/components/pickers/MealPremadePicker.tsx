@@ -22,7 +22,7 @@ import {
   type DinnerCategory,
   dinnerCategoryDisplayNames
 } from '@/data/aiPremadeDinner';
-import { generateSingleMeal, normalizeUnifiedMealOutput } from '@/lib/mealEngineApi';
+import { normalizeUnifiedMealOutput } from '@/lib/mealEngineApi';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -196,16 +196,35 @@ export default function MealPremadePicker({
         ingredientsList = [meal.name];
       }
       
-      // Use the SAME AI-powered endpoint with DALL-E as AI Meal Creator
-      const generatedMeal = await generateSingleMeal({
-        source: "fridge-rescue",
-        userId: localStorage.getItem("userId") || "local-user",
-        fridgeItems: ingredientsList,
-        generateImages: true
+      // Use the OLD working fridge-rescue endpoint
+      const response = await fetch('/api/meals/fridge-rescue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: ingredientsList,
+          servings: 1,
+          dietFlags: []
+        })
       });
       
+      if (!response.ok) {
+        throw new Error('Failed to generate premade meal');
+      }
+      
+      const data = await response.json();
+      
+      // Handle both response formats
+      let rawMeal;
+      if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
+        rawMeal = data.meals[0];
+      } else if (data.meal) {
+        rawMeal = data.meal;
+      } else {
+        throw new Error('No meal found in response');
+      }
+      
       // Normalize UnifiedMeal response to frontend format
-      const normalized = normalizeUnifiedMealOutput(generatedMeal);
+      const normalized = normalizeUnifiedMealOutput(rawMeal);
       
       // Transform to match board format
       const premadeMeal = {

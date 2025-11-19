@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { generateSingleMeal } from '@/lib/mealEngineApi';
 import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 
@@ -314,18 +313,41 @@ export default function MealIngredientPicker({
         };
       }
 
-      // STEP 5 — API call using normalized meal engine
-      const generatedMeal = await generateSingleMeal({
-        source: "fridge-rescue",
-        userId: localStorage.getItem("userId") || "local-user",
-        fridgeItems: allIngredientsWithStyles,
-        ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
-        ...(dietType && { dietType })
+      // STEP 5 — API call using OLD working fridge-rescue endpoint
+      const response = await fetch('/api/meals/fridge-rescue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: allIngredientsWithStyles,
+          servings: 1,
+          dietFlags: dietType ? [dietType] : []
+        })
       });
 
-      // STEP 7 — Add default image
+      if (!response.ok) {
+        throw new Error('Failed to generate meal');
+      }
+
+      const data = await response.json();
+      const generatedMeal = data.meals && data.meals[0] ? data.meals[0] : null;
+
+      if (!generatedMeal) {
+        throw new Error('No meal returned from API');
+      }
+
+      // STEP 7 — Add default image and format for frontend
       const mealWithImage = {
-        ...generatedMeal,
+        id: generatedMeal.id || `meal-${Date.now()}`,
+        name: generatedMeal.name,
+        description: generatedMeal.description || '',
+        ingredients: generatedMeal.ingredients || [],
+        instructions: generatedMeal.instructions || [],
+        nutrition: {
+          calories: generatedMeal.nutrition?.calories || 0,
+          protein_g: generatedMeal.nutrition?.protein_g || 0,
+          carbs_g: generatedMeal.nutrition?.carbs_g || 0,
+          fat_g: generatedMeal.nutrition?.fat_g || 0,
+        },
         imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
         ...(macroTargets && {
           macroTargets: {
