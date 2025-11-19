@@ -91,12 +91,38 @@ export default function MealPremadePicker({
 
   // List of ingredients that need cooking style selection
   const NEEDS_PREP = [
+    // Eggs
     'Eggs', 'Egg Whites', 'Whole Eggs',
-    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon',
-    'Chicken Breast', 'Chicken Thighs',
+    
+    // Red Meats
+    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon', 'Flank Steak',
+    'Beef', 'Ground Beef', 'Beef Strips',
+    'Pork', 'Pork Chop', 'Pork Tenderloin',
+    'Lamb', 'Lamb Chop',
+    
+    // Poultry
+    'Chicken Breast', 'Chicken Thighs', 'Chicken',
+    'Turkey Breast', 'Turkey', 'Ground Turkey',
+    
+    // Fish & Seafood
+    'Salmon', 'Tuna', 'Tilapia', 'Cod', 'Halibut', 'White Fish',
+    'Shrimp',
+    
+    // Rice & Grains
+    'Rice', 'Brown Rice', 'White Rice', 'Jasmine Rice', 'Basmati Rice',
+    'Quinoa', 'Couscous', 'Farro', 'Barley',
+    
+    // Vegetables
     'Broccoli', 'Spinach', 'Asparagus', 'Brussels Sprouts',
-    'Potato', 'Sweet Potato', 'Yam',
-    'Lettuce', 'Spring Mix'
+    'Cauliflower', 'Zucchini', 'Bell Peppers', 'Peppers',
+    'Green Beans', 'Carrots', 'Mixed Vegetables',
+    'Kale', 'Cabbage',
+    
+    // Potatoes
+    'Potato', 'Sweet Potato', 'Yam', 'Potatoes',
+    
+    // Salad Greens
+    'Lettuce', 'Spring Mix', 'Mixed Greens', 'Romaine'
   ];
 
   // Set initial category when modal opens or meal type changes
@@ -110,11 +136,23 @@ export default function MealPremadePicker({
   }, [open, mealType]);
 
   const handleSelectPremade = (meal: any, category: string) => {
-    // Detect if meal name contains ingredients that need prep selection
+    // Check both meal name and actual ingredients for items needing prep
     const mealNameLower = meal.name.toLowerCase();
-    const needsPrepIngredient = NEEDS_PREP.find(ing => 
+    const actualIngredients = meal.actualIngredients || [];
+    
+    // First check meal name
+    let needsPrepIngredient = NEEDS_PREP.find(ing => 
       mealNameLower.includes(ing.toLowerCase())
     );
+    
+    // If not found in name, check actual ingredients
+    if (!needsPrepIngredient && actualIngredients.length > 0) {
+      needsPrepIngredient = NEEDS_PREP.find(ing => 
+        actualIngredients.some((ai: any) => 
+          ai.item.toLowerCase().includes(ing.toLowerCase())
+        )
+      );
+    }
 
     if (needsPrepIngredient) {
       // Show prep modal first
