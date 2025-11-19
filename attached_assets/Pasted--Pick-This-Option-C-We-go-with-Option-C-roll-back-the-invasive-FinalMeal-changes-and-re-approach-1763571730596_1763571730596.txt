@@ -1,0 +1,179 @@
+✅ Pick This: Option C
+
+We go with Option C: roll back the invasive FinalMeal changes and re-approach unification with a separate UnifiedMeal type and a clean mapping layer.
+
+Why?
+
+We explicitly said “don’t change route shapes” and “don’t touch frontend cards.”
+
+Changing medicalBadges from string[] to objects without updating all consumers is a guaranteed mess.
+
+Updating “ALL consumer components” is not Phase 1 – that’s full migration.
+
+So:
+
+Macros fixes, IDs, and nutrition flattening can be additive and safe.
+
+Medical badge objectification + FinalMeal restructuring should only happen inside the future unified layer, not by mutating every existing consumer mid-flight.
+
+We’re going to pull them back into the box.
+
+🔧 What Needs To Happen NOW
+
+You need to tell the architect:
+
+We are choosing Option C.
+
+Roll back the FinalMeal / badge shape changes that broke consumers.
+
+Keep only the safe, additive changes from Phase 1.
+
+Park the “rich medical badges” and “UnifiedMeal” into a new layer, not into the current FinalMeal used everywhere.
+
+I’ll give you a drop-in prompt for Replit.
+
+🛠️ Prompt to Send the Replit Architect
+
+Paste this to the agent:
+
+🔄 UNIFICATION PHASE 1 COURSE CORRECTION — CHOOSE OPTION C
+
+We are choosing Option C from your options:
+
+Option C: Roll back the FinalMeal interface changes and use a different approach (e.g., separate UnifiedMeal type).
+
+Your job now is:
+
+Roll back any invasive FinalMeal changes that altered response shapes or broke consumers.
+
+Keep Phase 1 additive and non-breaking.
+
+Park unification into its own future type – do NOT retrofit everything into FinalMeal yet.
+
+1️⃣ ROLLBACK: FinalMeal / medicalBadges Changes
+
+Goal: Restore the app to a stable state where:
+
+All current frontend consumers still work.
+
+medicalBadges are back to their original types for now.
+
+Route response shapes match what the frontend expects.
+
+Do this:
+
+Revert any changes where:
+
+medicalBadges was changed from string[] to rich objects in existing types that the frontend is already using (e.g., Craving Creator’s current meal type).
+
+FinalMeal or equivalent global/shared type was modified in a way that changed what the frontend receives.
+
+Ensure:
+
+Craving Creator’s current response type is back to what the frontend expects today.
+
+Any shared FinalMeal / store types are restored to pre-Phase-1 shapes.
+
+⚠ Do NOT remove newly added fields that are additive and safe, such as flat macros or IDs. Only revert structural/type changes that broke compatibility.
+
+2️⃣ KEEP: Safe Phase 1 Changes (Additive Only)
+
+We want to preserve the non-breaking improvements from Phase 1:
+
+✅ KEEP THESE
+
+Find Meals Near Me – add IDs
+
+Keep the new meal.id field you added.
+
+Using a hash or composite ID is fine (we’ll refine uniqueness later if needed).
+
+AI Premades – expose flat macros
+
+Keep calories, protein, carbs, fat as top-level fields on premade meals.
+
+It’s fine if nutrition { ... } is mirrored in addition to that.
+
+Just don’t change any existing consumer expectations.
+
+Craving Creator – flat macros (ADD ONLY)
+
+It’s OK to add flat fields: calories, protein, carbs, fat at the top level in addition to the existing nested nutrition object.
+
+Do NOT remove or restructure the existing nutrition field yet.
+
+Do NOT change consumers yet.
+
+❌ PULL BACK FOR NOW
+
+Craving Creator – medicalBadges as rich objects
+
+Restore the original medicalBadges type to whatever the existing frontend expects right now.
+
+If you implemented rich badges: keep that logic behind a new helper or in a new function, but don’t change what routes return yet.
+
+Any shared FinalMeal / canonical type changes
+
+If you refactored a global/shared type that’s used across multiple features, restore it to its original shape.
+
+UnifiedMeal will be implemented as a new type in a separate layer, not by mutating this one yet.
+
+3️⃣ PREP FOR NEXT PHASE: Separate UnifiedMeal Type (NO IMPLEMENTATION YET)
+
+Do NOT implement UnifiedMeal or a new unification folder yet.
+
+But:
+
+Leave the codebase in a state where:
+
+We can later introduce UnifiedMeal as a new type in a unification/ folder.
+
+We can later add mapper functions like mapCravingCreatorToUnifiedMeal, etc.
+
+Right now, just:
+
+Make sure everything builds.
+
+Make sure all current flows still work using their existing schemas.
+
+Confirm:
+
+Craving Creator works.
+
+Meal Finder works.
+
+Restaurant Guide works.
+
+Fridge Rescue / AI Meal Creator / AI Premades work.
+
+Confirm no type errors or broken components from the layout changes.
+
+4️⃣ HASH COLLISION NOTE (Meal Finder)
+
+For now, we can accept a simple hash or composite ID like:
+
+const mealId = `meal-finder-${restaurant.place_id}-${index}`;
+
+
+We’ll revisit a stronger ID scheme later in the UnifiedMeal phase.
+
+Do not over-engineer this now; we just need a stable id per meal.
+
+🔚 End of Prompt
+🧭 What You Do After That
+
+After you send that prompt and the architect finishes:
+
+Test the main flows again:
+
+Craving Creator (no front-end crashes, macros still show).
+
+Meal Finder (now with meal.id).
+
+AI Premades (still working, flat macros present).
+
+Fridge Rescue + AI Meal Creator (unchanged, still working).
+
+Once everything is stable again, you tell me:
+
+“Rollback complete, Phase 1 safe changes
