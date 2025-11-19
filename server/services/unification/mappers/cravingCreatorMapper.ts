@@ -6,6 +6,7 @@ import { normalizeIngredients } from '../utils/ingredientNormalizer';
 import { normalizeInstructions } from '../utils/instructionNormalizer';
 import { normalizeNutrition } from '../utils/nutritionNormalizer';
 import { normalizeBadges } from '../utils/badgeNormalizer';
+import { normalizeIngredientMeasurements } from '../utils/measurementNormalizer';
 
 export function mapCravingCreatorToUnified(meal: any): UnifiedMeal {
   // FinalMeal has nested nutrition object
@@ -19,7 +20,8 @@ export function mapCravingCreatorToUnified(meal: any): UnifiedMeal {
     source: 'craving-creator',
     
     // FinalMeal ingredients have { name, amount, unit, notes } format
-    ingredients: normalizeIngredients(meal.ingredients),
+    // First normalize to UnifiedIngredient format, then apply ounce measurements
+    ingredients: normalizeIngredientMeasurements(normalizeIngredients(meal.ingredients)),
     instructions: normalizeInstructions(meal.instructions),
     
     nutrition,

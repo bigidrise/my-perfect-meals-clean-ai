@@ -6,6 +6,7 @@ import { normalizeIngredients } from '../utils/ingredientNormalizer';
 import { normalizeInstructions } from '../utils/instructionNormalizer';
 import { normalizeNutrition } from '../utils/nutritionNormalizer';
 import { normalizeBadges } from '../utils/badgeNormalizer';
+import { normalizeIngredientMeasurements } from '../utils/measurementNormalizer';
 
 export function mapMealFinderToUnified(meal: any): UnifiedMeal {
   // Meal Finder has flat macros
@@ -23,7 +24,8 @@ export function mapMealFinderToUnified(meal: any): UnifiedMeal {
     mealType: meal.mealType,
     source: 'meal-finder',
     
-    ingredients: normalizeIngredients(meal.ingredients),
+    // First normalize to UnifiedIngredient format, then apply ounce measurements
+    ingredients: normalizeIngredientMeasurements(normalizeIngredients(meal.ingredients)),
     instructions: normalizeInstructions(meal.instructions),
     
     nutrition,

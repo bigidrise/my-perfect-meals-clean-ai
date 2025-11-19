@@ -6,6 +6,7 @@ import { normalizeIngredients } from '../utils/ingredientNormalizer';
 import { normalizeInstructions } from '../utils/instructionNormalizer';
 import { normalizeNutrition } from '../utils/nutritionNormalizer';
 import { normalizeBadges } from '../utils/badgeNormalizer';
+import { normalizeIngredientMeasurements } from '../utils/measurementNormalizer';
 
 export function mapFridgeRescueToUnified(meal: any): UnifiedMeal {
   // FridgeRescueMeal has flat macros (calories, protein, carbs, fat)
@@ -18,12 +19,15 @@ export function mapFridgeRescueToUnified(meal: any): UnifiedMeal {
   
   // FridgeRescueMeal ingredients have { name, quantity, unit } format
   // Convert to normalized format
-  const ingredients = meal.ingredients?.map((ing: any) => ({
+  const baseIngredients = meal.ingredients?.map((ing: any) => ({
     name: ing.name,
     amount: ing.quantity ? parseFloat(ing.quantity) : undefined,
     unit: ing.unit,
     notes: undefined
   })) || [];
+  
+  // Phase 4B: Apply ounce-based measurement normalization
+  const ingredients = normalizeIngredientMeasurements(baseIngredients);
   
   return {
     id: meal.id || `fridge-rescue-${Date.now()}`,

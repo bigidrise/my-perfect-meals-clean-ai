@@ -24,6 +24,11 @@ export interface UnifiedIngredient {
   amount?: number;
   unit?: string;
   notes?: string;
+  
+  // Phase 4B: Ounce-based measurement normalization
+  quantityOz?: number;           // Rounded UP to nearest 0.5 oz
+  displayQuantity?: string;       // e.g. "8 oz (1 cup)" or "24 oz (1.5 lb)"
+  originalUnit?: string;          // Preserves raw unit before conversion
 }
 
 export type UnifiedInstructions = string | string[] | null;

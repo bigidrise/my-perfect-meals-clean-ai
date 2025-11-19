@@ -6,6 +6,7 @@ import { normalizeIngredients } from '../utils/ingredientNormalizer';
 import { normalizeInstructions } from '../utils/instructionNormalizer';
 import { normalizeNutrition } from '../utils/nutritionNormalizer';
 import { normalizeBadges } from '../utils/badgeNormalizer';
+import { normalizeIngredientMeasurements } from '../utils/measurementNormalizer';
 
 export function mapRestaurantGuideToUnified(meal: any): UnifiedMeal {
   // Restaurant meals may have calories/protein/carbs/fat at top level
@@ -25,7 +26,8 @@ export function mapRestaurantGuideToUnified(meal: any): UnifiedMeal {
     mealType: meal.mealType,
     source: 'restaurant-guide',
     
-    ingredients: normalizeIngredients(meal.ingredients),
+    // First normalize to UnifiedIngredient format, then apply ounce measurements
+    ingredients: normalizeIngredientMeasurements(normalizeIngredients(meal.ingredients)),
     instructions: normalizeInstructions(meal.instructions),
     
     nutrition,
