@@ -318,7 +318,7 @@ export default function MealIngredientPicker({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: allIngredientsWithStyles,
+          fridgeItems: allIngredientsWithStyles,
           servings: 1,
           dietFlags: dietType ? [dietType] : []
         })

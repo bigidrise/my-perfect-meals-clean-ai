@@ -201,7 +201,7 @@ export default function MealPremadePicker({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: ingredientsList,
+          fridgeItems: ingredientsList,
           servings: 1,
           dietFlags: []
         })
