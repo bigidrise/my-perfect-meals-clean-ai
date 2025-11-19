@@ -1050,12 +1050,15 @@ export default function WeeklyMealBoard() {
                     // Update local state immediately for instant UI feedback
                     setBoard(clearedBoard);
                     
+                    // Clear shopping list store
+                    useShoppingListStore.getState().clearAll();
+                    
                     // Save to backend
                     try {
                       await saveBoard(clearedBoard);
                       toast({
                         title: "All Meals Deleted",
-                        description: "Successfully cleared all meals from the board",
+                        description: "Successfully cleared all meals and shopping list",
                       });
                     } catch (error) {
                       console.error("Failed to delete meals:", error);

@@ -1243,10 +1243,11 @@ export default function DiabeticMenuBuilder() {
                     };
                     saveBoard(clearedBoard);
                     clearAIMealsCache();
+                    useShoppingListStore.getState().clearAll();
                     toast({
                       title: "All Meals Deleted",
                       description:
-                        "Successfully cleared all meals from the board",
+                        "Successfully cleared all meals and shopping list",
                     });
                   }
                 }

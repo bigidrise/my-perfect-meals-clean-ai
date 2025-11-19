@@ -1042,9 +1042,10 @@ export default function AntiInflammatoryMenuBuilder() {
                     };
                     saveBoard(clearedBoard);
                     clearAIMealsCache();
+                    useShoppingListStore.getState().clearAll();
                     toast({
                       title: "All Meals Deleted",
-                      description: "Successfully cleared all meals from the board",
+                      description: "Successfully cleared all meals and shopping list",
                     });
                   }
                 }
