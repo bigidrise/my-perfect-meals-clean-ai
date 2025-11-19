@@ -5,6 +5,8 @@
  * Handles quantity parsing, unit conversion, and duplicate ingredient grouping.
  */
 
+import { formatIngredientMeasurement } from './measurementFormatter';
+
 export type ParsedIngredient = {
   name: string;
   quantity: number | null;
@@ -328,6 +330,7 @@ export function aggregateIngredients(
 
 /**
  * Format ingredient for display
+ * Uses ounce normalization for volume/weight units, fractional display for others
  */
 function formatIngredientDisplay(
   quantity: number | null,
@@ -338,7 +341,16 @@ function formatIngredientDisplay(
     return name;
   }
 
-  // Format quantity nicely (avoid .00, show fractions for common values)
+  // Try ounce normalization for convertible units
+  if (unit) {
+    const formatted = formatIngredientMeasurement(quantity, unit, name);
+    // If formatter successfully converted to ounces (has quantityOz), use it
+    if (formatted.quantityOz !== null) {
+      return `${formatted.displayQuantity} ${name}`;
+    }
+  }
+
+  // Fall back to fractional display for non-convertible units (tsp, tbsp, counts, etc.)
   let qtyStr: string;
   if (quantity % 1 === 0) {
     qtyStr = quantity.toString();

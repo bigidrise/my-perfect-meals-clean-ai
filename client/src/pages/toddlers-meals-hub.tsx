@@ -10,6 +10,7 @@ import { toddlersMeals, type ToddlersMeal } from "@/data/toddlersMealsData";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import CopyRecipeButton from "@/components/CopyRecipeButton";
+import { formatIngredientMeasurement } from "@/utils/measurementFormatter";
 
 const SERVING_OPTIONS = [1, 2, 3, 4] as const;
 
@@ -321,10 +322,10 @@ export default function ToddlersMealsHub() {
                   </h3>
                   <ul className="list-disc list-inside space-y-1">
                     {scaledIngs.map((ing, idx) => {
-                      const unit = pluralize(ing.unit, ing.quantity);
+                      const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.item);
                       return (
                         <li key={idx} className="text-white/90">
-                          {formatQty(ing.quantity)} {unit} {ing.item}
+                          {formatted.displayQuantity} {ing.item}
                         </li>
                       );
                     })}
