@@ -311,11 +311,13 @@ export default function CravingCreator() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        targetMealType: "snacks",
-        cravingInput,
-        dietaryRestrictions: selectedDiet || dietaryRestrictions,
-        userId: DEV_USER_ID,
-        servings: servings, // NEW: Send serving size to backend
+        craving: cravingInput, // Fixed: Changed from cravingInput to craving
+        servings: servings,
+        mealtime: "snack", // Fixed: Changed from targetMealType to mealtime (singular)
+        dietaryRestrictions: (selectedDiet || dietaryRestrictions) 
+          ? [selectedDiet || dietaryRestrictions].filter(Boolean) 
+          : [], // Fixed: Convert string to array
+        healthConditions: [], // Added: Backend expects this field
       }),
     });
 
