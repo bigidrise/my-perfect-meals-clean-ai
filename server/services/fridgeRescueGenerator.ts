@@ -336,7 +336,12 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
           name: processedMeal.name,
           description: processedMeal.description,
           type: 'meal',
-          style: 'homemade'
+          style: 'homemade',
+          ingredients: processedMeal.ingredients?.map(ing => ing.name) || [],
+          calories: processedMeal.calories,
+          protein: processedMeal.protein,
+          carbs: processedMeal.carbs,
+          fat: processedMeal.fat,
         });
         
         if (imageUrl) {

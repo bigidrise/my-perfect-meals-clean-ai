@@ -1,5 +1,7 @@
 // 🔒 LOCKDOWN PROTECTED: DALL-E image generation system - DO NOT MODIFY
 import OpenAI from 'openai';
+import { buildMealImageCacheKey } from '../lib/mealImageCacheKey';
+import { checkImageExists, uploadImageToPermanentStorage } from './permanentImageStorage';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -13,6 +15,11 @@ interface ImageGenerationOptions {
   description?: string;
   type: 'meal' | 'beverage';
   style?: string;
+  ingredients?: string[];
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
 }
 
 // Main function used by stableMealGenerator
@@ -28,22 +35,56 @@ export async function generateRecipeImage(recipeName: string): Promise<string | 
 export async function generateImage(options: ImageGenerationOptions): Promise<string | null> {
   const cacheKey = `${options.type}-${options.name.toLowerCase()}`;
   
-  // 🔒 PROTECTED: Check cache first - critical for performance
+  // 🔒 PROTECTED: Check in-memory cache first - critical for performance
   if (imageCache.has(cacheKey)) {
-    console.log(`📸 Using cached image for: ${options.name}`);
+    console.log(`📸 Using in-memory cached image for: ${options.name}`);
     return imageCache.get(cacheKey)!;
   }
 
   try {
-    console.log(`🎨 Generating image for: ${options.name}`);
+    // Generate deterministic hash for persistent cache
+    const imageHash = buildMealImageCacheKey({
+      name: options.name,
+      ingredients: options.ingredients,
+      calories: options.calories,
+      protein: options.protein,
+      carbs: options.carbs,
+      fat: options.fat,
+      description: options.description,
+    });
+
+    // Check if image exists in permanent storage
+    const existingImageUrl = await checkImageExists(imageHash);
+    if (existingImageUrl) {
+      console.log(`💾 Using persistent cached image for: ${options.name}`);
+      imageCache.set(cacheKey, existingImageUrl);
+      return existingImageUrl;
+    }
+
+    console.log(`🎨 Generating new image for: ${options.name}`);
     
     // Use DALL-E 3 for high-quality, authentic food images
     if (process.env.OPENAI_API_KEY) {
       const dalleUrl = await generateDalleImage(options);
       if (dalleUrl) {
-        imageCache.set(cacheKey, dalleUrl);
-        console.log(`🤖 Generated DALL-E image for: ${options.name}`);
-        return dalleUrl;
+        // Upload to permanent storage
+        try {
+          const { permanentUrl } = await uploadImageToPermanentStorage({
+            imageUrl: dalleUrl,
+            mealName: options.name,
+            imageHash,
+          });
+          
+          // Cache the permanent URL (not the temporary DALL-E URL)
+          imageCache.set(cacheKey, permanentUrl);
+          console.log(`🤖 Generated and stored DALL-E image for: ${options.name}`);
+          return permanentUrl;
+        } catch (uploadError) {
+          console.error(`⚠️ Failed to upload to permanent storage, using temporary URL:`, uploadError);
+          // Fallback to temporary DALL-E URL if upload fails
+          imageCache.set(cacheKey, dalleUrl);
+          return dalleUrl;
+        }
       }
     } else {
       console.log(`⚠️ No OpenAI API key available for DALL-E generation`);

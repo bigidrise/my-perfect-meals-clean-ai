@@ -228,7 +228,12 @@ Make the meals sound authentic to ${restaurantName}. Vary the protein sources an
           name: meal.name,
           description: meal.description,
           type: 'meal',
-          style: cuisine
+          style: cuisine,
+          ingredients: meal.ingredients,
+          calories: meal.calories,
+          protein: meal.protein,
+          carbs: meal.carbs,
+          fat: meal.fat,
         });
 
         if (imageUrl) {
