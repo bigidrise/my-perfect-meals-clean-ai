@@ -70,16 +70,15 @@ export async function zipToCoordinates(zipCode: string): Promise<Coordinates | n
   }
 
   try {
-    console.log(`🔍 Geocoding ZIP code: ${zipCode}`);
+    console.log(`🔍 Geocoding ZIP code: ${zipCode} (USA only)`);
 
-    // Auto-append USA to ensure proper geocoding
-    const address = `${zipCode}, USA`;
-
+    // CRITICAL: Force USA-only geocoding with explicit components filter
+    // This prevents international ZIP code confusion
     const url = `https://maps.googleapis.com/maps/api/geocode/json`;
     const response = await axios.get(url, {
       params: {
-        address: address,
-        components: 'country:US', // Force US-only results
+        address: zipCode,
+        components: 'postal_code:' + zipCode + '|country:US', // EXPLICIT USA constraint
         key: apiKey
       },
       timeout: 5000

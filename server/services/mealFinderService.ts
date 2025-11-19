@@ -118,7 +118,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
     const searchQuery = `restaurants serving ${mealQuery}`;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json`;
     
-    console.log(`🔍 Google Places search: "${searchQuery}" at (${coords.lat}, ${coords.lng})`);
+    console.log(`🔍 Google Places search: "${searchQuery}" at USA coords (${coords.lat}, ${coords.lng})`);
     
     const response = await axios.get(url, {
       params: {
@@ -126,7 +126,8 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
         location: `${coords.lat},${coords.lng}`,
         radius: 8000, // 8km radius (~5 miles)
         key: apiKey,
-        type: 'restaurant' // Ensure we only get restaurants, not stores
+        type: 'restaurant', // Ensure we only get restaurants, not stores
+        region: 'us' // EXPLICIT USA region constraint
       }
     });
     

@@ -9,6 +9,9 @@ import {
   validateUnifiedMeal,
   type UnifiedMeal 
 } from '../services/unification';
+import { db } from '../db';
+import { users } from '@shared/schema';
+import { eq } from 'drizzle-orm';
 
 const router = express.Router();
 
@@ -19,7 +22,7 @@ const router = express.Router();
  */
 router.post('/meal-finder', async (req, res) => {
   try {
-    const { mealQuery, zipCode } = req.body;
+    const { mealQuery, zipCode, userId } = req.body;
     
     // Validate request
     if (!mealQuery || typeof mealQuery !== 'string') {
@@ -34,17 +37,28 @@ router.post('/meal-finder', async (req, res) => {
       });
     }
     
-    // Validate ZIP code format (5 digits)
+    // Validate ZIP code format (5 digits) - USA ONLY
     if (!/^\d{5}$/.test(zipCode)) {
       return res.status(400).json({ 
-        error: 'zipCode must be a valid 5-digit US ZIP code' 
+        error: 'zipCode must be a valid 5-digit US ZIP code (e.g., 90210, 10001, 30303)' 
       });
     }
     
-    console.log(`📍 Meal Finder request: "${mealQuery}" near ZIP ${zipCode}`);
+    console.log(`📍 Meal Finder request: "${mealQuery}" near USA ZIP ${zipCode}`);
     
-    // Get user from session (if available)
-    const user = (req as any).user;
+    // CONSISTENCY FIX: Try to get user from request body OR session
+    let user = (req as any).user;
+    if (!user && userId) {
+      try {
+        const [foundUser] = await db.select().from(users).where(eq(users.id, userId));
+        if (foundUser) {
+          user = foundUser;
+          console.log(`👤 User ${userId} found for Meal Finder personalization`);
+        }
+      } catch (err) {
+        console.warn(`⚠️ Could not fetch user ${userId}:`, err);
+      }
+    }
     
     // Find meals
     const results = await findMealsNearby({

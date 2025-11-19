@@ -127,7 +127,11 @@ export default function MealFinder() {
       try {
         const response = await apiRequest('/api/meal-finder', {
           method: 'POST',
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            mealQuery: data.mealQuery,
+            zipCode: data.zipCode,
+            userId: localStorage.getItem("userId") || "1" // CONSISTENCY: Send userId like Restaurant Guide
+          }),
           headers: { 'Content-Type': 'application/json' }
         });
 
