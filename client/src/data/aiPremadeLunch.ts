@@ -676,9 +676,308 @@ export const AI_PREMADE_LUNCH_PROTEIN_CARB_BOWLS: AiPremadeMeal[] = [
   }
 ];
 
-// LUNCH CATEGORY 3: WRAPS, SANDWICHES & MELTS (30 meals, l3-01 to l3-30)
+// LUNCH CATEGORY 3: HIGH-PROTEIN PLATES (30 meals, l3-01 to l3-30)
 export const AI_PREMADE_LUNCH_WRAPS_SANDWICHES: AiPremadeMeal[] = [
-  // Ready for your 30 alphabetized meals
+  {
+    id: "l3-01",
+    name: "Baked Cod Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-02",
+    name: "Baked Turkey Breast Strips",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-03",
+    name: "BBQ Chicken Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-04",
+    name: "Blackened Salmon Filet",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-05",
+    name: "Chicken Breast Medallions",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-06",
+    name: "Chicken Cutlet Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-07",
+    name: "Egg White Protein Scramble",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 8, unit: "large" }
+    ]
+  },
+  {
+    id: "l3-08",
+    name: "Egg White Patty Stack",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "fried",
+    ingredients: [
+      { item: "Egg Whites", quantity: 8, unit: "large" }
+    ]
+  },
+  {
+    id: "l3-09",
+    name: "Grilled Beef Tender Strips",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Beef (lean)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-10",
+    name: "Grilled Chicken Breast Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-11",
+    name: "Grilled Salmon Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-12",
+    name: "Grilled Shrimp Skewers",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-13",
+    name: "Ground Beef Crumble Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Beef (96% lean)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-14",
+    name: "Ground Chicken Protein Crumbles",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Chicken (lean)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-15",
+    name: "Ground Turkey Crumble Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey (99% lean)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-16",
+    name: "Lemon Pepper Chicken Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-17",
+    name: "Mediterranean Salmon Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-18",
+    name: "Pan-Seared Halibut Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Halibut", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-19",
+    name: "Pan-Seared Steak Bites",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-20",
+    name: "Plain Chicken Breast Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-21",
+    name: "Plain Egg White Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 8, unit: "large" }
+    ]
+  },
+  {
+    id: "l3-22",
+    name: "Roasted Chicken Breast Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-23",
+    name: "Roasted Turkey Breast Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-24",
+    name: "Simple Grilled Steak Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-25",
+    name: "Simple Shrimp Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-26",
+    name: "Tilapia Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Tilapia", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-27",
+    name: "Turkey Burger Patty Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey (99% lean)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-28",
+    name: "Turkey Cutlet Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-29",
+    name: "White Fish Protein Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "White Fish (cod/tilapia)", quantity: 6, unit: "oz" }
+    ]
+  },
+  {
+    id: "l3-30",
+    name: "Zesty Chicken Breast Plate",
+    category: "wraps-sandwiches" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" }
+    ]
+  }
 ];
 
 // LUNCH CATEGORY 4: HIGH-PROTEIN SALADS (30 meals, l4-01 to l4-30)
