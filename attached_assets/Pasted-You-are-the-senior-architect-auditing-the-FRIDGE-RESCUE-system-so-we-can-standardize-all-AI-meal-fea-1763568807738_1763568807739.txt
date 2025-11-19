@@ -1,0 +1,100 @@
+You are the senior architect auditing the FRIDGE RESCUE system so we can standardize all AI meal features on top of it.
+
+⚠️ DO NOT MODIFY ANY FILES.
+Only READ and REPORT. This is a documentation + analysis pass, not a refactor.
+
+OBJECTIVE:
+Give me a precise, implementation-level picture of how Fridge Rescue currently works, so we can use it as the canonical blueprint for the unified AI system.
+
+STEP 1 – FRONTEND AUDIT (Fridge Rescue + AI Meal Creator)
+1) Inspect:
+   - client/src/pages/fridge-rescue.tsx
+   - client/src/components/modals/AIMealCreatorModal.tsx
+
+2) For EACH of these, tell me:
+   - What endpoint(s) it calls (full URL path).
+   - The exact request body shape being sent (fields + types).
+   - How it handles the response: expected keys (meal vs meals), any mapping/normalization.
+   - Any differences between the Fridge Rescue page and the AI Meal Creator modal in how they talk to the backend.
+
+STEP 2 – BACKEND ROUTES
+1) Inspect:
+   - server/routes/fridgeRescue.ts (if present)
+   - server/routes.ts (search for “fridge-rescue” and “/api/meals/fridge-rescue”)
+2) For EACH route you find, document:
+   - Full path (e.g. POST /api/fridge-rescue/generate).
+   - The controller/handler function name.
+   - The service or engine it calls (file + function name).
+   - Any request validation (Zod, JOI, manual checks, etc.).
+   - The exact response shape it sends back to the client.
+
+STEP 3 – BACKEND SERVICES
+1) Inspect:
+   - server/services/fridgeRescueGenerator.ts
+   - server/services/fridgeRescueEngine.ts (or any similarly named fridge-rescue service)
+
+2) For the AI-based generator, document:
+   - Which OpenAI model it uses.
+   - How the prompt is built (show the template string or builder function).
+   - How it parses the AI response into a JavaScript/TypeScript object.
+   - The exact “meal” shape it constructs (fields + types).
+   - Where and how it calls the image service (file + function, arguments).
+   - Where and how medical badges are generated (file + function, input/output shape).
+
+3) For the deterministic engine (if present):
+   - When is it used? (Only on error, or always + AI override?)
+   - What shape does its “meal” object use?
+   - Does it match the AI generator’s meal shape 1:1, or are there differences?
+
+STEP 4 – TYPE & CONTRACT SUMMARY
+Based on everything you found, provide:
+
+1) The CURRENT “Fridge Rescue meal” TypeScript interface as it effectively exists in the codebase.
+   - Include ALL fields: id, name, description, ingredients, instructions, calories, etc.
+2) The CURRENT API CONTRACT for:
+   - Request: POST /api/fridge-rescue/generate
+   - Response: what the client truly gets back.
+
+STEP 5 – GAPS vs. UnifiedMeal
+Compare the current Fridge Rescue meal structure to this target UnifiedMeal:
+
+interface UnifiedMeal {
+  id: string;
+  name: string;
+  description: string;
+  ingredients: Array<{ name: string; quantity: string; unit: string }>;
+  instructions: string;
+  nutrition: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  cookingTime?: string;
+  difficulty?: string;
+  servingSize?: string;
+  imageUrl?: string;
+  medicalBadges: Array<{
+    id: string;
+    label: string;
+    level: "green" | "yellow" | "red";
+    reason: string;
+  }>;
+}
+
+Tell me:
+- Which fields already match.
+- Which fields are missing.
+- Which fields are named differently (e.g. calories vs nutrition.calories).
+- Any extra fields Fridge Rescue has that UnifiedMeal does not (yet).
+
+OUTPUT FORMAT:
+Return a clear, structured report with these sections:
+
+1) FRONTEND SUMMARY (Fridge Rescue & AI Meal Creator)
+2) BACKEND ROUTES SUMMARY
+3) BACKEND SERVICES SUMMARY (AI + deterministic)
+4) CURRENT API CONTRACT (request + response)
+5) DIFF vs UnifiedMeal (what matches, what doesn’t)
+
+Again: DO NOT change any code. This is an analysis-only audit.
