@@ -10,9 +10,21 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_T
 export type ReminderChannel = "sms" | "push" | "in-app";
 
 export async function getUsersNeedingDailyJournalReminder(nowISO: string) {
-  // Compute users whose local time matches their configured HH:mm (to the minute)
-  const all = await db.select().from(users).where(eq(users.dailyJournalReminderEnabled, true));
-  const due: typeof all = [] as any;
+  // Only select users with reminders enabled
+  const all = await db
+    .select({
+      id: users.id,
+      phone: users.phone,
+      timezone: users.timezone,
+      dailyJournalReminderEnabled: users.dailyJournalReminderEnabled,
+      dailyJournalReminderTime: users.dailyJournalReminderTime,
+      dailyJournalReminderChannel: users.dailyJournalReminderChannel,
+      fcmWebPushToken: users.fcmWebPushToken,
+    })
+    .from(users)
+    .where(eq(users.dailyJournalReminderEnabled, true));
+
+  const due: typeof all = [];
   for (const u of all) {
     const tz = u.timezone || process.env.DEFAULT_TZ || "America/Chicago";
     const localNow = DateTime.fromISO(nowISO, { zone: tz });
