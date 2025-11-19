@@ -980,9 +980,338 @@ export const AI_PREMADE_LUNCH_WRAPS_SANDWICHES: AiPremadeMeal[] = [
   }
 ];
 
-// LUNCH CATEGORY 4: HIGH-PROTEIN SALADS (30 meals, l4-01 to l4-30)
+// LUNCH CATEGORY 4: SIMPLE PROTEIN + VEGGIE PLATES (30 meals, l4-01 to l4-30)
 export const AI_PREMADE_LUNCH_HIGH_PROTEIN_SALADS: AiPremadeMeal[] = [
-  // Ready for your 30 alphabetized meals
+  {
+    id: "l4-01",
+    name: "Baked Cod with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-02",
+    name: "Baked Tilapia with Asparagus",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Tilapia", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-03",
+    name: "Balsamic Chicken with Zucchini",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-04",
+    name: "BBQ Turkey Breast with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-05",
+    name: "Blackened Chicken with Cauliflower",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Cauliflower", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-06",
+    name: "Blackened Cod with Spinach",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-07",
+    name: "Chicken Breast with Mixed Veggies",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-08",
+    name: "Chicken Strips with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-09",
+    name: "Citrus Salmon with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-10",
+    name: "Egg White Scramble with Spinach",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "scrambled",
+    ingredients: [
+      { item: "Egg Whites", quantity: 8, unit: "large" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-11",
+    name: "Garlic Chicken with Asparagus",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-12",
+    name: "Ginger Chicken with Stir Fry Veggies",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Stir Fry Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-13",
+    name: "Grilled Chicken with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-14",
+    name: "Grilled Salmon with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-15",
+    name: "Grilled Shrimp with Zucchini",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-16",
+    name: "Halibut with Roasted Vegetables",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Halibut", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-17",
+    name: "Herb Chicken with Spinach",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-18",
+    name: "Lemon Chicken with Cauliflower",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Cauliflower", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-19",
+    name: "Mediterranean Cod with Zucchini",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-20",
+    name: "Pan-Seared Chicken with Asparagus",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-21",
+    name: "Pan-Seared Salmon with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-22",
+    name: "Shrimp with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-23",
+    name: "Simple Chicken with Spinach",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-24",
+    name: "Simple Cod with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-25",
+    name: "Simple Salmon with Spinach",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-26",
+    name: "Simple Steak with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-27",
+    name: "Steak Strips with Roasted Veggies",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak (sirloin)", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-28",
+    name: "Teriyaki Chicken with Broccoli",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-29",
+    name: "Turkey Breast with Green Beans",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "l4-30",
+    name: "Zesty Shrimp with Zucchini",
+    category: "high-protein-salads" as any,
+    mealType: "lunch",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Shrimp", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  }
 ];
 
 // Combined lunch meals array (120 total)
