@@ -1960,19 +1960,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log(`📏 Scaled meal for ${validatedServings} servings`);
       }
 
-      // Generate image for the meal
+      // Generate image using enhanced cooking-method-aware system
       try {
-        const { generateImage } = await import("./services/imageService");
-        const imageUrl = await generateImage({
-          name: generatedMeal.name,
-          description: generatedMeal.description,
-          type: 'meal',
+        const { generateMealImage } = await import("./services/mealImageGenerator");
+        const imageResult = await generateMealImage({
+          mealName: generatedMeal.name,
+          ingredients: generatedMeal.ingredients?.map((ing: any) => ing.name) || [],
           style: 'homemade'
         });
 
-        if (imageUrl) {
-          generatedMeal.imageUrl = imageUrl;
-          console.log("🖼️ Image generated for meal:", generatedMeal.name);
+        if (imageResult?.url) {
+          generatedMeal.imageUrl = imageResult.url;
+          console.log("🖼️ Enhanced image generated for meal:", generatedMeal.name);
         }
       } catch (error) {
         console.error(`Failed to generate image for ${generatedMeal.name}:`, error);
