@@ -1,10 +1,5 @@
 import OpenAI from 'openai';
-import { generateMealImage } from './mealImageGenerator';
-import { 
-  mapFridgeRescueToUnified,
-  validateUnifiedMeal,
-  type UnifiedMeal 
-} from './unification';
+import { generateImage } from './imageService';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -176,10 +171,7 @@ function getMedicalBadges(meal: any, userConditions: string[] = []): Array<{
   return badges;
 }
 
-export async function generateFridgeRescueMeals(request: FridgeRescueRequest): Promise<{
-  meals: FridgeRescueMeal[];
-  unifiedMeals: UnifiedMeal[];
-}> {
+export async function generateFridgeRescueMeals(request: FridgeRescueRequest): Promise<FridgeRescueMeal[]> {
   const { fridgeItems, user, macroTargets } = request;
   const userConditions = user?.healthConditions || [];
   
@@ -338,16 +330,17 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
         medicalBadges: getMedicalBadges(meal, userConditions)
       };
 
-      // Generate image using enhanced cooking-method-aware system
+      // Generate image for the meal
       try {
-        const imageResult = await generateMealImage({
-          mealName: processedMeal.name,
-          ingredients: processedMeal.ingredients.map(ing => ing.name),
+        const imageUrl = await generateImage({
+          name: processedMeal.name,
+          description: processedMeal.description,
+          type: 'meal',
           style: 'homemade'
         });
         
-        if (imageResult?.url) {
-          processedMeal.imageUrl = imageResult.url;
+        if (imageUrl) {
+          processedMeal.imageUrl = imageUrl;
         }
       } catch (error) {
         console.error(`Failed to generate image for ${processedMeal.name}:`, error);
@@ -357,28 +350,7 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
     }
 
     console.log("✅ Fridge rescue meals generated successfully with images");
-    
-    // PHASE 3A: Return best meal (first one) in standardized single format
-    const bestMeal = processedMeals[0];
-    let unifiedMeal: UnifiedMeal | null = null;
-    
-    try {
-      unifiedMeal = mapFridgeRescueToUnified(bestMeal);
-      validateUnifiedMeal(unifiedMeal);
-    } catch (err) {
-      console.warn(
-        "[UnifiedMeal][FridgeRescue] Validation failed for meal:",
-        { mealId: bestMeal.id, error: (err as Error).message }
-      );
-    }
-    
-    // Return single meal format for consistency with Craving Creator
-    return { 
-      meal: bestMeal, 
-      unifiedMeal,
-      // Include alternates for future use
-      alternates: processedMeals.slice(1)
-    };
+    return processedMeals;
 
   } catch (error: any) {
     console.error('OpenAI API error for fridge rescue meals:', error);
@@ -447,24 +419,6 @@ Remember: Only use ingredients from this list: ${fridgeItems.join(', ')}`;
       }
     ];
 
-    // PHASE 3A: Return best fallback meal in standardized format
-    const bestMeal = fallbackMeals[0];
-    let unifiedMeal: UnifiedMeal | null = null;
-    
-    try {
-      unifiedMeal = mapFridgeRescueToUnified(bestMeal);
-      validateUnifiedMeal(unifiedMeal);
-    } catch (err) {
-      console.warn(
-        "[UnifiedMeal][FridgeRescue] Validation failed for fallback meal:",
-        { mealId: bestMeal.id, error: (err as Error).message }
-      );
-    }
-    
-    return { 
-      meal: bestMeal, 
-      unifiedMeal,
-      alternates: fallbackMeals.slice(1)
-    };
+    return fallbackMeals;
   }
 }

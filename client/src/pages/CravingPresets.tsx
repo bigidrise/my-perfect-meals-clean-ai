@@ -10,7 +10,6 @@ import { CRAVING_PRESETS, type CravingPreset, type Ingredient } from "@/data/cra
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import CopyRecipeButton from "@/components/CopyRecipeButton";
-import { formatIngredientMeasurement } from "@/utils/measurementFormatter";
 
 const SERVING_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -309,15 +308,10 @@ export default function CravingPresetsPage() {
                   </h3>
                   <ul className="list-disc list-inside space-y-1">
                     {scaledIngs.map((ing, idx) => {
-                      const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.name);
-                      // Use ounce display if converted, otherwise use legacy format
-                      const displayText = formatted.quantityOz !== null 
-                        ? `${formatted.displayQuantity} ${ing.name}`
-                        : `${formatQty(ing.quantity)} ${pluralize(ing.unit, ing.quantity)} ${ing.name}`;
+                      const unit = pluralize(ing.unit, ing.quantity);
                       return (
                         <li key={idx} className="text-white/90">
-                          {displayText}
-                          {ing.notes && <span className="text-white/60 text-sm ml-1">({ing.notes})</span>}
+                          {formatQty(ing.quantity)} {unit} {ing.name}
                         </li>
                       );
                     })}

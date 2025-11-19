@@ -17,7 +17,6 @@ import type { MacroTargets } from "@/utils/computeTargets";
 import { RecipeQuickActions } from "@/components/RecipeQuickActions";
 import { generateMedicalBadges, getUserMedicalProfile } from "@/utils/medicalBadges";
 import MedicalBadges from "@/components/meal/MedicalBadges";
-import { formatIngredientMeasurement } from "@/utils/measurementFormatter";
 
 export type Ingredient = { item: string; quantity: number; unit: string };
 export type MealTemplate = {
@@ -464,66 +463,43 @@ export function createMealHub(type: "breakfast"|"lunch"|"dinner"|"snacks", meals
                     </div>
                     <div className="max-h-60 overflow-auto rounded-xl border border-white/10 bg-black/30 p-4">
                       <ul className="space-y-2">
-                        {scaledIngredients.map((ing, i) => {
-                          return (
-                            <li key={i} className="flex items-center gap-2">
-                              {editMode ? (
-                                <div className="flex items-center gap-2 w-full">
-                                  <Input 
-                                    value={ing.item}
-                                    onChange={(e) => updateIngredient(i, 'item', e.target.value)}
-                                    className="flex-1 bg-black/20 text-white border-white/20 text-sm"
-                                    placeholder="Ingredient name"
-                                  />
-                                  <Input 
-                                    type="number"
-                                    value={ing.quantity}
-                                    onChange={(e) => updateIngredient(i, 'quantity', e.target.value)}
-                                    className="w-20 bg-black/20 text-white border-white/20 text-sm"
-                                  />
-                                  <Input 
-                                    value={ing.unit}
-                                    onChange={(e) => updateIngredient(i, 'unit', e.target.value)}
-                                    className="w-20 bg-black/20 text-white border-white/20 text-sm"
-                                    placeholder="unit"
-                                  />
-                                  <Button 
-                                    size="sm" 
-                                    variant="destructive" 
-                                    onClick={() => removeIngredient(i)}
-                                  >
-                                    ×
-                                  </Button>
-                                </div>
-                              ) : (
-                                (() => {
-                                  // Only format in read-only mode to avoid edit/display conflicts
-                                  const formatted = formatIngredientMeasurement(ing.quantity, ing.unit, ing.item);
-                                  
-                                  if (formatted.quantityOz !== null) {
-                                    // Use ounce display for convertible units
-                                    return (
-                                      <span className="text-white/90">
-                                        <strong>{formatted.displayQuantity}</strong> {ing.item}
-                                      </span>
-                                    );
-                                  } else {
-                                    // Use legacy format for non-convertible units (with proper rounding/pluralization)
-                                    const roundedQty = Math.round(ing.quantity * 10) / 10;
-                                    const formattedQty = Number.isInteger(roundedQty) ? roundedQty.toString() : roundedQty.toFixed(1);
-                                    const pluralUnit = ing.quantity === 1 ? ing.unit.replace(/s$/i, "") : 
-                                                       (!/s$/i.test(ing.unit) && !/(oz|ml|g|kg|lb)$/i.test(ing.unit) ? `${ing.unit}s` : ing.unit);
-                                    return (
-                                      <span className="text-white/90">
-                                        <strong>{formattedQty} {pluralUnit}</strong> {ing.item}
-                                      </span>
-                                    );
-                                  }
-                                })()
-                              )}
-                            </li>
-                          );
-                        })}
+                        {scaledIngredients.map((ing, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            {editMode ? (
+                              <div className="flex items-center gap-2 w-full">
+                                <Input 
+                                  value={ing.item}
+                                  onChange={(e) => updateIngredient(i, 'item', e.target.value)}
+                                  className="flex-1 bg-black/20 text-white border-white/20 text-sm"
+                                  placeholder="Ingredient name"
+                                />
+                                <Input 
+                                  type="number"
+                                  value={ing.quantity}
+                                  onChange={(e) => updateIngredient(i, 'quantity', e.target.value)}
+                                  className="w-20 bg-black/20 text-white border-white/20 text-sm"
+                                />
+                                <Input 
+                                  value={ing.unit}
+                                  onChange={(e) => updateIngredient(i, 'unit', e.target.value)}
+                                  className="w-20 bg-black/20 text-white border-white/20 text-sm"
+                                  placeholder="unit"
+                                />
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive" 
+                                  onClick={() => removeIngredient(i)}
+                                >
+                                  ×
+                                </Button>
+                              </div>
+                            ) : (
+                              <span className="text-white/90">
+                                <strong>{ing.item}</strong> — {ing.quantity} {ing.unit}
+                              </span>
+                            )}
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>

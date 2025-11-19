@@ -4,14 +4,6 @@
 
 import express from 'express';
 import { findMealsNearby } from '../services/mealFinderService';
-import { 
-  mapMealFinderToUnified,
-  validateUnifiedMeal,
-  type UnifiedMeal 
-} from '../services/unification';
-import { db } from '../db';
-import { users } from '@shared/schema';
-import { eq } from 'drizzle-orm';
 
 const router = express.Router();
 
@@ -22,7 +14,7 @@ const router = express.Router();
  */
 router.post('/meal-finder', async (req, res) => {
   try {
-    const { mealQuery, zipCode, userId } = req.body;
+    const { mealQuery, zipCode } = req.body;
     
     // Validate request
     if (!mealQuery || typeof mealQuery !== 'string') {
@@ -37,28 +29,17 @@ router.post('/meal-finder', async (req, res) => {
       });
     }
     
-    // Validate ZIP code format (5 digits) - USA ONLY
+    // Validate ZIP code format (5 digits)
     if (!/^\d{5}$/.test(zipCode)) {
       return res.status(400).json({ 
-        error: 'zipCode must be a valid 5-digit US ZIP code (e.g., 90210, 10001, 30303)' 
+        error: 'zipCode must be a valid 5-digit US ZIP code' 
       });
     }
     
-    console.log(`📍 Meal Finder request: "${mealQuery}" near USA ZIP ${zipCode}`);
+    console.log(`📍 Meal Finder request: "${mealQuery}" near ZIP ${zipCode}`);
     
-    // CONSISTENCY FIX: Try to get user from request body OR session
-    let user = (req as any).user;
-    if (!user && userId) {
-      try {
-        const [foundUser] = await db.select().from(users).where(eq(users.id, userId));
-        if (foundUser) {
-          user = foundUser;
-          console.log(`👤 User ${userId} found for Meal Finder personalization`);
-        }
-      } catch (err) {
-        console.warn(`⚠️ Could not fetch user ${userId}:`, err);
-      }
-    }
+    // Get user from session (if available)
+    const user = (req as any).user;
     
     // Find meals
     const results = await findMealsNearby({
@@ -67,32 +48,18 @@ router.post('/meal-finder', async (req, res) => {
       user
     });
     
-    // PHASE 3D: Map results to UnifiedMeal format
-    const unifiedMeals: UnifiedMeal[] = [];
-    for (const result of results) {
-      try {
-        const unified = mapMealFinderToUnified(result);
-        validateUnifiedMeal(unified);
-        unifiedMeals.push(unified);
-      } catch (err) {
-        console.warn(
-          "[UnifiedMeal][MealFinder] Validation failed:",
-          (err as Error).message
-        );
-      }
+    if (results.length === 0) {
+      return res.status(404).json({
+        error: 'No restaurants found',
+        message: `Could not find restaurants serving "${mealQuery}" near ZIP ${zipCode}. Try a different search or ZIP code.`
+      });
     }
-    console.log(`✅ [UnifiedMeal][MealFinder] Mapped ${unifiedMeals.length}/${results.length} meals`);
     
-    // Always return 200, even if no results - let frontend handle UX
     return res.json({
       success: true,
       query: mealQuery,
       zipCode,
-      results,
-      unifiedMeals,
-      message: results.length === 0 
-        ? `No restaurants found near ZIP ${zipCode}. Try a nearby ZIP code or different search.`
-        : undefined
+      results
     });
     
   } catch (error) {

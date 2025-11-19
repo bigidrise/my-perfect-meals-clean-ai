@@ -139,7 +139,6 @@ export default function BeachBodyMealBoard() {
   const saveBoard = React.useCallback(
     async (updatedBoard: WeekBoard) => {
       setSaving(true);
-      setJustSaved(false); // Reset success state when starting new save
       try {
         await saveToHook(updatedBoard as any, uuidv4());
         setJustSaved(true);
@@ -950,10 +949,9 @@ export default function BeachBodyMealBoard() {
                     };
                     saveBoard(clearedBoard);
                     clearAIMealsCache();
-                    useShoppingListStore.getState().clearAll();
                     toast({
                       title: "All Meals Deleted",
-                      description: "Successfully cleared all meals and shopping list",
+                      description: "Successfully cleared all meals from the board",
                     });
                   }
                 }

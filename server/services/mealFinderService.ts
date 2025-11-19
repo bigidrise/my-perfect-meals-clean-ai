@@ -7,17 +7,6 @@ import { zipToCoordinates } from './zipToCoordsService';
 import { generateRestaurantMealsAI } from './restaurantMealGeneratorAI';
 import type { User } from '@shared/schema';
 
-// PHASE 1 FIX: Deterministic ID generation using simple hash
-function simpleHash(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash).toString(36);
-}
-
 interface MealFinderRequest {
   mealQuery: string;
   zipCode: string;
@@ -31,7 +20,6 @@ interface RestaurantResult {
   rating?: number;
   photoUrl?: string;
   meal: {
-    id: string;  // PHASE 1 FIX: Add unique meal ID
     name: string;
     description: string;
     calories: number;
@@ -100,8 +88,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
   // Step 1: Convert ZIP to coordinates
   const coords = await zipToCoordinates(zipCode);
   if (!coords) {
-    console.warn(`⚠️ Could not geocode ZIP code ${zipCode} - returning empty results`);
-    // Return empty array gracefully - frontend will handle the UX message
+    console.error('❌ Could not geocode ZIP code');
     return [];
   }
   
@@ -118,7 +105,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
     const searchQuery = `restaurants serving ${mealQuery}`;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json`;
     
-    console.log(`🔍 Google Places search: "${searchQuery}" at USA coords (${coords.lat}, ${coords.lng})`);
+    console.log(`🔍 Google Places search: "${searchQuery}" at (${coords.lat}, ${coords.lng})`);
     
     const response = await axios.get(url, {
       params: {
@@ -126,8 +113,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
         location: `${coords.lat},${coords.lng}`,
         radius: 8000, // 8km radius (~5 miles)
         key: apiKey,
-        type: 'restaurant', // Ensure we only get restaurants, not stores
-        region: 'us' // EXPLICIT USA region constraint
+        type: 'restaurant' // Ensure we only get restaurants, not stores
       }
     });
     
@@ -168,14 +154,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
           // Take first 2 meal suggestions
           const mealsToAdd = aiMeals.slice(0, 2);
           
-          for (let index = 0; index < mealsToAdd.length; index++) {
-            const meal = mealsToAdd[index];
-            // PHASE 1 FIX: Generate deterministic meal ID using hash of place_id + meal name
-            // Handles missing place_id gracefully
-            const placeId = restaurant.place_id || restaurantName.toLowerCase().replace(/\s+/g, '-');
-            const idSource = `${placeId}-${meal.name}-${index}`;
-            const mealId = `meal-finder-${simpleHash(idSource)}`;
-            
+          for (const meal of mealsToAdd) {
             results.push({
               restaurantName,
               cuisine,
@@ -183,7 +162,6 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
               rating,
               photoUrl,
               meal: {
-                id: mealId,
                 name: meal.name,
                 description: meal.description,
                 calories: meal.calories,
@@ -198,7 +176,7 @@ export async function findMealsNearby(request: MealFinderRequest): Promise<Resta
               medicalBadges: meal.medicalBadges
             });
             
-            console.log(`✅ Generated meal: ${meal.name} (ID: ${mealId})`);
+            console.log(`✅ Generated meal: ${meal.name}`);
           }
         }
       } catch (error) {

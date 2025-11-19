@@ -36,7 +36,6 @@ import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -103,7 +102,6 @@ export default function WeeklyMealBoard() {
   // Wrapper to save with idempotent IDs
   const saveBoard = React.useCallback(async (updatedBoard: WeekBoard) => {
     setSaving(true);
-    setJustSaved(false); // Reset success state when starting new save
     try {
       // Type assertion needed because ExtendedMeal has optional title, but schema requires it
       await saveToHook(updatedBoard as any, uuidv4());
@@ -475,21 +473,24 @@ export default function WeeklyMealBoard() {
 
     console.log("🤖 AI Meal Generated - Replacing old meals with new one:", generatedMeal, "for slot:", aiMealSlot);
 
-    // Normalize UnifiedMeal response to frontend format
-    const normalized = normalizeUnifiedMealOutput(generatedMeal);
-    
-    // Transform API response to match Meal type structure
+    // Transform API response to match Meal type structure (copy Fridge Rescue format)
     const transformedMeal: Meal = {
-      ...normalized,
       id: `ai-meal-${Date.now()}`,
-      title: normalized.name,
+      name: generatedMeal.name,
+      title: generatedMeal.name,
+      description: generatedMeal.description,
+      ingredients: generatedMeal.ingredients || [],
+      instructions: generatedMeal.instructions || '',
       servings: 1,
-      instructions: normalized.instructions || '',
+      imageUrl: generatedMeal.imageUrl,
+      cookingTime: generatedMeal.cookingTime,
+      difficulty: generatedMeal.difficulty,
+      medicalBadges: generatedMeal.medicalBadges || [],
       nutrition: {
-        calories: normalized.calories || 0,
-        protein: normalized.protein || 0,
-        carbs: normalized.carbs || 0,
-        fat: normalized.fat || 0,
+        calories: generatedMeal.calories || 0,
+        protein: generatedMeal.protein || 0,
+        carbs: generatedMeal.carbs || 0,
+        fat: generatedMeal.fat || 0,
       },
     };
 
@@ -1021,7 +1022,7 @@ export default function WeeklyMealBoard() {
             <Button
               size="sm"
               variant="destructive"
-              onClick={async () => {
+              onClick={() => {
                 if (confirm("Delete all meals from this board? This action cannot be undone.")) {
                   if (board) {
                     const clearedBoard = {
@@ -1037,35 +1038,13 @@ export default function WeeklyMealBoard() {
                           dateISO,
                           { breakfast: [], lunch: [], dinner: [], snacks: [] }
                         ])
-                      ) : undefined,
-                      version: board.version + 1,
-                      meta: {
-                        ...board.meta,
-                        lastUpdatedAt: new Date().toISOString()
-                      }
+                      ) : undefined
                     };
-                    
-                    // Update local state immediately for instant UI feedback
-                    setBoard(clearedBoard);
-                    
-                    // Clear shopping list store
-                    useShoppingListStore.getState().clearAll();
-                    
-                    // Save to backend
-                    try {
-                      await saveBoard(clearedBoard);
-                      toast({
-                        title: "All Meals Deleted",
-                        description: "Successfully cleared all meals and shopping list",
-                      });
-                    } catch (error) {
-                      console.error("Failed to delete meals:", error);
-                      toast({
-                        title: "Error",
-                        description: "Failed to delete meals. Please try again.",
-                        variant: "destructive"
-                      });
-                    }
+                    saveBoard(clearedBoard);
+                    toast({
+                      title: "All Meals Deleted",
+                      description: "Successfully cleared all meals from the board",
+                    });
                   }
                 }
               }}
@@ -1075,12 +1054,8 @@ export default function WeeklyMealBoard() {
             </Button>
 
             <Button
-              onClick={async () => {
-                if (board) {
-                  await saveBoard(board);
-                }
-              }}
-              disabled={saving || justSaved || !board}
+              onClick={handleSave}
+              disabled={saving || justSaved}
               size="sm"
               className={`${
                 justSaved

@@ -77,7 +77,7 @@ import manualMacrosRouter from "./routes/manualMacros";
 import { testimonialsRouter } from "./routes/testimonials";
 import { USE_FACEBOOK } from "./config";
 import { facebookRouter } from "./routes/facebook";
-import restaurantRoutes from "./routes/restaurants";
+import restaurantRoutes from "./routes/restaurants.js";
 import abTestingMealPlansRouter from "./routes/mealPlans";
 import { templateRouter } from "./routes/mealTemplates";
 import { userMealPrefsRouter } from "./routes/userMealPrefs";

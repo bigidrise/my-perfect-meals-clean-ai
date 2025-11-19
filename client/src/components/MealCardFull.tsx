@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { RotateCcw, Clock, Users, Shield, AlertTriangle, CheckCircle, X, Plus, Eye } from "lucide-react";
 import { useState } from "react";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
-import type { UnifiedMeal } from "@/types/unifiedMeal";
-import { mapToViewMeal } from "@/utils/mealViewAdapter";
 // Shopping list functionality removed - import eliminated
 
 export interface Ingredient {
@@ -127,7 +125,6 @@ function generateDynamicMedicalBadges(meal: Meal) {
 
 interface MealCardFullProps {
   meal: Meal;
-  unifiedMeal?: UnifiedMeal | null;
   appliedDietLabel?: string;
   onReplace?: () => void;
   replacing?: boolean;
@@ -139,7 +136,6 @@ interface MealCardFullProps {
 
 export default function MealCardFull({
   meal,
-  unifiedMeal,
   appliedDietLabel,
   onReplace,
   replacing = false,
@@ -151,18 +147,11 @@ export default function MealCardFull({
   const [adding, setAdding] = useState(false);
   const [addMessage, setAddMessage] = useState("");
   
-  const viewMeal = mapToViewMeal({ legacyMeal: meal, unifiedMeal });
-  
-  // Use UnifiedMeal badges if available, otherwise generate from legacy meal
-  const legacyBadges = generateDynamicMedicalBadges(meal);
-  const medicalBadges = unifiedMeal?.medicalBadges?.map(badge => ({
-    badge: badge.label,
-    explanation: badge.reason,
-    type: badge.level === 'green' ? 'safe' as const : badge.level === 'yellow' ? 'warning' as const : 'alert' as const
-  })) || legacyBadges;
+  // Generate dynamic medical badges based on user's onboarding profile
+  const medicalBadges = generateDynamicMedicalBadges(meal);
   
   // Debug: Check if medical badges are being generated
-  console.log("MealCardFull - Medical badges for", viewMeal.name, ":", medicalBadges);
+  console.log("MealCardFull - Medical badges for", meal.name, ":", medicalBadges);
 
   const handleAddToShoppingList = async () => {
     // Shopping list functionality removed
@@ -175,11 +164,11 @@ export default function MealCardFull({
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <h4 className="font-semibold text-lg text-slate-900 dark:text-white line-clamp-2">
-            {viewMeal.name}
+            {meal.name}
           </h4>
-          {viewMeal.description && (
+          {meal.description && (
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
-              {viewMeal.description}
+              {meal.description}
             </p>
           )}
           {appliedDietLabel && (
@@ -258,25 +247,25 @@ export default function MealCardFull({
       </div>
 
       {/* Image */}
-      {viewMeal.imageUrl && (
+      {meal.imageUrl && (
         <div className="relative">
           <img
-            src={viewMeal.imageUrl}
-            alt={viewMeal.name}
+            src={meal.imageUrl}
+            alt={meal.name}
             className="w-full h-48 object-cover rounded-lg"
             loading="lazy"
           />
-          {viewMeal.difficulty && (
+          {meal.difficulty && (
             <Badge 
               className={`absolute top-2 right-2 ${
-                viewMeal.difficulty === 'Easy' 
+                meal.difficulty === 'Easy' 
                   ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
-                  : viewMeal.difficulty === 'Medium' 
+                  : meal.difficulty === 'Medium' 
                   ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
                   : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
               }`}
             >
-              {viewMeal.difficulty}
+              {meal.difficulty}
             </Badge>
           )}
         </div>
@@ -287,26 +276,26 @@ export default function MealCardFull({
         <div className="space-y-2">
           <div className="text-center">
             <div className="text-lg font-bold text-slate-900 dark:text-white">
-              {viewMeal.calories}
+              {meal.nutrition.calories}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">calories</div>
           </div>
           <div className="grid grid-cols-3 gap-1 text-center text-xs">
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.protein}g
+                {meal.nutrition.protein_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">P</div>
             </div>
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.carbs}g
+                {meal.nutrition.carbs_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">C</div>
             </div>
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.fat}g
+                {meal.nutrition.fat_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">F</div>
             </div>
@@ -316,19 +305,19 @@ export default function MealCardFull({
         <div className="space-y-2">
           <div className="flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400">
             <Users className="h-3 w-3" />
-            {viewMeal.servings} serving{viewMeal.servings !== 1 ? 's' : ''}
+            {meal.servings} serving{meal.servings !== 1 ? 's' : ''}
           </div>
-          {viewMeal.cookingTime && (
+          {meal.cookingTime && (
             <div className="flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400">
               <Clock className="h-3 w-3" />
-              {viewMeal.cookingTime} min
+              {meal.cookingTime} min
             </div>
           )}
-          {viewMeal.medicalBadges && viewMeal.medicalBadges.length > 0 && (
+          {meal.medicalBadges && meal.medicalBadges.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {viewMeal.medicalBadges.map((badge, i) => (
+              {meal.medicalBadges.map((badge, i) => (
                 <Badge key={i} variant="outline" className="text-xs">
-                  {badge.label}
+                  {badge}
                 </Badge>
               ))}
             </div>
@@ -339,30 +328,23 @@ export default function MealCardFull({
       {/* Ingredients */}
       <div>
         <h5 className="font-semibold text-sm text-slate-900 dark:text-white mb-2">
-          Ingredients (serves {viewMeal.servings})
+          Ingredients (serves {meal.servings})
         </h5>
-        {viewMeal.ingredients?.length ? (
+        {meal.ingredients?.length ? (
           <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-            {viewMeal.ingredients.map((ingredient, i) => {
-              const displayText = ingredient.displayQuantity
-                ? `${ingredient.displayQuantity} ${ingredient.name}`
-                : ingredient.amount && ingredient.unit
-                ? formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.name)
-                : ingredient.name;
-              return (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-slate-400 rounded-full shrink-0 mt-2"></span>
-                  <span>
-                    {displayText}
-                    {ingredient.notes && (
-                      <span className="text-slate-500 dark:text-slate-400">
-                        {" "}— {ingredient.notes}
-                      </span>
-                    )}
-                  </span>
-                </li>
-              );
-            })}
+            {meal.ingredients.map((ingredient, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="w-2 h-2 bg-slate-400 rounded-full shrink-0 mt-2"></span>
+                <span>
+                  {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
+                  {ingredient.notes && (
+                    <span className="text-slate-500 dark:text-slate-400">
+                      {" "}— {ingredient.notes}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
           </ul>
         ) : (
           <p className="text-sm text-slate-500 dark:text-slate-400 italic">
@@ -376,9 +358,9 @@ export default function MealCardFull({
         <h5 className="font-semibold text-sm text-slate-900 dark:text-white mb-2">
           Instructions
         </h5>
-        {viewMeal.instructions?.length ? (
+        {meal.instructions?.length ? (
           <ol className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-            {viewMeal.instructions.map((instruction, i) => (
+            {meal.instructions.map((instruction, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span className="bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium shrink-0 mt-0.5">
                   {i + 1}

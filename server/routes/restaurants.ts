@@ -5,11 +5,6 @@ import { generateRestaurantMealsAI } from "../services/restaurantMealGeneratorAI
 import { db } from "../db";
 import { users } from "@shared/schema";
 import { eq } from "drizzle-orm";
-import { 
-  mapRestaurantGuideToUnified,
-  validateUnifiedMeal,
-  type UnifiedMeal 
-} from "../services/unification";
 
 const router = Router();
 
@@ -55,30 +50,13 @@ router.post("/guide", async (req, res) => {
     const generationTime = Date.now() - generationStart;
     console.log(`✅ Generated ${recommendations.length} recommendations in ${generationTime}ms`);
 
-    // PHASE 3C: Map recommendations to UnifiedMeal format
-    const unifiedMeals: UnifiedMeal[] = [];
-    for (const meal of recommendations) {
-      try {
-        const unified = mapRestaurantGuideToUnified(meal);
-        validateUnifiedMeal(unified);
-        unifiedMeals.push(unified);
-      } catch (err) {
-        console.warn(
-          "[UnifiedMeal][RestaurantGuide] Validation failed:",
-          (err as Error).message
-        );
-      }
-    }
-    console.log(`✅ [UnifiedMeal][RestaurantGuide] Mapped ${unifiedMeals.length}/${recommendations.length} meals`);
-
     return res.json({
       recommendations,
       restaurantName,
       craving,
       cuisine,
       generatedAt: new Date().toISOString(),
-      generationTime,
-      unifiedMeals
+      generationTime
     });
 
   } catch (error) {
@@ -127,28 +105,11 @@ router.post("/analyze-menu", async (req, res) => {
 
     console.log(`✅ Generated ${recommendations.length} restaurant meal recommendations`);
 
-    // PHASE 3C: Map recommendations to UnifiedMeal format
-    const unifiedMeals: UnifiedMeal[] = [];
-    for (const meal of recommendations) {
-      try {
-        const unified = mapRestaurantGuideToUnified(meal);
-        validateUnifiedMeal(unified);
-        unifiedMeals.push(unified);
-      } catch (err) {
-        console.warn(
-          "[UnifiedMeal][RestaurantGuide] Validation failed:",
-          (err as Error).message
-        );
-      }
-    }
-    console.log(`✅ [UnifiedMeal][RestaurantGuide] Mapped ${unifiedMeals.length}/${recommendations.length} meals`);
-
     return res.json({
       recommendations,
       restaurantName,
       cuisine,
-      generatedAt: new Date().toISOString(),
-      unifiedMeals
+      generatedAt: new Date().toISOString()
     });
 
   } catch (error) {

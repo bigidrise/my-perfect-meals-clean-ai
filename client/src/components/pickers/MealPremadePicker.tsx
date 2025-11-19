@@ -8,21 +8,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import PreparationModal from '@/components/PreparationModal';
 import { 
+  AI_PREMADE_BREAKFAST_MEALS, 
   getBreakfastMealsByCategory,
-  type BreakfastCategory,
-  categoryDisplayNames as breakfastDisplayNames
+  type BreakfastCategory 
 } from '@/data/aiPremadeBreakfast';
-import {
-  getLunchMealsByCategory,
-  type LunchCategory,
-  lunchCategoryDisplayNames
-} from '@/data/aiPremadeLunch';
-import {
-  getDinnerMealsByCategory,
-  type DinnerCategory,
-  dinnerCategoryDisplayNames
-} from '@/data/aiPremadeDinner';
-import { normalizeUnifiedMealOutput } from '@/lib/mealEngineApi';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -31,40 +20,62 @@ interface MealPremadePickerProps {
   mealType?: 'breakfast' | 'lunch' | 'dinner';
 }
 
-// Helper to transform meals to picker format
-const transformMeals = (meals: any[]) => meals.map(meal => ({
-  id: meal.id,
-  name: meal.name,
-  defaultCookingMethod: meal.defaultCookingMethod,
-  actualIngredients: meal.ingredients,
-  ingredients: meal.ingredients.map((ing: any) => ({
-    item: ing.item,
-    amount: `${ing.quantity} ${ing.unit}`,
-    preparation: meal.defaultCookingMethod || 'as preferred'
-  }))
-}));
+// Map category names to display names
+const categoryDisplayNames: Record<BreakfastCategory, string> = {
+  'all-protein': 'All Protein',
+  'protein-carb': 'Protein + Carb',
+  'egg-based': 'Egg-Based Meals'
+};
 
-// Build breakfast premades
+// Build breakfast premades from AI data with actual ingredients
 const breakfastPremades = {
-  'All Protein': transformMeals(getBreakfastMealsByCategory('all-protein')),
-  'Protein + Carb': transformMeals(getBreakfastMealsByCategory('protein-carb')),
-  'Egg-Based Meals': transformMeals(getBreakfastMealsByCategory('egg-based'))
+  'All Protein': getBreakfastMealsByCategory('all-protein').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'Protein + Carb': getBreakfastMealsByCategory('protein-carb').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'Egg-Based Meals': getBreakfastMealsByCategory('egg-based').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  }))
 };
 
-// Build lunch premades
+// Lunch premade meals organized by category
 const lunchPremades = {
-  'Lean Protein Plates': transformMeals(getLunchMealsByCategory('lean-plates')),
-  'Protein + Carb Bowls': transformMeals(getLunchMealsByCategory('protein-carb-bowls')),
-  'Wraps, Sandwiches & Melts': transformMeals(getLunchMealsByCategory('wraps-sandwiches')),
-  'High-Protein Salads': transformMeals(getLunchMealsByCategory('high-protein-salads'))
+  'Category 1': [],
+  'Category 2': [],
+  'Category 3': []
 };
 
-// Build dinner premades
+// Dinner premade meals organized by category
 const dinnerPremades = {
-  'Lean Protein Plates': transformMeals(getDinnerMealsByCategory('lean-plates')),
-  'Protein + Carb Bowls': transformMeals(getDinnerMealsByCategory('protein-carb-bowls')),
-  'High-Protein Pastas': transformMeals(getDinnerMealsByCategory('high-protein-pastas')),
-  'Veggie + Lean Protein Bowls': transformMeals(getDinnerMealsByCategory('veggie-lean-bowls'))
+  'Category 1': [],
+  'Category 2': [],
+  'Category 3': []
 };
 
 export default function MealPremadePicker({
@@ -91,38 +102,12 @@ export default function MealPremadePicker({
 
   // List of ingredients that need cooking style selection
   const NEEDS_PREP = [
-    // Eggs
     'Eggs', 'Egg Whites', 'Whole Eggs',
-    
-    // Red Meats
-    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon', 'Flank Steak',
-    'Beef', 'Ground Beef', 'Beef Strips',
-    'Pork', 'Pork Chop', 'Pork Tenderloin',
-    'Lamb', 'Lamb Chop',
-    
-    // Poultry
-    'Chicken Breast', 'Chicken Thighs', 'Chicken',
-    'Turkey Breast', 'Turkey', 'Ground Turkey',
-    
-    // Fish & Seafood
-    'Salmon', 'Tuna', 'Tilapia', 'Cod', 'Halibut', 'White Fish',
-    'Shrimp',
-    
-    // Rice & Grains
-    'Rice', 'Brown Rice', 'White Rice', 'Jasmine Rice', 'Basmati Rice',
-    'Quinoa', 'Couscous', 'Farro', 'Barley',
-    
-    // Vegetables
+    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon',
+    'Chicken Breast', 'Chicken Thighs',
     'Broccoli', 'Spinach', 'Asparagus', 'Brussels Sprouts',
-    'Cauliflower', 'Zucchini', 'Bell Peppers', 'Peppers',
-    'Green Beans', 'Carrots', 'Mixed Vegetables',
-    'Kale', 'Cabbage',
-    
-    // Potatoes
-    'Potato', 'Sweet Potato', 'Yam', 'Potatoes',
-    
-    // Salad Greens
-    'Lettuce', 'Spring Mix', 'Mixed Greens', 'Romaine'
+    'Potato', 'Sweet Potato', 'Yam',
+    'Lettuce', 'Spring Mix'
   ];
 
   // Set initial category when modal opens or meal type changes
@@ -136,23 +121,11 @@ export default function MealPremadePicker({
   }, [open, mealType]);
 
   const handleSelectPremade = (meal: any, category: string) => {
-    // Check both meal name and actual ingredients for items needing prep
+    // Detect if meal name contains ingredients that need prep selection
     const mealNameLower = meal.name.toLowerCase();
-    const actualIngredients = meal.actualIngredients || [];
-    
-    // First check meal name
-    let needsPrepIngredient = NEEDS_PREP.find(ing => 
+    const needsPrepIngredient = NEEDS_PREP.find(ing => 
       mealNameLower.includes(ing.toLowerCase())
     );
-    
-    // If not found in name, check actual ingredients
-    if (!needsPrepIngredient && actualIngredients.length > 0) {
-      needsPrepIngredient = NEEDS_PREP.find(ing => 
-        actualIngredients.some((ai: any) => 
-          ai.item.toLowerCase().includes(ing.toLowerCase())
-        )
-      );
-    }
 
     if (needsPrepIngredient) {
       // Show prep modal first
@@ -170,8 +143,7 @@ export default function MealPremadePicker({
     const updatedStyles = { ...cookingStyles, [ingredient]: style };
     setCookingStyles(updatedStyles);
     
-    // AI PREMADES: Meals are pre-defined, so we can generate immediately after prep selection
-    // (Unlike AI Meal Creator which must wait for user to click Generate button)
+    // Generate meal with selected style
     if (pendingMeal) {
       generateMealImage(pendingMeal, pendingCategory, updatedStyles);
       setPendingMeal(null);
@@ -196,14 +168,13 @@ export default function MealPremadePicker({
         ingredientsList = [meal.name];
       }
       
-      // Use the OLD working fridge-rescue endpoint
+      // Use the SAME endpoint as the working AI Meal Creator
       const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fridgeItems: ingredientsList,
-          servings: 1,
-          dietFlags: []
+          userId: 1
         })
       });
       
@@ -214,25 +185,32 @@ export default function MealPremadePicker({
       const data = await response.json();
       
       // Handle both response formats
-      let rawMeal;
+      let generatedMeal;
       if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        rawMeal = data.meals[0];
+        generatedMeal = data.meals[0];
       } else if (data.meal) {
-        rawMeal = data.meal;
+        generatedMeal = data.meal;
       } else {
         throw new Error('No meal found in response');
       }
       
-      // Normalize UnifiedMeal response to frontend format
-      const normalized = normalizeUnifiedMealOutput(rawMeal);
-      
       // Transform to match board format
       const premadeMeal = {
-        ...normalized,
         id: `premade-${meal.id}-${Date.now()}`,
-        title: normalized.name || meal.name,
+        title: generatedMeal.name || meal.name,
+        name: generatedMeal.name || meal.name,
+        description: generatedMeal.description,
         servings: 1,
-        imageUrl: normalized.imageUrl || '/assets/meals/default-breakfast.jpg',
+        ingredients: generatedMeal.ingredients || meal.ingredients,
+        instructions: generatedMeal.instructions || [],
+        imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
+        nutrition: generatedMeal.nutrition || {
+          calories: generatedMeal.calories || 350,
+          protein: generatedMeal.protein || 30,
+          carbs: generatedMeal.carbs || 20,
+          fat: generatedMeal.fat || 15
+        },
+        medicalBadges: generatedMeal.medicalBadges || [],
         source: 'premade',
         category: category
       };

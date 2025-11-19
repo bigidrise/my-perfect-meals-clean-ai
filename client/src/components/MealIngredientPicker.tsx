@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
 
@@ -313,41 +314,31 @@ export default function MealIngredientPicker({
         };
       }
 
-      // STEP 5 — API call using OLD working fridge-rescue endpoint
-      const response = await fetch('/api/meals/fridge-rescue', {
+      // STEP 5 — Build payload including rewritten ingredients
+      const requestPayload = {
+        fridgeItems: allIngredientsWithStyles,
+        userId: 1,
+        mealSlot: mealSlot,
+        ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
+        ...(dietType && { dietType })
+      };
+
+      // STEP 6 — API call
+      const data = await apiRequest('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fridgeItems: allIngredientsWithStyles,
-          servings: 1,
-          dietFlags: dietType ? [dietType] : []
-        })
+        body: JSON.stringify(requestPayload)
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate meal');
-      }
-
-      const data = await response.json();
-      const generatedMeal = data.meals && data.meals[0] ? data.meals[0] : null;
+      const generatedMeal = data.meals?.[0];
 
       if (!generatedMeal) {
-        throw new Error('No meal returned from API');
+        throw new Error('No meal generated');
       }
 
-      // STEP 7 — Add default image and format for frontend
+      // STEP 7 — Add default image
       const mealWithImage = {
-        id: generatedMeal.id || `meal-${Date.now()}`,
-        name: generatedMeal.name,
-        description: generatedMeal.description || '',
-        ingredients: generatedMeal.ingredients || [],
-        instructions: generatedMeal.instructions || [],
-        nutrition: {
-          calories: generatedMeal.nutrition?.calories || 0,
-          protein_g: generatedMeal.nutrition?.protein_g || 0,
-          carbs_g: generatedMeal.nutrition?.carbs_g || 0,
-          fat_g: generatedMeal.nutrition?.fat_g || 0,
-        },
+        ...generatedMeal,
         imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
         ...(macroTargets && {
           macroTargets: {
@@ -374,13 +365,9 @@ export default function MealIngredientPicker({
 
       // STEP 10 — Macro accuracy toast
       if (macroTargets) {
-        const actualProtein = generatedMeal.nutrition.protein_g;
-        const actualCarbs = generatedMeal.nutrition.carbs_g;
-        const actualFat = generatedMeal.nutrition.fat_g;
-        
-        const proteinDiff = Math.abs(actualProtein - macroTargets.protein);
-        const carbsDiff = Math.abs(actualCarbs - macroTargets.carbs);
-        const fatDiff = Math.abs(actualFat - macroTargets.fat);
+        const proteinDiff = Math.abs(generatedMeal.protein - macroTargets.protein);
+        const carbsDiff = Math.abs(generatedMeal.carbs - macroTargets.carbs);
+        const fatDiff = Math.abs(generatedMeal.fat - macroTargets.fat);
         const withinTolerance = proteinDiff <= 5 && carbsDiff <= 5 && fatDiff <= 5;
 
         const missedMacros = [];
@@ -391,8 +378,8 @@ export default function MealIngredientPicker({
         toast({
           title: withinTolerance ? "🎯 Perfect Macro Hit!" : "⚠️ Close to Target",
           description: withinTolerance 
-            ? `${generatedMeal.name}\nActual: ${actualProtein}p / ${actualCarbs}c / ${actualFat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f ✓`
-            : `${generatedMeal.name}\nActual: ${actualProtein}p / ${actualCarbs}c / ${actualFat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f\n${missedMacros.join(', ')}`,
+            ? `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f ✓`
+            : `${generatedMeal.name}\nActual: ${generatedMeal.protein}p / ${generatedMeal.carbs}c / ${generatedMeal.fat}f\nTarget: ${macroTargets.protein}p / ${macroTargets.carbs}c / ${macroTargets.fat}f\n${missedMacros.join(', ')}`,
           variant: "default",
         });
       } else {

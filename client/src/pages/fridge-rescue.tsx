@@ -34,7 +34,6 @@ import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
 import MacroBridgeButton from "@/components/biometrics/MacroBridgeButton";
 import TrashButton from "@/components/ui/TrashButton";
 import PhaseGate from "@/components/PhaseGate";
-import { normalizeGeneratorInput, normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -321,20 +320,18 @@ const FridgeRescuePage = () => {
     setIsLoading(true);
     startProgressTicker();
     try {
-      const body = normalizeGeneratorInput({
-        fridgeItems: ingredients
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
-        userId: 1,
-      });
-
       const response = await fetch("/api/meals/fridge-rescue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          fridgeItems: ingredients
+            .split(",")
+            .map((i) => i.trim())
+            .filter((i) => i),
+          userId: 1,
+        }),
       });
 
       if (!response.ok) {
@@ -347,10 +344,10 @@ const FridgeRescuePage = () => {
       // Handle both response formats: {meals: [...]} or {meal: {...}}
       let mealsArray;
       if (data.meals && Array.isArray(data.meals)) {
-        mealsArray = data.meals.map(normalizeUnifiedMealOutput);
+        mealsArray = data.meals;
       } else if (data.meal) {
         // Backend returned single meal, wrap in array
-        mealsArray = [normalizeUnifiedMealOutput(data.meal)];
+        mealsArray = [data.meal];
       } else {
         console.error("❌ Invalid data structure:", data);
         throw new Error("No meals found in response");
@@ -444,26 +441,23 @@ const FridgeRescuePage = () => {
     ingredients: string,
     selectedGoal?: string,
   ) {
-    const body = normalizeGeneratorInput({
-      fridgeItems: ingredients
-        .trim()
-        .split(",")
-        .map((i) => i.trim())
-        .filter((i) => i),
-      goal: selectedGoal,
-    });
-
     const resp = await fetch("/api/meals/fridge-rescue", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        fridgeItems: ingredients
+          .trim()
+          .split(",")
+          .map((i) => i.trim())
+          .filter((i) => i),
+        goal: selectedGoal,
+      }),
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
     if (!data?.meals?.length) throw new Error("No meals returned");
 
-    const normalized = normalizeUnifiedMealOutput(data.meals[0]);
-    await addMealToPlan(normalized); // send to weekly slot
+    await addMealToPlan(data.meals[0]); // send to weekly slot
   }
 
   // Local list replace (for non-replace mode)
@@ -480,17 +474,15 @@ const FridgeRescuePage = () => {
       }
 
       // Otherwise, do local list replacement
-      const body = normalizeGeneratorInput({
-        ingredients: ingredients.trim(),
-        goal: undefined,
-      });
-
       const response = await fetch("/api/meals/fridge-rescue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          ingredients: ingredients.trim(),
+          goal: undefined, // You can add selectedGoal if needed
+        }),
       });
 
       if (!response.ok) {
@@ -500,8 +492,7 @@ const FridgeRescuePage = () => {
       const data = await response.json();
 
       if (data?.meals?.length > 0) {
-        const normalized = normalizeUnifiedMealOutput(data.meals[0]);
-        const next = { ...normalized };
+        const next = { ...data.meals[0] };
         if (!next.imageUrl) {
           next.imageUrl = "/assets/meals/default-dinner.jpg"; // fallback image
         }
@@ -718,7 +709,7 @@ const FridgeRescuePage = () => {
                       {meal.medicalBadges && meal.medicalBadges.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           <HealthBadgesPopover
-                            badges={meal.medicalBadges}
+                            badges={meal.medicalBadges.map((b) => b.badge)}
                             className="mt-2"
                           />
                         </div>

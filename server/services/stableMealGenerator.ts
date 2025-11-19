@@ -361,50 +361,16 @@ function violatesDiet(ings: Skeleton["ingredients"], diet: string[]) {
   return false;
 }
 
-// PHASE 1 FIX: Medical badges now return rich objects instead of strings
-interface UnifiedMedicalBadge {
-  id: string;
-  label: string;
-  level: "green" | "yellow" | "red";
-  reason: string;
-  category?: "metabolic" | "digestive" | "cardiovascular" | "allergies" | "fitness" | "dietary";
-}
-
-function medicalBadgesFor(s: Skeleton, flags: string[]): UnifiedMedicalBadge[] {
+function medicalBadgesFor(s: Skeleton, flags: string[]): string[] {
   const text = (s.ingredients.map(i => i.name).join(" ") + " " + s.name).toLowerCase();
-  const badges: UnifiedMedicalBadge[] = [];
-  
+  const badges: string[] = [];
   if (flags.some(f => ["type1_diabetes","type2_diabetes","low_gi"].includes(f))) {
-    if (!/\b(syrup|candy|frosting|soda|donut|pastry)\b/.test(text)) {
-      badges.push({
-        id: `craving-diabetes-safe-${Date.now()}`,
-        label: "Diabetes-Safe",
-        level: "green",
-        reason: "No high-sugar ingredients detected. Uses complex carbs and lean proteins.",
-        category: "metabolic"
-      });
-    }
-    badges.push({
-      id: `craving-low-gi-${Date.now()}`,
-      label: "Low-GI-Cautious",
-      level: "yellow",
-      reason: "Meal designed with low glycemic index awareness for blood sugar management.",
-      category: "metabolic"
-    });
+    if (!/\b(syrup|candy|frosting|soda|donut|pastry)\b/.test(text)) badges.push("Diabetes-Safe");
+    badges.push("Low-GI-Cautious");
   }
-  
   if (flags.includes("heart_health")) {
-    if (/\b(salmon|olive oil|avocado|nuts)\b/.test(text)) {
-      badges.push({
-        id: `craving-heart-healthy-${Date.now()}`,
-        label: "Heart-Healthy",
-        level: "green",
-        reason: "Contains heart-healthy fats from salmon, olive oil, avocado, or nuts.",
-        category: "cardiovascular"
-      });
-    }
+    if (/\b(salmon|olive oil|avocado|nuts)\b/.test(text)) badges.push("Heart-Healthy");
   }
-  
   return badges;
 }
 
@@ -687,7 +653,7 @@ export async function generateWeeklyMeals(req: WeeklyMealReq): Promise<FinalMeal
           "Season and serve"
         ],
         nutrition,
-        medicalBadges: medicalBadges.map(b => b.label), // Convert objects back to strings for FinalMeal
+        medicalBadges,
         flags: skeleton.tags,
         servingSize: "1 serving",
         imageUrl: null, // No images for speed
@@ -1043,7 +1009,7 @@ export async function generateCravingMeal(targetMealType: MealType, craving?: st
       "Season to taste and serve hot"
     ],
     nutrition,
-    medicalBadges: medicalBadges.map(b => b.label), // Convert objects back to strings for FinalMeal
+    medicalBadges,
     flags: selected.tags,
     servingSize: "1 serving",
     imageUrl: imageUrl,

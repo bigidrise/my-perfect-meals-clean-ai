@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -14,59 +15,64 @@ export default function PreparationModal({
   onClose,
   onSelect
 }: PreparationModalProps) {
-  // Define cooking styles based on ingredient type
-  const getCookingStyles = (ingredient: string): string[] => {
-    const lower = ingredient.toLowerCase();
 
+  // 🔥 MASTER LIST OF PREP OPTIONS
+  const PREP_OPTIONS: Record<string, string[]> = {
     // Eggs
-    if (lower.includes('egg')) {
-      return ['Scrambled', 'Fried', 'Poached', 'Hard-Boiled', 'Soft-Boiled', 'Over Easy', 'Omelette'];
-    }
+    "Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
+    "Egg Whites": ["Scrambled", "Omelet", "Pan-Seared", "Poached"],
+    "Whole Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
 
-    // Red Meats (Beef, Pork, Lamb)
-    if (lower.includes('steak') || lower.includes('beef') || lower.includes('pork') || lower.includes('lamb')) {
-      return ['Grilled', 'Pan-Seared', 'Broiled', 'Baked', 'Slow-Cooked', 'Rare', 'Medium-Rare', 'Medium', 'Medium-Well', 'Well-Done'];
-    }
+    // Steak
+    "Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+    "Ribeye": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+    "Sirloin Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+    "Filet Mignon": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
 
-    // Poultry
-    if (lower.includes('chicken') || lower.includes('turkey')) {
-      return ['Grilled', 'Baked', 'Pan-Seared', 'Roasted', 'Air-Fried', 'Poached'];
-    }
-
-    // Fish & Seafood
-    if (lower.includes('salmon') || lower.includes('tuna') || lower.includes('fish') || lower.includes('tilapia') || lower.includes('cod') || lower.includes('halibut') || lower.includes('shrimp')) {
-      return ['Grilled', 'Baked', 'Pan-Seared', 'Poached', 'Blackened', 'Broiled'];
-    }
-
-    // Rice & Grains
-    if (lower.includes('rice') || lower.includes('quinoa') || lower.includes('couscous') || lower.includes('farro') || lower.includes('barley')) {
-      return ['Steamed', 'Boiled', 'Pilaf-Style', 'Fried'];
-    }
+    // Chicken
+    "Chicken Breast": [
+      "Grilled",
+      "Grilled (BBQ)",
+      "Grilled (Lemon Pepper)",
+      "Teriyaki",
+      "Pan-Seared",
+      "Air-Fried",
+      "Baked"
+    ],
+    "Chicken Thighs": [
+      "Grilled",
+      "Baked",
+      "Smoked",
+      "Teriyaki",
+      "Pan-Seared",
+      "Air-Fried"
+    ],
 
     // Vegetables
-    if (lower.includes('broccoli') || lower.includes('asparagus') || lower.includes('spinach') ||
-        lower.includes('cauliflower') || lower.includes('zucchini') || lower.includes('pepper') ||
-        lower.includes('green bean') || lower.includes('carrot') || lower.includes('brussels') ||
-        lower.includes('kale') || lower.includes('cabbage')) {
-      return ['Steamed', 'Roasted', 'Grilled', 'Sautéed', 'Stir-Fried', 'Raw'];
-    }
+    "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
+    "Spinach": ["Sautéed", "Steamed", "Creamed", "Wilted"],
+    "Asparagus": ["Grilled", "Roasted", "Pan-Seared", "Steamed"],
+    "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed"],
 
     // Potatoes
-    if (lower.includes('potato') || lower.includes('yam')) {
-      return ['Baked', 'Roasted', 'Mashed', 'Boiled', 'Grilled', 'Air-Fried'];
-    }
+    "Potato": ["Roasted", "Mashed", "Baked", "Air-Fried", "Boiled"],
+    "Sweet Potato": ["Baked", "Mashed", "Roasted", "Air-Fried"],
+    "Yam": ["Baked", "Mashed", "Roasted"],
 
-    // Salad Greens
-    if (lower.includes('lettuce') || lower.includes('spring mix') || lower.includes('greens') || lower.includes('romaine')) {
-      return ['Raw', 'Lightly Wilted'];
-    }
-
-    // Default styles
-    return ['Grilled', 'Baked', 'Pan-Seared', 'Steamed', 'Roasted'];
+    // Salads
+    "Lettuce": ["Garden Salad", "Cobb Salad", "Caesar Style", "Chopped"],
+    "Spring Mix": ["Garden Salad", "Lightly Tossed", "Cobb Style"],
   };
 
   // If ingredient not found → fallback to generic
-  const styles = getCookingStyles(ingredientName);
+  const styles =
+    PREP_OPTIONS[ingredientName] ||
+    PREP_OPTIONS[
+      Object.keys(PREP_OPTIONS).find((key) =>
+        ingredientName.toLowerCase().includes(key.toLowerCase())
+      ) || ""
+    ] ||
+    [];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -88,10 +94,10 @@ export default function PreparationModal({
                   onClose();
                 }}
                 className="
-                  bg-black/40 border border-white/20
-                  hover:bg-white/10
-                  text-white text-sm
-                  rounded-xl py-3 px-2
+                  bg-black/40 border border-white/20 
+                  hover:bg-white/10 
+                  text-white text-sm 
+                  rounded-xl py-3 px-2 
                   transition-all shadow-sm
                 "
               >

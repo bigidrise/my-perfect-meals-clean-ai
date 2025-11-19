@@ -5,8 +5,6 @@ import { CheckCircle, AlertTriangle, RotateCcw, Plus, Clock, Users, Eye } from "
 import { Meal, UserProfile } from "@/services/mealEngineService";
 import TrashButton from "@/components/ui/TrashButton";
 import { formatIngredientWithGrams } from "@/utils/unitConversions";
-import type { UnifiedMeal } from "@/types/unifiedMeal";
-import { mapToViewMeal } from "@/utils/mealViewAdapter";
 
 interface MedicalBadge {
   badge: string;
@@ -102,7 +100,6 @@ function generateDynamicMedicalBadges(meal: Meal, userProfile: UserProfile): Med
 
 interface MealCardDynamicProps {
   meal: Meal;
-  unifiedMeal?: UnifiedMeal | null;
   userProfile: UserProfile;
   onDelete: (mealId: string) => void;
   onReplace: (mealId: string) => void;
@@ -112,8 +109,7 @@ interface MealCardDynamicProps {
 }
 
 const MealCardDynamic: React.FC<MealCardDynamicProps> = ({ 
-  meal,
-  unifiedMeal, 
+  meal, 
   userProfile, 
   onDelete, 
   onReplace, 
@@ -124,18 +120,11 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
   const [showFullIngredients, setShowFullIngredients] = useState(false);
   const [showFullInstructions, setShowFullInstructions] = useState(false);
 
-  const viewMeal = mapToViewMeal({ legacyMeal: meal, unifiedMeal });
-
-  // Use UnifiedMeal badges if available, otherwise generate from legacy meal
-  const legacyBadges = generateDynamicMedicalBadges(meal, userProfile);
-  const medicalBadges = unifiedMeal?.medicalBadges?.map(badge => ({
-    badge: badge.label,
-    explanation: badge.reason,
-    type: badge.level === 'green' ? 'safe' as const : badge.level === 'yellow' ? 'warning' as const : 'alert' as const
-  })) || legacyBadges;
+  // Generate dynamic medical badges based on user's onboarding profile
+  const medicalBadges = generateDynamicMedicalBadges(meal, userProfile);
 
   // Debug: Check if medical badges are being generated
-  console.log("MealCardDynamic - Medical badges for", viewMeal.name, ":", medicalBadges);
+  console.log("MealCardDynamic - Medical badges for", meal.name, ":", medicalBadges);
 
   const renderMedicalBadges = () => {
     return (
@@ -178,26 +167,26 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-3">
           <h4 className="font-semibold text-lg text-slate-900 dark:text-white line-clamp-2">
-            {viewMeal.name}
+            {meal.name}
           </h4>
-          {viewMeal.difficulty && (
+          {meal.difficulty && (
             <Badge 
               className={`${
-                viewMeal.difficulty === 'Easy' 
+                meal.difficulty === 'Easy' 
                   ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
-                  : viewMeal.difficulty === 'Medium' 
+                  : meal.difficulty === 'Medium' 
                   ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
                   : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
               }`}
             >
-              {viewMeal.difficulty}
+              {meal.difficulty}
             </Badge>
           )}
         </div>
 
-        {viewMeal.description && (
+        {meal.description && (
           <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
-            {viewMeal.description}
+            {meal.description}
           </p>
         )}
 
@@ -206,10 +195,10 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
       </div>
 
       {/* Image */}
-      {viewMeal.imageUrl && (
+      {meal.imageUrl && (
         <img
-          src={viewMeal.imageUrl}
-          alt={viewMeal.name}
+          src={meal.imageUrl}
+          alt={meal.name}
           className="w-full h-48 object-cover rounded-lg"
           loading="lazy"
         />
@@ -220,26 +209,26 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
         <div className="space-y-2">
           <div className="text-center">
             <div className="text-lg font-bold text-slate-900 dark:text-white">
-              {viewMeal.calories}
+              {meal.nutrition.calories}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">calories</div>
           </div>
           <div className="grid grid-cols-3 gap-1 text-center text-xs">
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.protein}g
+                {meal.nutrition.protein_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">P</div>
             </div>
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.carbs}g
+                {meal.nutrition.carbs_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">C</div>
             </div>
             <div>
               <div className="font-semibold text-slate-900 dark:text-white">
-                {viewMeal.fat}g
+                {meal.nutrition.fat_g}g
               </div>
               <div className="text-slate-500 dark:text-slate-400">F</div>
             </div>
@@ -249,12 +238,12 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
             <Users className="w-4 h-4" />
-            <span>{viewMeal.servings} servings</span>
+            <span>{meal.servings} servings</span>
           </div>
-          {viewMeal.cookingTime && (
+          {meal.cookingTime && (
             <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
               <Clock className="w-4 h-4" />
-              <span>{viewMeal.cookingTime}m</span>
+              <span>{meal.cookingTime}m</span>
             </div>
           )}
         </div>
@@ -264,26 +253,19 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
       <div className="space-y-2">
         <h5 className="font-semibold text-slate-900 dark:text-white">Ingredients</h5>
         <ul className="list-disc pl-6 space-y-1">
-          {viewMeal.ingredients && viewMeal.ingredients.slice(0, showFullIngredients ? viewMeal.ingredients.length : 5).map((ingredient, index) => {
-            const displayText = ingredient.displayQuantity
-              ? `${ingredient.displayQuantity} ${ingredient.name}`
-              : ingredient.amount && ingredient.unit
-              ? formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.name)
-              : ingredient.name;
-            return (
-              <li key={index} className="text-sm text-slate-700 dark:text-slate-300">
-                {displayText}
-                {ingredient.notes && <span className="text-slate-500"> — {ingredient.notes}</span>}
-              </li>
-            );
-          })}
+          {meal.ingredients && meal.ingredients.slice(0, showFullIngredients ? meal.ingredients.length : 5).map((ingredient, index) => (
+            <li key={index} className="text-sm text-slate-700 dark:text-slate-300">
+              {formatIngredientWithGrams(ingredient.amount, ingredient.unit, ingredient.item)}
+              {ingredient.notes && <span className="text-slate-500"> — {ingredient.notes}</span>}
+            </li>
+          ))}
         </ul>
-        {viewMeal.ingredients && viewMeal.ingredients.length > 5 && (
+        {meal.ingredients && meal.ingredients.length > 5 && (
           <button
             onClick={() => setShowFullIngredients(!showFullIngredients)}
             className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
           >
-            {showFullIngredients ? 'Show less' : `Show ${viewMeal.ingredients.length - 5} more ingredients`}
+            {showFullIngredients ? 'Show less' : `Show ${meal.ingredients.length - 5} more ingredients`}
           </button>
         )}
       </div>
@@ -292,18 +274,18 @@ const MealCardDynamic: React.FC<MealCardDynamicProps> = ({
       <div className="space-y-2">
         <h5 className="font-semibold text-slate-900 dark:text-white">Instructions</h5>
         <ol className="list-decimal pl-6 space-y-2">
-          {viewMeal.instructions && viewMeal.instructions.slice(0, showFullInstructions ? viewMeal.instructions.length : 3).map((step, index) => (
+          {meal.instructions && meal.instructions.slice(0, showFullInstructions ? meal.instructions.length : 3).map((step, index) => (
             <li key={index} className="text-sm text-slate-700 dark:text-slate-300">
               {step}
             </li>
           ))}
         </ol>
-        {viewMeal.instructions && viewMeal.instructions.length > 3 && (
+        {meal.instructions && meal.instructions.length > 3 && (
           <button
             onClick={() => setShowFullInstructions(!showFullInstructions)}
             className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
           >
-            {showFullInstructions ? 'Show less' : `Show ${viewMeal.instructions.length - 3} more steps`}
+            {showFullInstructions ? 'Show less' : `Show ${meal.instructions.length - 3} more steps`}
           </button>
         )}
       </div>

@@ -42,7 +42,6 @@ import { post } from "@/lib/api";
 import CopyRecipeButton from "@/components/CopyRecipeButton";
 import { ProDietaryDirectives } from "@/components/ProDietaryDirectives";
 import PhaseGate from "@/components/PhaseGate";
-import { normalizeGeneratorInput, normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
 
 // Development user ID - consistent across all components (UUID format)
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -167,7 +166,7 @@ export default function CravingCreator() {
   useEffect(() => {
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenCravingInfo = localStorage.getItem("hasSeenCravingInfo");
-
+    
     if (coachMode === "guided" && !hasSeenCravingInfo) {
       // Small delay to let page render first
       setTimeout(() => {
@@ -308,64 +307,52 @@ export default function CravingCreator() {
     setIsGenerating(true);
     startProgressTicker();
 
-    const body = normalizeGeneratorInput({
-      craving: cravingInput,
-      servings,
-      mealtime: "snack",
-      dietaryRestrictions: (selectedDiet || dietaryRestrictions)
-        ? [selectedDiet || dietaryRestrictions].filter(Boolean)
-        : [],
-      healthConditions: [],
-    });
+    try {
+      const response = await fetch("/api/meals/craving-creator", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetMealType: "snacks",
+          cravingInput,
+          dietaryRestrictions: selectedDiet || dietaryRestrictions,
+          userId: DEV_USER_ID,
+          servings: servings, // NEW: Send serving size to backend
+        }),
+      });
 
-    const response = await fetch("/api/craving-creator/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
-      // Attempt to parse error message from backend if available
-      let errorMsg = "Failed to generate meal";
-      try {
-        const errorData = await response.json();
-        errorMsg = errorData.message || errorMsg;
-      } catch {
-        // If parsing fails, use the response status text
-        errorMsg = response.statusText || errorMsg;
+      if (!response.ok) {
+        throw new Error("Failed to generate meal");
       }
+
+      const data = await response.json();
+      const meal = data.meal || data; // Handle both response formats
+
+      stopProgressTicker();
+      setGeneratedMeals([meal]);
+
+      // Immediately cache the new meal so it survives navigation/refresh
+      saveCravingCache({
+        generatedMeal: meal,
+        craving: cravingInput,
+        servings: servings, // Use actual serving size from state
+        mealType: "snacks",
+        generatedAtISO: new Date().toISOString(),
+      });
+
+      toast({
+        title: "✨ Meal Created!",
+        description: `${meal.name} is ready for you.`,
+      });
+    } catch (error: any) {
       stopProgressTicker();
       toast({
         title: "Generation Failed",
-        description: errorMsg,
+        description: error.message || "Failed to generate meal. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsGenerating(false);
-      return; // Exit early if response is not OK
     }
-
-    const data = await response.json();
-    const rawMeal = data.meal || data;
-    const meal = normalizeUnifiedMealOutput(rawMeal);
-
-    stopProgressTicker();
-    setGeneratedMeals([meal]);
-
-    // Immediately cache the new meal so it survives navigation/refresh
-    saveCravingCache({
-      generatedMeal: meal,
-      craving: cravingInput,
-      servings: servings, // Use actual serving size from state
-      mealType: "snacks",
-      generatedAtISO: new Date().toISOString(),
-    });
-
-    toast({
-      title: "✨ Meal Created!",
-      description: `${meal.name} is ready for you.`,
-    });
-
-    setIsGenerating(false);
   };
 
 
@@ -668,7 +655,7 @@ export default function CravingCreator() {
 
                 {!replaceId && (
                   <p className="text-white/80 text-sm mt-2 text-center">
-                    ⏱️ Generation takes 15-30 seconds
+                    ⏱️ Generation takes 15-30 seconds 
                     compliance
                   </p>
                 )}
@@ -847,8 +834,8 @@ export default function CravingCreator() {
                                 amount: ing.amount || ing.quantity,
                                 unit: ing.unit
                               })),
-                              instructions: Array.isArray(meal.instructions)
-                                ? meal.instructions
+                              instructions: Array.isArray(meal.instructions) 
+                                ? meal.instructions 
                                 : (meal.instructions ? meal.instructions.split('\n').filter((s: string) => s.trim()) : [])
                             }} />
                           </div>

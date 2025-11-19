@@ -18,20 +18,6 @@ interface CacheEntry {
 const cache = new Map<string, CacheEntry>();
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-// Basic fallback data for common ZIP codes if API fails
-// This could be expanded or loaded from a more comprehensive source
-const fallbackZipData: { [key: string]: Coordinates } = {
-  "90210": { lat: 34.0901, lng: -118.4093 }, // Beverly Hills, CA
-  "10001": { lat: 40.7506, lng: -73.9970 }, // New York, NY
-  "60601": { lat: 41.8818, lng: -87.6231 }, // Chicago, IL
-  "75001": { lat: 32.9566, lng: -96.8647 }, // Addison, TX
-  "94107": { lat: 37.7749, lng: -122.4194 }, // San Francisco, CA
-};
-
-function getFallbackCoordinates(zipCode: string): Coordinates | null {
-  return fallbackZipData[zipCode] || null;
-}
-
 /**
  * Convert ZIP code to coordinates using Google Geocoding API
  * Returns cached result if available and fresh (< 24h old)
@@ -60,74 +46,37 @@ export async function zipToCoordinates(zipCode: string): Promise<Coordinates | n
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     console.error('❌ GOOGLE_PLACES_API_KEY not configured');
-    // Attempt fallback if API key is missing
-    const fallbackCoords = getFallbackCoordinates(zipCode);
-    if (fallbackCoords) {
-      console.log(`✅ Using fallback coordinates as API key is missing for ZIP ${zipCode}`);
-      return fallbackCoords;
-    }
     return null;
   }
 
   try {
-    console.log(`🔍 Geocoding ZIP code: ${zipCode} (USA only)`);
+    console.log(`🔍 Geocoding ZIP code: ${zipCode}`);
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${apiKey}`;
+    
+    const response = await axios.get(url);
+    
+    if (response.data.status !== 'OK' || !response.data.results || response.data.results.length === 0) {
+      console.error(`❌ Geocoding failed for ZIP ${zipCode}:`, response.data.status);
+      return null;
+    }
 
-    // CRITICAL: Force USA-only geocoding with explicit components filter
-    // This prevents international ZIP code confusion
-    const url = `https://maps.googleapis.com/maps/api/geocode/json`;
-    const response = await axios.get(url, {
-      params: {
-        address: zipCode,
-        components: 'postal_code:' + zipCode + '|country:US', // EXPLICIT USA constraint
-        key: apiKey
-      },
-      timeout: 5000
+    const location = response.data.results[0].geometry.location;
+    const coords: Coordinates = {
+      lat: location.lat,
+      lng: location.lng
+    };
+
+    // Cache the result
+    cache.set(zipCode, {
+      coords,
+      timestamp: Date.now()
     });
 
-    if (response.data.status === 'OK' && response.data.results && response.data.results.length > 0) {
-      const location = response.data.results[0].geometry.location;
-      const coords: Coordinates = {
-        lat: location.lat,
-        lng: location.lng
-      };
-
-      // Cache the result
-      cache.set(zipCode, {
-        coords,
-        timestamp: Date.now()
-      });
-
-      console.log(`✅ Geocoded ZIP ${zipCode} to (${coords.lat}, ${coords.lng})`);
-      return coords;
-    }
-
-    // Fallback: Use hardcoded ZIP centroid lookup for common ZIPs
-    console.warn(`⚠️ Geocoding returned ${response.data.status} for ZIP ${zipCode}, trying fallback`);
-    const fallbackCoords = getFallbackCoordinates(zipCode);
-
-    if (fallbackCoords) {
-      console.log(`✅ Using fallback coordinates for ZIP ${zipCode}`);
-      // Cache fallback result too
-      cache.set(zipCode, {
-        coords: fallbackCoords,
-        timestamp: Date.now()
-      });
-      return fallbackCoords;
-    }
-
-    console.error(`❌ No fallback available for ZIP ${zipCode}`);
-    return null;
+    console.log(`✅ Geocoded ZIP ${zipCode} to (${coords.lat}, ${coords.lng})`);
+    return coords;
 
   } catch (error) {
-    console.error(`❌ Geocoding API error for ZIP ${zipCode}:`, error);
-
-    // Try fallback even on network error
-    const fallbackCoords = getFallbackCoordinates(zipCode);
-    if (fallbackCoords) {
-      console.log(`✅ Using fallback coordinates after error for ZIP ${zipCode}`);
-      return fallbackCoords;
-    }
-
+    console.error('❌ Geocoding API error:', error);
     return null;
   }
 }

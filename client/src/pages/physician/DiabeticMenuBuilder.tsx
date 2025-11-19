@@ -134,7 +134,6 @@ export default function DiabeticMenuBuilder() {
   const saveBoard = React.useCallback(
     async (updatedBoard: WeekBoard) => {
       setSaving(true);
-      setJustSaved(false); // Reset success state when starting new save
       try {
         // Type assertion needed because ExtendedMeal has optional title, but schema requires it
         await saveToHook(updatedBoard as any, uuidv4());
@@ -1243,11 +1242,10 @@ export default function DiabeticMenuBuilder() {
                     };
                     saveBoard(clearedBoard);
                     clearAIMealsCache();
-                    useShoppingListStore.getState().clearAll();
                     toast({
                       title: "All Meals Deleted",
                       description:
-                        "Successfully cleared all meals and shopping list",
+                        "Successfully cleared all meals from the board",
                     });
                   }
                 }

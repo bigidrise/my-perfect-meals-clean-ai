@@ -98,7 +98,6 @@ export default function AntiInflammatoryMenuBuilder() {
   // Wrapper to save with idempotent IDs
   const saveBoard = React.useCallback(async (updatedBoard: WeekBoard) => {
     setSaving(true);
-    setJustSaved(false); // Reset success state when starting new save
     try {
       // Type assertion needed because ExtendedMeal has optional title, but schema requires it
       await saveToHook(updatedBoard as any, uuidv4());
@@ -1042,10 +1041,9 @@ export default function AntiInflammatoryMenuBuilder() {
                     };
                     saveBoard(clearedBoard);
                     clearAIMealsCache();
-                    useShoppingListStore.getState().clearAll();
                     toast({
                       title: "All Meals Deleted",
-                      description: "Successfully cleared all meals and shopping list",
+                      description: "Successfully cleared all meals from the board",
                     });
                   }
                 }
