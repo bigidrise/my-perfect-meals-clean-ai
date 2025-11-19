@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
-import { normalizeUnifiedMealOutput } from "@/lib/mealEngineApi";
+import { normalizeUnifiedMealOutput, generateSingleMeal } from "@/lib/mealEngineApi";
 import PreparationModal from "./PreparationModal"; // Assuming PreparationModal is in the same directory
 
 interface AIMealCreatorModalProps {
@@ -34,7 +34,7 @@ export default function AIMealCreatorModal({
   // State for Preparation Modal
   const [prepModalOpen, setPrepModalOpen] = useState(false);
   const [currentIngredient, setCurrentIngredient] = useState("");
-  const [prepStyles, setPrepStyles] = useState({}); // Stores preparation styles for ingredients
+  const [prepStyles, setPrepStyles] = useState<Record<string, string>>({}); // Stores preparation styles for ingredients
 
   const startProgressTicker = () => {
     if (tickerRef.current) return;
@@ -94,37 +94,27 @@ export default function AIMealCreatorModal({
     setIsLoading(true);
     startProgressTicker();
     try {
-      const response = await fetch("/api/meals/fridge-rescue", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fridgeItems: ingredients
-            .split(",")
-            .map((i) => i.trim())
-            .filter((i) => i),
-          userId: 1,
-          // Pass preparation styles if available
-          prepStyles: Object.keys(prepStyles).length > 0 ? prepStyles : undefined,
-        }),
+      const ingredientList = ingredients
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+
+      const rawMeal = await generateSingleMeal({
+        userId: "1",
+        source: "fridge-rescue",
+        fridgeItems: ingredientList,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate meal");
-      }
+      console.log("🍳 AI Meal Creator received data:", rawMeal);
 
-      const data = await response.json();
-      console.log("🍳 AI Meal Creator received data:", data);
-
-      // Standardized single meal format
-      if (!data.meal) {
-        console.error("❌ Invalid data structure:", data);
+      // generateSingleMeal returns Meal directly, not { meal: Meal }
+      if (!rawMeal) {
+        console.error("❌ No meal returned from API");
         throw new Error("No meal found in response");
       }
 
       // Normalize UnifiedMeal response to frontend format
-      const meal = normalizeUnifiedMealOutput(data.meal);
+      const meal = normalizeUnifiedMealOutput(rawMeal);
 
       // Ensure meal has required fields
       if (!meal.imageUrl) {
@@ -143,9 +133,10 @@ export default function AIMealCreatorModal({
       setPrepStyles({}); // Reset prep styles
       onOpenChange(false);
     } catch (error) {
-      console.error("Error generating meal:", error);
+      console.error("Failed to generate meal:", error);
       stopProgressTicker();
-      alert("Failed to generate meal. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to generate meal. Please try again.";
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
     }
