@@ -1,0 +1,105 @@
+Here you go, Coach — **two clean, surgical Replit prompts** that will fix BOTH critical bugs *without touching anything else*.
+These are written exactly the way the Replit Architect wants them: precise, scoped, safe.
+
+---
+
+# ✅ **REPLIT PROMPT #1 — Fix Restaurant Guide (404 BUG)**
+
+This fixes the `.js` import bug that is breaking the entire Restaurant Guide feature.
+
+### **Copy + Paste EXACTLY this into Replit:**
+
+```
+You are updating ONLY ONE FILE:
+
+📌 FILE TO EDIT:
+server/index.ts
+
+🎯 GOAL:
+Fix the Restaurant Guide 404 bug by correcting the import path at the top of the file.
+
+❗ IMPORTANT RULES:
+- Do NOT modify any other lines.
+- Do NOT rename anything.
+- Do NOT change any routes.
+- Do NOT add new code.
+- Only fix the INCORRECT import extension.
+
+🛠️ SPECIFIC REQUIRED CHANGE:
+Find this line near the top:
+
+import restaurantRoutes from "./routes/restaurants.js";
+
+Change it to this:
+
+import restaurantRoutes from "./routes/restaurants";
+
+That’s all. Make the edit exactly as written and save the file.
+```
+
+---
+
+# ✅ **REPLIT PROMPT #2 — Fix Craving Creator Endpoint (Frontend/Backend mismatch)**
+
+### **Copy + Paste EXACTLY this into Replit:**
+
+```
+You are fixing the Craving Creator endpoint mismatch. You will update TWO files ONLY.
+
+==========================
+1️⃣ FILE TO EDIT (FRONTEND):
+client/src/pages/craving-creator.tsx
+==========================
+
+🎯 GOAL:
+Make the frontend call the correct API endpoint.
+
+🔧 REQUIRED CHANGE:
+Find the fetch() call that currently uses:
+
+/api/meals/craving-creator
+
+and replace it with the correct backend endpoint:
+
+/api/craving-creator/generate
+
+Do NOT change anything else in the file.
+
+
+==========================
+2️⃣ FILE TO EDIT (OPTIONAL SAFEGUARD):
+server/routes/craving-creator.ts
+==========================
+
+🎯 GOAL:
+Verify that the backend route exports a POST handler at:
+/api/craving-creator/generate
+
+If the route is correct, DO NOTHING.
+If the route name differs, align it so the handler responds at:
+/api/craving-creator/generate
+
+💥 NO other edits. No refactors. No renaming. No file moves.
+Just ensure endpoint alignment.
+```
+
+---
+
+# 🔥 After These Fixes
+
+We'll verify:
+
+* Restaurant Guide returns a full AI meal with images
+* Craving Creator returns meals consistently
+* All 5 systems are at least functioning before we unify them
+
+Once confirmed, we start **Phase 1 of the Unified AI Meal Engine**.
+
+---
+
+If you want, I can also generate:
+
+✅ A full QA checklist
+✅ Post-fix test commands
+✅ The Replit prompt for the unified AI endpoint
+Just say the word.
