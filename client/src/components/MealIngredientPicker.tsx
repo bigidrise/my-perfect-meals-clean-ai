@@ -12,21 +12,19 @@ import { snackIngredients } from "@/data/snackIngredients";
 
 interface MealIngredientPickerProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onMealGenerated: (meal: any) => void;
-  mealSlot: string;
-  dietConfig?: any;
-  dietType?: string;
+  onClose: () => void;
+  onMealSelect?: (meal: any) => void;
+  mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+  boardType?: 'beach-body' | 'athlete' | 'diabetic' | 'glp1' | 'anti-inflammatory';
   showMacroTargeting?: boolean;
 }
 
 export default function MealIngredientPicker({ 
   open, 
-  onOpenChange, 
-  onMealGenerated,
-  mealSlot,
-  dietConfig,
-  dietType,
+  onClose,
+  onMealSelect,
+  mealType = 'breakfast',
+  boardType = 'beach-body',
   showMacroTargeting = false
 }: MealIngredientPickerProps) {
 
@@ -195,13 +193,13 @@ export default function MealIngredientPicker({
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-    
+
     // Stop and reset progress ticker
     if (tickerRef.current) {
       clearInterval(tickerRef.current);
       tickerRef.current = null;
     }
-    
+
     // Reset all state
     setGenerating(false);
     setProgress(0);
@@ -446,7 +444,7 @@ export default function MealIngredientPicker({
       };
 
       // STEP 8 — Send result back up
-      onMealGenerated(mealWithImage);
+      onMealSelect(mealWithImage);
 
       // STEP 9 — Macro accuracy toast
       if (macroTargets) {
@@ -482,7 +480,7 @@ export default function MealIngredientPicker({
       setTargetFat('');
       saveMacroTargetsCache(false, '', '', '');
       cleanupGeneration();
-      onOpenChange(false);
+      onClose();
 
     } catch (error: any) {
       // Don't show error if request was cancelled
@@ -498,7 +496,7 @@ export default function MealIngredientPicker({
         description: "Please try again with different ingredients",
         variant: "destructive"
       });
-      
+
       // Clean up on error
       cleanupGeneration();
     }
@@ -507,16 +505,16 @@ export default function MealIngredientPicker({
   const handleCancel = () => {
     // Use shared cleanup routine
     cleanupGeneration();
-    
+
     // Close modal
-    onOpenChange(false);
+    onClose();
   };
 
   const handleDialogChange = (isOpen: boolean) => {
     if (!isOpen) {
       // Cancel generation if modal is being closed
       cleanupGeneration();
-      onOpenChange(false);
+      onClose();
     }
   };
 
@@ -727,7 +725,7 @@ export default function MealIngredientPicker({
                     const nameB = typeof b === "string" ? b : b.name;
                     return nameA.localeCompare(nameB);
                   });
-                  
+
                   // Filter by search query
                   const filteredItems = searchQuery.trim()
                     ? sortedItems.filter((ingredient) => {
@@ -735,7 +733,7 @@ export default function MealIngredientPicker({
                         return ingredientName.toLowerCase().includes(searchQuery.toLowerCase());
                       })
                     : sortedItems;
-                  
+
                   return filteredItems.map((ingredient: string | any, index: number) => {
                     const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
                     const isSelected = selectedIngredients.includes(ingredientName);
