@@ -628,9 +628,6 @@ const FridgeRescuePage = () => {
                 <h2 className="text-xl font-bold text-white mb-2">
                   🍽️ Your Fridge Rescue Meals
                 </h2>
-                <p className="text-sm text-white/80">
-                  Here are 3 delicious meals you can make with your ingredients
-                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
