@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import PreparationModal from '@/components/PreparationModal';
+import PreparationModal, { normalizeIngredientName } from '@/components/PreparationModal';
 import { 
   AI_PREMADE_BREAKFAST_MEALS, 
   getBreakfastMealsByCategory,
@@ -319,9 +319,10 @@ export default function MealPremadePicker({
     if (meal.actualIngredients && Array.isArray(meal.actualIngredients)) {
       for (const ing of meal.actualIngredients) {
         const ingredientName = ing.item || '';
+        // 🔥 Use normalization to match ingredient
+        const normalizedName = normalizeIngredientName(ingredientName);
         const match = NEEDS_PREP.find(prep => 
-          ingredientName.toLowerCase().includes(prep.toLowerCase()) ||
-          prep.toLowerCase().includes(ingredientName.toLowerCase())
+          normalizeIngredientName(prep) === normalizedName
         );
         if (match) {
           needsPrepIngredient = ingredientName;
@@ -333,9 +334,10 @@ export default function MealPremadePicker({
     // Fallback: check meal name if no ingredients array
     if (!needsPrepIngredient) {
       const mealNameLower = meal.name.toLowerCase();
-      needsPrepIngredient = NEEDS_PREP.find(ing => 
-        mealNameLower.includes(ing.toLowerCase())
-      );
+      needsPrepIngredient = NEEDS_PREP.find(ing => {
+        const normalizedPrep = normalizeIngredientName(ing);
+        return mealNameLower.includes(normalizedPrep.toLowerCase());
+      });
     }
 
     if (needsPrepIngredient) {

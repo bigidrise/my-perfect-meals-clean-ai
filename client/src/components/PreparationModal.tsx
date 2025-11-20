@@ -1,5 +1,7 @@
-import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 interface PreparationModalProps {
   open: boolean;
@@ -8,160 +10,197 @@ interface PreparationModalProps {
   onSelect: (ingredient: string, style: string) => void;
 }
 
+// 🔥 INGREDIENT ALIAS MAP - Maps all variations to canonical names
+const INGREDIENT_ALIASES: Record<string, string[]> = {
+  // Eggs
+  "Eggs": ["egg", "eggs", "whole egg", "whole eggs"],
+  "Egg Whites": ["egg white", "egg whites"],
+
+  // Steaks (all variations)
+  "Steak": ["steak", "steaks", "steak strips", "beef steak", "beef steaks"],
+  "Ribeye": ["ribeye", "ribeye steak", "rib eye", "rib-eye"],
+  "Ribeye Steak": ["ribeye steak", "ribeye steaks"],
+  "Sirloin Steak": ["sirloin", "sirloin steak", "top sirloin", "sirloin steaks"],
+  "Filet Mignon": ["filet mignon", "filet", "tenderloin"],
+  "Flank Steak": ["flank steak", "flank", "flank steaks"],
+
+  // Potatoes (ALL VARIATIONS)
+  "Potatoes": ["potato", "potatoes", "roasted potato", "roasted potatoes", "diced potato", "diced potatoes"],
+  "Red Potatoes": ["red potato", "red potatoes"],
+  "Sweet Potatoes": ["sweet potato", "sweet potatoes", "mashed sweet potato", "sweet potato mash", "yam", "yams"],
+
+  // Chicken
+  "Chicken Breast": ["chicken", "chicken breast", "chicken breasts", "grilled chicken", "chicken breast strips"],
+  "Chicken Thighs": ["chicken thigh", "chicken thighs"],
+
+  // Turkey
+  "Turkey Breast": ["turkey", "turkey breast", "turkey breasts"],
+
+  // Fish
+  "Salmon": ["salmon", "salmon fillet", "salmon fillets"],
+  "Tilapia": ["tilapia", "tilapia fillet", "tilapia fillets"],
+  "Cod": ["cod", "cod fillet", "cod fillets"],
+
+  // Rice (all variations)
+  "Rice": ["rice"],
+  "Brown Rice": ["brown rice"],
+  "White Rice": ["white rice"],
+  "Jasmine Rice": ["jasmine rice"],
+  "Basmati Rice": ["basmati rice"],
+
+  // Vegetables
+  "Broccoli": ["broccoli", "broccoli florets"],
+  "Asparagus": ["asparagus", "asparagus spears"],
+  "Green Beans": ["green bean", "green beans"],
+};
+
+// 🔥 NORMALIZE INGREDIENT NAME - Converts any variation to canonical form
+function normalizeIngredientName(name: string): string {
+  const normalized = name.trim().toLowerCase();
+  
+  // Search through aliases to find canonical name
+  for (const [canonical, aliases] of Object.entries(INGREDIENT_ALIASES)) {
+    if (aliases.some(alias => normalized === alias.toLowerCase())) {
+      return canonical;
+    }
+  }
+  
+  // If no match found, try fuzzy matching (contains)
+  for (const [canonical, aliases] of Object.entries(INGREDIENT_ALIASES)) {
+    if (aliases.some(alias => normalized.includes(alias.toLowerCase()) || alias.toLowerCase().includes(normalized))) {
+      return canonical;
+    }
+  }
+  
+  // Fallback: return original name with proper capitalization
+  return name;
+}
+
 export default function PreparationModal({
   open,
   ingredientName,
   onClose,
   onSelect
 }: PreparationModalProps) {
+  const [selectedStyle, setSelectedStyle] = useState('');
 
-  // 🔥 MASTER LIST OF PREP OPTIONS
+  // 🔥 MASTER LIST OF PREP OPTIONS (using canonical names)
   const PREP_OPTIONS: Record<string, string[]> = {
     // Eggs
     "Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
     "Egg Whites": ["Scrambled", "Omelet", "Pan-Seared", "Poached"],
-    "Whole Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
 
     // Steak
     "Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Ribeye": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+    "Ribeye Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Sirloin Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Filet Mignon": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
+    "Flank Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
 
-    // Potatoes (ALL PLURAL)
+    // Potatoes (PLURAL CANONICAL)
     "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
     "Red Potatoes": ["Roasted Cubes", "Air-Fried", "Boiled"],
     "Sweet Potatoes": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
-    "Yams": ["Baked", "Mashed", "Roasted Cubes"],
-
-    // Rice
-    "Rice": ["Steamed", "Fried Rice", "Pilaf"],
-    "White Rice": ["Steamed", "Fried Rice", "Pilaf"],
-    "Brown Rice": ["Steamed", "Fried Rice", "Pilaf"],
-    "Jasmine Rice": ["Steamed", "Fried Rice"],
-    "Basmati Rice": ["Steamed", "Pilaf"],
-    "Wild Rice": ["Steamed", "Pilaf"],
 
     // Chicken
-    "Chicken Breast": [
-      "Grilled",
-      "Grilled (BBQ)",
-      "Grilled (Lemon Pepper)",
-      "Teriyaki",
-      "Pan-Seared",
-      "Air-Fried",
-      "Baked"
-    ],
-    "Chicken Thighs": [
-      "Grilled",
-      "Baked",
-      "Smoked",
-      "Teriyaki",
-      "Pan-Seared",
-      "Air-Fried"
-    ],
-    "Chicken Sausage": ["Pan-Seared", "Grilled", "Air-Fried"],
-    "Ground Chicken": ["Pan-Seared", "Crumbled & Seasoned"],
+    "Chicken Breast": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Chicken Thighs": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
 
     // Turkey
-    "Turkey Breast": ["Grilled", "Pan-Seared", "Lemon Pepper", "Taco-Seasoned", "Air-Fried"],
-    "Ground Turkey": ["Pan-Seared", "Taco-Seasoned"],
-    "Turkey Sausage": ["Pan-Seared", "Air-Fried"],
+    "Turkey Breast": ["Grilled", "Baked", "Pan-Seared", "Roasted"],
 
     // Fish
-    "Salmon": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
-    "Tilapia": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
-    "Cod": ["Baked", "Pan-Seared", "Air-Fried"],
-    "Tuna": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
-    "Tuna Steak": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
-    "Halibut": ["Grilled", "Baked", "Pan-Seared"],
-    "Mahi Mahi": ["Grilled", "Baked", "Pan-Seared"],
-    "Trout": ["Grilled", "Baked", "Pan-Seared"],
-    "Sardines": ["Grilled", "Pan-Seared"],
-    "Anchovies": ["Pan-Seared", "Raw"],
-    "Catfish": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
-    "Sea Bass": ["Grilled", "Baked", "Pan-Seared"],
-    "Red Snapper": ["Grilled", "Baked", "Pan-Seared"],
-    "Flounder": ["Baked", "Pan-Seared", "Air-Fried"],
-    "Orange Roughy": ["Baked", "Pan-Seared"],
-    "Sole": ["Baked", "Pan-Seared", "Air-Fried"],
+    "Salmon": ["Grilled", "Baked", "Pan-Seared"],
+    "Tilapia": ["Grilled", "Baked", "Pan-Seared"],
+    "Cod": ["Grilled", "Baked", "Pan-Seared"],
+
+    // Rice
+    "Rice": ["Steamed", "Boiled"],
+    "Brown Rice": ["Steamed", "Boiled"],
+    "White Rice": ["Steamed", "Boiled"],
+    "Jasmine Rice": ["Steamed", "Boiled"],
+    "Basmati Rice": ["Steamed", "Boiled"],
 
     // Vegetables
-    "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
-    "Asparagus": ["Steamed", "Grilled", "Roasted", "Pan-Seared"],
-    "Green Beans": ["Steamed", "Sautéed", "Roasted"],
-    "Mixed Vegetables": ["Steamed", "Sautéed", "Roasted"],
-    "Cauliflower": ["Steamed", "Roasted", "Mashed", "Air-Fried"],
-    "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed", "Pan-Seared"],
-    "Kale": ["Sautéed", "Steamed", "Massaged (Salad)", "Baked (Chips)"],
-    "Spinach": ["Steamed", "Sautéed", "Salad Style", "Wilted"],
-    "Carrots": ["Raw", "Sliced", "Roasted", "Julienned"],
-    "Celery": ["Raw", "Sticks"],
-    "Cucumber": ["Raw", "Sliced", "Seasoned (Salt/Lemon)"],
-
-    // Salads
-    "Lettuce": ["Garden Salad", "Cobb Salad", "Caesar Style", "Chopped"],
-    "Romaine Lettuce": ["Garden Salad", "Caesar Style (Light)", "Cobb Style", "Greek Style", "Simple Salad (Olive Oil + Lemon)"],
-    "Spring Mix": ["Garden Salad", "Cobb Style", "Simple Salad (Olive Oil + Lemon)"],
+    "Broccoli": ["Steamed", "Roasted", "Air-Fried"],
+    "Asparagus": ["Steamed", "Roasted", "Grilled"],
+    "Green Beans": ["Steamed", "Roasted", "Sautéed"]
   };
 
-  // If ingredient not found → fallback to generic
-  const styles =
-    PREP_OPTIONS[ingredientName] ||
-    PREP_OPTIONS[
-      Object.keys(PREP_OPTIONS).find((key) =>
-        ingredientName.toLowerCase().includes(key.toLowerCase())
-      ) || ""
-    ] ||
-    [];
+  // 🔥 Normalize the ingredient name before lookup
+  const canonicalName = normalizeIngredientName(ingredientName);
+  const styles = PREP_OPTIONS[canonicalName] || [];
+
+  const handleSelect = () => {
+    if (selectedStyle) {
+      onSelect(ingredientName, selectedStyle);
+      setSelectedStyle('');
+      onClose();
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-gradient-to-b from-zinc-900 via-zinc-800 to-black border border-white/20 rounded-2xl p-6">
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) { setSelectedStyle(''); onClose(); } }}>
+      <DialogContent className="bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-white text-lg font-semibold text-center">
-            How do you want your {ingredientName}?
+          <DialogTitle className="text-white text-base">
+            How do you want your {ingredientName.toLowerCase()}?
           </DialogTitle>
         </DialogHeader>
 
-        {/* Grid of cooking style tiles */}
-        <div className="grid grid-cols-2 gap-3 mt-4">
-          {styles.length > 0 ? (
-            styles.map((style) => (
-              <button
-                key={style}
-                onClick={() => {
-                  onSelect(ingredientName, style);
-                  onClose();
-                }}
-                className="
-                  bg-black/40 border border-white/20 
-                  hover:bg-white/10 
-                  text-white text-sm 
-                  rounded-xl py-3 px-2 
-                  transition-all shadow-sm
-                "
-              >
-                {style}
-              </button>
-            ))
-          ) : (
-            <p className="text-white/60 text-sm text-center col-span-2">
-              This ingredient has no preparation options.
-            </p>
-          )}
-        </div>
+        {styles.length > 0 ? (
+          <div className="mt-3 space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              {styles.map((style) => (
+                <button
+                  key={style}
+                  onClick={() => setSelectedStyle(style)}
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                    selectedStyle === style
+                      ? 'bg-emerald-600/70 border-emerald-400 text-white shadow-lg'
+                      : 'bg-black/50 border-white/20 text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  {style}
+                </button>
+              ))}
+            </div>
 
-        {/* Cancel Button */}
-        <div className="mt-6 flex justify-center">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-black/40 text-white border border-white/20 rounded-lg hover:bg-white/10"
-          >
-            Cancel
-          </button>
-        </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                variant="outline"
+                onClick={() => { setSelectedStyle(''); onClose(); }}
+                className="bg-black/40 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={!selectedStyle}
+                onClick={handleSelect}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Use This Style
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3 space-y-3">
+            <p className="text-white/60 text-sm">This ingredient has no preparation options.</p>
+            <div className="flex justify-end">
+              <Button
+                onClick={onClose}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                OK
+              </Button>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
 }
+
+// 🔥 EXPORT the normalization function so other components can use it
+export { normalizeIngredientName };
