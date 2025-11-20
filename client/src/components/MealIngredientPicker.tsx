@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
@@ -132,6 +133,40 @@ export default function MealIngredientPicker({
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const tickerRef = useRef<number | null>(null);
+
+  // Progress ticker functions
+  const startProgressTicker = () => {
+    if (tickerRef.current) return;
+    setProgress(0);
+    tickerRef.current = window.setInterval(() => {
+      setProgress((p) => {
+        if (p < 90) {
+          const next = p + Math.max(1, Math.floor((90 - p) * 0.07));
+          return Math.min(next, 90);
+        }
+        return p;
+      });
+    }, 150);
+  };
+
+  const stopProgressTicker = () => {
+    if (tickerRef.current) {
+      clearInterval(tickerRef.current);
+      tickerRef.current = null;
+    }
+    setProgress(100);
+  };
+
+  // Cleanup ticker on unmount
+  useEffect(() => {
+    return () => {
+      if (tickerRef.current) {
+        clearInterval(tickerRef.current);
+      }
+    };
+  }, []);
 
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -273,6 +308,7 @@ export default function MealIngredientPicker({
     }
 
     setGenerating(true);
+    startProgressTicker();
 
     try {
       // STEP 1 — Start with selected ingredients
@@ -351,6 +387,8 @@ export default function MealIngredientPicker({
 
       // STEP 8 — Send result back up
       onMealGenerated(mealWithImage);
+      
+      stopProgressTicker();
 
       // STEP 9 — Reset UI state
       setSelectedIngredients([]);
@@ -391,6 +429,7 @@ export default function MealIngredientPicker({
 
     } catch (error) {
       console.error('Failed to generate meal:', error);
+      stopProgressTicker();
       toast({
         title: "Generation Failed",
         description: "Please try again with different ingredients",
@@ -688,12 +727,17 @@ export default function MealIngredientPicker({
             </div>
 
             {generating && (
-              <div>
-                <div className="h-1 bg-black/30 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-purple-600 to-pink-600 animate-pulse" style={{ width: '100%' }} />
+              <div className="max-w-md mx-auto mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-white/80">AI Analysis Progress</span>
+                  <span className="text-sm text-white/80">{Math.round(progress)}%</span>
                 </div>
-                <p className="text-white/60 text-xs text-center mt-2">
-                  AI is crafting your perfect {mealSlot}...
+                <Progress
+                  value={progress}
+                  className="h-3 bg-black/40 border border-white/30"
+                />
+                <p className="text-white/70 text-sm text-center mt-3">
+                  This may take 30-60 seconds
                 </p>
               </div>
             )}
