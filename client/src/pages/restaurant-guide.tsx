@@ -503,6 +503,22 @@ export default function RestaurantGuidePage() {
               >
                 {generateMealsMutation.isPending ? "Finding Dishes..." : "Find Dishes"}
               </Button>
+
+              {generateMealsMutation.isPending && (
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-white/80">AI Analysis Progress</span>
+                    <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+                  </div>
+                  <Progress
+                    value={progress}
+                    className="h-3 bg-black/30 border border-white/20"
+                  />
+                  <p className="text-white/70 text-sm text-center mt-3">
+                    This may take 30-60 seconds
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Generated Meals Section */}
@@ -630,22 +646,6 @@ export default function RestaurantGuidePage() {
               </div>
             )}
 
-            {/* Loading State with Progress Bar */}
-            {generateMealsMutation.isPending && (
-              <div className="max-w-md mx-auto mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-white/80">AI Analysis Progress</span>
-                  <span className="text-sm text-white/80">{Math.round(progress)}%</span>
-                </div>
-                <Progress 
-                  value={progress} 
-                  className="h-3 bg-black/40 border border-white/30" 
-                />
-                <p className="text-white/70 text-sm text-center mt-3">
-                  This may take 30-60 seconds
-                </p>
-              </div>
-            )}
 
             {matchedCuisine &&
             !generateMealsMutation.isPending &&

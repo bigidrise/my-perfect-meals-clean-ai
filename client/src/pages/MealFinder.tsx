@@ -118,9 +118,9 @@ export default function MealFinder() {
 
   const findMealsMutation = useMutation({
     mutationFn: async (data: { mealQuery: string; zipCode: string }) => {
-      setProgress(0);
+      setProgress(60);
       const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + Math.random() * 15, 90));
+        setProgress(prev => Math.min(prev + Math.random() * 10, 90));
       }, 800);
 
       try {

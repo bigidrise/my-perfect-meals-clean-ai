@@ -347,7 +347,7 @@ export default function MealPremadePicker({
             </div>
             <Progress
               value={progress}
-              className="h-3 bg-black/40 border border-white/30"
+              className="h-3 bg-black/30 border border-white/20"
             />
             <p className="text-white/70 text-sm text-center mt-3">
               This may take 30-60 seconds
