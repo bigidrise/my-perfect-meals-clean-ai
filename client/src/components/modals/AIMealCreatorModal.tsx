@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from '@/components/ui/input';
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
@@ -102,7 +103,7 @@ export default function AIMealCreatorModal({
 
       console.log("✅ Generated meal:", meal.name);
       stopProgressTicker();
-      
+
       // Pass meal to parent and close modal
       onMealGenerated(meal);
       setIngredients("");
@@ -151,7 +152,7 @@ export default function AIMealCreatorModal({
             >
               Available Ingredients (separated by commas):
             </label>
-            
+
             {/* Snack Category Suggestions */}
             {mealSlot === "snacks" && !isLoading && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -173,6 +174,12 @@ export default function AIMealCreatorModal({
               </div>
             )}
             
+            {/* Search Input for AI Meal Creator */}
+            <Input
+              placeholder="Search for ingredients..."
+              className="w-full p-4 border border-white/30 bg-black/30 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder:text-white/50"
+            />
+
             <div className="relative">
               <textarea
                 id="ai-ingredients"
@@ -221,7 +228,7 @@ export default function AIMealCreatorModal({
               </div>
 
               <p className="text-white/70 text-sm">
-                
+
               </p>
             </div>
           )}
