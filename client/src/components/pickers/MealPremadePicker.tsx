@@ -272,8 +272,11 @@ export default function MealPremadePicker({
     
     // Vegetables
     'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',
-    'Spinach', 'Lettuce', 'Romaine Lettuce', 'Spring Mix',
-    'Carrots', 'Celery', 'Cucumber'
+    'Cauliflower', 'Brussels Sprouts', 'Kale', 'Spinach',
+    'Carrots', 'Celery', 'Cucumber',
+    
+    // Salads
+    'Lettuce', 'Romaine Lettuce', 'Spring Mix'
   ];
 
   // Set initial category when modal opens or meal type changes

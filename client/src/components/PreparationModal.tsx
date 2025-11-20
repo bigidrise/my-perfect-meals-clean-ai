@@ -88,13 +88,21 @@ export default function PreparationModal({
 
     // Vegetables
     "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
-    "Spinach": ["Sautéed", "Steamed", "Creamed", "Wilted"],
-    "Asparagus": ["Grilled", "Roasted", "Pan-Seared", "Steamed"],
-    "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed"],
+    "Asparagus": ["Steamed", "Grilled", "Roasted", "Pan-Seared"],
+    "Green Beans": ["Steamed", "Sautéed", "Roasted"],
+    "Mixed Vegetables": ["Steamed", "Sautéed", "Roasted"],
+    "Cauliflower": ["Steamed", "Roasted", "Mashed", "Air-Fried"],
+    "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed", "Pan-Seared"],
+    "Kale": ["Sautéed", "Steamed", "Massaged (Salad)", "Baked (Chips)"],
+    "Spinach": ["Steamed", "Sautéed", "Salad Style", "Wilted"],
+    "Carrots": ["Raw", "Sliced", "Roasted", "Julienned"],
+    "Celery": ["Raw", "Sticks"],
+    "Cucumber": ["Raw", "Sliced", "Seasoned (Salt/Lemon)"],
 
     // Salads
     "Lettuce": ["Garden Salad", "Cobb Salad", "Caesar Style", "Chopped"],
-    "Spring Mix": ["Garden Salad", "Lightly Tossed", "Cobb Style"],
+    "Romaine Lettuce": ["Garden Salad", "Caesar Style (Light)", "Cobb Style", "Greek Style", "Simple Salad (Olive Oil + Lemon)"],
+    "Spring Mix": ["Garden Salad", "Cobb Style", "Simple Salad (Olive Oil + Lemon)"],
   };
 
   // If ingredient not found → fallback to generic

@@ -117,18 +117,22 @@ export default function MealIngredientPicker({
     "Wild Rice": ["Steamed", "Pilaf"],
 
     // Vegetables
-    "Broccoli": ["Steamed", "Sautéed", "Roasted", "Air-Fried", "Seasoned"],
-    "Asparagus": ["Steamed", "Grilled", "Roasted"],
-    "Green Beans": ["Steamed", "Sautéed", "Seasoned"],
-    "Mixed Vegetables": ["Steamed", "Sautéed", "Seasoned"],
+    "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
+    "Asparagus": ["Steamed", "Grilled", "Roasted", "Pan-Seared"],
+    "Green Beans": ["Steamed", "Sautéed", "Roasted"],
+    "Mixed Vegetables": ["Steamed", "Sautéed", "Roasted"],
+    "Cauliflower": ["Steamed", "Roasted", "Mashed", "Air-Fried"],
+    "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed", "Pan-Seared"],
+    "Kale": ["Sautéed", "Steamed", "Massaged (Salad)", "Baked (Chips)"],
 
     // Salads / greens
+    "Lettuce": ["Garden Salad", "Cobb Salad", "Caesar Style", "Chopped"],
     "Romaine Lettuce": ["Garden Salad", "Caesar Style (Light)", "Cobb Style", "Greek Style", "Simple Salad (Olive Oil + Lemon)"],
     "Spring Mix": ["Garden Salad", "Cobb Style", "Simple Salad (Olive Oil + Lemon)"],
-    "Spinach": ["Steamed", "Sautéed", "Salad Style"],
+    "Spinach": ["Steamed", "Sautéed", "Salad Style", "Wilted"],
 
     // Raw veggies
-    "Carrots": ["Raw", "Sliced", "Julienned", "Seasoned (Salt/Lemon)"],
+    "Carrots": ["Raw", "Sliced", "Roasted", "Julienned"],
     "Celery": ["Raw", "Sticks"],
     "Cucumber": ["Raw", "Sliced", "Seasoned (Salt/Lemon)"],
   };
