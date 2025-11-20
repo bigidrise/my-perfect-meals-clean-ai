@@ -135,6 +135,7 @@ export default function MealIngredientPicker({
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Progress ticker functions
   const startProgressTicker = () => {
@@ -159,12 +160,34 @@ export default function MealIngredientPicker({
     setProgress(100);
   };
 
-  // Cleanup ticker on unmount
+  // Shared cleanup routine for all cancellation paths
+  const cleanupGeneration = () => {
+    // Abort ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    
+    // Stop and reset progress ticker
+    if (tickerRef.current) {
+      clearInterval(tickerRef.current);
+      tickerRef.current = null;
+    }
+    
+    // Reset all state
+    setGenerating(false);
+    setProgress(0);
+    setSelectedIngredients([]);
+    setCustomIngredients('');
+    setCookingStyles({});
+    setPrepModalIngredient(null);
+    setPrepModalStyle("");
+  };
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (tickerRef.current) {
-        clearInterval(tickerRef.current);
-      }
+      cleanupGeneration();
     };
   }, []);
 
@@ -310,6 +333,9 @@ export default function MealIngredientPicker({
     setGenerating(true);
     startProgressTicker();
 
+    // Create new AbortController for this request
+    abortControllerRef.current = new AbortController();
+
     try {
       // STEP 1 — Start with selected ingredients
       let allIngredients = [...selectedIngredients];
@@ -359,11 +385,12 @@ export default function MealIngredientPicker({
         ...(dietType && { dietType })
       };
 
-      // STEP 6 — API call
+      // STEP 6 — API call with abort signal
       const data = await apiRequest('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload)
+        body: JSON.stringify(requestPayload),
+        signal: abortControllerRef.current.signal
       });
 
       const generatedMeal = data.meals?.[0];
@@ -387,21 +414,8 @@ export default function MealIngredientPicker({
 
       // STEP 8 — Send result back up
       onMealGenerated(mealWithImage);
-      
-      stopProgressTicker();
 
-      // STEP 9 — Reset UI state
-      setSelectedIngredients([]);
-      setCustomIngredients('');
-      setActiveCategory('');
-      setMacroTargetingEnabled(false);
-      setTargetProtein('');
-      setTargetCarbs('');
-      setTargetFat('');
-      saveMacroTargetsCache(false, '', '', '');
-      onOpenChange(false);
-
-      // STEP 10 — Macro accuracy toast
+      // STEP 9 — Macro accuracy toast
       if (macroTargets) {
         const proteinDiff = Math.abs(generatedMeal.protein - macroTargets.protein);
         const carbsDiff = Math.abs(generatedMeal.carbs - macroTargets.carbs);
@@ -427,16 +441,49 @@ export default function MealIngredientPicker({
         });
       }
 
-    } catch (error) {
+      // STEP 10 — Clean up and close
+      setActiveCategory('');
+      setMacroTargetingEnabled(false);
+      setTargetProtein('');
+      setTargetCarbs('');
+      setTargetFat('');
+      saveMacroTargetsCache(false, '', '', '');
+      cleanupGeneration();
+      onOpenChange(false);
+
+    } catch (error: any) {
+      // Don't show error if request was cancelled
+      if (error.name === 'AbortError') {
+        console.log('Meal generation cancelled by user');
+        cleanupGeneration();
+        return;
+      }
+
       console.error('Failed to generate meal:', error);
-      stopProgressTicker();
       toast({
         title: "Generation Failed",
         description: "Please try again with different ingredients",
         variant: "destructive"
       });
-    } finally {
-      setGenerating(false);
+      
+      // Clean up on error
+      cleanupGeneration();
+    }
+  };
+
+  const handleCancel = () => {
+    // Use shared cleanup routine
+    cleanupGeneration();
+    
+    // Close modal
+    onOpenChange(false);
+  };
+
+  const handleDialogChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      // Cancel generation if modal is being closed
+      cleanupGeneration();
+      onOpenChange(false);
     }
   };
 
@@ -476,7 +523,7 @@ export default function MealIngredientPicker({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={handleDialogChange}>
         <DialogContent className="max-w-2xl h-[90vh] sm:h-auto sm:max-h-[80vh] bg-gradient-to-b from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] border border-white/10 p-4 flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle className="text-white flex items-center gap-2 text-xl">
@@ -718,7 +765,7 @@ export default function MealIngredientPicker({
                 )}
               </Button>
               <Button
-                onClick={() => onOpenChange(false)}
+                onClick={handleCancel}
                 variant="outline"
                 className="bg-black/40 border-white/20 text-white hover:bg-white/10"
               >
