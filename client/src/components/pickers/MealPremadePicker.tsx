@@ -377,7 +377,7 @@ export default function MealPremadePicker({
         </div>
 
         {generating && (
-          <div className="max-w-md mx-auto mb-4">
+          <div className="w-full mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-white/80">AI Analysis Progress</span>
               <span className="text-sm text-white/80">{Math.round(progress)}%</span>
