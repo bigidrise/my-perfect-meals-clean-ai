@@ -23,6 +23,7 @@ export const mealIngredients = {
     "Egg Whites",
     "Eggs",
     "Elk",
+    "Whole Eggs",
     "Feta Cheese",
     "Filet Mignon",
     "Flank Steak",

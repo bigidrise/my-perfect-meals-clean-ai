@@ -39,7 +39,7 @@ export default function MealIngredientPicker({
   const COOKING_STYLE_ENABLED: Record<string, string[]> = {
     // Eggs
     "Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
-    "Egg Whites": ["Scrambled", "Omelet", "Poached", "Hard Boiled"],
+    "Egg Whites": ["Scrambled", "Omelet", "Pan-Seared", "Poached"],
     "Whole Eggs": ["Scrambled", "Sunny Side Up", "Omelet", "Poached", "Hard Boiled"],
 
     // Generic steak label
