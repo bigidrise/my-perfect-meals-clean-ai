@@ -101,6 +101,7 @@ export default function MealPremadePicker({
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
 
   const startProgressTicker = () => {
@@ -117,20 +118,32 @@ export default function MealPremadePicker({
     }, 150);
   };
 
-  const stopProgressTicker = () => {
+  // Shared cleanup routine for all cancellation paths
+  const cleanupGeneration = () => {
+    // Abort ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    
+    // Stop and reset progress ticker
     if (tickerRef.current) {
       clearInterval(tickerRef.current);
       tickerRef.current = null;
     }
-    setProgress(100);
+    
+    // Reset all state
+    setGenerating(false);
+    setProgress(0);
+    setPendingMeal(null);
+    setPendingCategory('');
+    setCookingStyles({});
   };
 
-  // Cleanup ticker on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (tickerRef.current) {
-        clearInterval(tickerRef.current);
-      }
+      cleanupGeneration();
     };
   }, []);
 
@@ -189,6 +202,9 @@ export default function MealPremadePicker({
     setGenerating(true);
     startProgressTicker();
     
+    // Create new AbortController for this request
+    abortControllerRef.current = new AbortController();
+    
     try {
       // Build ingredient list with cooking methods applied
       let ingredientsList: string[] = [];
@@ -210,7 +226,8 @@ export default function MealPremadePicker({
         body: JSON.stringify({
           fridgeItems: ingredientsList,
           userId: 1
-        })
+        }),
+        signal: abortControllerRef.current.signal
       });
       
       if (!response.ok) {
@@ -255,25 +272,46 @@ export default function MealPremadePicker({
         onMealSelect(premadeMeal);
       }
       
-      stopProgressTicker();
-      
       toast({
         title: 'Meal Added!',
         description: `${meal.name} has been added to your ${mealType}`,
       });
       
+      // Clean up and close on success
+      cleanupGeneration();
       onClose();
-      setCookingStyles({});
-    } catch (error) {
+    } catch (error: any) {
+      // Don't show error if request was cancelled
+      if (error.name === 'AbortError') {
+        console.log('Meal generation cancelled by user');
+        return;
+      }
+      
       console.error('Error generating premade meal:', error);
-      stopProgressTicker();
       toast({
         title: 'Error',
         description: 'Failed to generate meal image. Please try again.',
         variant: 'destructive'
       });
-    } finally {
-      setGenerating(false);
+      
+      // Clean up on error
+      cleanupGeneration();
+    }
+  };
+
+  const handleCancel = () => {
+    // Use shared cleanup routine
+    cleanupGeneration();
+    
+    // Close modal
+    onClose();
+  };
+
+  const handleDialogChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      // Cancel generation if modal is being closed
+      cleanupGeneration();
+      onClose();
     }
   };
 
@@ -281,7 +319,7 @@ export default function MealPremadePicker({
   const currentMeals = premadeData[activeCategory] || [];
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="max-w-2xl max-h-[85vh] bg-gradient-to-br from-zinc-900 via-zinc-800 to-black border border-white/20 rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-white text-xl font-semibold">
@@ -330,7 +368,7 @@ export default function MealPremadePicker({
         {/* Cancel Button */}
         <div className="flex justify-end gap-3 mb-3">
           <Button
-            onClick={onClose}
+            onClick={handleCancel}
             variant="outline"
             className="bg-black/40 border-white/20 text-white hover:bg-white/10"
           >
