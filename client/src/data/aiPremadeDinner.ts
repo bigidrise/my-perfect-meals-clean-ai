@@ -1,12 +1,11 @@
-
 // client/src/data/aiPremadeDinner.ts
 
 // Types
 export type MealType = "breakfast" | "lunch" | "dinner";
-export type DinnerCategory = 
-  | "lean-protein-plates" 
-  | "protein-carb-bowls" 
-  | "high-protein-plates" 
+export type DinnerCategory =
+  | "lean-protein-plates"
+  | "protein-carb-bowls"
+  | "high-protein-plates"
   | "simple-protein-veggie"
   | "one-pan-meals"
   | "smart-plate-dinners";
@@ -1030,16 +1029,16 @@ export const AI_PREMADE_DINNER_MEALS: AiPremadeMeal[] = [
     ]
   },
 
-  // CATEGORY 4: SIMPLE PROTEIN-VEGGIE (30 meals, d4-01 to d4-30)
+  // CATEGORY 4: SIMPLE PROTEIN-VEGGIE PLATES (30 meals, d4-01 to d4-30)
   {
     id: "d4-01",
-    name: "Baked Cod with Asparagus",
+    name: "Baked Cod with Green Beans",
     category: "simple-protein-veggie",
     mealType: "dinner",
     defaultCookingMethod: "baked",
     ingredients: [
       { item: "Cod", quantity: 6, unit: "oz" },
-      { item: "Asparagus", quantity: 150, unit: "g" }
+      { item: "Green Beans", quantity: 150, unit: "g" }
     ]
   },
   {
@@ -1359,6 +1358,730 @@ export const AI_PREMADE_DINNER_MEALS: AiPremadeMeal[] = [
     ingredients: [
       { item: "Turkey Breast", quantity: 6, unit: "oz" },
       { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+
+  // CATEGORY 5: ONE-PAN MEALS (30 meals, d5-01 to d5-30)
+  {
+    id: "d5-01",
+    name: "Baked Chicken and Asparagus Tray",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-02",
+    name: "Baked Cod and Broccoli Sheet",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-03",
+    name: "Balsamic Chicken and Brussels Sprouts",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-04",
+    name: "Beef Strips and Green Beans One-Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-05",
+    name: "Blackened Chicken and Zucchini Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-06",
+    name: "Cajun Salmon and Asparagus Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-07",
+    name: "Chicken and Bell Peppers One-Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Bell Peppers", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-08",
+    name: "Chicken and Broccoli Sheet Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-09",
+    name: "Chicken and Green Beans Roast",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-10",
+    name: "Chicken and Mixed Vegetables Bake",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-11",
+    name: "Chicken Sausage and Broccoli Bake",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Sausage", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-12",
+    name: "Cod and Asparagus One-Pan Dinner",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-13",
+    name: "Garlic Butter Chicken and Cauliflower",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Cauliflower", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-14",
+    name: "Garlic Salmon and Brussels Sprouts",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-15",
+    name: "Ground Turkey and Bell Peppers Bake",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey", quantity: 6, unit: "oz" },
+      { item: "Bell Peppers", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-16",
+    name: "Herb Chicken and Zucchini Tray",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-17",
+    name: "Honey Mustard Chicken and Carrots",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Carrots", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-18",
+    name: "Italian Cod and Vegetables Bake",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-19",
+    name: "Lemon Chicken and Green Beans Tray",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-20",
+    name: "Lemon Salmon and Broccoli Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-21",
+    name: "Mediterranean Chicken Sheet Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Tomatoes", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-22",
+    name: "Mixed Vegetable and Steak Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-23",
+    name: "Pesto Chicken and Broccoli Roast",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-24",
+    name: "Roasted Chicken and Brussels Sprouts",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-25",
+    name: "Roasted Cod and Green Beans Plate",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 6, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-26",
+    name: "Salmon and Carrots Bake",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Carrots", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-27",
+    name: "Salmon and Zucchini Sheet Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 6, unit: "oz" },
+      { item: "Zucchini", quantity: 150, unit: "g" },
+      { item: "Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+  {
+    id: "d5-28",
+    name: "Steak and Asparagus One-Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Steak", quantity: 6, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-29",
+    name: "Teriyaki Chicken and Vegetables Tray",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" },
+      { item: "Rice", quantity: 0.5, unit: "cup" }
+    ]
+  },
+  {
+    id: "d5-30",
+    name: "Turkey and Bell Peppers One-Pan",
+    category: "one-pan-meals",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey", quantity: 6, unit: "oz" },
+      { item: "Bell Peppers", quantity: 150, unit: "g" },
+      { item: "Sweet Potatoes", quantity: 100, unit: "g" }
+    ]
+  },
+
+  // CATEGORY 6: SMART PLATE DINNERS (30 meals, d6-01 to d6-30)
+  {
+    id: "d6-01",
+    name: "Baked Chicken Breast, Brown Rice & Broccoli",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Brown Rice", quantity: 0.5, unit: "cup" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-02",
+    name: "Baked Cod, Potatoes & Asparagus",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-03",
+    name: "Baked Salmon, Potatoes & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Salmon", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-04",
+    name: "BBQ Chicken Breast, Rice & Mixed Vegetables",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-05",
+    name: "Blackened Salmon, Quinoa & Zucchini",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Salmon", quantity: 5, unit: "oz" },
+      { item: "Quinoa", quantity: 0.5, unit: "cup" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-06",
+    name: "Chicken Breast, Jasmine Rice & Brussels Sprouts",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Jasmine Rice", quantity: 0.5, unit: "cup" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-07",
+    name: "Chicken Breast, Mashed Potatoes & Broccoli",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-08",
+    name: "Chicken Breast, Pilaf Rice & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Pilaf", quantity: 0.5, unit: "cup" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-09",
+    name: "Chicken Thighs, Jasmine Rice & Carrots",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Thighs", quantity: 6, unit: "oz" },
+      { item: "Jasmine Rice", quantity: 0.5, unit: "cup" },
+      { item: "Carrots", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-10",
+    name: "Citrus Chicken Breast, Rice & Spinach",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-11",
+    name: "Citrus Cod, Brown Rice & Asparagus",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 5, unit: "oz" },
+      { item: "Brown Rice", quantity: 0.5, unit: "cup" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-12",
+    name: "Garlic Chicken Breast, Rice & Mixed Vegetables",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-13",
+    name: "Garlic Shrimp, Rice & Broccoli",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Shrimp", quantity: 5, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-14",
+    name: "Grilled Chicken Breast, Quinoa & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Quinoa", quantity: 0.5, unit: "cup" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-15",
+    name: "Grilled Salmon, Rice & Zucchini",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Salmon", quantity: 5, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-16",
+    name: "Ground Beef, Potatoes & Carrots",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Steak", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Carrots", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-17",
+    name: "Ground Turkey, Rice & Spinach",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Ground Turkey", quantity: 5, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-18",
+    name: "Lemon Chicken Breast, Rice & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "grilled",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-19",
+    name: "Lemon Cod, Potatoes & Broccoli",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-20",
+    name: "Pan-Seared Chicken Breast, Quinoa & Brussels Sprouts",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Quinoa", quantity: 0.5, unit: "cup" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-21",
+    name: "Pan-Seared Shrimp, Jasmine Rice & Zucchini",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Shrimp", quantity: 5, unit: "oz" },
+      { item: "Jasmine Rice", quantity: 0.5, unit: "cup" },
+      { item: "Zucchini", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-22",
+    name: "Pesto Chicken Breast, Pasta & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Pasta", quantity: 0.5, unit: "cup" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-23",
+    name: "Roasted Chicken Breast, Potatoes & Spinach",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Spinach", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-24",
+    name: "Roasted Cod, Rice & Bell Peppers",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 5, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Bell Peppers", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-25",
+    name: "Sirloin Steak, Potatoes & Asparagus",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Sirloin Steak", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Asparagus", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-26",
+    name: "Sirloin Steak, Rice & Broccoli",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Sirloin Steak", quantity: 5, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Broccoli", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-27",
+    name: "Teriyaki Chicken Breast, Rice & Mixed Vegetables",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Chicken Breast", quantity: 6, unit: "oz" },
+      { item: "White Rice", quantity: 0.5, unit: "cup" },
+      { item: "Mixed Vegetables", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-28",
+    name: "Turkey Breast, Quinoa & Brussels Sprouts",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Turkey Breast", quantity: 6, unit: "oz" },
+      { item: "Quinoa", quantity: 0.5, unit: "cup" },
+      { item: "Brussels Sprouts", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-29",
+    name: "Turkey Sausage, Potatoes & Cauliflower",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "pan-seared",
+    ingredients: [
+      { item: "Turkey Sausage", quantity: 5, unit: "oz" },
+      { item: "Potatoes", quantity: 4, unit: "oz" },
+      { item: "Cauliflower", quantity: 150, unit: "g" }
+    ]
+  },
+  {
+    id: "d6-30",
+    name: "White Fish, Jasmine Rice & Green Beans",
+    category: "smart-plate-dinners",
+    mealType: "dinner",
+    defaultCookingMethod: "baked",
+    ingredients: [
+      { item: "Cod", quantity: 5, unit: "oz" },
+      { item: "Jasmine Rice", quantity: 0.5, unit: "cup" },
+      { item: "Green Beans", quantity: 150, unit: "g" }
     ]
   }
 ];
