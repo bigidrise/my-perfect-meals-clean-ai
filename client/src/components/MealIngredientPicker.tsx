@@ -28,6 +28,12 @@ export default function MealIngredientPicker({
   showMacroTargeting = false
 }: MealIngredientPickerProps) {
 
+  // Define default diet config if not provided
+  const dietConfig = {
+    name: "General",
+    constraints: {},
+  };
+
   // 🔥🔥🔥 Cooking style state
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
 
@@ -141,7 +147,7 @@ export default function MealIngredientPicker({
   // Ingredient source based on meal type and diet config
   const ingredientSource = (() => {
     if (dietConfig) {
-      if (mealSlot === "snacks") {
+      if (mealType === "snacks") {
         if (Array.isArray(dietConfig.snacks)) {
           return { "Snacks": dietConfig.snacks };
         }
@@ -149,7 +155,7 @@ export default function MealIngredientPicker({
       }
       return dietConfig;
     }
-    return mealSlot === "snacks" 
+    return mealType === "snacks" 
       ? snackIngredients
       : mealIngredients;
   })();
@@ -228,7 +234,7 @@ export default function MealIngredientPicker({
   });
 
   // 🎯 Macro Targeting State
-  const MACRO_TARGETS_CACHE_KEY = `macro-targets-${mealSlot}`;
+  const MACRO_TARGETS_CACHE_KEY = `macro-targets-${mealType}`;
 
   const [macroTargetingEnabled, setMacroTargetingEnabled] = useState(() => {
     try {
@@ -344,7 +350,7 @@ export default function MealIngredientPicker({
       return;
     }
 
-    if (mealSlot !== "snacks") {
+    if (mealType !== "snacks") {
       const macroValidation = validateMacroTargets();
       if (!macroValidation.valid) {
         toast({
@@ -406,9 +412,9 @@ export default function MealIngredientPicker({
       const requestPayload = {
         fridgeItems: allIngredientsWithStyles,
         userId: 1,
-        mealSlot: mealSlot,
-        ...(mealSlot !== "snacks" && macroTargets && { macroTargets }),
-        ...(dietType && { dietType })
+        mealSlot: mealType,
+        ...(mealType !== "snacks" && macroTargets && { macroTargets }),
+        ...(boardType && { dietType: boardType })
       };
 
       // STEP 6 — API call with abort signal (using fetch directly like AI Premades)
@@ -601,7 +607,7 @@ export default function MealIngredientPicker({
 
           <div className="flex-1 overflow-y-auto mb-3 min-h-0">
 
-            {showMacroTargeting && mealSlot !== "snacks" && (
+            {showMacroTargeting && mealType !== "snacks" && (
             <div className="mb-3 p-3 bg-black/30 border border-orange-500/30 rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-white text-sm font-semibold flex items-center gap-2 cursor-pointer">
@@ -871,7 +877,7 @@ export default function MealIngredientPicker({
             <div className="bg-black/20 border border-white/10 rounded-lg p-3">
               <p className="font-semibold text-white mb-1">💡 Tip:</p>
               <p className="text-white/70">
-                {mealSlot === "snacks" 
+                {mealType === "snacks" 
                   ? "You can pick just one ingredient (like 'apple' or 'protein bar') for ultra-quick snack ideas!"
                   : "Use 'Set Macro Targets' for precise meal portion sizes"}
               </p>
