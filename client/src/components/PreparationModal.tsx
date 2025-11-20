@@ -37,9 +37,13 @@ const INGREDIENT_ALIASES: Record<string, string[]> = {
   "Turkey Breast": ["turkey", "turkey breast", "turkey breasts"],
 
   // Fish
-  "Salmon": ["salmon", "salmon fillet", "salmon fillets"],
+  "Salmon": ["salmon", "salmon fillet", "salmon fillets", "salmon steak"],
   "Tilapia": ["tilapia", "tilapia fillet", "tilapia fillets"],
   "Cod": ["cod", "cod fillet", "cod fillets"],
+  "Swordfish": ["swordfish", "swordfish steak", "swordfish fillet"],
+  "Tuna": ["tuna", "tuna steak", "tuna fillet"],
+  "Halibut": ["halibut", "halibut steak", "halibut fillet"],
+  "Mahi Mahi": ["mahi mahi", "mahi-mahi", "mahi mahi steak"],
 
   // Rice (all variations)
   "Rice": ["rice"],
@@ -111,9 +115,13 @@ export default function PreparationModal({
     "Turkey Breast": ["Grilled", "Baked", "Pan-Seared", "Roasted"],
 
     // Fish
-    "Salmon": ["Grilled", "Baked", "Pan-Seared"],
-    "Tilapia": ["Grilled", "Baked", "Pan-Seared"],
-    "Cod": ["Grilled", "Baked", "Pan-Seared"],
+    "Salmon": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
+    "Tilapia": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
+    "Cod": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
+    "Swordfish": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
+    "Tuna": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked", "Raw-Center (Sushi-Grade Only)"],
+    "Halibut": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
+    "Mahi Mahi": ["Lightly Seared (Center Slightly Translucent)", "Fully Cooked (Opaque Throughout)", "Char-Grilled / Crisp Edges", "Pan-Seared & Butter-Basted", "Broiled / Oven-Roasted", "Lemon-Herb Poached / Gentle Cooked"],
 
     // Rice
     "Rice": ["Steamed", "Boiled"],
