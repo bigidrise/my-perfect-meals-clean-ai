@@ -1899,6 +1899,7 @@ export default function DiabeticMenuBuilder() {
         open={premadePickerOpen}
         onClose={() => setPremadePickerOpen(false)}
         mealType={premadePickerSlot}
+        dietType="diabetic"
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}

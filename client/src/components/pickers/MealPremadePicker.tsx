@@ -26,12 +26,14 @@ import {
   DINNER_CATEGORY_DISPLAY_NAMES,
   type DinnerCategory
 } from '@/data/aiPremadeDinner';
+import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
 
 interface MealPremadePickerProps {
   open: boolean;
   onClose: () => void;
   onMealSelect?: (meal: any) => void;
   mealType?: 'breakfast' | 'lunch' | 'dinner';
+  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory';
 }
 
 // Map category names to display names
@@ -39,6 +41,25 @@ const categoryDisplayNames: Record<BreakfastCategory, string> = {
   'all-protein': 'All Protein',
   'protein-carb': 'Protein + Carb',
   'egg-based': 'Egg-Based Meals'
+};
+
+// Build diabetic breakfast premades (simple title-only format)
+const diabeticBreakfastPremades = {
+  'All Protein': DIABETIC_BREAKFAST_MEALS['all-protein'].map((meal, idx) => ({
+    id: `diabetic-bp-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Protein + Carb': DIABETIC_BREAKFAST_MEALS['protein-carb'].map((meal, idx) => ({
+    id: `diabetic-pc-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Egg-Based Meals': DIABETIC_BREAKFAST_MEALS['egg-based'].map((meal, idx) => ({
+    id: `diabetic-eb-${idx}`,
+    name: meal.title,
+    ingredients: []
+  }))
 };
 
 // Build breakfast premades from AI data with actual ingredients
@@ -222,11 +243,12 @@ export default function MealPremadePicker({
   open,
   onClose,
   onMealSelect,
-  mealType = 'breakfast'
+  mealType = 'breakfast',
+  dietType = 'weekly'
 }: MealPremadePickerProps) {
-  // Determine which premade set to use based on meal type
+  // Determine which premade set to use based on meal type and diet type
   const premadeData = mealType === 'breakfast' 
-    ? breakfastPremades 
+    ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
     ? lunchPremades 
     : dinnerPremades;
