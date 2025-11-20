@@ -103,7 +103,7 @@ export default function GLP1Hub() {
         type="button"
         onClick={() => setLocation("/planner")}
         aria-label="Back to Planner Hub"
-        className="fixed top-4 left-4 z-[9999] bg-black/10 border border-white/20 text-white hover:bg-black/20 rounded-2xl px-3 py-2 flex items-center gap-2"
+        className="fixed top-12 left-4 z-[9999] bg-black/10 border border-white/20 text-white hover:bg-black/20 rounded-2xl px-3 py-2 flex items-center gap-2"
       >
         <ArrowLeft className="w-5 h-5" />Planner
         <span className="text-sm font-medium"></span>
