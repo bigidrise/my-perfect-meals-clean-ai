@@ -316,7 +316,7 @@ export default function MealPremadePicker({
   };
 
   const categories = Object.keys(premadeData);
-  const currentMeals = premadeData[activeCategory] || [];
+  const currentMeals = (premadeData[activeCategory as keyof typeof premadeData] || []) as any[];
 
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
@@ -347,7 +347,7 @@ export default function MealPremadePicker({
         {/* Meal Grid - Checkbox Style (Matching Meal Ingredient Picker) */}
         <div className="overflow-y-auto max-h-[50vh] mb-3 min-h-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
-            {currentMeals.map((meal) => (
+            {currentMeals.map((meal: any) => (
               <div
                 key={meal.id}
                 onClick={() => handleSelectPremade(meal, activeCategory)}
