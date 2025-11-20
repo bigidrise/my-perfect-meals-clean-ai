@@ -11,6 +11,8 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
+import { mealIngredients } from "@/data/mealIngredients";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AIMealCreatorModalProps {
   open: boolean;
@@ -28,6 +30,9 @@ export default function AIMealCreatorModal({
   const [ingredients, setIngredients] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("Proteins");
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const tickerRef = useRef<number | null>(null);
 
   const startProgressTicker = () => {
@@ -52,9 +57,21 @@ export default function AIMealCreatorModal({
     setProgress(100);
   };
 
+  const toggleIngredient = (ingredientName: string) => {
+    setSelectedIngredients((prev) => {
+      const isSelected = prev.some((i) => i.toLowerCase() === ingredientName.toLowerCase());
+      if (isSelected) {
+        return prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase());
+      } else {
+        return [...prev, ingredientName];
+      }
+    });
+  };
+
   const handleGenerateMeal = async () => {
-    if (!ingredients.trim()) {
-      alert("Please enter some ingredients first!");
+    const allIngredients = [...selectedIngredients, ...ingredients.split(",").map(i => i.trim()).filter(i => i)];
+    if (allIngredients.length === 0) {
+      alert("Please select or enter some ingredients first!");
       return;
     }
 
@@ -67,10 +84,7 @@ export default function AIMealCreatorModal({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fridgeItems: ingredients
-            .split(",")
-            .map((i) => i.trim())
-            .filter((i) => i),
+          fridgeItems: [...selectedIngredients, ...ingredients.split(",").map(i => i.trim()).filter(i => i)],
           userId: 1,
         }),
       });
@@ -150,8 +164,27 @@ export default function AIMealCreatorModal({
               htmlFor="ai-ingredients"
               className="block text-sm font-medium text-white/90"
             >
-              Available Ingredients (separated by commas):
+              Select Ingredients:
             </label>
+
+            {/* Category Tabs */}
+            {!isLoading && mealSlot !== "snacks" && (
+              <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2">
+                {Object.keys(mealIngredients).map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                      activeCategory === category
+                        ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
+                        : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Snack Category Suggestions */}
             {mealSlot === "snacks" && !isLoading && (
@@ -174,32 +207,71 @@ export default function AIMealCreatorModal({
               </div>
             )}
             
-            {/* Search Input for AI Meal Creator */}
+            {/* Search Input */}
             <Input
-              placeholder="Search for ingredients..."
-              className="w-full p-4 border border-white/30 bg-black/30 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder:text-white/50"
+              placeholder="Search ingredients..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-4 mb-3 border border-white/30 bg-black/30 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder:text-white/50"
             />
+
+            {/* Ingredient Checkboxes */}
+            {!isLoading && mealSlot !== "snacks" && (
+              <div className="overflow-y-auto max-h-[200px] mb-3 border border-white/20 rounded-xl p-3 bg-black/20">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
+                  {(() => {
+                    const categoryIngredients = mealIngredients[activeCategory as keyof typeof mealIngredients] || [];
+                    const filteredIngredients = searchQuery.trim()
+                      ? categoryIngredients.filter((item: any) => {
+                          const itemName = typeof item === 'string' ? item : item.name;
+                          return itemName.toLowerCase().includes(searchQuery.toLowerCase());
+                        })
+                      : categoryIngredients;
+
+                    return filteredIngredients.map((item: any) => {
+                      const itemName = typeof item === 'string' ? item : item.name;
+                      return (
+                        <div
+                          key={itemName}
+                          onClick={() => toggleIngredient(itemName)}
+                          className="flex items-center gap-1.5 text-white/90 hover:text-white cursor-pointer p-1"
+                        >
+                          <Checkbox
+                            checked={selectedIngredients.includes(itemName)}
+                            className="h-3.5 w-3.5 border-white/30 data-[state=checked]:bg-emerald-600"
+                          />
+                          <span className="text-xs">{itemName}</span>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+            )}
+
+            <label
+              htmlFor="ai-custom-ingredients"
+              className="block text-sm font-medium text-white/90 mb-2"
+            >
+              Add Custom Ingredients (optional):
+            </label>
 
             <div className="relative">
               <textarea
-                id="ai-ingredients"
+                id="ai-custom-ingredients"
                 value={ingredients}
                 onChange={(e) => setIngredients(e.target.value)}
-                placeholder={
-                  mealSlot === "snacks"
-                    ? "e.g., greek yogurt, berries, almonds, dark chocolate"
-                    : "e.g., eggs, spinach, cheese, tomatoes, bread"
-                }
+                placeholder="Add any custom ingredients not listed above (separated by commas)"
                 className="w-full p-4 pr-10 border border-white/30 bg-black/30 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder:text-white/50"
-                rows={4}
+                rows={3}
                 disabled={isLoading}
               />
               {ingredients.trim() && !isLoading && (
                 <TrashButton
                   onClick={() => setIngredients("")}
                   size="sm"
-                  ariaLabel="Clear ingredients"
-                  title="Clear ingredients"
+                  ariaLabel="Clear custom ingredients"
+                  title="Clear custom ingredients"
                   className="absolute top-2 right-2"
                 />
               )}
@@ -236,7 +308,7 @@ export default function AIMealCreatorModal({
           {/* Generate Button */}
           <Button
             onClick={handleGenerateMeal}
-            disabled={isLoading || !ingredients.trim()}
+            disabled={isLoading || (selectedIngredients.length === 0 && !ingredients.trim())}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-6 px-6 rounded-xl transition-all text-lg flex items-center justify-center gap-3"
           >
             {isLoading ? (
