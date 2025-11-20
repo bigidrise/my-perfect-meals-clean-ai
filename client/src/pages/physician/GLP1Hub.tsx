@@ -324,22 +324,13 @@ export default function GLP1Hub() {
         <section className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-4 shadow-xl">
           <h3 className="text-white font-medium text-lg mb-1">Find Meals for GLP-1 Users</h3>
           <p className="text-white/90 text-sm mb-3">Small portions • Calorie-dense • Mixed cuisines.</p>
-          <div className="space-y-2">
-            <Button
-              onClick={() => setLocation("/glp1-meal-builder")}
-              className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl"
-              data-testid="button-go-to-glp1-meals"
-            >
-              Go to GLP-1 Meal Builder
-            </Button>
-            <Button
-              onClick={() => setLocation("/glp1-ai-premades")}
-              className="bg-pink-600 hover:bg-pink-700 text-white w-full rounded-xl flash-border"
-              data-testid="button-go-to-glp1-ai-premades"
-            >
-              Browse AI Premade Meals
-            </Button>
-          </div>
+          <Button
+            onClick={() => setLocation("/glp1-meal-builder")}
+            className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl"
+            data-testid="button-go-to-glp1-meals"
+          >
+            Go to GLP-1 Meal Builder
+          </Button>
         </section>
 
         {/* Info Modal */}
