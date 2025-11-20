@@ -570,7 +570,7 @@ export default function WeeklyMealBoard() {
     const pct = target ? Math.round((value/target)*100) : 0;
     const ok = pct >= 90 && pct <= 110; // within ±10% looks "green"
     return (
-      <span className={`text-xs px-2 py-1 rounded-xl border ${
+      <span className={`text-xs px-2 py-1 rounded-2xl border ${
         ok ? "border-lime-500/40 text-lime-300 bg-lime-500/10"
            : "border-amber-500/40 text-amber-300 bg-amber-500/10"
       }`}>
@@ -966,7 +966,7 @@ export default function WeeklyMealBoard() {
             </div>
             <button
               onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
+              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-2xl bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
               aria-label="How to use Weekly Meal Board"
             >
               ?
