@@ -154,7 +154,7 @@ export async function generateRestaurantMeals(request: RestaurantMealRequest): P
     }
   ];
 
-  // Generate images for all meals
+  // Generate images for all meals with full meal data
   for (const meal of fallbackMeals) {
     try {
       console.log(`🖼️ Generating image for ${meal.name}...`);
@@ -162,7 +162,12 @@ export async function generateRestaurantMeals(request: RestaurantMealRequest): P
         name: meal.name,
         description: meal.description,
         type: 'meal',
-        style: cuisine
+        style: cuisine,
+        ingredients: meal.ingredients || [],
+        calories: meal.calories,
+        protein: meal.protein,
+        carbs: meal.carbs,
+        fat: meal.fat,
       });
 
       if (imageUrl) {

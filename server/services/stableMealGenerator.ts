@@ -770,12 +770,19 @@ export async function generateCravingMeal(targetMealType: MealType, craving?: st
         // Generate image for meal
         let imageUrl = null;
         try {
-          const imageService = await import("./imageService");
-          if (imageService.generateRecipeImage) {
-            const imagePrompt = `child-friendly cartoon-style version of ${selected.name}, colorful plate, fun design, appealing to kids`;
-            imageUrl = await imageService.generateRecipeImage(imagePrompt);
-            console.log(`📸 Generated kid-friendly image for ${selected.name}`);
-          }
+          const { generateImage } = await import("./imageService");
+          imageUrl = await generateImage({
+            name: selected.name,
+            description: `child-friendly cartoon-style version, colorful plate, fun design, appealing to kids`,
+            type: 'meal',
+            style: 'kid-friendly',
+            ingredients: selected.ingredients.map(ing => ing.name),
+            calories: nutrition.calories,
+            protein: nutrition.protein,
+            carbs: nutrition.carbs,
+            fat: nutrition.fat,
+          });
+          console.log(`📸 Generated kid-friendly image for ${selected.name}`);
         } catch (error) {
           console.log(`❌ Image generation failed for ${selected.name}:`, error);
         }
@@ -978,16 +985,19 @@ export async function generateCravingMeal(targetMealType: MealType, craving?: st
   // Generate image for meal with kid-friendly styling
   let imageUrl = null;
   try {
-    const imageService = await import("./imageService");
-    if (imageService.generateRecipeImage) {
-      const imagePrompt = isKidMeal 
-        ? `child-friendly cartoon-style version of ${selected.name}, colorful plate, fun design, appealing to kids`
-        : selected.name;
-      imageUrl = await imageService.generateRecipeImage(imagePrompt);
-      console.log(`📸 Generated ${isKidMeal ? 'kid-friendly ' : ''}image for ${selected.name}`);
-    } else {
-      console.log(`⚠️ Image generation service not available for ${selected.name}`);
-    }
+    const { generateImage } = await import("./imageService");
+    imageUrl = await generateImage({
+      name: selected.name,
+      description: isKidMeal ? `child-friendly cartoon-style version, colorful plate, fun design, appealing to kids` : description,
+      type: 'meal',
+      style: isKidMeal ? 'kid-friendly' : 'homemade',
+      ingredients: selected.ingredients.map(ing => ing.name),
+      calories: nutrition.calories,
+      protein: nutrition.protein,
+      carbs: nutrition.carbs,
+      fat: nutrition.fat,
+    });
+    console.log(`📸 Generated ${isKidMeal ? 'kid-friendly ' : ''}image for ${selected.name}`);
   } catch (error) {
     console.log(`❌ Image generation failed for ${selected.name}:`, error);
   }
