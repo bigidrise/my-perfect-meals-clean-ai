@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -328,26 +328,16 @@ export default function MealPremadePicker({
         </div>
 
         {generating && (
-          <div className="text-center py-6">
-            <div className="flex items-center justify-center gap-2 text-purple-400 mb-4">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              <span className="text-lg font-medium">
-                Creating your AI meal...
-              </span>
+          <div className="max-w-md mx-auto mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-white/80">AI Analysis Progress</span>
+              <span className="text-sm text-white/80">{Math.round(progress)}%</span>
             </div>
-
-            <div className="max-w-md mx-auto mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/80">AI Analysis Progress</span>
-                <span className="text-sm text-white/80">{Math.round(progress)}%</span>
-              </div>
-              <Progress
-                value={progress}
-                className="h-3 bg-black/40 border border-white/30"
-              />
-            </div>
-
-            <p className="text-white/70 text-sm">
+            <Progress
+              value={progress}
+              className="h-3 bg-black/40 border border-white/30"
+            />
+            <p className="text-white/70 text-sm text-center mt-3">
               This may take 30-60 seconds
             </p>
           </div>
