@@ -13,6 +13,12 @@ import {
   getBreakfastMealsByCategory,
   type BreakfastCategory 
 } from '@/data/aiPremadeBreakfast';
+import {
+  AI_PREMADE_LUNCH_MEALS,
+  getLunchMealsByCategory,
+  LUNCH_CATEGORY_DISPLAY_NAMES,
+  type LunchCategory
+} from '@/data/aiPremadeLunch';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -67,9 +73,50 @@ const breakfastPremades = {
 
 // Lunch premade meals organized by category
 const lunchPremades = {
-  'Category 1': [],
-  'Category 2': [],
-  'Category 3': []
+  'Lean Plates': getLunchMealsByCategory('lean-plates').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'Protein + Carb Bowls': getLunchMealsByCategory('satisfying-protein-carb-bowls').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'High Protein Plates': getLunchMealsByCategory('high-protein-plates').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'Protein + Veggie Plates': getLunchMealsByCategory('simple-protein-veggie-plates').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  }))
 };
 
 // Dinner premade meals organized by category
