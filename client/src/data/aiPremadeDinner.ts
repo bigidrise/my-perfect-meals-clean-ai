@@ -3,7 +3,13 @@
 
 // Types
 export type MealType = "breakfast" | "lunch" | "dinner";
-export type DinnerCategory = "lean-protein-plates" | "protein-carb-bowls" | "high-protein-plates" | "simple-protein-veggie";
+export type DinnerCategory = 
+  | "lean-protein-plates" 
+  | "protein-carb-bowls" 
+  | "high-protein-plates" 
+  | "simple-protein-veggie"
+  | "one-pan-meals"
+  | "smart-plate-dinners";
 
 export type CookingMethod =
   | "air-fried"
@@ -1369,5 +1375,7 @@ export const DINNER_CATEGORY_DISPLAY_NAMES: Record<DinnerCategory, string> = {
   'lean-protein-plates': 'Lean Protein Plates',
   'protein-carb-bowls': 'Protein + Carb Bowls',
   'high-protein-plates': 'High Protein Plates',
-  'simple-protein-veggie': 'Protein + Veggie Plates'
+  'simple-protein-veggie': 'Protein + Veggie Plates',
+  'one-pan-meals': 'One-Pan Meals',
+  'smart-plate-dinners': 'Smart Plate Dinners'
 };
