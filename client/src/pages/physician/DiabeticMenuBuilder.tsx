@@ -1938,6 +1938,7 @@ export default function DiabeticMenuBuilder() {
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
         showMacroTargeting={false}
+        dietType="diabetic"
       />
 
       {/* Meal Premade Picker Modal */}

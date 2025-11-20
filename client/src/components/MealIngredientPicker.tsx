@@ -152,9 +152,11 @@ export default function MealIngredientPicker({
       }
       return dietConfig;
     }
-    return mealSlot === "snacks" 
-      ? snackIngredients
-      : mealIngredients;
+    // Use diabetic snacks for Diabetic Hub, weekly snacks for everything else
+    if (mealSlot === "snacks") {
+      return dietType === "diabetic" ? diabeticSnackIngredients : snackIngredients;
+    }
+    return mealIngredients;
   })();
 
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
