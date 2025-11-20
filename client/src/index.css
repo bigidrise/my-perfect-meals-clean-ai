@@ -349,6 +349,15 @@
     backdrop-filter: var(--glass-blur);
   }
 
+  /* Consistent glass header spacing - Apple Store ready */
+  .glass-header-wrapper {
+    margin-top: 3.5rem; /* mt-14 = 56px */
+  }
+
+  .glass-header-nav {
+    margin-top: 3rem; /* mt-12 = 48px for back buttons and badges */
+  }
+
   /* Modern viewport utilities for Android browser UI */
   .min-h-svh {
     min-height: 100svh;
