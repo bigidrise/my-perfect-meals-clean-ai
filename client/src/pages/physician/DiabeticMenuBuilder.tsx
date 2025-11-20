@@ -62,7 +62,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -167,12 +166,6 @@ export default function DiabeticMenuBuilder() {
   // NEW: Day/Week planning state
   const [planningMode, setPlanningMode] = React.useState<"day" | "week">("day");
   const [activeDayISO, setActiveDayISO] = React.useState<string>("");
-
-  // AI Premade State
-  const [aiPremadePickerOpen, setAiPremadePickerOpen] = React.useState(false);
-  const [aiPremadeSlot, setAiPremadeSlot] = React.useState<
-    "breakfast" | "lunch" | "dinner" | "snacks"
-  >("breakfast");
 
   // Why drawer state
   const [boardWhyOpen, setBoardWhyOpen] = React.useState(false);
@@ -625,53 +618,6 @@ export default function DiabeticMenuBuilder() {
       });
     },
     [board, activeDayISO, aiMealSlot, toast],
-  );
-
-  // Handler for when an AI Premade meal is selected
-  const handleAIPremadeSelected = useCallback(
-    async (selectedMeal: Meal) => {
-      if (!activeDayISO || !aiPremadeSlot) return;
-
-      console.log(
-        "AI Premade Selected:",
-        selectedMeal.name,
-        "for slot:",
-        aiPremadeSlot,
-      );
-
-      // Add the selected meal to the board
-      if (board) {
-        const dayLists = getDayLists(board, activeDayISO);
-        const currentSlotMeals = dayLists[aiPremadeSlot];
-        // Filter out any existing AI meals from the target slot to avoid duplicates
-        const nonAIMeals = currentSlotMeals.filter(
-          (m) => !m.id.startsWith("ai-meal-"),
-        );
-        const updatedSlotMeals = [...nonAIMeals, selectedMeal];
-        const updatedDayLists = { ...dayLists, [aiPremadeSlot]: updatedSlotMeals };
-        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-        setBoard(updatedBoard);
-      }
-
-      // Save the updated board
-      try {
-        await saveBoard(board!); // Use non-null assertion as board is checked
-        toast({
-          title: "AI Premade Added!",
-          description: `${selectedMeal.name} added to your ${aiPremadeSlot}`,
-        });
-      } catch (error) {
-        console.error("Failed to save board after adding AI premade:", error);
-        toast({
-          title: "Save Failed",
-          description: "Could not add AI premade meal. Please try again.",
-          variant: "destructive",
-        });
-      }
-
-      setAiPremadePickerOpen(false); // Close the picker
-    },
-    [board, activeDayISO, aiPremadeSlot, saveBoard, toast],
   );
 
   const profile = useOnboardingProfile();
@@ -1150,7 +1096,7 @@ export default function DiabeticMenuBuilder() {
         className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
-
+        
       </Button>
 
       {/* Fixed Client Dashboard Button - Top Right (when accessed from ProCare) */}
@@ -1354,34 +1300,21 @@ export default function DiabeticMenuBuilder() {
                       {label}
                     </h2>
                     <div className="flex gap-2">
-                      {/* AI Meal Creator and AI Premade Buttons */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button
-                          onClick={() => {
-                            setAiPremadeSlot(
-                              key as "breakfast" | "lunch" | "dinner" | "snacks",
-                            );
-                            setAiPremadePickerOpen(true);
-                            console.log("AI Premades Clicked");
-                          }}
-                          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-lg"
-                        >
-                          <Sparkles className="mr-2 h-4 w-4" />
-                          AI Premades
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            setAiMealSlot(
-                              key as "breakfast" | "lunch" | "dinner" | "snacks",
-                            );
-                            setAiMealModalOpen(true);
-                          }}
-                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl shadow-lg"
-                        >
-                          <Sparkles className="mr-2 h-4 w-4" />
-                          AI Creator
-                        </Button>
-                      </div>
+                      {/* AI Meal Creator button for all meal sections */}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                        onClick={() => {
+                          setAiMealSlot(
+                            key as "breakfast" | "lunch" | "dinner" | "snacks",
+                          );
+                          setAiMealModalOpen(true);
+                        }}
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        Create with AI
+                      </Button>
 
                       {/* Plus button for manual entry */}
                       <Button
@@ -1930,8 +1863,8 @@ export default function DiabeticMenuBuilder() {
         meal={shoppingListModal.meal}
       />
 
-      {/* AI Meal Creator Modal */}
-      <AIMealCreatorModal
+      {/* AI Meal Creator with Ingredient Picker - All Meal Slots */}
+      <MealIngredientPicker
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
@@ -1939,15 +1872,219 @@ export default function DiabeticMenuBuilder() {
         showMacroTargeting={false}
       />
 
-      {/* AI Premade Picker Modal */}
-      <MealIngredientPicker
-        open={aiPremadePickerOpen}
-        onClose={() => setAiPremadePickerOpen(false)}
-        onMealSelect={handleAIPremadeSelected}
-        mealType={aiPremadeSlot}
-        boardType="diabetic"
-        showMacroTargeting={false}
-      />
+      {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
+      {board &&
+        (() => {
+          const allMeals =
+            planningMode === "day" && activeDayISO
+              ? (() => {
+                  const dayLists = getDayLists(board, activeDayISO);
+                  return [
+                    ...dayLists.breakfast,
+                    ...dayLists.lunch,
+                    ...dayLists.dinner,
+                    ...dayLists.snacks,
+                  ];
+                })()
+              : [
+                  ...board.lists.breakfast,
+                  ...board.lists.lunch,
+                  ...board.lists.dinner,
+                  ...board.lists.snacks,
+                ];
+
+          const ingredients = allMeals.flatMap((meal) =>
+            normalizeIngredients(meal.ingredients || []),
+          );
+
+          // If no ingredients, don't show the bar
+          if (ingredients.length === 0) return null;
+
+          // DAY MODE: Show dual buttons (Send Day + Send Entire Week)
+          if (
+            FEATURES.dayPlanning === "alpha" &&
+            planningMode === "day" &&
+            activeDayISO
+          ) {
+            const dayName = new Date(
+              activeDayISO + "T00:00:00Z",
+            ).toLocaleDateString(undefined, { weekday: "long" });
+
+            return (
+              <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-zinc-900/95 via-zinc-800/95 to-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl safe-area-inset-bottom">
+                <div className="container mx-auto px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-white text-sm font-semibold">
+                      Shopping List Ready - {ingredients.length} ingredients
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => {
+                          handleAddToShoppingList();
+                          setTimeout(
+                            () =>
+                              setLocation(
+                                "/shopping-list-v2?from=weekly-meal-board",
+                              ),
+                            100,
+                          );
+                        }}
+                        className="flex-1 min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"
+                        data-testid="button-send-day-shopping"
+                      >
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        Send {dayName}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          handleAddEntireWeekToShoppingList();
+                          setTimeout(
+                            () =>
+                              setLocation(
+                                "/shopping-list-v2?from=weekly-meal-board",
+                              ),
+                            100,
+                          );
+                        }}
+                        className="flex-1 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white border border-white/30"
+                        data-testid="button-send-week-shopping"
+                      >
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        Send Entire Week
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          // WEEK MODE: Use existing ShoppingAggregateBar component
+          return (
+            <ShoppingAggregateBar
+              ingredients={ingredients}
+              source={`Diabetic Meal Plan (${formatWeekLabel(weekStartISO)})`}
+              sourceSlug="diabetic-meal-board"
+            />
+          );
+        })()}
+
+      {/* Info Modal - How to Use */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">
+              How to Use Diabetic Menu Builder
+            </h3>
+
+            <div className="space-y-4 text-white/90 text-sm">
+              <p>Create your day or week by starting with breakfast.</p>
+              <p className="text-white/80">
+                Click the "Create with AI" button on each meal section to build
+                your plan. You can create one day and duplicate it across the
+                week, or create each day individually.
+              </p>
+              <p className="text-white/80">
+                If you change your mind about a meal, just hit the{" "}
+                <span className="font-semibold text-white">trash can</span> to
+                delete it and create a new one.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowInfoModal(false);
+                handleInfoModalClose();
+              }}
+              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Daily Totals Info Modal - Next Steps After First Meal */}
+      <Dialog
+        open={showDailyTotalsInfo}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowDailyTotalsInfo(false);
+            setHasSeenDailyTotalsInfo(true);
+            localStorage.setItem(
+              "diabetic-menu-builder-daily-totals-info-seen",
+              "true",
+            );
+          }
+        }}
+      >
+        <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-white text-xl flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-orange-400" />
+              Next Steps - Track Your Progress!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-white/90 text-sm space-y-4">
+            <p className="text-base font-semibold text-orange-300">
+              Great job creating your meals! Here's what to do next:
+            </p>
+
+            <div className="space-y-3">
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-orange-400" />
+                  Option 1: Track Your Macros
+                </p>
+                <p className="text-white/70 text-xs">
+                  Send your day to the Macro Calculator to ensure you're hitting
+                  your nutrition targets. Look for the "Send to Macros" button
+                  below.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
+                <p className="font-semibold text-white mb-1">
+                  Option 2: Plan Your Week
+                </p>
+                <p className="text-white/70 text-xs">
+                  Use the Day/Week toggle at the top to switch between planning
+                  a single day or your entire week. You can duplicate days or
+                  create each day individually.
+                </p>
+              </div>
+
+              <div className="bg-orange-900/30 p-3 rounded-lg border border-orange-400/30">
+                <p className="font-semibold text-orange-200 mb-1">
+                  💡 Pro Tip: Macro Tracking
+                </p>
+                <p className="text-orange-100/80 text-xs">
+                  Send just ONE day to macros at a time (not the whole week).
+                  This way, if you change meals on other days, you won't have
+                  outdated data.
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
+                <p className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4 text-emerald-400" />
+                  Shopping List Ready
+                </p>
+                <p className="text-white/70 text-xs">
+                  You CAN send your entire week to the shopping list! This
+                  consolidates all ingredients for easy grocery shopping. Click
+                  "Send Entire Week" at the bottom.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-white/60 text-center pt-2 border-t border-white/10">
+              Next: Check out the Shopping List to learn how to use it
+              effectively!
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }
