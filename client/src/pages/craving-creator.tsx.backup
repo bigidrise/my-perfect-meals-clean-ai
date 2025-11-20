@@ -662,16 +662,28 @@ export default function CravingCreator() {
                 )}
 
                 {isGenerating ? (
-                  <div className="max-w-md mx-auto mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-white/80">AI Analysis Progress</span>
-                      <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+                  <div className="w-full" aria-live="polite">
+                    <div className="flex items-center justify-center gap-2 text-orange-600 mb-4">
+                      <Sparkles className="h-6 w-6 animate-spin" />
+                      <span className="text-lg font-medium">
+                        Crafting your personalized craving...
+                      </span>
                     </div>
-                    <Progress
-                      value={progress}
-                      className="h-3 bg-black/40 border border-white/30"
-                    />
-                    <p className="text-white/70 text-sm text-center mt-3">
+
+                    {/* 🔋 Animated Progress Bar (Restaurant Guide Style) */}
+                    <div className="max-w-md mx-auto">
+                      {/* Fill: inline gradient (can’t be purged), width follows progress */}
+                      <div
+                        className="h-2 rounded-full transition-[width] duration-200 ease-linear"
+                        style={{
+                          width: `${progress}%`,
+                          background:
+                            "linear-gradient(90deg, rgba(16,185,129,1) 0%, rgba(59,130,246,1) 100%)",
+                        }}
+                      />
+                    </div>
+
+                    <p className="text-gray-400 text-sm text-center">
                       This may take 15-30 seconds
                     </p>
                   </div>
