@@ -90,6 +90,8 @@ import GLP1Hub from "@/pages/physician/GLP1Hub";
 import GLP1MealBuilder from "@/pages/physician/GLP1MealBuilder";
 import MedicalDietsHub from "@/pages/physician/MedicalDietsHub";
 import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
+// Import the new GLP1AiPremades component
+const GLP1AiPremades = lazy(() => import("@/pages/physician/GLP1AiPremades"));
 
 // Craving pages
 import CravingHub from "@/pages/CravingHub";
@@ -296,6 +298,7 @@ export default function Router() {
         <Route path="/diabetic-menu-builder" component={withPageErrorBoundary(DiabeticMenuBuilder, "Diabetic Menu Builder")} />
         <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
         <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
+        <Route path="/glp1-ai-premades" component={withPageErrorBoundary(GLP1AiPremades, "GLP-1 AI Premades")} />
         <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
         <Route path="/anti-inflammatory-menu-builder" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
 
