@@ -591,25 +591,6 @@ const FridgeRescuePage = () => {
                   </p>
                 </div>
 
-                {/* 🔋 Loading State with Restaurant Guide Style Progress Bar */}
-                {isLoading && (
-                  <div className="max-w-md mx-auto mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-white/80">
-                        AI Analysis Progress
-                      </span>
-                      <span className="text-sm text-white/80">
-                        {Math.round(progress)}%
-                      </span>
-                    </div>
-                    <Progress
-                      value={progress}
-                      className="h-3 bg-black/30 border border-white/20"
-                    />
-                    <p className="text-white/70 text-sm text-center mt-3"></p>
-                  </div>
-                )}
-
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
