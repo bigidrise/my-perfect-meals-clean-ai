@@ -327,6 +327,18 @@ export default function MealPremadePicker({
           </div>
         </div>
 
+        {/* Cancel Button */}
+        <div className="flex justify-end gap-3 mb-3">
+          <Button
+            onClick={onClose}
+            variant="outline"
+            className="bg-black/40 border-white/20 text-white hover:bg-white/10"
+            disabled={generating}
+          >
+            Cancel
+          </Button>
+        </div>
+
         {generating && (
           <div className="max-w-md mx-auto mb-4">
             <div className="flex items-center justify-between mb-2">
