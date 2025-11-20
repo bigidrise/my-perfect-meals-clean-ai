@@ -17,6 +17,7 @@ interface MealIngredientPickerProps {
   mealSlot: string;
   dietConfig?: any;
   dietType?: string;
+  showMacroTargeting?: boolean;
 }
 
 export default function MealIngredientPicker({ 
@@ -25,7 +26,8 @@ export default function MealIngredientPicker({
   onMealGenerated,
   mealSlot,
   dietConfig,
-  dietType
+  dietType,
+  showMacroTargeting = false
 }: MealIngredientPickerProps) {
 
   // 🔥🔥🔥 Cooking style state
@@ -159,6 +161,7 @@ export default function MealIngredientPicker({
   const [customIngredients, setCustomIngredients] = useState('');
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const tickerRef = useRef<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -588,9 +591,19 @@ export default function MealIngredientPicker({
             })}
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-3">
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search ingredients..."
+              className="bg-black/40 border-white/20 text-white placeholder:text-white/40 text-sm h-10"
+            />
+          </div>
+
           <div className="flex-1 overflow-y-auto mb-3 min-h-0">
 
-            {mealSlot !== "snacks" && (
+            {showMacroTargeting && mealSlot !== "snacks" && (
             <div className="mb-3 p-3 bg-black/30 border border-orange-500/30 rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-white text-sm font-semibold flex items-center gap-2 cursor-pointer">
