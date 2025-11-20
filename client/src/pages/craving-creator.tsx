@@ -710,6 +710,20 @@ export default function CravingCreator() {
                             {meal.name}
                           </h3>
                         </div>
+                        <TrashButton
+                          onClick={() => {
+                            setGeneratedMeals([]);
+                            clearCravingCache();
+                            toast({
+                              title: "🗑️ Meal Deleted",
+                              description: "Your generated meal has been removed.",
+                            });
+                          }}
+                          size="sm"
+                          ariaLabel="Delete meal"
+                          title="Delete meal"
+                          data-testid="button-delete-meal"
+                        />
                       </div>
 
                       <p className="text-white/90 mb-4">{meal.description}</p>
