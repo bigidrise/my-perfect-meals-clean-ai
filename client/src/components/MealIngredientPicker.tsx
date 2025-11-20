@@ -87,8 +87,20 @@ export default function MealIngredientPicker({
     // Fish
     "Salmon": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
     "Tilapia": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
-    "Cod": ["Baked", "Pan-Seared"],
+    "Cod": ["Baked", "Pan-Seared", "Air-Fried"],
+    "Tuna": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
     "Tuna Steak": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
+    "Halibut": ["Grilled", "Baked", "Pan-Seared"],
+    "Mahi Mahi": ["Grilled", "Baked", "Pan-Seared"],
+    "Trout": ["Grilled", "Baked", "Pan-Seared"],
+    "Sardines": ["Grilled", "Pan-Seared"],
+    "Anchovies": ["Pan-Seared", "Raw"],
+    "Catfish": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Sea Bass": ["Grilled", "Baked", "Pan-Seared"],
+    "Red Snapper": ["Grilled", "Baked", "Pan-Seared"],
+    "Flounder": ["Baked", "Pan-Seared", "Air-Fried"],
+    "Orange Roughy": ["Baked", "Pan-Seared"],
+    "Sole": ["Baked", "Pan-Seared", "Air-Fried"],
 
     // Potatoes (ALL PLURAL)
     "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],

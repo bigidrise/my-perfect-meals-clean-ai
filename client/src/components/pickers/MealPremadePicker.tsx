@@ -260,7 +260,9 @@ export default function MealPremadePicker({
     'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
     
     // Fish
-    'Salmon', 'Tilapia', 'Cod', 'Tuna Steak',
+    'Salmon', 'Tilapia', 'Cod', 'Tuna', 'Tuna Steak', 'Halibut', 'Mahi Mahi',
+    'Trout', 'Sardines', 'Anchovies', 'Catfish', 'Sea Bass', 'Red Snapper',
+    'Flounder', 'Orange Roughy', 'Sole',
     
     // Potatoes (ALL PLURAL)
     'Potatoes', 'Red Potatoes', 'Sweet Potatoes', 'Yams',
