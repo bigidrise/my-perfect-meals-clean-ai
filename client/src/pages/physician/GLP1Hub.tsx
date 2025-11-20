@@ -119,7 +119,7 @@ export default function GLP1Hub() {
 
       <div className="max-w-2xl mx-auto space-y-6 pt-14">
         {/* Header with Black Glass Background */}
-        <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center">
+        <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center mt-14">
           <div className="flex items-center justify-center gap-3 mb-2">
             <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
             <button
