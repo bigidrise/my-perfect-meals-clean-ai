@@ -95,6 +95,14 @@ export default function MealIngredientPicker({
     "Sweet Potatoes": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
     "Yams": ["Baked", "Mashed", "Roasted Cubes"],
 
+    // Rice
+    "Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "White Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "Brown Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "Jasmine Rice": ["Steamed", "Fried Rice"],
+    "Basmati Rice": ["Steamed", "Pilaf"],
+    "Wild Rice": ["Steamed", "Pilaf"],
+
     // Vegetables
     "Broccoli": ["Steamed", "Sautéed", "Roasted", "Air-Fried", "Seasoned"],
     "Asparagus": ["Steamed", "Grilled", "Roasted"],

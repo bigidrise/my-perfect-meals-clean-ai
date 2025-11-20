@@ -265,6 +265,9 @@ export default function MealPremadePicker({
     // Potatoes (ALL PLURAL)
     'Potatoes', 'Red Potatoes', 'Sweet Potatoes', 'Yams',
     
+    // Rice
+    'Rice', 'White Rice', 'Brown Rice', 'Jasmine Rice', 'Basmati Rice', 'Wild Rice',
+    
     // Vegetables
     'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',
     'Spinach', 'Lettuce', 'Romaine Lettuce', 'Spring Mix',

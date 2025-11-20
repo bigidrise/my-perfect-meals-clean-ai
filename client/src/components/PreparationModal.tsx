@@ -35,11 +35,12 @@ export default function PreparationModal({
     "Yams": ["Baked", "Mashed", "Roasted Cubes"],
 
     // Rice
+    "Rice": ["Steamed", "Fried Rice", "Pilaf"],
     "White Rice": ["Steamed", "Fried Rice", "Pilaf"],
     "Brown Rice": ["Steamed", "Fried Rice", "Pilaf"],
     "Jasmine Rice": ["Steamed", "Fried Rice"],
     "Basmati Rice": ["Steamed", "Pilaf"],
-    "Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "Wild Rice": ["Steamed", "Pilaf"],
 
     // Chicken
     "Chicken Breast": [

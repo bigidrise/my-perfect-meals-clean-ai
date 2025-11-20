@@ -66,6 +66,7 @@ export const mealIngredients = {
   starchyCarbs: [
     "Acorn Squash",
     "Amaranth",
+    "Basmati Rice",
     "Barley",
     "Black Beans",
     "Brown Rice",
@@ -80,6 +81,7 @@ export const mealIngredients = {
     "Delicata Squash",
     "Farro",
     "Green Peas",
+    "Jasmine Rice",
     "Kamut",
     "Kidney Beans",
     "Lentils",
@@ -95,6 +97,7 @@ export const mealIngredients = {
     "Potatoes",
     "Quinoa",
     "Red Potatoes",
+    "Rice",
     "Rice Noodles",
     "Sourdough Bread",
     "Spaghetti Squash",
