@@ -608,7 +608,7 @@ const FridgeRescuePage = () => {
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
-                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
+                  className="w-full bg-black/30 backdrop-blur-lg hover:bg-black/40 border border-white/20 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
                 >
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5" />
