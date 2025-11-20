@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, RefreshCw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
+import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
 import { mealIngredients } from "@/data/mealIngredients";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -20,6 +21,7 @@ interface AIMealCreatorModalProps {
   onMealGenerated: (meal: any) => void;
   mealSlot: "breakfast" | "lunch" | "dinner" | "snacks";
   showMacroTargeting?: boolean; // Controls visibility of macro targeting section
+  dietType?: "weekly" | "diabetic"; // Which snack data to use
 }
 
 export default function AIMealCreatorModal({
@@ -28,7 +30,12 @@ export default function AIMealCreatorModal({
   onMealGenerated,
   mealSlot,
   showMacroTargeting = false, // Default to hidden unless explicitly enabled
+  dietType = "weekly", // Default to weekly snacks
 }: AIMealCreatorModalProps) {
+  // Use diabetic snacks for Diabetic Hub, weekly snacks for everything else
+  const ACTIVE_SNACK_CATEGORIES = (dietType === "diabetic" && mealSlot === "snacks") 
+    ? DIABETIC_SNACK_CATEGORIES 
+    : SNACK_CATEGORIES;
   const [ingredients, setIngredients] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -208,7 +215,7 @@ export default function AIMealCreatorModal({
             {/* Snack Category Suggestions */}
             {mealSlot === "snacks" && !isLoading && (
               <div className="flex flex-wrap gap-2 mb-2">
-                {SNACK_CATEGORIES.map((category) => (
+                {ACTIVE_SNACK_CATEGORIES.map((category) => (
                   <button
                     key={category.name}
                     type="button"

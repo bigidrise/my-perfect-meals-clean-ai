@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { mealIngredients } from "@/data/mealIngredients";
 import { snackIngredients } from "@/data/snackIngredients";
+import { diabeticSnackIngredients } from "@/data/diabeticPremadeSnacks";
 
 interface MealIngredientPickerProps {
   open: boolean;
