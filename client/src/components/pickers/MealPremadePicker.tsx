@@ -27,6 +27,7 @@ import {
   type DinnerCategory
 } from '@/data/aiPremadeDinner';
 import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
+import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -57,6 +58,40 @@ const diabeticBreakfastPremades = {
   })),
   'Egg-Based Meals': DIABETIC_BREAKFAST_MEALS['egg-based'].map((meal, idx) => ({
     id: `diabetic-eb-${idx}`,
+    name: meal.title,
+    ingredients: []
+  }))
+};
+
+// Build diabetic lunch premades (simple title-only format)
+const diabeticLunchPremades = {
+  'Lean Plates': DIABETIC_LUNCH_MEALS['lean-plates'].map((meal, idx) => ({
+    id: `diabetic-l1-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Protein + Carb Bowls': DIABETIC_LUNCH_MEALS['satisfying-protein-carb-bowls'].map((meal, idx) => ({
+    id: `diabetic-l2-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'High Protein Plates': DIABETIC_LUNCH_MEALS['high-protein-plates'].map((meal, idx) => ({
+    id: `diabetic-l3-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Protein + Veggie Plates': DIABETIC_LUNCH_MEALS['simple-protein-veggie-plates'].map((meal, idx) => ({
+    id: `diabetic-l4-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'One-Pan Meals': DIABETIC_LUNCH_MEALS['one-pan-meals'].map((meal, idx) => ({
+    id: `diabetic-l5-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Smart Plate Dinners': DIABETIC_LUNCH_MEALS['smart-plate-dinners'].map((meal, idx) => ({
+    id: `diabetic-l6-${idx}`,
     name: meal.title,
     ingredients: []
   }))
@@ -250,7 +285,7 @@ export default function MealPremadePicker({
   const premadeData = mealType === 'breakfast' 
     ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
-    ? lunchPremades 
+    ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)
     : dinnerPremades;
 
   const [activeCategory, setActiveCategory] = useState<string>('');
