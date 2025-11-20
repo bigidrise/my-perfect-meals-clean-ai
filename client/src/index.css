@@ -190,6 +190,8 @@
     touch-action: manipulation;
     /* Android optimizations - prevents white band on bounce */
     overscroll-behavior-y: contain;
+    /* iPhone status bar safe area - prevents content from being covered */
+    padding-top: env(safe-area-inset-top);
   }
 
   /* Mobile-optimized button touch targets */
