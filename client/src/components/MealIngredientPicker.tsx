@@ -12,19 +12,21 @@ import { snackIngredients } from "@/data/snackIngredients";
 
 interface MealIngredientPickerProps {
   open: boolean;
-  onClose: () => void;
-  onMealSelect?: (meal: any) => void;
-  mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
-  boardType?: 'beach-body' | 'athlete' | 'diabetic' | 'glp1' | 'anti-inflammatory';
+  onOpenChange: (open: boolean) => void;
+  onMealGenerated: (meal: any) => void;
+  mealSlot: string;
+  dietConfig?: any;
+  dietType?: string;
   showMacroTargeting?: boolean;
 }
 
 export default function MealIngredientPicker({ 
   open, 
-  onClose,
-  onMealSelect,
-  mealType = 'breakfast',
-  boardType = 'beach-body',
+  onOpenChange, 
+  onMealGenerated,
+  mealSlot,
+  dietConfig,
+  dietType,
   showMacroTargeting = false
 }: MealIngredientPickerProps) {
 
@@ -444,7 +446,7 @@ export default function MealIngredientPicker({
       };
 
       // STEP 8 — Send result back up
-      onMealSelect(mealWithImage);
+      onMealGenerated(mealWithImage);
 
       // STEP 9 — Macro accuracy toast
       if (macroTargets) {
@@ -480,7 +482,7 @@ export default function MealIngredientPicker({
       setTargetFat('');
       saveMacroTargetsCache(false, '', '', '');
       cleanupGeneration();
-      onClose();
+      onOpenChange(false);
 
     } catch (error: any) {
       // Don't show error if request was cancelled
@@ -507,14 +509,14 @@ export default function MealIngredientPicker({
     cleanupGeneration();
 
     // Close modal
-    onClose();
+    onOpenChange(false);
   };
 
   const handleDialogChange = (isOpen: boolean) => {
     if (!isOpen) {
       // Cancel generation if modal is being closed
       cleanupGeneration();
-      onClose();
+      onOpenChange(false);
     }
   };
 
