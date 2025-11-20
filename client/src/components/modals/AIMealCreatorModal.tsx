@@ -221,7 +221,7 @@ export default function AIMealCreatorModal({
               </div>
 
               <p className="text-white/70 text-sm">
-                This may take 30-60 seconds
+                
               </p>
             </div>
           )}

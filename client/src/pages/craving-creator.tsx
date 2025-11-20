@@ -13,10 +13,14 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import {
-  GlassButton,
-} from "@/components/glass";
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { GlassButton } from "@/components/glass";
 import {
   Select,
   SelectContent,
@@ -25,14 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import {
-  Brain,
-  Target,
-  Sparkles,
-  Home,
-  Users,
-  ArrowLeft,
-} from "lucide-react";
+import { Brain, Target, Sparkles, Home, Users, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
 import {
@@ -130,8 +127,8 @@ function getMealNutrition(meal: any) {
   return {
     calories: Number(n.calories ?? meal.calories ?? 0),
     protein_g: Number(n.protein ?? n.protein_g ?? meal.protein ?? 0),
-    carbs_g:   Number(n.carbs   ?? n.carbs_g   ?? meal.carbs   ?? 0),
-    fat_g:     Number(n.fat     ?? n.fat_g     ?? meal.fat     ?? 0),
+    carbs_g: Number(n.carbs ?? n.carbs_g ?? meal.carbs ?? 0),
+    fat_g: Number(n.fat ?? n.fat_g ?? meal.fat ?? 0),
   };
 }
 
@@ -167,7 +164,7 @@ export default function CravingCreator() {
   useEffect(() => {
     const coachMode = localStorage.getItem("coachMode");
     const hasSeenCravingInfo = localStorage.getItem("hasSeenCravingInfo");
-    
+
     if (coachMode === "guided" && !hasSeenCravingInfo) {
       // Small delay to let page render first
       setTimeout(() => {
@@ -348,14 +345,14 @@ export default function CravingCreator() {
       stopProgressTicker();
       toast({
         title: "Generation Failed",
-        description: error.message || "Failed to generate meal. Please try again.",
+        description:
+          error.message || "Failed to generate meal. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
     }
   };
-
 
   // helper to clear diet selection
   const clearDiet = () => {
@@ -394,7 +391,10 @@ export default function CravingCreator() {
       fat: meal.fat || 0,
       badges: meal.medicalBadges?.map((b: any) => b.condition) || [],
       ingredients: meal.ingredients || [],
-      instructions: typeof meal.instructions === "string" ? [meal.instructions] : meal.instructions || [],
+      instructions:
+        typeof meal.instructions === "string"
+          ? [meal.instructions]
+          : meal.instructions || [],
       source: "craving",
     };
 
@@ -413,7 +413,6 @@ export default function CravingCreator() {
     setLocation("/weekly-meal-board");
   }
 
-
   return (
     <PhaseGate phase="PHASE_1_CORE" feature="craving-creator">
       <motion.div
@@ -431,560 +430,629 @@ export default function CravingCreator() {
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-      {/* Premium Feature Banner */}
-      <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl px-3 sm:px-4 py-2 text-white shadow-2xl">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="font-semibold text-xs sm:text-sm">Premium • $19.99/mo</span>
-        </div>
-      </div>
-
-      <div className={`max-w-2xl mx-auto mt-14 ${generatedMeals.length > 0 ? 'pb-32' : ''}`}>
-        <div className="flex items-center justify-between mb-6">
-          {/* Spacer for layout */}
-
-          {replaceId && (
-            <GlassButton
-              onClick={() => {
-                setLocation("/emotion-ai");
-                localStorage.removeItem("replacingMeal");
-              }}
-              className="bg-black/10 backdrop-blur-none text-gray-700 border-white/30 hover:bg-white"
-            >
-              Return to Meal Hub Now
-            </GlassButton>
-          )}
+        {/* Premium Feature Banner */}
+        <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl px-3 sm:px-4 py-2 text-white shadow-2xl">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="font-semibold text-xs sm:text-sm">
+              Premium • $19.99/mo
+            </span>
+          </div>
         </div>
 
-        <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg">
-          <h1 className="text-2xl font-bold text-white mb-2">
-            {replaceId
-              ? `Replace: ${replaceName || "Meal"}`
-              : "Craving Creator"}
-          </h1>
-          <p className="text-white/90 mb-2 text-sm">
-            {replaceId
-              ? "Create a replacement meal for your weekly plan"
-              : "Use the Craving Creator to make delicious meals, snacks, or desserts!"}
-          </p>
-        </div>
+        <div
+          className={`max-w-2xl mx-auto mt-14 ${generatedMeals.length > 0 ? "pb-32" : ""}`}
+        >
+          <div className="flex items-center justify-between mb-6">
+            {/* Spacer for layout */}
 
-        {isDeclinedMeal && (
-          <Card className="mb-6 w-full max-w-xl mx-auto bg-black/20 backdrop-blur-lg border border-white/20 shadow-lg">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Target className="w-5 h-5 text-yellow-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-yellow-800">
-                    Replacing Declined Meal
-                  </h3>
-                  <p className="text-sm text-yellow-700">
-                    You declined "<strong>{declinedMealName}</strong>" on{" "}
-                    {declinedMealDate}.
-                    <br />
-                    Your new creation will be automatically logged in your food
-                    log.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+            {replaceId && (
+              <GlassButton
+                onClick={() => {
+                  setLocation("/emotion-ai");
+                  localStorage.removeItem("replacingMeal");
+                }}
+                className="bg-black/10 backdrop-blur-none text-gray-700 border-white/30 hover:bg-white"
+              >
+                Return to Meal Hub Now
+              </GlassButton>
+            )}
+          </div>
 
-        {/* Create Craving Form */}
-        <div className="w-full max-w-4xl mx-auto">
-          <div className="mt-6">
-            <Card className="shadow-2xl bg-black/30 backdrop-blur-lg border border-white/20 w-full max-w-xl mx-auto">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-sm text-white">
-                  <Brain className="h-4 w-4 text-white" />
-                  Describe Your Craving
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+          <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg">
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {replaceId
+                ? `Replace: ${replaceName || "Meal"}`
+                : "Craving Creator"}
+            </h1>
+            <p className="text-white/90 mb-2 text-sm">
+              {replaceId
+                ? "Create a replacement meal for your weekly plan"
+                : "Use the Craving Creator to make delicious meals, snacks, or desserts!"}
+            </p>
+          </div>
 
-
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-medium text-white">
-                      What are you craving?
-                    </label>
-                    <button
-                      onClick={() => setShowCravingInfoModal(true)} // Open modal on click
-                      className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-                      aria-label="How to use Craving Creator"
-                    >
-                      ?
-                    </button>
+          {isDeclinedMeal && (
+            <Card className="mb-6 w-full max-w-xl mx-auto bg-black/20 backdrop-blur-lg border border-white/20 shadow-lg">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                    <Target className="w-5 h-5 text-yellow-700" />
                   </div>
-                  <div className="relative">
-                    <textarea
-                      value={cravingInput}
-                      onChange={(e) => setCravingInput(e.target.value)}
-                      placeholder="e.g., I want something creamy chocolate with peanut butter swirl and crunchy topping - BE SPECIFIC and describe what you crave!"
-                      className="w-full px-3 py-2 pr-10 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-20 resize-none text-sm"
-                      maxLength={200}
-                    />
-                    {cravingInput && (
-                      <TrashButton
-                        onClick={() => setCravingInput("")}
-                        size="sm"
-                        ariaLabel="Clear craving input"
-                        title="Clear craving input"
-                        className="absolute top-2 right-2"
-                        data-testid="button-clear-craving"
-                      />
-                    )}
-                  </div>
-                  <p className="text-xs text-white mt-1 text-center">
-                    Use keyboard or voice texting for input.
-                  </p>
-                  <p className="text-xs text-white/70 mt-1 text-right">
-                    {cravingInput.length}/200
-                  </p>
-                </div>
-
-                {/* Dietary Preferences with clear support */}
-                <div>
-                  <label className="block text-xs font-medium mb-1 text-white">
-                    Dietary Preferences (Optional)
-                  </label>
-
-                  <div className="flex items-center gap-2">
-                    <Select
-                      value={selectedDiet || "__none__"}
-                      onValueChange={(v) =>
-                        setSelectedDiet(v === "__none__" ? "" : v)
-                      }
-                    >
-                      <SelectTrigger className="w-full text-sm bg-black text-white border-white/30">
-                        <SelectValue placeholder="Select dietary preferences" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="__none__">
-                          No preference (Clear)
-                        </SelectItem>
-                        <SelectItem value="keto">Keto/Low Carb</SelectItem>
-                        <SelectItem value="paleo">Paleo</SelectItem>
-                        <SelectItem value="vegan">Vegan</SelectItem>
-                        <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                        <SelectItem value="gluten-free">Gluten-Free</SelectItem>
-                        <SelectItem value="dairy-free">Dairy-Free</SelectItem>
-                        <SelectItem value="mediterranean">
-                          Mediterranean
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <GlassButton
-                      onClick={clearDiet}
-                      disabled={!selectedDiet}
-                      className="shrink-0 px-3 py-1 text-sm"
-                      title="Clear dietary preference"
-                    >
-                      Clear
-                    </GlassButton>
-                  </div>
-                </div>
-
-                {/* NEW: Serving Size Dropdown */}
-                <div>
-                  <label className="block text-xs font-medium mb-1 text-white">
-                    Number of Servings
-                  </label>
-                  <Select
-                    value={servings.toString()}
-                    onValueChange={(v) => setServings(parseInt(v))}
-                  >
-                    <SelectTrigger className="w-full text-sm bg-black text-white border-white/30">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 serving (just me)</SelectItem>
-                      <SelectItem value="2">2 servings</SelectItem>
-                      <SelectItem value="3">3 servings</SelectItem>
-                      <SelectItem value="4">4 servings</SelectItem>
-                      <SelectItem value="5">5 servings</SelectItem>
-                      <SelectItem value="6">6 servings</SelectItem>
-                      <SelectItem value="7">7 servings</SelectItem>
-                      <SelectItem value="8">8 servings</SelectItem>
-                      <SelectItem value="9">9 servings</SelectItem>
-                      <SelectItem value="10">10 servings</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-white mt-1">
-                    Ingredients and nutrition will be scaled for {servings} {servings === 1 ? 'serving' : 'servings'}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-medium mb-1 text-white">
-                    Medical Safety Profile (Always Enabled)
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={true}
-                      disabled={true}
-                      className="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500 opacity-50"
-                    />
-                    <span className="text-xs text-green-300 font-medium">
-                      ✓ Protected
-                    </span>
-                  </div>
-                </div>
-
-                {!selectedDiet && (
                   <div>
-                    <label className="block text-xs font-medium mb-1 text-white">
-                      Custom Dietary Restrictions
-                    </label>
-                    <textarea
-                      value={dietaryRestrictions}
-                      onChange={(e) => setDietaryRestrictions(e.target.value)}
-                      placeholder="e.g., no nuts, low sodium, diabetic-friendly..."
-                      className="w-full px-3 py-2 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-16 resize-none text-sm"
-                      maxLength={150}
-                    />
-                    <p className="text-xs text-white/70 mt-1 text-right">
-                      {dietaryRestrictions.length}/150
+                    <h3 className="font-semibold text-yellow-800">
+                      Replacing Declined Meal
+                    </h3>
+                    <p className="text-sm text-yellow-700">
+                      You declined "<strong>{declinedMealName}</strong>" on{" "}
+                      {declinedMealDate}.
+                      <br />
+                      Your new creation will be automatically logged in your
+                      food log.
                     </p>
                   </div>
-                )}
-
-                {!replaceId && (
-                  <p className="text-white/80 text-sm mt-2 text-center">
-                    ⏱️ Generation takes 15-30 seconds 
-                    compliance
-                  </p>
-                )}
-
-                {isGenerating ? (
-                  <div className="max-w-md mx-auto mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-white/80">AI Analysis Progress</span>
-                      <span className="text-sm text-white/80">{Math.round(progress)}%</span>
-                    </div>
-                    <Progress
-                      value={progress}
-                      className="h-3 bg-black/30 border border-white/20"
-                    />
-                    <p className="text-white/70 text-sm text-center mt-3">
-                      This may take 30-60 seconds
-                    </p>
-                  </div>
-                ) : (
-                  <GlassButton
-                    onClick={handleGenerateMeal}
-                    disabled={isGenerating}
-                    className="w-full bg-orange-600 hover:bg-orange-700 overflow-hidden text-ellipsis whitespace-nowrap"
-                    icon={<Sparkles className="h-4 w-4" />}
-                  >
-                    Create My Craving
-                  </GlassButton>
-                )}
+                </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          )}
 
-        {generatedMeals.length > 0 && (
-          <div className="mt-8 space-y-6">
-            {generatedMeals.map((meal, index) => (
-              <div key={index}>
-                <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-6 w-6 text-yellow-600" />
-                        <h3 className="text-xl font-bold text-white">
-                          {meal.name}
-                        </h3>
-                      </div>
-
-                    </div>
-
-                    <p className="text-white/90 mb-4">{meal.description}</p>
-
-                    {/* Meal Image - Show if available */}
-                    {meal.imageUrl && (
-                      <div className="mb-6 rounded-lg overflow-hidden">
-                        <img
-                          src={meal.imageUrl}
-                          alt={meal.name}
-                          className="w-full h-64 object-cover"
-                          onError={(e) => {
-                            console.log("Image load error:", e);
-                            e.currentTarget.style.display = "none";
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Serving Size Display - ALWAYS SHOW */}
-                    <div className="mb-4 p-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg">
-                      <div className="flex items-center gap-2 text-sm text-white">
-                        <Users className="h-4 w-4" />
-                        <span className="font-medium">Serving Size:</span>{" "}
-                        {meal.servingSize || "1 serving"}
-                      </div>
-                    </div>
-
-                    {/* Per-Serving Info for Multiple Servings */}
-                    {servings > 1 && (
-                      <div className="mb-3 p-2 bg-black/40 backdrop-blur-md rounded-lg border border-white/20">
-                        <div className="text-xs text-white text-center">
-                          <strong>Total nutrition below is for {servings} servings.</strong>
-                          <br />
-                          Per serving: {Math.round((meal.nutrition?.calories || meal.calories || 0) / servings)} cal |
-                          {' '}{Math.round((meal.nutrition?.protein || meal.protein || 0) / servings)}g protein |
-                          {' '}{Math.round((meal.nutrition?.carbs || meal.carbs || 0) / servings)}g carbs |
-                          {' '}{Math.round((meal.nutrition?.fat || meal.fat || 0) / servings)}g fat
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-4 gap-4 mb-4 text-center">
-                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
-                        <div className="text-lg font-bold text-white">
-                          {meal.nutrition?.calories || meal.calories || 0}
-                        </div>
-                        <div className="text-xs text-white">Calories</div>
-                      </div>
-                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
-                        <div className="text-lg font-bold text-white">
-                          {meal.nutrition?.protein || meal.protein || 0}g
-                        </div>
-                        <div className="text-xs text-white">Protein</div>
-                      </div>
-                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
-                        <div className="text-lg font-bold text-white">
-                          {meal.nutrition?.carbs || meal.carbs || 0}g
-                        </div>
-                        <div className="text-xs text-white">Carbs</div>
-                      </div>
-                      <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
-                        <div className="text-lg font-bold text-white">
-                          {meal.nutrition?.fat || meal.fat || 0}g
-                        </div>
-                        <div className="text-xs text-white">Fat</div>
-                      </div>
-                    </div>
-
-                    {/* Medical Badges - ALWAYS SHOW */}
-                    {(() => {
-                      const profile = getUserMedicalProfile(1); // Use numeric ID for development
-                      // or your real user id
-                      const mealForBadges = {
-                        name: meal.name,
-                        calories: meal.nutrition?.calories ?? meal.calories ?? 0,
-                        protein: meal.nutrition?.protein ?? meal.protein ?? 0,
-                        carbs: meal.nutrition?.carbs ?? meal.carbs ?? 0,
-                        fat: meal.nutrition?.fat ?? meal.fat ?? 0,
-                        ingredients: (meal.ingredients ?? []).map(
-                          (ing: any) => ({
-                            name: ing.name ?? ing.item,
-                            amount:
-                              typeof ing.quantity === "number"
-                                ? ing.quantity
-                                : typeof ing.amount === "number"
-                                  ? ing.amount
-                                  : parseFloat(
-                                      String(ing.quantity ?? ing.amount ?? "1"),
-                                    ) || 1,
-                            unit: (ing.unit ?? "serving")
-                              .toString()
-                              .toLowerCase(),
-                          }),
-                        ),
-                      };
-
-                      const medicalBadges =
-                        (meal as any).medicalBadges &&
-                        (meal as any).medicalBadges.length
-                          ? (meal as any).medicalBadges
-                          : generateMedicalBadges(
-                              mealForBadges as any,
-                              profile,
-                            );
-
-                      return medicalBadges && medicalBadges.length > 0 ? (
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between gap-3 mb-2">
-                            <h3 className="font-semibold text-white">
-                              Medical Safety
-                            </h3>
-                            <CopyRecipeButton recipe={{
-                              name: meal.name,
-                              ingredients: (meal.ingredients ?? []).map((ing: any) => ({
-                                name: ing.item || ing.name,
-                                amount: ing.amount || ing.quantity,
-                                unit: ing.unit
-                              })),
-                              instructions: Array.isArray(meal.instructions) 
-                                ? meal.instructions 
-                                : (meal.instructions ? meal.instructions.split('\n').filter((s: string) => s.trim()) : [])
-                            }} />
-                          </div>
-                          <HealthBadgesPopover badges={medicalBadges.map((b: any) => b.badge)} className="mt-2" />
-                        </div>
-                      ) : null;
-                    })()}
-
-                    {meal.ingredients && meal.ingredients.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="font-semibold mb-2 text-white">
-                          Ingredients:
-                        </h4>
-                        <ul className="text-sm text-white/80 space-y-1">
-                          {meal.ingredients.map(
-                            (ingredient: any, i: number) => {
-                              const name = ingredient.item || ingredient.name;
-                              const amount =
-                                ingredient.amount || ingredient.quantity;
-                              const unit = ingredient.unit;
-
-                              if (ingredient.displayText) {
-                                return (
-                                  <li key={i}>{ingredient.displayText}</li>
-                                );
-                              }
-
-                              if (amount && unit) {
-                                return (
-                                  <li key={i}>
-                                    {amount} {unit} {name}
-                                  </li>
-                                );
-                              }
-
-                              return <li key={i}>{name}</li>;
-                            },
-                          )}
-                        </ul>
-                      </div>
-                    )}
-
-                    {meal.instructions && (
-                      <div className="mb-4">
-                        <h4 className="font-semibold mb-2 text-white">
-                          Instructions:
-                        </h4>
-                        <div className="text-sm text-white/80 whitespace-pre-line max-h-40 overflow-y-auto">
-                          {meal.instructions}
-                        </div>
-                      </div>
-                    )}
-
-                    {meal.reasoning && (
-                      <div className="mb-4">
-                        <h4 className="font-semibold mb-2 flex items-center gap-2 text-white">
-                          <Brain className="h-4 w-4" />
-                          Why This Works For You:
-                        </h4>
-                        <p className="text-sm text-white/80">
-                          {meal.reasoning}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Add Your Macros - standardized black button */}
-                    <div className="space-y-2 mb-3">
-                      <GlassButton
-                        onClick={() => {
-                          const macros = getMealNutrition(meal);
-                          setQuickView({
-                            protein: Math.round(macros.protein_g),
-                            carbs: Math.round(macros.carbs_g),
-                            fat: Math.round(macros.fat_g),
-                            calories: Math.round(macros.calories),
-                            dateISO: new Date().toISOString().slice(0, 10),
-                            mealSlot: "snacks"
-                          });
-                          setLocation("/biometrics?from=craving-creator&view=macros");
-                        }}
-                        className="w-full bg-black hover:bg-black/80 text-white flex items-center justify-center"
-                        data-testid="button-add-your-macros"
+          {/* Create Craving Form */}
+          <div className="w-full max-w-4xl mx-auto">
+            <div className="mt-6">
+              <Card className="shadow-2xl bg-black/30 backdrop-blur-lg border border-white/20 w-full max-w-xl mx-auto">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm text-white">
+                    <Brain className="h-4 w-4 text-white" />
+                    Describe Your Craving
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-medium text-white">
+                        What are you craving?
+                      </label>
+                      <button
+                        onClick={() => setShowCravingInfoModal(true)} // Open modal on click
+                        className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
+                        aria-label="How to use Craving Creator"
                       >
-                        Add Your Macros
-                      </GlassButton>
-                      {replaceCtx && (
-                        <GlassButton
-                          onClick={() => addMealToPlan(meal)}
-                          className="w-full bg-white/10 hover:bg-white/20 border border-white/20 overflow-hidden text-ellipsis whitespace-nowrap"
-                          data-testid="add-to-meal-plan-button"
-                        >
-                          Add to Meal Plan
-                        </GlassButton>
+                        ?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <textarea
+                        value={cravingInput}
+                        onChange={(e) => setCravingInput(e.target.value)}
+                        placeholder="e.g., I want something creamy chocolate with peanut butter swirl and crunchy topping - BE SPECIFIC and describe what you crave!"
+                        className="w-full px-3 py-2 pr-10 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-20 resize-none text-sm"
+                        maxLength={200}
+                      />
+                      {cravingInput && (
+                        <TrashButton
+                          onClick={() => setCravingInput("")}
+                          size="sm"
+                          ariaLabel="Clear craving input"
+                          title="Clear craving input"
+                          className="absolute top-2 right-2"
+                          data-testid="button-clear-craving"
+                        />
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                    <p className="text-xs text-white mt-1 text-center">
+                      Use keyboard or voice texting for input.
+                    </p>
+                    <p className="text-xs text-white/70 mt-1 text-right">
+                      {cravingInput.length}/200
+                    </p>
+                  </div>
 
-                {/* Voice ingredient capture feature removed per user request */}
+                  {/* Dietary Preferences with clear support */}
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-white">
+                      Dietary Preferences (Optional)
+                    </label>
+
+                    <div className="flex items-center gap-2">
+                      <Select
+                        value={selectedDiet || "__none__"}
+                        onValueChange={(v) =>
+                          setSelectedDiet(v === "__none__" ? "" : v)
+                        }
+                      >
+                        <SelectTrigger className="w-full text-sm bg-black text-white border-white/30">
+                          <SelectValue placeholder="Select dietary preferences" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">
+                            No preference (Clear)
+                          </SelectItem>
+                          <SelectItem value="keto">Keto/Low Carb</SelectItem>
+                          <SelectItem value="paleo">Paleo</SelectItem>
+                          <SelectItem value="vegan">Vegan</SelectItem>
+                          <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                          <SelectItem value="gluten-free">
+                            Gluten-Free
+                          </SelectItem>
+                          <SelectItem value="dairy-free">Dairy-Free</SelectItem>
+                          <SelectItem value="mediterranean">
+                            Mediterranean
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <GlassButton
+                        onClick={clearDiet}
+                        disabled={!selectedDiet}
+                        className="shrink-0 px-3 py-1 text-sm"
+                        title="Clear dietary preference"
+                      >
+                        Clear
+                      </GlassButton>
+                    </div>
+                  </div>
+
+                  {/* NEW: Serving Size Dropdown */}
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-white">
+                      Number of Servings
+                    </label>
+                    <Select
+                      value={servings.toString()}
+                      onValueChange={(v) => setServings(parseInt(v))}
+                    >
+                      <SelectTrigger className="w-full text-sm bg-black text-white border-white/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 serving (just me)</SelectItem>
+                        <SelectItem value="2">2 servings</SelectItem>
+                        <SelectItem value="3">3 servings</SelectItem>
+                        <SelectItem value="4">4 servings</SelectItem>
+                        <SelectItem value="5">5 servings</SelectItem>
+                        <SelectItem value="6">6 servings</SelectItem>
+                        <SelectItem value="7">7 servings</SelectItem>
+                        <SelectItem value="8">8 servings</SelectItem>
+                        <SelectItem value="9">9 servings</SelectItem>
+                        <SelectItem value="10">10 servings</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-white mt-1">
+                      Ingredients and nutrition will be scaled for {servings}{" "}
+                      {servings === 1 ? "serving" : "servings"}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-medium mb-1 text-white">
+                      Medical Safety Profile (Always Enabled)
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={true}
+                        disabled={true}
+                        className="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500 opacity-50"
+                      />
+                      <span className="text-xs text-green-300 font-medium">
+                        ✓ Protected
+                      </span>
+                    </div>
+                  </div>
+
+                  {!selectedDiet && (
+                    <div>
+                      <label className="block text-xs font-medium mb-1 text-white">
+                        Custom Dietary Restrictions
+                      </label>
+                      <textarea
+                        value={dietaryRestrictions}
+                        onChange={(e) => setDietaryRestrictions(e.target.value)}
+                        placeholder="e.g., no nuts, low sodium, diabetic-friendly..."
+                        className="w-full px-3 py-2 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-16 resize-none text-sm"
+                        maxLength={150}
+                      />
+                      <p className="text-xs text-white/70 mt-1 text-right">
+                        {dietaryRestrictions.length}/150
+                      </p>
+                    </div>
+                  )}
+
+                  {!replaceId && (
+                    <p className="text-white/80 text-sm mt-2 text-center">
+                      
+                    </p>
+                  )}
+
+                  {isGenerating ? (
+                    <div className="max-w-md mx-auto mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-white/80">
+                          AI Analysis Progress
+                        </span>
+                        <span className="text-sm text-white/80">
+                          {Math.round(progress)}%
+                        </span>
+                      </div>
+                      <Progress
+                        value={progress}
+                        className="h-3 bg-black/30 border border-white/20"
+                      />
+                      <p className="text-white/70 text-sm text-center mt-3">
+                        This may take 30-60 seconds
+                      </p>
+                    </div>
+                  ) : (
+                    <GlassButton
+                      onClick={handleGenerateMeal}
+                      disabled={isGenerating}
+                      className="w-full bg-orange-600 hover:bg-orange-700 overflow-hidden text-ellipsis whitespace-nowrap"
+                      icon={<Sparkles className="h-4 w-4" />}
+                    >
+                      Create My Craving
+                    </GlassButton>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {generatedMeals.length > 0 && (
+            <div className="mt-8 space-y-6">
+              {generatedMeals.map((meal, index) => (
+                <div key={index}>
+                  <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Sparkles className="h-6 w-6 text-yellow-600" />
+                          <h3 className="text-xl font-bold text-white">
+                            {meal.name}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-white/90 mb-4">{meal.description}</p>
+
+                      {/* Meal Image - Show if available */}
+                      {meal.imageUrl && (
+                        <div className="mb-6 rounded-lg overflow-hidden">
+                          <img
+                            src={meal.imageUrl}
+                            alt={meal.name}
+                            className="w-full h-64 object-cover"
+                            onError={(e) => {
+                              console.log("Image load error:", e);
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {/* Serving Size Display - ALWAYS SHOW */}
+                      <div className="mb-4 p-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg">
+                        <div className="flex items-center gap-2 text-sm text-white">
+                          <Users className="h-4 w-4" />
+                          <span className="font-medium">
+                            Serving Size:
+                          </span>{" "}
+                          {meal.servingSize || "1 serving"}
+                        </div>
+                      </div>
+
+                      {/* Per-Serving Info for Multiple Servings */}
+                      {servings > 1 && (
+                        <div className="mb-3 p-2 bg-black/40 backdrop-blur-md rounded-lg border border-white/20">
+                          <div className="text-xs text-white text-center">
+                            <strong>
+                              Total nutrition below is for {servings} servings.
+                            </strong>
+                            <br />
+                            Per serving:{" "}
+                            {Math.round(
+                              (meal.nutrition?.calories || meal.calories || 0) /
+                                servings,
+                            )}{" "}
+                            cal |{" "}
+                            {Math.round(
+                              (meal.nutrition?.protein || meal.protein || 0) /
+                                servings,
+                            )}
+                            g protein |{" "}
+                            {Math.round(
+                              (meal.nutrition?.carbs || meal.carbs || 0) /
+                                servings,
+                            )}
+                            g carbs |{" "}
+                            {Math.round(
+                              (meal.nutrition?.fat || meal.fat || 0) / servings,
+                            )}
+                            g fat
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-4 gap-4 mb-4 text-center">
+                        <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                          <div className="text-lg font-bold text-white">
+                            {meal.nutrition?.calories || meal.calories || 0}
+                          </div>
+                          <div className="text-xs text-white">Calories</div>
+                        </div>
+                        <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                          <div className="text-lg font-bold text-white">
+                            {meal.nutrition?.protein || meal.protein || 0}g
+                          </div>
+                          <div className="text-xs text-white">Protein</div>
+                        </div>
+                        <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                          <div className="text-lg font-bold text-white">
+                            {meal.nutrition?.carbs || meal.carbs || 0}g
+                          </div>
+                          <div className="text-xs text-white">Carbs</div>
+                        </div>
+                        <div className="bg-black/40 backdrop-blur-md border border-white/20 p-3 rounded-md">
+                          <div className="text-lg font-bold text-white">
+                            {meal.nutrition?.fat || meal.fat || 0}g
+                          </div>
+                          <div className="text-xs text-white">Fat</div>
+                        </div>
+                      </div>
+
+                      {/* Medical Badges - ALWAYS SHOW */}
+                      {(() => {
+                        const profile = getUserMedicalProfile(1); // Use numeric ID for development
+                        // or your real user id
+                        const mealForBadges = {
+                          name: meal.name,
+                          calories:
+                            meal.nutrition?.calories ?? meal.calories ?? 0,
+                          protein: meal.nutrition?.protein ?? meal.protein ?? 0,
+                          carbs: meal.nutrition?.carbs ?? meal.carbs ?? 0,
+                          fat: meal.nutrition?.fat ?? meal.fat ?? 0,
+                          ingredients: (meal.ingredients ?? []).map(
+                            (ing: any) => ({
+                              name: ing.name ?? ing.item,
+                              amount:
+                                typeof ing.quantity === "number"
+                                  ? ing.quantity
+                                  : typeof ing.amount === "number"
+                                    ? ing.amount
+                                    : parseFloat(
+                                        String(
+                                          ing.quantity ?? ing.amount ?? "1",
+                                        ),
+                                      ) || 1,
+                              unit: (ing.unit ?? "serving")
+                                .toString()
+                                .toLowerCase(),
+                            }),
+                          ),
+                        };
+
+                        const medicalBadges =
+                          (meal as any).medicalBadges &&
+                          (meal as any).medicalBadges.length
+                            ? (meal as any).medicalBadges
+                            : generateMedicalBadges(
+                                mealForBadges as any,
+                                profile,
+                              );
+
+                        return medicalBadges && medicalBadges.length > 0 ? (
+                          <div className="mb-4">
+                            <div className="flex items-center justify-between gap-3 mb-2">
+                              <h3 className="font-semibold text-white">
+                                Medical Safety
+                              </h3>
+                              <CopyRecipeButton
+                                recipe={{
+                                  name: meal.name,
+                                  ingredients: (meal.ingredients ?? []).map(
+                                    (ing: any) => ({
+                                      name: ing.item || ing.name,
+                                      amount: ing.amount || ing.quantity,
+                                      unit: ing.unit,
+                                    }),
+                                  ),
+                                  instructions: Array.isArray(meal.instructions)
+                                    ? meal.instructions
+                                    : meal.instructions
+                                      ? meal.instructions
+                                          .split("\n")
+                                          .filter((s: string) => s.trim())
+                                      : [],
+                                }}
+                              />
+                            </div>
+                            <HealthBadgesPopover
+                              badges={medicalBadges.map((b: any) => b.badge)}
+                              className="mt-2"
+                            />
+                          </div>
+                        ) : null;
+                      })()}
+
+                      {meal.ingredients && meal.ingredients.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="font-semibold mb-2 text-white">
+                            Ingredients:
+                          </h4>
+                          <ul className="text-sm text-white/80 space-y-1">
+                            {meal.ingredients.map(
+                              (ingredient: any, i: number) => {
+                                const name = ingredient.item || ingredient.name;
+                                const amount =
+                                  ingredient.amount || ingredient.quantity;
+                                const unit = ingredient.unit;
+
+                                if (ingredient.displayText) {
+                                  return (
+                                    <li key={i}>{ingredient.displayText}</li>
+                                  );
+                                }
+
+                                if (amount && unit) {
+                                  return (
+                                    <li key={i}>
+                                      {amount} {unit} {name}
+                                    </li>
+                                  );
+                                }
+
+                                return <li key={i}>{name}</li>;
+                              },
+                            )}
+                          </ul>
+                        </div>
+                      )}
+
+                      {meal.instructions && (
+                        <div className="mb-4">
+                          <h4 className="font-semibold mb-2 text-white">
+                            Instructions:
+                          </h4>
+                          <div className="text-sm text-white/80 whitespace-pre-line max-h-40 overflow-y-auto">
+                            {meal.instructions}
+                          </div>
+                        </div>
+                      )}
+
+                      {meal.reasoning && (
+                        <div className="mb-4">
+                          <h4 className="font-semibold mb-2 flex items-center gap-2 text-white">
+                            <Brain className="h-4 w-4" />
+                            Why This Works For You:
+                          </h4>
+                          <p className="text-sm text-white/80">
+                            {meal.reasoning}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Add Your Macros - standardized black button */}
+                      <div className="space-y-2 mb-3">
+                        <GlassButton
+                          onClick={() => {
+                            const macros = getMealNutrition(meal);
+                            setQuickView({
+                              protein: Math.round(macros.protein_g),
+                              carbs: Math.round(macros.carbs_g),
+                              fat: Math.round(macros.fat_g),
+                              calories: Math.round(macros.calories),
+                              dateISO: new Date().toISOString().slice(0, 10),
+                              mealSlot: "snacks",
+                            });
+                            setLocation(
+                              "/biometrics?from=craving-creator&view=macros",
+                            );
+                          }}
+                          className="w-full bg-black hover:bg-black/80 text-white flex items-center justify-center"
+                          data-testid="button-add-your-macros"
+                        >
+                          Add Your Macros
+                        </GlassButton>
+                        {replaceCtx && (
+                          <GlassButton
+                            onClick={() => addMealToPlan(meal)}
+                            className="w-full bg-white/10 hover:bg-white/20 border border-white/20 overflow-hidden text-ellipsis whitespace-nowrap"
+                            data-testid="add-to-meal-plan-button"
+                          >
+                            Add to Meal Plan
+                          </GlassButton>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Voice ingredient capture feature removed per user request */}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Shopping Aggregate Bar */}
+        {generatedMeals.length > 0 && (
+          <ShoppingAggregateBar
+            ingredients={generatedMeals.flatMap((meal) =>
+              meal.ingredients.map((ing: StructuredIngredient) => ({
+                name: ing.name,
+                qty:
+                  typeof ing.quantity === "string"
+                    ? parseFloat(ing.quantity) || undefined
+                    : ing.quantity,
+                unit: ing.unit,
+              })),
+            )}
+            source="Craving Creator"
+            hideCopyButton={true}
+          />
+        )}
+
+        {/* Craving Info Modal */}
+        {showCravingInfoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-4">
+                How to Describe Your Craving
+              </h3>
+
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>
+                  To get the best results, be as specific as possible! Think
+                  about:
+                </p>
+
+                <ul className="space-y-2 text-white/80 text-sm">
+                  <li>
+                    <strong className="text-white">Flavor Profile:</strong>{" "}
+                    Sweet, savory, spicy, sour, bitter, umami
+                  </li>
+                  <li>
+                    <strong className="text-white">Texture:</strong> Creamy,
+                    crunchy, chewy, smooth, fluffy, crispy
+                  </li>
+                  <li>
+                    <strong className="text-white">Key Ingredients:</strong>{" "}
+                    e.g., "strawberry," "chocolate," "chicken," "broccoli"
+                  </li>
+                  <li>
+                    <strong className="text-white">Dietary Needs:</strong> e.g.,
+                    "low-fat," "vegan," "gluten-free," "no nuts"
+                  </li>
+                  <li>
+                    <strong className="text-white">Meal Type:</strong> Snack,
+                    breakfast, lunch, dinner, dessert
+                  </li>
+                  <li>
+                    <strong className="text-white">Cooking Style:</strong>{" "}
+                    Baked, fried, grilled, raw, stir-fried
+                  </li>
+                </ul>
+
+                <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+                  <p className="font-semibold text-white mb-1">Example:</p>
+                  <p className="text-white/70 italic">
+                    "I want something lowfat, strawberry, with graham cracker
+                    crust, my equal sweetener, and non-dairy"
+                  </p>
+                </div>
               </div>
-            ))}
+
+              <button
+                onClick={() => {
+                  setShowCravingInfoModal(false);
+                  localStorage.setItem("hasSeenCravingInfo", "true");
+                }}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
           </div>
         )}
-      </div>
-
-      {/* Shopping Aggregate Bar */}
-      {generatedMeals.length > 0 && (
-        <ShoppingAggregateBar
-          ingredients={generatedMeals.flatMap((meal) =>
-            meal.ingredients.map((ing: StructuredIngredient) => ({
-              name: ing.name,
-              qty: typeof ing.quantity === 'string' ? parseFloat(ing.quantity) || undefined : ing.quantity,
-              unit: ing.unit,
-            }))
-          )}
-          source="Craving Creator"
-          hideCopyButton={true}
-        />
-      )}
-
-      {/* Craving Info Modal */}
-      {showCravingInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Describe Your Craving</h3>
-
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>To get the best results, be as specific as possible! Think about:</p>
-
-              <ul className="space-y-2 text-white/80 text-sm">
-                <li><strong className="text-white">Flavor Profile:</strong> Sweet, savory, spicy, sour, bitter, umami</li>
-                <li><strong className="text-white">Texture:</strong> Creamy, crunchy, chewy, smooth, fluffy, crispy</li>
-                <li><strong className="text-white">Key Ingredients:</strong> e.g., "strawberry," "chocolate," "chicken," "broccoli"</li>
-                <li><strong className="text-white">Dietary Needs:</strong> e.g., "low-fat," "vegan," "gluten-free," "no nuts"</li>
-                <li><strong className="text-white">Meal Type:</strong> Snack, breakfast, lunch, dinner, dessert</li>
-                <li><strong className="text-white">Cooking Style:</strong> Baked, fried, grilled, raw, stir-fried</li>
-              </ul>
-
-              <div className="bg-black/20 border border-white/10 rounded-lg p-3">
-                <p className="font-semibold text-white mb-1">Example:</p>
-                <p className="text-white/70 italic">
-                  "I want something lowfat, strawberry, with graham cracker crust, my equal sweetener, and non-dairy"
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowCravingInfoModal(false);
-                localStorage.setItem("hasSeenCravingInfo", "true");
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
-
-    </motion.div>
+      </motion.div>
     </PhaseGate>
   );
 }
