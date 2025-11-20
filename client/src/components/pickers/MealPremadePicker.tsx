@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import PreparationModal, { normalizeIngredientName } from '@/components/PreparationModal';
 import { 
@@ -238,6 +239,7 @@ export default function MealPremadePicker({
   const [pendingCategory, setPendingCategory] = useState<string>('');
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
   const [progress, setProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const tickerRef = useRef<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
@@ -515,7 +517,14 @@ export default function MealPremadePicker({
   };
 
   const categories = Object.keys(premadeData);
-  const currentMeals = (premadeData[activeCategory as keyof typeof premadeData] || []) as any[];
+  const allMeals = (premadeData[activeCategory as keyof typeof premadeData] || []) as any[];
+  
+  // Filter meals by search query
+  const currentMeals = searchQuery.trim()
+    ? allMeals.filter(meal => 
+        meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allMeals;
 
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
@@ -541,6 +550,16 @@ export default function MealPremadePicker({
               {category}
             </button>
           ))}
+        </div>
+
+        {/* Search Input */}
+        <div className="mb-3">
+          <Input
+            placeholder="Search meals..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-black/40 text-white border-white/20 placeholder:text-white/50"
+          />
         </div>
 
         {/* Meal Grid - Checkbox Style (Matching Meal Ingredient Picker) */}
