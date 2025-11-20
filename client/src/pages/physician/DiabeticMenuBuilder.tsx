@@ -1354,36 +1354,34 @@ export default function DiabeticMenuBuilder() {
                       {label}
                     </h2>
                     <div className="flex gap-2">
-                      {/* AI Meal Creator and AI Premade Buttons - Only for breakfast, lunch, dinner */}
-                      {(key === "breakfast" || key === "lunch" || key === "dinner") && (
-                        <div className="grid grid-cols-2 gap-2">
-                          <Button
-                            onClick={() => {
-                              setAiPremadeSlot(
-                                key as "breakfast" | "lunch" | "dinner" | "snacks",
-                              );
-                              setAiPremadePickerOpen(true);
-                              console.log("AI Premades Clicked");
-                            }}
-                            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-lg"
-                          >
-                            <Sparkles className="mr-2 h-4 w-4" />
-                            AI Premades
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setAiMealSlot(
-                                key as "breakfast" | "lunch" | "dinner" | "snacks",
-                              );
-                              setAiMealModalOpen(true);
-                            }}
-                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl shadow-lg"
-                          >
-                            <Sparkles className="mr-2 h-4 w-4" />
-                            AI Creator
-                          </Button>
-                        </div>
-                      )}
+                      {/* AI Meal Creator and AI Premade Buttons */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          onClick={() => {
+                            setAiPremadeSlot(
+                              key as "breakfast" | "lunch" | "dinner" | "snacks",
+                            );
+                            setAiPremadePickerOpen(true);
+                            console.log("AI Premades Clicked");
+                          }}
+                          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-lg"
+                        >
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          AI Premades
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setAiMealSlot(
+                              key as "breakfast" | "lunch" | "dinner" | "snacks",
+                            );
+                            setAiMealModalOpen(true);
+                          }}
+                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl shadow-lg"
+                        >
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          AI Creator
+                        </Button>
+                      </div>
 
                       {/* Plus button for manual entry */}
                       <Button
