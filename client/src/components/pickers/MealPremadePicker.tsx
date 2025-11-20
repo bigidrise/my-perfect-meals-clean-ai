@@ -266,13 +266,16 @@ export default function MealPremadePicker({
         ingredientsList = [meal.name];
       }
       
+      console.log(`🎨 Generating ${mealType} meal with ingredients:`, ingredientsList);
+      
       // Use the SAME endpoint as the working AI Meal Creator
       const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fridgeItems: ingredientsList,
-          userId: 1
+          userId: 1,
+          mealType: mealType // Pass meal type to help with image generation
         }),
         signal: abortControllerRef.current.signal
       });
@@ -294,6 +297,12 @@ export default function MealPremadePicker({
       }
       
       // Transform to match board format
+      const defaultImage = mealType === 'breakfast' 
+        ? '/assets/meals/default-breakfast.jpg'
+        : mealType === 'lunch'
+        ? '/assets/meals/default-lunch.jpg'
+        : '/assets/meals/default-dinner.jpg';
+        
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
         title: generatedMeal.name || meal.name,
@@ -302,7 +311,7 @@ export default function MealPremadePicker({
         servings: 1,
         ingredients: generatedMeal.ingredients || meal.ingredients,
         instructions: generatedMeal.instructions || [],
-        imageUrl: generatedMeal.imageUrl || '/assets/meals/default-breakfast.jpg',
+        imageUrl: generatedMeal.imageUrl || defaultImage,
         nutrition: generatedMeal.nutrition || {
           calories: generatedMeal.calories || 350,
           protein: generatedMeal.protein || 30,
@@ -313,6 +322,8 @@ export default function MealPremadePicker({
         source: 'premade',
         category: category
       };
+      
+      console.log(`✅ Generated ${mealType} meal with image:`, premadeMeal.imageUrl);
       
       // Call the parent's onMealSelect handler
       if (onMealSelect) {
