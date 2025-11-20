@@ -837,9 +837,9 @@ export default function BeachBodyMealBoard() {
         Back
       </Button>
 
-      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4 mt-6">
+      <div className="mb-6 mt-16 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4 mt-6">
         <div className="px-4 py-4 flex flex-col gap-3">
-          
+
           {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
           <div className="relative flex justify-center">
             <div className="flex items-center gap-3">
@@ -886,7 +886,7 @@ export default function BeachBodyMealBoard() {
           {FEATURES.dayPlanning === "alpha" && (
             <div className="flex items-center justify-between gap-3">
               <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
-              
+
               {planningMode === "day" && (
                 <Button
                   size="sm"

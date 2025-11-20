@@ -932,12 +932,13 @@ export default function WeeklyMealBoard() {
         variant="ghost"
         size="sm"
         onClick={() => setLocation("/planner")}
-        className="fixed top-4 left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 text-white hover:bg-white/10 rounded-2xl overflow-hidden text-ellipsis whitespace-nowrap p-2"
+        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
       >
-        <ArrowLeft className="h-4 w-4" />Planner
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Planner
       </Button>
 
-      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+      <div className="mb-6 mt-16 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
         <div className="px-4 py-4 flex flex-col gap-3">
 
           {/* ROW 1: Week Navigation + Info Button */}

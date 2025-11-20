@@ -923,7 +923,7 @@ export default function AntiInflammatoryMenuBuilder() {
         );
       })()}
 
-      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+      <div className="mb-6 mt-16 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
         <div className="px-4 py-4 flex flex-col gap-3">
           
           {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
