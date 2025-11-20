@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -29,6 +28,20 @@ export default function PreparationModal({
     "Sirloin Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Filet Mignon": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
 
+    // Potatoes
+    "Potato": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
+    "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
+    "Red Potatoes": ["Roasted Cubes", "Air-Fried", "Boiled"],
+    "Sweet Potato": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
+    "Yam": ["Baked", "Mashed", "Roasted Cubes"],
+
+    // Rice
+    "White Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "Brown Rice": ["Steamed", "Fried Rice", "Pilaf"],
+    "Jasmine Rice": ["Steamed", "Fried Rice"],
+    "Basmati Rice": ["Steamed", "Pilaf"],
+    "Rice": ["Steamed", "Fried Rice", "Pilaf"],
+
     // Chicken
     "Chicken Breast": [
       "Grilled",
@@ -53,11 +66,6 @@ export default function PreparationModal({
     "Spinach": ["Sautéed", "Steamed", "Creamed", "Wilted"],
     "Asparagus": ["Grilled", "Roasted", "Pan-Seared", "Steamed"],
     "Brussels Sprouts": ["Roasted", "Air-Fried", "Sautéed"],
-
-    // Potatoes
-    "Potato": ["Roasted", "Mashed", "Baked", "Air-Fried", "Boiled"],
-    "Sweet Potato": ["Baked", "Mashed", "Roasted", "Air-Fried"],
-    "Yam": ["Baked", "Mashed", "Roasted"],
 
     // Salads
     "Lettuce": ["Garden Salad", "Cobb Salad", "Caesar Style", "Chopped"],

@@ -243,12 +243,32 @@ export default function MealPremadePicker({
 
   // List of ingredients that need cooking style selection
   const NEEDS_PREP = [
+    // Eggs
     'Eggs', 'Egg Whites', 'Whole Eggs',
-    'Steak', 'Ribeye', 'Sirloin Steak', 'Filet Mignon',
-    'Chicken Breast', 'Chicken Thighs',
-    'Broccoli', 'Spinach', 'Asparagus', 'Brussels Sprouts',
-    'Potato', 'Sweet Potato', 'Yam',
-    'Lettuce', 'Spring Mix'
+    
+    // Steaks
+    'Steak', 'Ribeye', 'Ribeye Steak', 'Sirloin Steak', 'Top Sirloin', 'Filet Mignon',
+    'New York Strip', 'NY Strip', 'Strip Steak', 'Porterhouse', 'Porterhouse Steak',
+    'T-Bone', 'T-Bone Steak', 'TBone Steak', 'Skirt Steak', 'Flank Steak',
+    'Flat Iron Steak', 'Tri-Tip', 'Tri-Tip Steak', 'Hanger Steak',
+    'Kobe Steak', 'Kobe Beef', 'Wagyu Steak', 'Wagyu Beef',
+    
+    // Chicken
+    'Chicken Breast', 'Chicken Thighs', 'Ground Chicken',
+    
+    // Turkey
+    'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
+    
+    // Fish
+    'Salmon', 'Tilapia', 'Cod', 'Tuna Steak',
+    
+    // Potatoes (include both singular and plural)
+    'Potato', 'Potatoes', 'Red Potatoes', 'Sweet Potato', 'Yam',
+    
+    // Vegetables
+    'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',
+    'Spinach', 'Lettuce', 'Romaine Lettuce', 'Spring Mix',
+    'Carrots', 'Celery', 'Cucumber'
   ];
 
   // Set initial category when modal opens or meal type changes
@@ -262,11 +282,31 @@ export default function MealPremadePicker({
   }, [open, mealType]);
 
   const handleSelectPremade = (meal: any, category: string) => {
-    // Detect if meal name contains ingredients that need prep selection
-    const mealNameLower = meal.name.toLowerCase();
-    const needsPrepIngredient = NEEDS_PREP.find(ing => 
-      mealNameLower.includes(ing.toLowerCase())
-    );
+    // Check meal ingredients for items that need prep selection
+    let needsPrepIngredient: string | undefined;
+    
+    // First check the actual ingredients array if it exists
+    if (meal.actualIngredients && Array.isArray(meal.actualIngredients)) {
+      for (const ing of meal.actualIngredients) {
+        const ingredientName = ing.item || '';
+        const match = NEEDS_PREP.find(prep => 
+          ingredientName.toLowerCase().includes(prep.toLowerCase()) ||
+          prep.toLowerCase().includes(ingredientName.toLowerCase())
+        );
+        if (match) {
+          needsPrepIngredient = ingredientName;
+          break;
+        }
+      }
+    }
+    
+    // Fallback: check meal name if no ingredients array
+    if (!needsPrepIngredient) {
+      const mealNameLower = meal.name.toLowerCase();
+      needsPrepIngredient = NEEDS_PREP.find(ing => 
+        mealNameLower.includes(ing.toLowerCase())
+      );
+    }
 
     if (needsPrepIngredient) {
       // Show prep modal first
