@@ -385,14 +385,19 @@ export default function MealIngredientPicker({
         ...(dietType && { dietType })
       };
 
-      // STEP 6 — API call with abort signal
-      const data = await apiRequest('/api/meals/fridge-rescue', {
+      // STEP 6 — API call with abort signal (using fetch directly like AI Premades)
+      const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestPayload),
         signal: abortControllerRef.current.signal
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to generate meal');
+      }
+
+      const data = await response.json();
       const generatedMeal = data.meals?.[0];
 
       if (!generatedMeal) {
