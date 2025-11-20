@@ -62,7 +62,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import AIMealCreatorModal from "@/components/AIMealCreatorModal";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
