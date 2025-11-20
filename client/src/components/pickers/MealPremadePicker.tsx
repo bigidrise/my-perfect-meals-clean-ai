@@ -333,7 +333,6 @@ export default function MealPremadePicker({
             onClick={onClose}
             variant="outline"
             className="bg-black/40 border-white/20 text-white hover:bg-white/10"
-            disabled={generating}
           >
             Cancel
           </Button>
