@@ -591,19 +591,29 @@ const FridgeRescuePage = () => {
                   </p>
                 </div>
 
+                {/* Progress Bar */}
+                {isLoading && (
+                  <div className="w-full mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-white/80">AI Analysis Progress</span>
+                      <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+                    </div>
+                    <Progress
+                      value={progress}
+                      className="h-3 bg-black/30 border border-white/20"
+                    />
+                  </div>
+                )}
+
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
                   className="w-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
                 >
-                  {isLoading ? (
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      🍽️ Generate 3 Meals
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    🍽️ Generate 3 Meals
+                  </div>
                 </button>
               </div>
             </div>
