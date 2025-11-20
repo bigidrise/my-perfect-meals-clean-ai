@@ -637,10 +637,10 @@ export default function RestaurantGuidePage() {
               </div>
             )}
 
-            {/* Loading State with Power Bar */}
+            {/* Loading State with Progress Bar */}
             {generateMealsMutation.isPending && (
               <div className="text-center py-8">
-                <div className="flex items-center justify-center gap-2 text-orange-600 mb-4">
+                <div className="flex items-center justify-center gap-2 text-orange-400 mb-4">
                   <Sparkles className="h-6 w-6 animate-spin" />
                   <span className="text-lg font-medium">
                     Generating personalized meals...
@@ -655,11 +655,11 @@ export default function RestaurantGuidePage() {
                   </div>
                   <Progress 
                     value={progress} 
-                    className="h-3 bg-black/30 border border-white/20" 
+                    className="h-3 bg-black/40 border border-white/30" 
                   />
                 </div>
 
-                <p className="text-white/60 text-sm">
+                <p className="text-white/70 text-sm">
                   Finding the best healthy options at this restaurant...
                   Usually takes 15-30 seconds.
                 </p>

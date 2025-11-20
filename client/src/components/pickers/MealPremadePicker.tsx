@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import PreparationModal from '@/components/PreparationModal';
 import { 
@@ -98,7 +99,40 @@ export default function MealPremadePicker({
   const [pendingMeal, setPendingMeal] = useState<any>(null);
   const [pendingCategory, setPendingCategory] = useState<string>('');
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
+  const [progress, setProgress] = useState(0);
+  const tickerRef = useRef<number | null>(null);
   const { toast } = useToast();
+
+  const startProgressTicker = () => {
+    if (tickerRef.current) return;
+    setProgress(0);
+    tickerRef.current = window.setInterval(() => {
+      setProgress((p) => {
+        if (p < 90) {
+          const next = p + Math.max(1, Math.floor((90 - p) * 0.07));
+          return Math.min(next, 90);
+        }
+        return p;
+      });
+    }, 150);
+  };
+
+  const stopProgressTicker = () => {
+    if (tickerRef.current) {
+      clearInterval(tickerRef.current);
+      tickerRef.current = null;
+    }
+    setProgress(100);
+  };
+
+  // Cleanup ticker on unmount
+  useEffect(() => {
+    return () => {
+      if (tickerRef.current) {
+        clearInterval(tickerRef.current);
+      }
+    };
+  }, []);
 
   // List of ingredients that need cooking style selection
   const NEEDS_PREP = [
@@ -153,6 +187,7 @@ export default function MealPremadePicker({
 
   const generateMealImage = async (meal: any, category: string, styles: Record<string, string>) => {
     setGenerating(true);
+    startProgressTicker();
     
     try {
       // Build ingredient list with cooking methods applied
@@ -220,6 +255,8 @@ export default function MealPremadePicker({
         onMealSelect(premadeMeal);
       }
       
+      stopProgressTicker();
+      
       toast({
         title: 'Meal Added!',
         description: `${meal.name} has been added to your ${mealType}`,
@@ -229,6 +266,7 @@ export default function MealPremadePicker({
       setCookingStyles({});
     } catch (error) {
       console.error('Error generating premade meal:', error);
+      stopProgressTicker();
       toast({
         title: 'Error',
         description: 'Failed to generate meal image. Please try again.',
@@ -290,9 +328,28 @@ export default function MealPremadePicker({
         </div>
 
         {generating && (
-          <div className="flex items-center justify-center py-6 text-white/60">
-            <Loader2 className="w-5 h-5 animate-spin mr-2" />
-            <span className="text-sm">Generating meal image...</span>
+          <div className="text-center py-6">
+            <div className="flex items-center justify-center gap-2 text-purple-400 mb-4">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span className="text-lg font-medium">
+                Creating your AI meal...
+              </span>
+            </div>
+
+            <div className="max-w-md mx-auto mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-white/80">AI Analysis Progress</span>
+                <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+              </div>
+              <Progress
+                value={progress}
+                className="h-3 bg-black/40 border border-white/30"
+              />
+            </div>
+
+            <p className="text-white/70 text-sm">
+              This may take 30-60 seconds
+            </p>
           </div>
         )}
       </DialogContent>
