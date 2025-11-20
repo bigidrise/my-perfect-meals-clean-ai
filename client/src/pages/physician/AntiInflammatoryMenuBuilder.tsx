@@ -920,7 +920,7 @@ export default function AntiInflammatoryMenuBuilder() {
             variant="ghost" 
             size="sm" 
             onClick={() => setLocation("/planner")}
-            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Planner
