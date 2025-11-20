@@ -28,6 +28,7 @@ import {
 } from '@/data/aiPremadeDinner';
 import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
 import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
+import { DIABETIC_DINNER_MEALS } from '@/data/diabeticPremadeDinner';
 
 interface MealPremadePickerProps {
   open: boolean;
@@ -92,6 +93,40 @@ const diabeticLunchPremades = {
   })),
   'Smart Plate Dinners': DIABETIC_LUNCH_MEALS['smart-plate-dinners'].map((meal, idx) => ({
     id: `diabetic-l6-${idx}`,
+    name: meal.title,
+    ingredients: []
+  }))
+};
+
+// Build diabetic dinner premades (simple title-only format)
+const diabeticDinnerPremades = {
+  'Lean Protein Plates': DIABETIC_DINNER_MEALS['lean-protein-plates'].map((meal, idx) => ({
+    id: `diabetic-d1-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Protein + Carb Bowls': DIABETIC_DINNER_MEALS['protein-carb-bowls'].map((meal, idx) => ({
+    id: `diabetic-d2-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'High Protein Plates': DIABETIC_DINNER_MEALS['high-protein-plates'].map((meal, idx) => ({
+    id: `diabetic-d3-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Protein + Veggie': DIABETIC_DINNER_MEALS['simple-protein-veggie'].map((meal, idx) => ({
+    id: `diabetic-d4-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'One-Pan Meals': DIABETIC_DINNER_MEALS['one-pan-meals'].map((meal, idx) => ({
+    id: `diabetic-d5-${idx}`,
+    name: meal.title,
+    ingredients: []
+  })),
+  'Smart Plate Dinners': DIABETIC_DINNER_MEALS['smart-plate-dinners'].map((meal, idx) => ({
+    id: `diabetic-d6-${idx}`,
     name: meal.title,
     ingredients: []
   }))
@@ -286,7 +321,7 @@ export default function MealPremadePicker({
     ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
     ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)
-    : dinnerPremades;
+    : (dietType === 'diabetic' ? diabeticDinnerPremades : dinnerPremades);
 
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [generating, setGenerating] = useState(false);
