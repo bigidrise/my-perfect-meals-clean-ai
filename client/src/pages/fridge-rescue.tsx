@@ -593,31 +593,20 @@ const FridgeRescuePage = () => {
 
                 {/* 🔋 Loading State with Restaurant Guide Style Progress Bar */}
                 {isLoading && (
-                  <div className="text-center py-6 mb-4">
-                    <div className="flex items-center justify-center gap-2 text-green-600 mb-4">
-                      <Sparkles className="h-6 w-6 animate-spin" />
-                      <span className="text-lg font-medium">
-                        Rescuing your fridge ingredients...
+                  <div className="max-w-md mx-auto mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-white/80">
+                        AI Analysis Progress
+                      </span>
+                      <span className="text-sm text-white/80">
+                        {Math.round(progress)}%
                       </span>
                     </div>
-
-                    {/* 🔋 Animated Progress Bar (Restaurant Guide Style) */}
-                    <div className="max-w-md mx-auto mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-white/80">
-                          AI Analysis Progress
-                        </span>
-                        <span className="text-sm text-white/80">
-                          {Math.round(progress)}%
-                        </span>
-                      </div>
-                      <Progress
-                        value={progress}
-                        className="h-3 bg-black/30 border border-white/20"
-                      />
-                    </div>
-
-                    <p className="text-gray-400 text-sm">
+                    <Progress
+                      value={progress}
+                      className="h-3 bg-black/30 border border-white/20"
+                    />
+                    <p className="text-white/70 text-sm text-center mt-3">
                       This may take 30-60 seconds
                     </p>
                   </div>
