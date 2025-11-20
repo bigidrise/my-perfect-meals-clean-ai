@@ -63,6 +63,11 @@ export default function PreparationModal({
     "Chicken Sausage": ["Pan-Seared", "Grilled", "Air-Fried"],
     "Ground Chicken": ["Pan-Seared", "Crumbled & Seasoned"],
 
+    // Turkey
+    "Turkey Breast": ["Grilled", "Pan-Seared", "Lemon Pepper", "Taco-Seasoned", "Air-Fried"],
+    "Ground Turkey": ["Pan-Seared", "Taco-Seasoned"],
+    "Turkey Sausage": ["Pan-Seared", "Air-Fried"],
+
     // Vegetables
     "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
     "Spinach": ["Sautéed", "Steamed", "Creamed", "Wilted"],
