@@ -391,11 +391,11 @@ export default function MealPremadePicker({
     'Flat Iron Steak', 'Tri-Tip', 'Tri-Tip Steak', 'Hanger Steak',
     'Kobe Steak', 'Kobe Beef', 'Wagyu Steak', 'Wagyu Beef',
     
-    // Chicken
-    'Chicken Breast', 'Chicken Thighs', 'Chicken Sausage', 'Ground Chicken',
+    // Chicken (base + variations)
+    'Chicken', 'Chicken Breast', 'Chicken Thighs', 'Chicken Sausage', 'Ground Chicken',
     
-    // Turkey
-    'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
+    // Turkey (base + variations)
+    'Turkey', 'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
     
     // Fish
     'Salmon', 'Tilapia', 'Cod', 'Tuna', 'Tuna Steak', 'Halibut', 'Mahi Mahi',
@@ -428,11 +428,15 @@ export default function MealPremadePicker({
   }, [open, mealType]);
 
   const handleSelectPremade = (meal: any, category: string) => {
+    // 🔥 DIABETIC/GLP-1/ANTI-INFLAMMATORY: Title-only meals ALWAYS need prep modal
+    const isMedicalDiet = dietType === 'diabetic' || dietType === 'glp1' || dietType === 'anti-inflammatory';
+    const hasMealIngredients = meal.actualIngredients && Array.isArray(meal.actualIngredients) && meal.actualIngredients.length > 0;
+    
     // Check meal ingredients for items that need prep selection
     let needsPrepIngredient: string | undefined;
     
     // First check the actual ingredients array if it exists
-    if (meal.actualIngredients && Array.isArray(meal.actualIngredients)) {
+    if (hasMealIngredients) {
       for (const ing of meal.actualIngredients) {
         const ingredientName = ing.item || '';
         // 🔥 Use normalization to match ingredient
@@ -447,13 +451,20 @@ export default function MealPremadePicker({
       }
     }
     
-    // Fallback: check meal name if no ingredients array
-    if (!needsPrepIngredient) {
+    // For medical diets OR fallback: check meal name to detect main ingredient
+    if (!needsPrepIngredient || isMedicalDiet) {
       const mealNameLower = meal.name.toLowerCase();
-      needsPrepIngredient = NEEDS_PREP.find(ing => {
+      const foundInName = NEEDS_PREP.find(ing => {
         const normalizedPrep = normalizeIngredientName(ing);
         return mealNameLower.includes(normalizedPrep.toLowerCase());
       });
+      
+      // For medical diets, prefer the name-based ingredient
+      if (isMedicalDiet && foundInName) {
+        needsPrepIngredient = foundInName;
+      } else if (!needsPrepIngredient) {
+        needsPrepIngredient = foundInName;
+      }
     }
 
     if (needsPrepIngredient) {
