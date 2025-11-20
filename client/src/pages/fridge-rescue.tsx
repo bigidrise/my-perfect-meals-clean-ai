@@ -807,7 +807,7 @@ const FridgeRescuePage = () => {
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="mt-auto pt-4">
+                      <div className="mt-auto pt-4 space-y-2">
                         <MacroBridgeButton
                           meal={{
                             protein: meal.protein || 0,
@@ -817,6 +817,23 @@ const FridgeRescuePage = () => {
                           }}
                           source="fridge-rescue"
                         />
+                        <div className="flex justify-end">
+                          <TrashButton
+                            onClick={() => {
+                              setMeals((prev) =>
+                                prev.filter((m) => m.id !== meal.id)
+                              );
+                              toast({
+                                title: "🗑️ Meal Deleted",
+                                description: `"${meal.name}" has been removed.`,
+                              });
+                            }}
+                            size="sm"
+                            ariaLabel={`Delete ${meal.name}`}
+                            title={`Delete ${meal.name}`}
+                            data-testid={`button-delete-${meal.name.toLowerCase().replace(/\s+/g, "-")}`}
+                          />
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
