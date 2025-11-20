@@ -191,6 +191,52 @@ export default function DiabeticMenuBuilder() {
   const [premadePickerOpen, setPremadePickerOpen] = useState(false);
   const [premadePickerSlot, setPremadePickerSlot] = useState<"breakfast" | "lunch" | "dinner">("breakfast");
 
+  // Handler for premade meal selection
+  const handlePremadeSelect = useCallback(async (meal: any) => {
+    if (!board) return;
+
+    try {
+      // Add to the appropriate slot based on premadePickerSlot
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // Add to specific day
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          [premadePickerSlot]: [...dayLists[premadePickerSlot as keyof typeof dayLists], meal]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // Week mode: update local board and save
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            [premadePickerSlot]: [...board.lists[premadePickerSlot], meal]
+          },
+          version: board.version + 1,
+          meta: {
+            ...board.meta,
+            lastUpdatedAt: new Date().toISOString()
+          }
+        };
+        setBoard(updatedBoard);
+        await saveBoard(updatedBoard);
+      }
+
+      // Dispatch board update event
+      window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
+      window.dispatchEvent(new Event("macros:updated"));
+    } catch (error) {
+      console.error("Failed to add premade meal:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add meal. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [board, premadePickerSlot, planningMode, activeDayISO, saveBoard, weekStartISO, toast]);
+
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
@@ -1900,6 +1946,7 @@ export default function DiabeticMenuBuilder() {
         onClose={() => setPremadePickerOpen(false)}
         mealType={premadePickerSlot}
         dietType="diabetic"
+        onMealSelect={handlePremadeSelect}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
