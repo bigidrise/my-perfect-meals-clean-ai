@@ -33,6 +33,7 @@ import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import MealIngredientPicker from "@/components/MealIngredientPicker";
+import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -132,6 +133,10 @@ export default function AntiInflammatoryMenuBuilder() {
   // AI Meal Creator modal state (for all meal slots)
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
+
+  // AI Premades modal state
+  const [premadePickerOpen, setPremadePickerOpen] = useState(false);
+  const [premadePickerSlot, setPremadePickerSlot] = useState<"breakfast" | "lunch" | "dinner">("breakfast");
 
   // Guided Tour state
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -1101,6 +1106,23 @@ export default function AntiInflammatoryMenuBuilder() {
                       Create with AI
                     </Button>
 
+                    {/* AI Premades button - Only for Breakfast, Lunch, Dinner */}
+                    {(key === "breakfast" || key === "lunch" || key === "dinner") && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                        onClick={() => {
+                          console.log("AI Premades Clicked");
+                          setPremadePickerSlot(key as "breakfast" | "lunch" | "dinner");
+                          setPremadePickerOpen(true);
+                        }}
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        AI Premades
+                      </Button>
+                    )}
+
                     {/* Plus button for manual entry */}
                     <Button 
                       size="sm" 
@@ -1497,6 +1519,13 @@ export default function AntiInflammatoryMenuBuilder() {
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
         showMacroTargeting={false}
+      />
+
+      {/* Meal Premade Picker Modal */}
+      <MealPremadePicker
+        open={premadePickerOpen}
+        onClose={() => setPremadePickerOpen(false)}
+        mealType={premadePickerSlot}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
