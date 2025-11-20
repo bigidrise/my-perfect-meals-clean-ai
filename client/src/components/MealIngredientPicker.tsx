@@ -727,7 +727,16 @@ export default function MealIngredientPicker({
                     const nameB = typeof b === "string" ? b : b.name;
                     return nameA.localeCompare(nameB);
                   });
-                  return sortedItems.map((ingredient: string | any, index: number) => {
+                  
+                  // Filter by search query
+                  const filteredItems = searchQuery.trim()
+                    ? sortedItems.filter((ingredient) => {
+                        const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
+                        return ingredientName.toLowerCase().includes(searchQuery.toLowerCase());
+                      })
+                    : sortedItems;
+                  
+                  return filteredItems.map((ingredient: string | any, index: number) => {
                     const ingredientName = typeof ingredient === "string" ? ingredient : ingredient.name;
                     const isSelected = selectedIngredients.includes(ingredientName);
                     return (
