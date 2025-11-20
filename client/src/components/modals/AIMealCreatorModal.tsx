@@ -37,6 +37,18 @@ export default function AIMealCreatorModal({
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const tickerRef = useRef<number | null>(null);
 
+  // Macro targeting state (added to match the original code's implicit usage)
+  const [macroTargetingEnabled, setMacroTargetingEnabled] = useState(false);
+  const [targetProtein, setTargetProtein] = useState<number | ''>('');
+  const [targetCarbs, setTargetCarbs] = useState<number | ''>('');
+  const [targetFat, setTargetFat] = useState<number | ''>('');
+
+  // Placeholder function for saving macro targets to cache
+  const saveMacroTargetsCache = (enabled: boolean, protein: number | '', carbs: number | '', fat: number | '') => {
+    console.log("Saving macro targets cache:", { enabled, protein, carbs, fat });
+    // In a real app, this would save to local storage or a state management solution
+  };
+
   const startProgressTicker = () => {
     if (tickerRef.current) return;
     setProgress(0);
@@ -87,7 +99,9 @@ export default function AIMealCreatorModal({
         },
         body: JSON.stringify({
           fridgeItems: [...selectedIngredients, ...ingredients.split(",").map(i => i.trim()).filter(i => i)],
-          userId: 1,
+          userId: 1, // Assuming a default userId for now
+          // Macro targets, if enabled, should also be sent here
+          macroTargets: macroTargetingEnabled ? { protein: targetProtein, carbs: targetCarbs, fat: targetFat } : undefined,
         }),
       });
 
@@ -111,7 +125,8 @@ export default function AIMealCreatorModal({
 
       // Ensure meal has required fields
       if (!meal.imageUrl) {
-        meal.imageUrl = "/assets/meals/default-breakfast.jpg";
+        // Provide a default image based on mealSlot if available, or a generic one
+        meal.imageUrl = `/assets/meals/default-${mealSlot}.jpg` || "/assets/meals/default-meal.jpg";
       }
       if (!meal.id) {
         meal.id = `ai-meal-${Date.now()}`;
@@ -123,6 +138,8 @@ export default function AIMealCreatorModal({
       // Pass meal to parent and close modal
       onMealGenerated(meal);
       setIngredients("");
+      setSelectedIngredients([]); // Clear selected ingredients
+      setSearchQuery(""); // Clear search query
       onOpenChange(false);
     } catch (error) {
       console.error("Error generating meal:", error);
@@ -208,7 +225,7 @@ export default function AIMealCreatorModal({
                 ))}
               </div>
             )}
-            
+
             {/* Macro Targeting Section - Only for Beach Body & Athlete Boards */}
             {showMacroTargeting && (
               <div className="mb-3 p-3 bg-black/30 border border-pink-500/30 rounded-lg">
@@ -320,7 +337,7 @@ export default function AIMealCreatorModal({
               </div>
             )}
 
-            {/* Search Input */}
+            {/* Search Input - Always visible */}
             <Input
               placeholder="Search ingredients..."
               value={searchQuery}
