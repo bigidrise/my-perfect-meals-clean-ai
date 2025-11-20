@@ -89,11 +89,11 @@ export default function MealIngredientPicker({
     "Cod": ["Baked", "Pan-Seared"],
     "Tuna Steak": ["Grilled", "Pan-Seared", "Raw (Sushi-Grade)"],
 
-    // Potatoes
+    // Potatoes (ALL PLURAL)
     "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
     "Red Potatoes": ["Roasted Cubes", "Air-Fried", "Boiled"],
-    "Sweet Potato": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
-    "Yam": ["Baked", "Mashed", "Roasted Cubes"],
+    "Sweet Potatoes": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
+    "Yams": ["Baked", "Mashed", "Roasted Cubes"],
 
     // Vegetables
     "Broccoli": ["Steamed", "Sautéed", "Roasted", "Air-Fried", "Seasoned"],

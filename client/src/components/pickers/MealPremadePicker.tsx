@@ -262,8 +262,8 @@ export default function MealPremadePicker({
     // Fish
     'Salmon', 'Tilapia', 'Cod', 'Tuna Steak',
     
-    // Potatoes (include both singular and plural)
-    'Potato', 'Potatoes', 'Red Potatoes', 'Sweet Potato', 'Yam',
+    // Potatoes (ALL PLURAL)
+    'Potatoes', 'Red Potatoes', 'Sweet Potatoes', 'Yams',
     
     // Vegetables
     'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',

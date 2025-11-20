@@ -28,12 +28,11 @@ export default function PreparationModal({
     "Sirloin Steak": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
     "Filet Mignon": ["Rare", "Medium Rare", "Medium", "Medium Well", "Well Done"],
 
-    // Potatoes
-    "Potato": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
+    // Potatoes (ALL PLURAL)
     "Potatoes": ["Hash Browns", "Home Style (Diced)", "Roasted Cubes", "Air-Fried", "Mashed", "Baked"],
     "Red Potatoes": ["Roasted Cubes", "Air-Fried", "Boiled"],
-    "Sweet Potato": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
-    "Yam": ["Baked", "Mashed", "Roasted Cubes"],
+    "Sweet Potatoes": ["Baked", "Mashed", "Roasted Cubes", "Air-Fried"],
+    "Yams": ["Baked", "Mashed", "Roasted Cubes"],
 
     // Rice
     "White Rice": ["Steamed", "Fried Rice", "Pilaf"],
