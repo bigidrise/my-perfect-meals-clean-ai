@@ -19,6 +19,7 @@ interface AIMealCreatorModalProps {
   onOpenChange: (open: boolean) => void;
   onMealGenerated: (meal: any) => void;
   mealSlot: "breakfast" | "lunch" | "dinner" | "snacks";
+  showMacroTargeting?: boolean; // Controls visibility of macro targeting section
 }
 
 export default function AIMealCreatorModal({
@@ -26,6 +27,7 @@ export default function AIMealCreatorModal({
   onOpenChange,
   onMealGenerated,
   mealSlot,
+  showMacroTargeting = false, // Default to hidden unless explicitly enabled
 }: AIMealCreatorModalProps) {
   const [ingredients, setIngredients] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -207,6 +209,117 @@ export default function AIMealCreatorModal({
               </div>
             )}
             
+            {/* Macro Targeting Section - Only for Beach Body & Athlete Boards */}
+            {showMacroTargeting && (
+              <div className="mb-3 p-3 bg-black/30 border border-pink-500/30 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-white text-sm font-semibold flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={macroTargetingEnabled}
+                      onCheckedChange={(checked) => {
+                        const newEnabled = checked as boolean;
+                        setMacroTargetingEnabled(newEnabled);
+                        saveMacroTargetsCache(newEnabled, targetProtein, targetCarbs, targetFat);
+                      }}
+                      className="h-4 w-4 border-pink-400/50 data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-500"
+                    />
+                    🎯 Set Macro Targets
+                  </label>
+                </div>
+
+                {macroTargetingEnabled && (
+                  <div className="space-y-2 mt-3 animate-in fade-in duration-200">
+                    <p className="text-white/60 text-xs mb-2">
+                      AI will generate a meal hitting these exact macros (±5g tolerance)
+                    </p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <label className="text-white/80 text-xs font-medium block mb-1">
+                          Protein grams
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="200"
+                          value={targetProtein}
+                          onChange={(e) => {
+                            const newValue = e.target.value === '' ? '' : Number(e.target.value);
+                            setTargetProtein(newValue);
+                            saveMacroTargetsCache(macroTargetingEnabled, newValue, targetCarbs, targetFat);
+                          }}
+                          placeholder="50"
+                          className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-white/80 text-xs font-medium block mb-1">
+                          Carb grams
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="200"
+                          value={targetCarbs}
+                          onChange={(e) => {
+                            const newValue = e.target.value === '' ? '' : Number(e.target.value);
+                            setTargetCarbs(newValue);
+                            saveMacroTargetsCache(macroTargetingEnabled, targetProtein, newValue, targetFat);
+                          }}
+                          placeholder="30"
+                          className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-white/80 text-xs font-medium block mb-1">
+                          Fat grams
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="200"
+                          value={targetFat}
+                          onChange={(e) => {
+                            const newValue = e.target.value === '' ? '' : Number(e.target.value);
+                            setTargetFat(newValue);
+                            saveMacroTargetsCache(macroTargetingEnabled, targetProtein, targetCarbs, newValue);
+                          }}
+                          placeholder="20"
+                          className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => {
+                          setTargetProtein(50);
+                          setTargetCarbs(30);
+                          setTargetFat(20);
+                          saveMacroTargetsCache(macroTargetingEnabled, 50, 30, 20);
+                        }}
+                        className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
+                      >
+                        50p / 30c / 20f
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTargetProtein(40);
+                          setTargetCarbs(40);
+                          setTargetFat(15);
+                          saveMacroTargetsCache(macroTargetingEnabled, 40, 40, 15);
+                        }}
+                        className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
+                      >
+                        40p / 40c / 15f
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Search Input */}
             <Input
               placeholder="Search ingredients..."

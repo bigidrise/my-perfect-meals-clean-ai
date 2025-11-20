@@ -1995,6 +1995,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
+        showMacroTargeting={true}
       />
 
       {/* Shopping List Buttons */}

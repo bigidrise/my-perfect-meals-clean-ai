@@ -1869,6 +1869,7 @@ export default function DiabeticMenuBuilder() {
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
+        showMacroTargeting={false}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
