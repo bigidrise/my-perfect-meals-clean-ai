@@ -254,7 +254,7 @@ export default function MealPremadePicker({
     'Kobe Steak', 'Kobe Beef', 'Wagyu Steak', 'Wagyu Beef',
     
     // Chicken
-    'Chicken Breast', 'Chicken Thighs', 'Ground Chicken',
+    'Chicken Breast', 'Chicken Thighs', 'Chicken Sausage', 'Ground Chicken',
     
     // Turkey
     'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',

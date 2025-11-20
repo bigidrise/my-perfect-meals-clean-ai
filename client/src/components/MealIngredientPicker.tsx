@@ -75,7 +75,8 @@ export default function MealIngredientPicker({
 
     // Chicken
     "Chicken Breast": ["Grilled", "Grilled (BBQ)", "Grilled (Lemon Pepper)", "Teriyaki", "Pan-Seared", "Air-Fried", "Baked"],
-    "Chicken Thighs": ["Grilled", "Baked", "Pan-Seared", "Air-Fried"],
+    "Chicken Thighs": ["Grilled", "Baked", "Smoked", "Teriyaki", "Pan-Seared", "Air-Fried"],
+    "Chicken Sausage": ["Pan-Seared", "Grilled", "Air-Fried"],
     "Ground Chicken": ["Pan-Seared", "Crumbled & Seasoned"],
 
     // Turkey

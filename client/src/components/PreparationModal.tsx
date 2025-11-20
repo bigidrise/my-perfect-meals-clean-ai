@@ -60,6 +60,8 @@ export default function PreparationModal({
       "Pan-Seared",
       "Air-Fried"
     ],
+    "Chicken Sausage": ["Pan-Seared", "Grilled", "Air-Fried"],
+    "Ground Chicken": ["Pan-Seared", "Crumbled & Seasoned"],
 
     // Vegetables
     "Broccoli": ["Steamed", "Roasted", "Pan-Seared", "Air-Fried"],
