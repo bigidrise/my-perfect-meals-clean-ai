@@ -241,7 +241,7 @@ export default function MealPremadePicker({
     };
   }, []);
 
-  // List of ingredients that need cooking style selection
+  // List of ingredients that need cooking style selection (FULL LIST from MealIngredientPicker)
   const NEEDS_PREP = [
     // Eggs
     'Eggs', 'Egg Whites', 'Whole Eggs',
