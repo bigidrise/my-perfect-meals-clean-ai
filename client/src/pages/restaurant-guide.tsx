@@ -501,14 +501,7 @@ export default function RestaurantGuidePage() {
                 disabled={generateMealsMutation.isPending}
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
               >
-                {generateMealsMutation.isPending ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Sparkles className="h-4 w-4 animate-spin" />
-                    Finding Dishes...
-                  </div>
-                ) : (
-                  "Find Dishes"
-                )}
+                {generateMealsMutation.isPending ? "Finding Dishes..." : "Find Dishes"}
               </Button>
             </div>
 
@@ -639,29 +632,17 @@ export default function RestaurantGuidePage() {
 
             {/* Loading State with Progress Bar */}
             {generateMealsMutation.isPending && (
-              <div className="text-center py-8">
-                <div className="flex items-center justify-center gap-2 text-orange-400 mb-4">
-                  <Sparkles className="h-6 w-6 animate-spin" />
-                  <span className="text-lg font-medium">
-                    Generating personalized meals...
-                  </span>
+              <div className="max-w-md mx-auto mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-white/80">AI Analysis Progress</span>
+                  <span className="text-sm text-white/80">{Math.round(progress)}%</span>
                 </div>
-
-                {/* Animated Progress Bar */}
-                <div className="max-w-md mx-auto mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/80">Smart Guide Progress</span>
-                    <span className="text-sm text-white/80">{Math.round(progress)}%</span>
-                  </div>
-                  <Progress 
-                    value={progress} 
-                    className="h-3 bg-black/40 border border-white/30" 
-                  />
-                </div>
-
-                <p className="text-white/70 text-sm">
-                  Finding the best healthy options at this restaurant...
-                  Usually takes 15-30 seconds.
+                <Progress 
+                  value={progress} 
+                  className="h-3 bg-black/40 border border-white/30" 
+                />
+                <p className="text-white/70 text-sm text-center mt-3">
+                  This may take 30-60 seconds
                 </p>
               </div>
             )}

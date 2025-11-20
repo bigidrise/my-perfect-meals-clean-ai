@@ -273,28 +273,21 @@ export default function MealFinder() {
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                   data-testid="button-find-meals"
                 >
-                  {findMealsMutation.isPending ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <Sparkles className="h-4 w-4 animate-spin" />
-                      Finding Meals...
-                    </div>
-                  ) : (
-                    "Find Meals"
-                  )}
+                  {findMealsMutation.isPending ? "Finding Meals..." : "Find Meals"}
                 </Button>
               </div>
 
               {findMealsMutation.isPending && (
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/80">Searching nearby restaurants...</span>
+                    <span className="text-sm text-white/80">AI Analysis Progress</span>
                     <span className="text-sm text-white/80">{Math.round(progress)}%</span>
                   </div>
                   <Progress
                     value={progress}
                     className="h-3 bg-black/30 border border-white/20"
                   />
-                  <p className="text-white/60 text-sm mt-2 text-center">
+                  <p className="text-white/70 text-sm text-center mt-3">
                     This may take 30-60 seconds
                   </p>
                 </div>
