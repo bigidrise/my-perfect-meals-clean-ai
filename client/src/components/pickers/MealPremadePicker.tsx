@@ -192,6 +192,28 @@ const dinnerPremades = {
       amount: `${ing.quantity} ${ing.unit}`,
       preparation: meal.defaultCookingMethod || 'as preferred'
     }))
+  })),
+  'One-Pan Meals': getDinnerMealsByCategory('one-pan-meals').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
+  })),
+  'Smart Plate Dinners': getDinnerMealsByCategory('smart-plate-dinners').map(meal => ({
+    id: meal.id,
+    name: meal.name,
+    defaultCookingMethod: meal.defaultCookingMethod,
+    actualIngredients: meal.ingredients,
+    ingredients: meal.ingredients.map(ing => ({
+      item: ing.item,
+      amount: `${ing.quantity} ${ing.unit}`,
+      preparation: meal.defaultCookingMethod || 'as preferred'
+    }))
   }))
 };
 
