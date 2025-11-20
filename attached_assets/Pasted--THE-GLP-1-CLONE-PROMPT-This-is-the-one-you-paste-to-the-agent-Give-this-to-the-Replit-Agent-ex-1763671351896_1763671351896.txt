@@ -66,6 +66,11 @@ Use the exact same API endpoints and request/response structure as diabetic prem
 
 DO NOT add guardrails — the GLP-1 hub already handles guardrails
 
+Import Requirements:
+
+In GLP1MenuBuilder.tsx, ensure this import is included:
+import MealIngredientPicker from "@/components/MealIngredientPicker";
+
 File Structure:
 
 Create a new folder: /ai-premades/glp1
