@@ -159,6 +159,85 @@ router.get("/users/:userId/macro-logs/summary", async (req, res) => {
   }
 });
 
+// GET /api/users/:userId/macros?start&end - Returns totals with separated food and alcohol
+router.get("/users/:userId/macros", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const start = req.query.start ? new Date(String(req.query.start)) : null;
+    const end = req.query.end ? new Date(String(req.query.end)) : null;
+    if (!start || !end)
+      return res.status(400).json({ error: "start & end required (ISO)." });
+
+    // Query all logs in the time range
+    const rows = await db
+      .select({
+        kcal: sql<number>`COALESCE(SUM(${macroLogs.kcal}), 0)`,
+        protein: sql<number>`COALESCE(SUM(${macroLogs.protein}), 0)`,
+        carbs: sql<number>`COALESCE(SUM(${macroLogs.carbs}), 0)`,
+        fat: sql<number>`COALESCE(SUM(${macroLogs.fat}), 0)`,
+        fiber: sql<number>`COALESCE(SUM(${macroLogs.fiber}), 0)`,
+        alcohol: sql<number>`COALESCE(SUM(${macroLogs.alcohol}), 0)`,
+        // Separate food totals (exclude alcohol source)
+        foodKcal: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} != 'alcohol' THEN ${macroLogs.kcal} ELSE 0 END), 0)`,
+        foodProtein: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} != 'alcohol' THEN ${macroLogs.protein} ELSE 0 END), 0)`,
+        foodCarbs: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} != 'alcohol' THEN ${macroLogs.carbs} ELSE 0 END), 0)`,
+        foodFat: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} != 'alcohol' THEN ${macroLogs.fat} ELSE 0 END), 0)`,
+        // Separate alcohol totals
+        alcoholKcal: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} = 'alcohol' THEN ${macroLogs.kcal} ELSE 0 END), 0)`,
+        alcoholProtein: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} = 'alcohol' THEN ${macroLogs.protein} ELSE 0 END), 0)`,
+        alcoholCarbs: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} = 'alcohol' THEN ${macroLogs.carbs} ELSE 0 END), 0)`,
+        alcoholFat: sql<number>`COALESCE(SUM(CASE WHEN ${macroLogs.source} = 'alcohol' THEN ${macroLogs.fat} ELSE 0 END), 0)`,
+      })
+      .from(macroLogs)
+      .where(
+        and(
+          eq(macroLogs.userId, userId),
+          gte(macroLogs.at, start),
+          lte(macroLogs.at, end),
+        ),
+      );
+
+    const result = rows[0] || {
+      kcal: 0,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      fiber: 0,
+      alcohol: 0,
+      foodKcal: 0,
+      foodProtein: 0,
+      foodCarbs: 0,
+      foodFat: 0,
+      alcoholKcal: 0,
+      alcoholProtein: 0,
+      alcoholCarbs: 0,
+      alcoholFat: 0,
+    };
+
+    res.json({
+      kcal: result.kcal,
+      protein: result.protein,
+      carbs: result.carbs,
+      fat: result.fat,
+      foodTotals: {
+        kcal: result.foodKcal,
+        protein: result.foodProtein,
+        carbs: result.foodCarbs,
+        fat: result.foodFat,
+      },
+      alcoholTotals: {
+        kcal: result.alcoholKcal,
+        protein: result.alcoholProtein,
+        carbs: result.alcoholCarbs,
+        fat: result.alcoholFat,
+      },
+    });
+  } catch (e: any) {
+    console.error("macros totals error:", e);
+    res.status(400).json({ error: e.message || "Failed to load macros." });
+  }
+});
+
 // GET /api/users/:userId/macro-logs/daily?start&end
 router.get("/users/:userId/macro-logs/daily", async (req, res) => {
   try {
