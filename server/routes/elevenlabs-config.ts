@@ -1,3 +1,6 @@
+import express from 'express';
+const router = express.Router();
+
 // ElevenLabs configuration endpoint
 router.get('/api/elevenlabs-config', (req, res) => {
   // Return disabled state during alpha testing
@@ -7,4 +10,6 @@ router.get('/api/elevenlabs-config', (req, res) => {
     disabled: true,
     reason: 'Feature disabled during alpha testing'
   });
-  return;
+});
+
+export default router;
