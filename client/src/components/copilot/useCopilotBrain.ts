@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   useCopilot,
   CopilotPersona,
@@ -69,31 +69,33 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
     emotionFlags = [],
   } = props;
 
-  // 1) Keep copilot context in sync with where the user is
+  const stableTags = useMemo(() => tags, [JSON.stringify(tags)]);
+  const stableRecentMeals = useMemo(() => recentMeals, [JSON.stringify(recentMeals)]);
+  const stableEmotionFlags = useMemo(() => emotionFlags, [JSON.stringify(emotionFlags)]);
+  const stableMacroSnapshot = useMemo(() => macroSnapshot, [JSON.stringify(macroSnapshot)]);
+
   useEffect(() => {
     const next: Partial<CopilotContextInfo> = {
       screenId,
       persona,
-      tags,
+      tags: stableTags,
     };
     setContextInfo(next);
-  }, [screenId, persona, JSON.stringify(tags), setContextInfo]);
+  }, [screenId, persona, stableTags, setContextInfo]);
 
-  // 2) Build suggestions based on context + data
   useEffect(() => {
     const ctx: CopilotContextInfo = {
       screenId,
       persona,
-      tags,
+      tags: stableTags,
     };
 
-    // Base, context-aware packs
     const base = buildBaseSuggestions(ctx);
     const dynamic: CopilotSuggestion[] = [];
 
     // === MACRO INTELLIGENCE ===
-    if (macroSnapshot && macroSnapshot.targetProtein && macroSnapshot.protein !== undefined) {
-      const ratio = macroSnapshot.protein / macroSnapshot.targetProtein;
+    if (stableMacroSnapshot && stableMacroSnapshot.targetProtein && stableMacroSnapshot.protein !== undefined) {
+      const ratio = stableMacroSnapshot.protein / stableMacroSnapshot.targetProtein;
       if (ratio < 0.75) {
         dynamic.push({
           id: "brain-protein-boost",
@@ -108,11 +110,11 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
     }
 
     if (
-      macroSnapshot &&
-      macroSnapshot.targetCalories &&
-      macroSnapshot.calories !== undefined
+      stableMacroSnapshot &&
+      stableMacroSnapshot.targetCalories &&
+      stableMacroSnapshot.calories !== undefined
     ) {
-      const calRatio = macroSnapshot.calories / macroSnapshot.targetCalories;
+      const calRatio = stableMacroSnapshot.calories / stableMacroSnapshot.targetCalories;
       if (calRatio > 1.1 && (timeOfDay === "evening" || timeOfDay === "late-night")) {
         dynamic.push({
           id: "brain-calorie-throttle",
@@ -127,7 +129,7 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
     }
 
     // === RECENT MEAL PATTERNS ===
-    const lastThree = recentMeals.slice(-3);
+    const lastThree = stableRecentMeals.slice(-3);
     const highCarbCount = lastThree.filter((m) =>
       (m.tags ?? []).some((t) => t === "high-carb" || t === "refined-carb")
     ).length;
@@ -175,10 +177,10 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
     }
 
     // === EMOTION / CRAVING SIGNALS ===
-    const isStressed = emotionFlags.includes("stressed");
-    const isTired = emotionFlags.includes("tired");
-    const cravingSweet = emotionFlags.includes("craving-sweet");
-    const cravingSavory = emotionFlags.includes("craving-savory");
+    const isStressed = stableEmotionFlags.includes("stressed");
+    const isTired = stableEmotionFlags.includes("tired");
+    const cravingSweet = stableEmotionFlags.includes("craving-sweet");
+    const cravingSavory = stableEmotionFlags.includes("craving-savory");
 
     if (isStressed || isTired) {
       dynamic.push({
@@ -233,11 +235,11 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
   }, [
     screenId,
     persona,
-    JSON.stringify(tags),
-    macroSnapshot,
-    JSON.stringify(recentMeals),
+    stableTags,
+    stableMacroSnapshot,
+    stableRecentMeals,
     timeOfDay,
-    JSON.stringify(emotionFlags),
+    stableEmotionFlags,
     setSuggestions,
   ]);
 };

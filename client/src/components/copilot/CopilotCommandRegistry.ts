@@ -1,123 +1,151 @@
 import { CopilotAction } from "./CopilotContext";
 
-// Import your real app actions here:
-// (navigation, API calls, modals, state updates, etc.)
-//
-// For now I’ll use placeholders so you can wire real logic later.
-// Replace these with your real functions (from stores, API utilities, etc.)
+type CommandHandler = () => Promise<void>;
+type NavigationHandler = (path: string) => void;
+type ModalHandler = (modalId: string) => void;
 
-const Commands = {
-  // ===== MACROS =====
+let navigationCallback: NavigationHandler | null = null;
+let modalCallback: ModalHandler | null = null;
+
+export function setNavigationHandler(fn: NavigationHandler) {
+  navigationCallback = fn;
+}
+
+export function setModalHandler(fn: ModalHandler) {
+  modalCallback = fn;
+}
+
+const Commands: Record<string, CommandHandler> = {
   "macros.boostProteinNextMeal": async () => {
-    console.log("➡️ Boosting protein in next meal...");
-    // call your macro swapper, or open a modal
+    console.log("➡️ Executing: macros.boostProteinNextMeal");
   },
 
   "macros.lightenDinner": async () => {
-    console.log("➡️ Lightening dinner calories...");
+    console.log("➡️ Executing: macros.lightenDinner");
   },
 
-  // ===== DIABETIC =====
   "diabetic.lowerCarb": async () => {
-    console.log("➡️ Lowering carb load (diabetic)...");
+    console.log("➡️ Executing: diabetic.lowerCarb");
   },
 
   "diabetic.balanceDay": async () => {
-    console.log("➡️ Balancing blood sugar across day...");
+    console.log("➡️ Executing: diabetic.balanceDay");
   },
 
   "diabetic.balanceNextMealCarbs": async () => {
-    console.log("➡️ Balancing carbs for next meal...");
+    console.log("➡️ Executing: diabetic.balanceNextMealCarbs");
   },
 
-  // ===== GLP-1 =====
   "glp1.volumeBoost": async () => {
-    console.log("➡️ Increase fullness / volume...");
+    console.log("➡️ Executing: glp1.volumeBoost");
   },
 
   "glp1.comfort": async () => {
-    console.log("➡️ GLP-1 comfort swaps...");
+    console.log("➡️ Executing: glp1.comfort");
   },
 
   "glp1.makeComfortSwap": async () => {
-    console.log("➡️ Making GLP-1-friendly comfort version...");
+    console.log("➡️ Executing: glp1.makeComfortSwap");
   },
 
-  // ===== CRAVINGS =====
   "cravings.sweetSafeOption": async () => {
-    console.log("➡️ Creating sweet but safe craving option...");
+    console.log("➡️ Executing: cravings.sweetSafeOption");
   },
 
   "cravings.savoryComfort": async () => {
-    console.log("➡️ Making savory comfort swap...");
+    console.log("➡️ Executing: cravings.savoryComfort");
   },
 
-  // ===== NIGHT MODE =====
   "night.buildGuardrailSnack": async () => {
-    console.log("➡️ Late-night guardrail snack...");
+    console.log("➡️ Executing: night.buildGuardrailSnack");
   },
 
-  // ===== WEEKLY BOARD =====
   "board.fillEmpty": async () => {
-    console.log("➡️ Auto-filling empty week slots...");
+    console.log("➡️ Executing: board.fillEmpty");
   },
 
   "board.batchPlan": async () => {
-    console.log("➡️ Creating batch-cook plan...");
+    console.log("➡️ Executing: board.batchPlan");
   },
 
-  // ===== ONE-PAN =====
   "onePan.rotation": async () => {
-    console.log("➡️ Creating 3-night one-pan rotation...");
+    console.log("➡️ Executing: onePan.rotation");
   },
 
-  // ===== FRIDGE RESCUE =====
   "fridge.onePanDinner": async () => {
-    console.log("➡️ Generating one-pan dinner from fridge...");
+    console.log("➡️ Executing: fridge.onePanDinner");
   },
 
   "fridge.suggestAdds": async () => {
-    console.log("➡️ Showing missing ingredient unlock list...");
+    console.log("➡️ Executing: fridge.suggestAdds");
   },
 
-  // ===== SHOPPING =====
   "shopping.addFromMeal": async () => {
-    console.log("➡️ Adding ingredients to shopping list...");
+    console.log("➡️ Executing: shopping.addFromMeal");
   },
 
-  // ===== EMOTION-AI =====
   "emotion.simplifyTonight": async () => {
-    console.log("➡️ Simplifying plan for stress/fatigue...");
+    console.log("➡️ Executing: emotion.simplifyTonight");
   },
 
-  // ===== MEALS =====
   "meals.addHiddenVeggies": async () => {
-    console.log("➡️ Adding vegetables without changing flavor...");
+    console.log("➡️ Executing: meals.addHiddenVeggies");
   },
 };
 
 export async function executeCommand(action: CopilotAction) {
-  switch (action.type) {
-    case "run-command": {
-      const fn = Commands[action.id as keyof typeof Commands];
-      if (!fn) {
-        console.warn("⚠️ Unknown command:", action.id);
-        return;
+  try {
+    switch (action.type) {
+      case "run-command": {
+        const fn = Commands[action.id];
+        if (!fn) {
+          console.error(`❌ Unknown copilot command: ${action.id}`);
+          throw new Error(`Unknown command: ${action.id}`);
+        }
+        console.log(`🔥 Executing command: ${action.id}`);
+        await fn();
+        console.log(`✅ Command completed: ${action.id}`);
+        break;
       }
-      return await fn();
+
+      case "navigate": {
+        if (!action.to) {
+          throw new Error("Navigate action missing 'to' property");
+        }
+        if (navigationCallback) {
+          console.log(`🧭 Navigating to: ${action.to}`);
+          navigationCallback(action.to);
+        } else {
+          console.warn("⚠️ Navigation handler not set. Call setNavigationHandler()");
+        }
+        break;
+      }
+
+      case "open-modal": {
+        if (!action.id) {
+          throw new Error("Modal action missing 'id' property");
+        }
+        if (modalCallback) {
+          console.log(`🪟 Opening modal: ${action.id}`);
+          modalCallback(action.id);
+        } else {
+          console.warn("⚠️ Modal handler not set. Call setModalHandler()");
+        }
+        break;
+      }
+
+      case "custom": {
+        console.log("📦 Custom action payload:", action.payload);
+        break;
+      }
+
+      default: {
+        const _exhaustive: never = action;
+        throw new Error(`Unhandled action type: ${JSON.stringify(_exhaustive)}`);
+      }
     }
-
-    case "navigate":
-      // Your router goes here
-      console.log("➡️ Navigating to:", action.to);
-      return;
-
-    case "open-modal":
-      console.log("➡️ Opening modal:", action.id);
-      return;
-
-    case "custom":
-      console.log("➡️ Custom action:", action.payload);
-      return;
+  } catch (error) {
+    console.error("❌ Command execution failed:", error);
+    throw error;
   }
 }

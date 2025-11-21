@@ -28,8 +28,8 @@ export const CopilotSheet: React.FC = () => {
     e.preventDefault();
     if (!lastQuery.trim()) return;
     setMode("thinking");
-    // Wire this into your AI backend
-    console.log("[Copilot] user query:", lastQuery);
+    runAction({ type: "custom", payload: { query: lastQuery } });
+    setLastQuery("");
     setTimeout(() => setMode("idle"), 600);
   };
 
@@ -157,9 +157,7 @@ export const CopilotSheet: React.FC = () => {
                     type="button"
                     className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-black/70 text-[11px] text-white/70 hover:border-orange-400/60 hover:text-orange-300"
                     onClick={() =>
-                      setMode((prev) =>
-                        prev === "listening" ? "idle" : "listening",
-                      )
+                      setMode(mode === "listening" ? "idle" : "listening")
                     }
                   >
                     {mode === "listening" ? "••" : "🎙"}

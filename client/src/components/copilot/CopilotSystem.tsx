@@ -6,11 +6,19 @@ import { executeCommand } from "./CopilotCommandRegistry";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
+  onAction?: (action: CopilotAction) => void | Promise<void>;
 }
 
-export const CopilotSystem: React.FC<CopilotSystemProps> = ({ children }) => {
+export const CopilotSystem: React.FC<CopilotSystemProps> = ({ 
+  children,
+  onAction: customOnAction,
+}) => {
   const handleAction = async (action: CopilotAction) => {
-    await executeCommand(action);
+    if (customOnAction) {
+      await customOnAction(action);
+    } else {
+      await executeCommand(action);
+    }
   };
 
   return (
