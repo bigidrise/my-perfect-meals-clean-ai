@@ -206,4 +206,38 @@ export const useCopilotBrain = (props: CopilotBrainProps) => {
 
     if (cravingSavory) {
       dynamic.push({
-        id:
+        id: "brain-craving-savory",
+        label: "Savory comfort without the crash",
+        description:
+          "You want savory comfort food. I can build a lighter version with the same flavor hit.",
+        badge: "Cravings",
+        emphasis: "medium",
+        action: { type: "run-command", id: "cravings.savoryComfort" },
+      });
+    }
+
+    if (timeOfDay === "late-night") {
+      dynamic.push({
+        id: "brain-late-night-guardrail",
+        label: "Late-night guardrail snack",
+        description:
+          "It's late. I'll keep this low-impact on blood sugar, digestion, and sleep quality.",
+        badge: "Night Mode",
+        emphasis: "medium",
+        action: { type: "run-command", id: "night.buildGuardrailSnack" },
+      });
+    }
+
+    const merged = mergeSuggestions(base, dynamic);
+    setSuggestions(merged);
+  }, [
+    screenId,
+    persona,
+    JSON.stringify(tags),
+    macroSnapshot,
+    JSON.stringify(recentMeals),
+    timeOfDay,
+    JSON.stringify(emotionFlags),
+    setSuggestions,
+  ]);
+};

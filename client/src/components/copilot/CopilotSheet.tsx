@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
-import { buildBaseSuggestions } from "./packs/basePacks";
 import { ChefCapIcon } from "./ChefCapIcon";
 
 export const CopilotSheet: React.FC = () => {
@@ -12,24 +11,17 @@ export const CopilotSheet: React.FC = () => {
     setMode,
     contextInfo,
     suggestions,
-    setSuggestions,
     runAction,
     lastQuery,
     setLastQuery,
   } = useCopilot();
-
-  // Rebuild suggestions whenever context changes
-  useEffect(() => {
-    const next = buildBaseSuggestions(contextInfo);
-    setSuggestions(next);
-  }, [contextInfo, setSuggestions]);
 
   const handleSuggestionClick = (id: string) => {
     const s = suggestions.find((s) => s.id === id);
     if (!s) return;
     setMode("thinking");
     runAction(s.action);
-    setTimeout(() => setMode("idle"), 400); // fake finish; swap with real async
+    setTimeout(() => setMode("idle"), 400);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
