@@ -853,35 +853,40 @@ export default function MyBiometrics() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 md:p-6"
+      className="min-h-screen text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      <Button
-        onClick={() => setLocation("/dashboard")}
-        className="fixed top-4 left-4 z-50 bg-black/30 hover:bg-black/50 text-white rounded-2xl border border-white/10 backdrop-blur-none"
-        size="sm"
-        data-testid="button-back-dashboard"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <Home className="h-4 w-4" />
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to Dashboard */}
+          <Button
+            onClick={() => setLocation("/dashboard")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+            data-testid="button-back-dashboard"
+          >
+            <Home className="h-5 w-5" />
+          </Button>
 
-      <div className="max-w-6xl mx-auto space-y-6 pt-14">
-        {/* Header */}
-        <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-          <CardHeader className="text-center relative">
-            <CardTitle className="text-2xl font-bold text-white">📊 My Biometrics</CardTitle>
-            <p className="text-white/90 text-sm mt-2">Track macros, calories, and weight</p>
-            <button
-              onClick={() => setShowBiometricsInfoModal(true)}
-              className="absolute top-4 right-4 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-              title="Biometrics info"
-            >
-              ?
-            </button>
-            <div className="mt-3 flex justify-center hidden">
-              <Button onClick={exportCSV} className="bg-orange-600 hover:bg-orange-700 text-white border border-white/20">Export CSV</Button>
-            </div>
-          </CardHeader>
-        </Card>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            My Biometrics
+          </h1>
+
+          <div className="ml-auto" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div
+        className="max-w-6xl mx-auto space-y-6 px-4 md:px-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+        
 
 
         {/* MACROS */}
