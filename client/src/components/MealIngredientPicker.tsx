@@ -27,13 +27,13 @@ export default function MealIngredientPicker({
 
   const handleAdd = () => {
     if (newIngredient.name && newIngredient.quantity > 0) {
-      onChange([...ingredients, newIngredient]);
+      onChange([...(ingredients || []), newIngredient]);
       setNewIngredient({ name: "", quantity: 0, unit: "g" });
     }
   };
 
   const handleRemove = (index: number) => {
-    onChange(ingredients.filter((_, i) => i !== index));
+    onChange((ingredients || []).filter((_, i) => i !== index));
   };
 
   return (
@@ -76,7 +76,7 @@ export default function MealIngredientPicker({
       </Button>
 
       <div className="space-y-2">
-        {ingredients.map((ingredient, index) => (
+        {(ingredients || []).map((ingredient, index) => (
           <Card key={index} className="p-3">
             <div className="flex items-center justify-between">
               <span>
