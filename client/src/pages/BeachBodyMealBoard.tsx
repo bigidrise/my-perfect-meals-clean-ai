@@ -843,7 +843,7 @@ export default function BeachBodyMealBoard() {
           </Button>
 
           {/* Page Title */}
-          <h1 className="text-lg font-bold text-white">Beach Body - Hard Body Meal Builder</h1>
+          <h1 className="text-lg font-bold text-white">Beach/Hard Body Meal Builder</h1>
         </div>
       </div>
 
