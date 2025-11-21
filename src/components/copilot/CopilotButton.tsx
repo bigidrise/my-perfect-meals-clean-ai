@@ -1,0 +1,27 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { useCopilot } from "./CopilotContext";
+import { ChefCapIcon } from "./ChefCapIcon";
+
+export const CopilotButton: React.FC = () => {
+  const { toggle, isOpen } = useCopilot();
+
+  return (
+    <motion.button
+      onClick={toggle}
+      className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full bg-black/70 border border-white/15 px-3 py-2 backdrop-blur-xl shadow-lg shadow-black/50"
+      whileTap={{ scale: 0.95 }}
+      whileHover={{ y: -2 }}
+    >
+      <ChefCapIcon size={30} />
+      <div className="flex flex-col items-start">
+        <span className="text-[11px] uppercase tracking-[0.14em] text-orange-300/80">
+          Copilot
+        </span>
+        <span className="text-xs font-medium text-white">
+          {isOpen ? "How can I help?" : "Ask your chef-coach"}
+        </span>
+      </div>
+    </motion.button>
+  );
+};
