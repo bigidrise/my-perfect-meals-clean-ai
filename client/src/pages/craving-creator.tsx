@@ -106,7 +106,7 @@ function loadCravingCache(): CachedCravingState | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const parsed = JSON.JSON.parse(raw);
+    const parsed = JSON.parse(raw);
     // Minimal sanity checks
     if (!parsed?.generatedMeal?.id) return null;
     return parsed as CachedCravingState;
@@ -419,14 +419,12 @@ export default function CravingCreator() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20"
-        style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4"
       >
-        {/* Back Button */}
+        {/* Back to Hub button */}
         <button
           onClick={() => setLocation("/craving-creator-landing")}
-          className="fixed left-2 sm:left-4 z-50 bg-black/10 border border-white/20 text-white hover:bg-black/20 rounded-2xl px-3 sm:px-6 py-2 sm:py-3 flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-          style={{ top: 'calc(0.5rem + env(safe-area-inset-top))' }}
+          className="fixed top-4 left-4 z-50 inline-flex items-center justify-center p-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg text-white hover:bg-black/60 transition-all"
           data-testid="button-back-to-hub"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -662,7 +660,7 @@ export default function CravingCreator() {
 
                   {!replaceId && (
                     <p className="text-white/80 text-sm mt-2 text-center">
-
+                      
                     </p>
                   )}
 
