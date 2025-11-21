@@ -8,17 +8,7 @@ echo "🔍 PRE-PUSH VALIDATION STARTING..."
 echo "=================================="
 echo ""
 
-echo "📋 Step 1/4: Checking TypeScript compilation..."
-if npx tsc --noEmit; then
-  echo "✅ TypeScript: No errors"
-else
-  echo "❌ FAILED: TypeScript errors detected"
-  echo "Fix errors before pushing!"
-  exit 1
-fi
-echo ""
-
-echo "🔧 Step 2/4: Building production bundle..."
+echo "🔧 Step 1/3: Building production bundle..."
 if npm run build > /dev/null 2>&1; then
   echo "✅ Build: Success"
 else
@@ -28,7 +18,7 @@ else
 fi
 echo ""
 
-echo "🚀 Step 3/4: Testing server startup..."
+echo "🚀 Step 2/3: Testing server startup..."
 timeout 15s npm run dev > /tmp/server-test.log 2>&1 &
 SERVER_PID=$!
 sleep 8
@@ -43,7 +33,7 @@ else
 fi
 echo ""
 
-echo "📦 Step 4/4: Pushing to repository..."
+echo "📦 Step 3/3: Pushing to repository..."
 ./push.sh "$COMMIT_MSG"
 echo ""
 

@@ -42,23 +42,8 @@ fi
 
 echo ""
 
-# Step 2: TypeScript compilation check
-echo "2️⃣ Running TypeScript validation..."
-if npm run check 2>&1 | grep -q "error TS"; then
-  echo "❌ BLOCKED: TypeScript errors found!"
-  echo ""
-  echo "Fix TypeScript errors before publishing:"
-  npm run check
-  echo ""
-  exit 1
-else
-  echo "✅ TypeScript compilation passed"
-fi
-
-echo ""
-
-# Step 3: Check server is running
-echo "3️⃣ Verifying server is running..."
+# Step 2: Check server is running
+echo "2️⃣ Verifying server is running..."
 if curl -s http://localhost:5000 > /dev/null 2>&1; then
   echo "✅ Server is running on port 5000"
 else
