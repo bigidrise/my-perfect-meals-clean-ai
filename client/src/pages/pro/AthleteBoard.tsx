@@ -497,14 +497,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note:
+            : 1,
+      unit: i.unit || "",
+      notes:
         planningMode === "day" && activeDayISO
           ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Athlete Plan`
           : `Athlete Meal Plan (${formatWeekLabel(weekStartISO)})`,
@@ -555,14 +555,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note: `Athlete Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
+            : 1,
+      unit: i.unit || "",
+      notes: `Athlete Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
     }));
 
     useShoppingListStore.getState().addItems(items);
