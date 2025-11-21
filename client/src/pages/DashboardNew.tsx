@@ -2,7 +2,13 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Calculator,
   ShoppingCart,
@@ -52,7 +58,6 @@ export default function DashboardNew() {
   const handlePhotoLog = () => {
     setLocation("/my-biometrics");
   };
-
 
   useEffect(() => {
     document.title = "Home | My Perfect Meals";
@@ -134,7 +139,10 @@ export default function DashboardNew() {
       </div>
 
       {/* Header Banner */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+      <div
+        className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
         <div className="px-4 py-3 flex items-center gap-3">
           <img
             src="/assets/MPMTransparentLogo.png"
@@ -174,17 +182,23 @@ export default function DashboardNew() {
                 <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
                   <Flame className="h-4 w-4 lg:h-5 lg:w-5 text-blue-500 mb-1" />
                   <div className="text-xs text-white/60">Protein</div>
-                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.protein)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">
+                    {Math.round(todayMacros.protein)}g
+                  </div>
                 </div>
                 <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
                   <TrendingUp className="h-4 w-4 lg:h-5 lg:w-5 text-orange-500 mb-1" />
                   <div className="text-xs text-white/60">Carbs</div>
-                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.carbs)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">
+                    {Math.round(todayMacros.carbs)}g
+                  </div>
                 </div>
                 <div className="flex flex-col items-center p-2 lg:p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
                   <Activity className="h-4 w-4 lg:h-5 lg:w-5 text-purple-500 mb-1" />
                   <div className="text-xs text-white/60">Fat</div>
-                  <div className="text-sm lg:text-lg font-bold text-white">{Math.round(todayMacros.fat)}g</div>
+                  <div className="text-sm lg:text-lg font-bold text-white">
+                    {Math.round(todayMacros.fat)}g
+                  </div>
                 </div>
               </div>
             </div>
@@ -264,7 +278,9 @@ export default function DashboardNew() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
-                className={feature.size === "large" ? "md:col-span-1" : "md:col-span-1"}
+                className={
+                  feature.size === "large" ? "md:col-span-1" : "md:col-span-1"
+                }
               >
                 <Card
                   onClick={() => handleCardClick(feature.route)}
