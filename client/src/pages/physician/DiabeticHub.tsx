@@ -185,7 +185,7 @@ export default function DiabeticHub() {
         >
 
           {/* Doctor / Coach Guardrail Card */}
-          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-4 relative overflow-hidden">
+          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="flex items-center gap-4 mb-6 relative z-10">
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg">
@@ -301,7 +301,7 @@ export default function DiabeticHub() {
           </section>
 
           {/* Blood Sugar Tracker */}
-          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-4 relative overflow-hidden">
+          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="flex items-center gap-4 mb-6 relative z-10">
               <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg">
@@ -381,7 +381,7 @@ export default function DiabeticHub() {
           <div className="border-t border-white/10 my-8" />
 
           {/* 7-Day Glucose Trend */}
-          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-4 relative overflow-hidden">
+          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="flex items-center gap-4 mb-6 relative z-10">
               <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white shadow-lg">
@@ -490,7 +490,7 @@ export default function DiabeticHub() {
           <div className="border-t border-white/10 my-8" />
 
           {/* AI Meal Generator */}
-          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-4 relative overflow-hidden">
+          <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="mb-6 relative z-10">
               <h2 className="text-lg font-semi-bold text-white">AI Diabetic Meal Generator</h2>
