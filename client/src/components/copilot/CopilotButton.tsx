@@ -9,9 +9,9 @@ export const CopilotButton: React.FC = () => {
   return (
     <motion.button
       onClick={toggle}
-      className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full bg-black/70 border border-white/15 px-3 py-2 backdrop-blur-xl shadow-lg shadow-black/50"
+      className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full bg-black/70 border border-white/15 px-3 py-2 backdrop-blur-xl shadow-lg shadow-black/50 hover:shadow-orange-500/30 hover:border-orange-400/40 transition-all duration-300"
       whileTap={{ scale: 0.95 }}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -2, scale: 1.02 }}
     >
       <ChefCapIcon size={30} />
       <div className="flex flex-col items-start">
