@@ -1229,7 +1229,7 @@ export default function DiabeticMenuBuilder() {
 
           {/* ROW 2: Title (centered) */}
           <h1 className="text-center text-2xl font-semibold text-white">
-            Diabetic Meal Board
+          
           </h1>
 
           {/* ROW 3: Day/Week Toggle + Duplicate */}

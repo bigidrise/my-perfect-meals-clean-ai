@@ -166,6 +166,14 @@ export default function DiabeticHub() {
             <h1 className="text-lg font-bold text-white">
               Diabetic Nutrition Hub
             </h1>
+
+            {/* Premium Badge */}
+            <div className="ml-auto bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-3 py-1 text-white">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4" />
+                <span className="font-semibold text-xs">Premium</span>
+              </div>
+            </div>
           </div>
         </div>
 
