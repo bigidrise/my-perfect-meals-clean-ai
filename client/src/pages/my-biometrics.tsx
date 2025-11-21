@@ -1196,7 +1196,7 @@ export default function MyBiometrics() {
               <p className="text-white/70 text-sm">
                 {targetSource === 'pro' 
                   ? `These targets were set by ${proName}. They'll stay active until ${proName} changes them.`
-                  : "You can change your macro targets anytime from Macro Calculator or Athlete Board."}
+                  : "You can change your macro targets anytime from Macro Calculator or Performance & Competition Builder."}
               </p>
             </div>
 

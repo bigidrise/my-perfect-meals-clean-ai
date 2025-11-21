@@ -857,7 +857,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       description: `${coachMacroTargets.calories} kcal coach-set targets saved`,
     });
 
-    setLocation("/my-biometrics?from=athlete-meal-board&view=macros");
+    setLocation("/my-biometrics?from=performance-competition-builder&view=macros");
   }, [coachMacroTargets, clientId, toast, setLocation]);
 
   // Show error toast if board load fails
@@ -878,7 +878,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-2xl h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading Athlete Meal Board...</p>
+          <p>Loading Performance & Competition Builder...</p>
         </div>
       </div>
     );
@@ -925,13 +925,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Performance & Competiton </h1>
+          <h1 className="text-lg font-bold text-white">Performance & Competition Builder</h1>
 
           {/* Info Button */}
           <button
             onClick={() => setShowInfoModal(true)}
             className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-            aria-label="How to use Athlete Meal Board"
+            aria-label="How to use Performance & Competition Builder"
           >
             ?
           </button>
@@ -1919,7 +1919,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   })()}
                   dateISO={activeDayISO}
                   variant="day"
-                  source="athlete-meal-board"
                 />
               </div>
             )}
@@ -2056,7 +2055,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                           setTimeout(
                             () =>
                               setLocation(
-                                "/shopping-list-v2?from=athlete-meal-board",
+                                "/shopping-list-v2?from=performance-competition-builder",
                               ),
                             100,
                           );
@@ -2073,7 +2072,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                           setTimeout(
                             () =>
                               setLocation(
-                                "/shopping-list-v2?from=athlete-meal-board",
+                                "/shopping-list-v2?from=performance-competition-builder",
                               ),
                             100,
                           );
@@ -2095,8 +2094,8 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           return (
             <ShoppingAggregateBar
               ingredients={ingredients}
-              source="Athlete Meal Board"
-              sourceSlug="athlete-meal-board"
+              source="Performance & Competition Builder"
+              sourceSlug="performance-competition-builder"
             />
           );
         })()}
@@ -2118,7 +2117,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           </DialogHeader>
           <div className="space-y-4 text-white/90">
             <p>
-              The Athlete Board helps you build competition-ready meal plans with precise macro tracking for peak performance.
+              The Performance & Competition Builder helps you build competition-ready meal plans with precise macro tracking for peak performance.
             </p>
             <div>
               <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>

@@ -101,10 +101,10 @@ export const MACRO_SOURCES = [
   },
   {
     label: "Performance & Competition Builder",
-    slug: "athlete-meal-board",
+    slug: "performance-competition-builder",
     get route() {
       // Dynamically resolve to the last used Performance Competition Builder clientId
-      return `/athlete-meal-board/${getLastAthleteClientId()}`;
+      return `/performance-competition-builder`;
     }
   }
 ] as const;

@@ -37,7 +37,7 @@ CRITICAL_FILES=(
   "client/src/components/modals/AIMealCreatorModal.tsx"
   "client/src/pages/WeeklyMealBoard.tsx"
   "client/src/pages/BeachBodyMealBoard.tsx"
-  "client/src/pages/pro/AthleteBoard.tsx"
+  "client/src/pages/pro/PerformanceCompetitionBuilder.tsx"
 )
 
 ERRORS_FOUND=0

@@ -58,7 +58,7 @@ These files are monitored for unexpected changes:
 - `client/src/components/PreparationModal.tsx`
 - `client/src/pages/WeeklyMealBoard.tsx`
 - `client/src/pages/BeachBodyMealBoard.tsx`
-- `client/src/pages/pro/AthleteBoard.tsx`
+- `client/src/pages/pro/PerformanceCompetitionBuilder.tsx`
 - `client/src/pages/Planner.tsx`
 - `server/routes/manualMacros.ts`
 

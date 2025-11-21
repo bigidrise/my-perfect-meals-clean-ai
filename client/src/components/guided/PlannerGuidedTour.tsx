@@ -45,7 +45,7 @@ function PlannerOverlay({ onClose }: { onClose: () => void }) {
           <p><strong className="text-white">Diabetic Board</strong> – For people managing blood sugar or insulin sensitivity.</p>
           <p><strong className="text-white">GLP-1 Board</strong> – For people on GLP-1 medications who need small, nutrient-dense meals.</p>
           <p><strong className="text-white">Anti-Inflammatory Board</strong> – For reducing joint pain, inflammation, and improving recovery.</p>
-          <p><strong className="text-white">Athlete/Competition Board</strong> – For strict, goal-driven athletes who need precision and structure.</p>
+          <p><strong className="text-white">Performance & Competition Builder</strong> – For strict, goal-driven athletes who need precision and structure.</p>
         </div>
 
         <p className="text-white/70 text-sm italic mb-6">
