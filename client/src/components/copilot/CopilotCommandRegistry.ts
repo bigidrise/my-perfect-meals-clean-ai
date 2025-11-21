@@ -177,6 +177,89 @@ const Commands: Record<string, CommandHandler> = {
   },
 };
 
+// Voice command interpreter - maps spoken text to Copilot commands
+function interpretVoiceCommand(text: string): string | null {
+  const lower = text.toLowerCase();
+
+  // Walkthrough intents
+  if (lower.includes("how do i use fridge rescue") || 
+      lower.includes("teach me fridge rescue") ||
+      lower.includes("show me fridge rescue")) {
+    return "walkthrough.start.fridge-rescue";
+  }
+
+  if (lower.includes("how do i use weekly") || 
+      lower.includes("teach me weekly") ||
+      lower.includes("plan my week") ||
+      lower.includes("show me weekly board")) {
+    return "walkthrough.start.weekly-board";
+  }
+
+  // Feature explanations
+  if (lower.includes("what is fridge rescue") || 
+      lower.includes("explain fridge rescue")) {
+    return "explain.fridge-rescue";
+  }
+
+  if (lower.includes("what is weekly board") || 
+      lower.includes("what is the weekly board") ||
+      lower.includes("explain weekly board")) {
+    return "explain.weekly-board";
+  }
+
+  if (lower.includes("what is the meal builder") ||
+      lower.includes("what is meal builder") ||
+      lower.includes("explain meal builder")) {
+    return "explain.ai-meal-builder";
+  }
+
+  if (lower.includes("what is shopping list") ||
+      lower.includes("explain shopping list")) {
+    return "explain.shopping-list";
+  }
+
+  if (lower.includes("what are subscriptions") ||
+      lower.includes("explain subscriptions")) {
+    return "explain.subscriptions";
+  }
+
+  // Actions
+  if (lower.includes("boost my protein") ||
+      lower.includes("increase protein") ||
+      lower.includes("more protein")) {
+    return "macros.boostProteinNextMeal";
+  }
+
+  if (lower.includes("fridge dinner") ||
+      lower.includes("one pan dinner") ||
+      lower.includes("make dinner from fridge")) {
+    return "fridge.onePanDinner";
+  }
+
+  return null;
+}
+
+// Voice query handler - processes voice transcripts
+async function handleVoiceQuery(transcript: string) {
+  console.log(`🎤 Processing voice query: "${transcript}"`);
+
+  const commandId = interpretVoiceCommand(transcript);
+
+  if (commandId && Commands[commandId]) {
+    console.log(`🎯 Mapped to command: ${commandId}`);
+    await Commands[commandId]();
+  } else {
+    // Fallback response for unrecognized commands
+    if (responseCallback) {
+      responseCallback({
+        title: "I heard you",
+        description: `You said: "${transcript}". I'm still learning how to respond to this command.`,
+        spokenText: `You said "${transcript}". I'm still learning this command.`,
+      });
+    }
+  }
+}
+
 export async function executeCommand(action: CopilotAction) {
   try {
     switch (action.type) {
@@ -219,7 +302,12 @@ export async function executeCommand(action: CopilotAction) {
       }
 
       case "custom": {
-        console.log("🤖 AI Query:", action.payload);
+        const payload = action.payload as any;
+        if (payload?.voiceQuery) {
+          await handleVoiceQuery(payload.voiceQuery);
+        } else {
+          console.log("🤖 AI Query:", action.payload);
+        }
         break;
       }
 

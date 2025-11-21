@@ -1,62 +1,106 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
+import { useMicRecorder } from "@/hooks/useMicRecorder";
 import { ChefCapIcon } from "./ChefCapIcon";
 
 export const CopilotSheet: React.FC = () => {
-  const {
-    isOpen,
-    close,
-    mode,
-    setMode,
-    contextInfo,
-    suggestions,
-    runAction,
-    lastQuery,
-    setLastQuery,
-    lastResponse,
-    setLastResponse,
-  } = useCopilot();
+  const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse } = useCopilot();
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  // =========================================
+  // AUDIO (ElevenLabs)
+  // =========================================
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (lastResponse?.spokenText) {
-      fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: lastResponse.spokenText }),
-      })
-        .then((res) => res.arrayBuffer())
-        .then((buffer) => {
-          const blob = new Blob([buffer], { type: "audio/mpeg" });
-          const url = URL.createObjectURL(blob);
-          setAudioUrl(url);
-        })
-        .catch((err) => console.error("TTS error:", err));
-    }
+    if (!lastResponse?.spokenText) return;
+
+    const speak = async () => {
+      try {
+        const res = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: lastResponse.spokenText }),
+        });
+
+        const buf = await res.arrayBuffer();
+        const blob = new Blob([buf], { type: "audio/mpeg" });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+      } catch (err) {
+        console.error("TTS error:", err);
+      }
+    };
+
+    speak();
   }, [lastResponse]);
 
-  const handleSuggestionClick = (id: string) => {
-    const s = suggestions.find((s) => s.id === id);
-    if (!s) return;
-    setLastResponse(null);
-    setCurrentStepIndex(0);
-    setMode("thinking");
-    runAction(s.action);
-    setTimeout(() => setMode("idle"), 400);
+  // =========================================
+  // VOICE INPUT (Whisper)
+  // =========================================
+  const { start, stop, recording } = useMicRecorder();
+  const [listening, setListening] = useState(false);
+
+  const handleVoiceStart = async () => {
+    setListening(true);
+    setMode("listening");
+    const audioPromise = start();
+
+    setTimeout(async () => {
+      stop();
+      const blob = await audioPromise;
+
+      const fd = new FormData();
+      fd.append("audio", blob, "audio.webm");
+
+      try {
+        const res = await fetch("/api/voice/transcribe", {
+          method: "POST",
+          body: fd,
+        });
+
+        const json = await res.json();
+        const transcript = json.transcript;
+
+        // Execute voice command
+        runAction({ type: "custom", payload: { voiceQuery: transcript } });
+      } catch (err) {
+        console.error("Whisper error:", err);
+      } finally {
+        setListening(false);
+        setMode("idle");
+      }
+    }, 4000); // 4 second voice window
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!lastQuery.trim()) return;
-    setMode("thinking");
-    runAction({ type: "custom", payload: { query: lastQuery } });
-    setLastQuery("");
-    setTimeout(() => setMode("idle"), 600);
+  // =========================================
+  // WALKTHROUGH STATE
+  // =========================================
+  const isWalkthrough = lastResponse?.type === "walkthrough";
+  const walkthroughSteps = isWalkthrough ? lastResponse.steps : [];
+  const [wtIndex, setWtIndex] = useState(0);
+
+  useEffect(() => {
+    if (isWalkthrough) setWtIndex(0);
+  }, [isWalkthrough]);
+
+  const currentStep = isWalkthrough && walkthroughSteps ? walkthroughSteps[wtIndex] : null;
+
+  const nextStep = () => {
+    if (!isWalkthrough || !walkthroughSteps) return;
+
+    const next = wtIndex + 1;
+    if (next < walkthroughSteps.length) {
+      setWtIndex(next);
+    } else {
+      setLastResponse(null);
+      setWtIndex(0);
+    }
   };
 
+  // =========================================
+  // RENDER
+  // =========================================
   return (
     <AnimatePresence>
       {isOpen && (
@@ -70,7 +114,7 @@ export const CopilotSheet: React.FC = () => {
             onClick={close}
           />
 
-          {/* Bottom sheet */}
+          {/* Bottom Sheet */}
           <motion.div
             className="fixed inset-x-0 bottom-0 z-50"
             initial={{ y: "100%" }}
@@ -88,96 +132,87 @@ export const CopilotSheet: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center gap-3 px-4 pt-3">
                   <ChefCapIcon size={32} />
-                  <div className="flex flex-col">
+                  <div className="flex flex-col flex-1">
                     <span className="text-xs uppercase tracking-[0.16em] text-orange-300/90">
                       My Perfect Meals Copilot
                     </span>
                     <span className="text-sm text-white/80">
                       {mode === "thinking"
                         ? "Tuning this to your lifestyle..."
+                        : mode === "listening"
+                        ? "Listening..."
                         : "Your chef-coach for every screen."}
                     </span>
                   </div>
+
+                  {/* Voice Button */}
+                  <button
+                    onClick={handleVoiceStart}
+                    disabled={listening}
+                    className={`text-sm px-3 py-1 rounded-full transition-all ${
+                      listening
+                        ? "bg-red-600 text-white animate-pulse"
+                        : "bg-white/10 text-white/70 hover:bg-white/20"
+                    }`}
+                  >
+                    {listening ? "🎙 Listening..." : "🎙 Speak"}
+                  </button>
+
                   <button
                     onClick={close}
-                    className="ml-auto rounded-full bg-white/5 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
+                    className="rounded-full bg-white/5 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
                   >
                     Close
                   </button>
                 </div>
 
-                {/* Context chips */}
-                <div className="flex flex-wrap gap-2 px-4 pt-3">
-                  {contextInfo.persona && (
-                    <span className="rounded-full border border-orange-400/40 bg-orange-500/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-orange-300">
-                      {contextInfo.persona === "default"
-                        ? "Food Lover"
-                        : contextInfo.persona.toUpperCase()}
-                    </span>
-                  )}
-                  {contextInfo.screenId && (
-                    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-white/70">
-                      {contextInfo.screenId}
-                    </span>
-                  )}
-                  {(contextInfo.tags ?? []).slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-white/8 bg-white/5 px-2 py-0.5 text-[11px] text-white/60"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
+                {/* Audio Player */}
+                {audioUrl && <audio autoPlay src={audioUrl} />}
 
-                {/* Knowledge Response Display */}
-                {lastResponse?.title && lastResponse.type === "walkthrough" && lastResponse.steps && (
+                {/* ============================
+                    WALKTHROUGH MODE
+                ============================= */}
+                {isWalkthrough && currentStep && (
                   <div className="mt-3 px-4 pb-2">
                     <div className="rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500/10 to-amber-500/5 p-4">
                       <button
                         onClick={() => {
                           setLastResponse(null);
-                          setCurrentStepIndex(0);
+                          setWtIndex(0);
                         }}
                         className="float-right text-xs text-white/40 hover:text-white/70"
                       >
                         ✕
                       </button>
                       <h2 className="text-lg font-semibold mb-1 text-white">{lastResponse.title}</h2>
-                      <p className="text-white/80 text-xs mb-4">Step {currentStepIndex + 1} of {lastResponse.steps.length}</p>
+                      <p className="text-white/80 text-xs mb-4">Step {wtIndex + 1} of {walkthroughSteps?.length || 0}</p>
 
-                      <p className="text-white/90 text-base mb-4">{lastResponse.steps[currentStepIndex].text}</p>
+                      <p className="text-white/90 text-base mb-4">{currentStep.text}</p>
 
-                      {lastResponse.steps[currentStepIndex].targetId && (
+                      {currentStep.targetId && (
                         <p className="text-xs text-orange-400/80 mb-4 italic">
-                          💡 Look for: {lastResponse.steps[currentStepIndex].targetId}
+                          💡 Look for: {currentStep.targetId}
                         </p>
                       )}
 
-                      {currentStepIndex < lastResponse.steps.length - 1 ? (
-                        <button
-                          className="w-full py-2.5 bg-gradient-to-r from-orange-600 to-orange-500 rounded-xl text-sm font-semibold text-white shadow-md hover:from-orange-500 hover:to-orange-400"
-                          onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
-                        >
-                          Next Step →
-                        </button>
-                      ) : (
-                        <button
-                          className="w-full py-2.5 bg-gradient-to-r from-green-600 to-green-500 rounded-xl text-sm font-semibold text-white shadow-md hover:from-green-500 hover:to-green-400"
-                          onClick={() => {
-                            setLastResponse(null);
-                            setCurrentStepIndex(0);
-                          }}
-                        >
-                          ✓ Finish Walkthrough
-                        </button>
-                      )}
+                      <button
+                        onClick={nextStep}
+                        className={`w-full py-2.5 rounded-xl text-sm font-semibold text-white shadow-md ${
+                          wtIndex === (walkthroughSteps?.length || 0) - 1
+                            ? "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400"
+                            : "bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400"
+                        }`}
+                      >
+                        {wtIndex === (walkthroughSteps?.length || 0) - 1 ? "✓ Finish Walkthrough" : "Next Step →"}
+                      </button>
                     </div>
                   </div>
                 )}
 
-                {/* Knowledge Explanation Display */}
-                {lastResponse?.title && lastResponse.type !== "walkthrough" && (
+                {/* ============================
+                    FEATURE / KNOWLEDGE MODE
+                ============================= */}
+                {!isWalkthrough && lastResponse?.title && (
                   <div className="mt-3 px-4 pb-2">
                     <div className="rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500/10 to-amber-500/5 p-4">
                       <button
@@ -214,13 +249,15 @@ export const CopilotSheet: React.FC = () => {
                   </div>
                 )}
 
-                {/* Suggestions */}
+                {/* ============================
+                    BASE SUGGESTIONS MODE
+                ============================= */}
                 {!lastResponse && (
                   <div className="mt-3 max-h-60 space-y-1 overflow-y-auto px-2 pb-2">
                     {suggestions.map((s) => (
                       <button
                         key={s.id}
-                        onClick={() => handleSuggestionClick(s.id)}
+                        onClick={() => runAction(s.action)}
                         className="group flex w-full items-start gap-3 rounded-2xl border border-white/8 bg-white/3 px-3 py-2 text-left hover:border-orange-400/50 hover:bg-orange-500/5"
                       >
                         <div className="mt-1 h-6 w-6 flex-shrink-0 rounded-full bg-black/60 text-[11px] font-semibold uppercase tracking-wide text-orange-300 flex items-center justify-center border border-orange-400/40">
@@ -256,39 +293,6 @@ export const CopilotSheet: React.FC = () => {
                       </div>
                     )}
                   </div>
-                )}
-
-                {/* Input row */}
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex items-center gap-2 border-t border-white/10 px-3 py-2"
-                >
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-black/70 text-[11px] text-white/70 hover:border-orange-400/60 hover:text-orange-300"
-                    onClick={() =>
-                      setMode(mode === "listening" ? "idle" : "listening")
-                    }
-                  >
-                    {mode === "listening" ? "••" : "🎙"}
-                  </button>
-                  <input
-                    className="flex-1 rounded-2xl border border-white/12 bg-black/60 px-3 py-1.5 text-xs text-white placeholder:text-white/35 focus:border-orange-400/70 focus:outline-none"
-                    placeholder="Ask your copilot: 'Fix this meal for GLP-1'..."
-                    value={lastQuery}
-                    onChange={(e) => setLastQuery(e.target.value)}
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-2xl bg-gradient-to-r from-orange-500/90 to-amber-400/90 px-3 py-1.5 text-xs font-semibold text-black shadow-md shadow-orange-900/50 hover:from-orange-400 hover:to-amber-300"
-                  >
-                    {mode === "thinking" ? "Thinking…" : "Send"}
-                  </button>
-                </form>
-
-                {/* TTS Audio Player */}
-                {audioUrl && (
-                  <audio autoPlay src={audioUrl} />
                 )}
               </div>
             </div>
