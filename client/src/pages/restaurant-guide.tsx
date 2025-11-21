@@ -347,39 +347,38 @@ export default function RestaurantGuidePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
       >
-        {/* Portal-like button positioned outside the main stacking context */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLocation("/lifestyle")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        style={{ 
-          zIndex: 2147483647,
-          position: 'fixed',
-          isolation: 'isolate',
-          transform: 'translateZ(0)',
-          willChange: 'transform'
-        }}
-      >
-        <ArrowLeft className="h-4 w-4 text-white" />
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
+        >
+          <div className="px-8 py-3 flex items-center gap-3">
+            {/* Back Button */}
+            <button
+              onClick={() => setLocation("/lifestyle")}
+              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
 
-      </Button>
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">Restaurant Guide</h1>
 
-      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6 overflow-x-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-0">
-          <div className="flex items-center gap-4 mb-6">
-
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+              aria-label="How to use Restaurant Guide"
+            >
+              ?
+            </button>
           </div>
-
-        <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
-          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
-            Restaurant Guide
-          </h1>
-          <p className="text-sm sm:text-lg text-white/80">
-            Get healthy ordering tips for any restaurant
-          </p>
         </div>
+
+        {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden" style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}>
 
         {/* Find Meals Near Me Card - MOVED TO TOP */}
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
@@ -827,7 +826,6 @@ export default function RestaurantGuidePage() {
           </div>
         </div>
       )}
-    </div>
     </motion.div>
     </PhaseGate>
   );
