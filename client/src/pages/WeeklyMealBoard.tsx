@@ -926,19 +926,38 @@ export default function WeeklyMealBoard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLocation("/planner")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Planner
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to Planner */}
+          <Button
+            onClick={() => setLocation("/planner")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
 
-      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">
+            Weekly Meal Board
+          </h1>
+
+          <div className="ml-auto" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div
+        className="max-w-[1600px] mx-auto px-4 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl">
         <div className="px-4 py-4 flex flex-col gap-3">
 
           {/* ROW 1: Week Navigation + Info Button */}
@@ -1077,7 +1096,7 @@ export default function WeeklyMealBoard() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 pb-10 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      <div className="pb-10 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
         {/* Render day view or week view based on mode */}
         {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board ? (
           // DAY MODE: Show only the active day's meals
@@ -1694,6 +1713,7 @@ export default function WeeklyMealBoard() {
         mealType={premadePickerSlot}
         onMealSelect={handlePremadeSelect} // Pass the handler here
       />
-          </motion.div>
-        );
-      }
+      </div>
+    </motion.div>
+  );
+}
