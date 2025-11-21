@@ -844,18 +844,29 @@ export default function BeachBodyMealBoard() {
 
           {/* Page Title */}
           <h1 className="text-lg font-bold text-white">Beach/Hard Body Meal Builder</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold"
+            aria-label="How to use Beach Body Meal Board"
+          >
+            ?
+          </button>
         </div>
       </div>
 
-      {/* Main Content Wrapper */}
+      {/* Main Content */}
       <div
-        className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        className="max-w-[1600px] mx-auto px-4 space-y-6"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
+
+      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
         <div className="px-4 py-4 flex flex-col gap-3">
 
-          {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
-          <div className="relative flex justify-center">
+          {/* ROW 1: Week Dates (centered) */}
+          <div className="flex justify-center">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -881,14 +892,6 @@ export default function BeachBodyMealBoard() {
                 ›
               </button>
             </div>
-
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-lg font-bold"
-              aria-label="How to use Beach Body Meal Board"
-            >
-              ?
-            </button>
           </div>
 
           {/* ROW 2: Day/Week Toggle + Duplicate */}
@@ -1820,6 +1823,7 @@ export default function BeachBodyMealBoard() {
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </motion.div>
   );
 }
