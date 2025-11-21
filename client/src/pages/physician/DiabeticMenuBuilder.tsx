@@ -1160,7 +1160,14 @@ export default function DiabeticMenuBuilder() {
             Diabetic Meal Builder
           </h1>
 
-          <div className="ml-auto" />
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold"
+            aria-label="How to use Diabetic Meal Builder"
+          >
+            ?
+          </button>
         </div>
       </div>
 
@@ -1192,8 +1199,8 @@ export default function DiabeticMenuBuilder() {
 
       <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
         <div className="px-4 py-4 flex flex-col gap-3">
-          {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
-          <div className="relative flex justify-center">
+          {/* ROW 1: Week Dates (centered) */}
+          <div className="flex justify-center">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -1217,22 +1224,9 @@ export default function DiabeticMenuBuilder() {
                 ›
               </button>
             </div>
-
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
-              aria-label="How to use"
-            >
-              ?
-            </button>
           </div>
 
-          {/* ROW 2: Title (centered) */}
-          <h1 className="text-center text-2xl font-semibold text-white">
-          
-          </h1>
-
-          {/* ROW 3: Day/Week Toggle + Duplicate */}
+          {/* ROW 2: Day/Week Toggle + Duplicate */}
           {FEATURES.dayPlanning === "alpha" && (
             <div className="flex items-center justify-between gap-3">
               <DayWeekToggle

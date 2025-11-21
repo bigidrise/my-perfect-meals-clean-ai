@@ -1157,7 +1157,7 @@ export default function GLP1MealBuilder() {
           </Button>
 
           {/* Page Title */}
-          <h1 className="text-lg font-bold text-white">GLP-1 Meal Board</h1>
+          <h1 className="text-lg font-bold text-white">GLP-1 Meal Builder</h1>
 
           {/* Info Button + Optional Client Dashboard Button */}
           <div className="ml-auto flex items-center gap-2">
@@ -1193,12 +1193,14 @@ export default function GLP1MealBuilder() {
         </div>
       </div>
 
-      {/* Main Content Wrapper */}
+      {/* Main Content */}
       <div
-        className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5.5rem)", marginTop: "0.5rem" }}
+        className="max-w-[1600px] mx-auto px-4 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-        <div className="px-4 py-3 flex flex-col gap-3">
+
+      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+        <div className="px-4 py-4 flex flex-col gap-3">
           {/* ROW 1: Week Dates (centered) */}
           <div className="flex justify-center">
             <div className="flex items-center gap-3">
@@ -2175,6 +2177,7 @@ export default function GLP1MealBuilder() {
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </motion.div>
   );
 }
