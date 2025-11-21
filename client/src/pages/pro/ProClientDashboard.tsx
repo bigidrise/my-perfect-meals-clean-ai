@@ -830,6 +830,16 @@ export default function ProClientDashboard() {
             >
               <Trophy className="h-4 w-4 mr-2" /> Performance & Competition Builder
             </Button>
+            <Button
+              onClick={() => {
+                localStorage.setItem("pro-client-id", clientId);
+                setLocation(`/anti-inflammatory-menu-builder?clientId=${clientId}`);
+              }}
+              className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
+              data-testid="button-general-nutrition-builder"
+            >
+              🌿 General Nutrition Builder
+            </Button>
           </CardContent>
         </Card>
       </div>
