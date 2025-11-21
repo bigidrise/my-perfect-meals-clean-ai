@@ -941,44 +941,41 @@ export default function AntiInflammatoryMenuBuilder() {
     >
       {/* Universal Safe-Area Header Bar */}
       <div
-        className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="relative h-20 flex items-center justify-center">
-          {/* Conditional Back Button - Changes based on navigation source */}
-          <div className="absolute left-2 sm:left-4">
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <Button
+            onClick={() => setLocation("/planner")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+
+          {/* Page Title */}
+          <h1 className="text-lg font-bold text-white">Anti-Inflammatory Meal Board</h1>
+
+          {/* Optional: Client Dashboard Button */}
+          <div className="ml-auto">
             {(() => {
               const urlParams = new URLSearchParams(window.location.search);
               const clientId = urlParams.get('clientId');
-              
-              // If coming from ProCare (has clientId), show "Client Dashboard"
               if (clientId) {
                 return (
                   <Button
-                    variant="ghost"
                     size="sm"
                     onClick={() => setLocation(`/pro/clients/${clientId}`)}
-                    className="bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+                    className="bg-black/60 hover:bg-black/80 text-white rounded-xl border border-white/20 backdrop-blur-sm px-3 py-2 flex items-center gap-2"
                     data-testid="button-client-dashboard"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    <ArrowLeft className="h-4 w-4" />
                     Client Dashboard
                   </Button>
                 );
               }
-              
-              // Otherwise, show "Planner" (default navigation from Planner page)
-              return (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setLocation("/planner")}
-                  className="bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Planner
-                </Button>
-              );
+              return null;
             })()}
           </div>
         </div>
