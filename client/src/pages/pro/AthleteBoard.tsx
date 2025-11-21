@@ -15,7 +15,7 @@ import {
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
 import { AddSnackModal } from "@/components/AddSnackModal";
-import MealIngredientPicker from "@/components/MealIngredientPicker";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
@@ -1996,13 +1996,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         meal={shoppingListModal.meal}
       />
 
-      {/* AI Meal Creator with Ingredient Picker */}
-      <MealIngredientPicker
+      {/* AI Meal Creator Modal */}
+      <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
-        showMacroTargeting={true}
       />
 
       {/* Shopping List Buttons */}
