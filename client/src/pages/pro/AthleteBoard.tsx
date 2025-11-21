@@ -905,39 +905,59 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-6"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
       <DailyMealProgressBar />
-      {/* Fixed Back Button - Top Left */}
-      <Button
-        size="sm"
-        onClick={() => setLocation(mode === "athlete" ? "/procare-cover" : "/dashboard")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-        data-testid="button-back-dashboard"
+      
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        {mode === "athlete" ? "" : "Home"}
-      </Button>
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation(mode === "athlete" ? "/procare-cover" : "/dashboard")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            data-testid="button-back-dashboard"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-      {/* Fixed Client Dashboard Button - Top Right (only in ProCare mode) */}
-      {mode === "procare" && (
-        <Button
-          size="sm"
-          onClick={() => setLocation(`/pro/clients/${clientId}`)}
-          className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-          data-testid="button-client-dashboard"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Client Dashboard
-        </Button>
-      )}
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Professional Meal Board</h1>
 
-      {/* Header */}
-      <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Athlete Meal Board"
+          >
+            ?
+          </button>
+
+          {/* Client Dashboard Button (only in ProCare mode) */}
+          {mode === "procare" && (
+            <button
+              onClick={() => setLocation(`/pro/clients/${clientId}`)}
+              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+              data-testid="button-client-dashboard"
+            >
+              <Target className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Header - Week Navigation */}
+      <div
+        className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        style={{ marginTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
+      >
         <div className="px-4 py-4 flex flex-col gap-3">
           
-          {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
-          <div className="relative flex justify-center">
+          {/* Week Dates (centered) */}
+          <div className="flex justify-center">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -963,20 +983,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 ›
               </button>
             </div>
-
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 top-0 bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-2xl h-4 w-4 flex items-center justify-center text-xs font-bold"
-              aria-label="How to use Athlete Meal Board"
-            >
-              ?
-            </button>
           </div>
-
-          {/* ROW 2: Title (centered) */}
-          <h1 className="text-center text-2xl font-semibold text-white">
-            Professional/ Trainer Meal Board
-          </h1>
 
           {/* ROW 3: Day/Week Toggle + Duplicate */}
           {FEATURES.dayPlanning === "alpha" && (

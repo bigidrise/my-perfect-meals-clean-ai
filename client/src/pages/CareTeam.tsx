@@ -211,45 +211,41 @@ export default function CareTeamPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      {/* Back / Home */}
-      <button
-        onClick={() => setLocation("/procare-cover")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/80 backdrop-blur-md border border-white/30 hover:bg-black/90 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        data-testid="button-back-dashboard"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4" />
-        
-      </button>
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/procare-cover")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            data-testid="button-back-dashboard"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-      <div className="max-w-6xl mx-auto pt-14 sm:pt-16 space-y-6">
-        {/* Header */}
-        <GlassCard>
-          <GlassCardContent className="p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Users className="h-6 w-6 text-white/90" />
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-                    Care Team & Pro Access
-                  </h1>
-                  <p className="text-white/70 text-sm">
-                    Invite your trainer, doctor, or nutritionist. You stay in
-                    control of what they can see or change.
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowInfoModal(true)}
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400 flash-border"
-                aria-label="How to use Care Team"
-              >
-                ?
-              </button>
-            </div>
-          </GlassCardContent>
-        </GlassCard>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Care Team & Pro Access</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Care Team"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+
+      <div
+        className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         {/* Invite Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

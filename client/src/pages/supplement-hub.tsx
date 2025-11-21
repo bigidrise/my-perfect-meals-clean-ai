@@ -115,39 +115,39 @@ export default function SupplementHub() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
-      <main className="mx-auto max-w-screen-md px-4 pb-24 pt-6">
-        {/* Header */}
-        <header className="mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
           <button
             onClick={() => setLocation("/procare-cover")}
-            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/30 backdrop-blur-lg border border-white/20 hover:bg-black/40 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
           </button>
-          <div className="bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 mb-6 mt-14">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h1 className="text-2xl font-bold leading-tight text-white">
-                  Supplement Hub
-                </h1>
-                <p className="text-sm text-white/80">
-                  Curated partners across{" "}
-                  <span className="font-semibold">two distinct lanes</span>:
-                  <span className="ml-1">Clinician-grade Nutraceuticals</span> and{" "}
-                  <span className="ml-1">Sports Nutrition</span>.
-                </p>
-              </div>
-              <button
-                onClick={() => setShowInfoModal(true)}
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 text-white font-bold shadow-lg border-2 border-emerald-400 flash-border"
-                aria-label="How to use Supplement Hub"
-              >
-                ?
-              </button>
-            </div>
-          </div>
-        </header>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Supplement Hub</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Supplement Hub"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+
+      <main
+        className="mx-auto max-w-screen-md px-4 pb-24"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         {/* Live Partner: Nutritional Frontiers (Nutraceuticals / Homeopathy-friendly) */}
         <CardShell className="p-6 mb-6">

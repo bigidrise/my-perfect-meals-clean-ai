@@ -6,7 +6,7 @@ import { Sparkles, Brain, UtensilsCrossed, Wine, Baby, Activity } from 'lucide-r
 import { Card, CardContent } from '@/components/ui/card';
 import LifestyleGuidedTour from '@/components/guided/LifestyleGuidedTour';
 
-const Lifestyle = ({ user }) => {
+const Lifestyle = ({ user }: { user?: any }) => {
   const [, setLocation] = useLocation();
 
   const lifestyleFeatures = [

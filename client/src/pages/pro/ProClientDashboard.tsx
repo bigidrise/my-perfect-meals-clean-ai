@@ -147,19 +147,34 @@ export default function ProClientDashboard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen p-4 text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+      className="min-h-screen text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      {/* Back Button */}
-      <button
-        onClick={() => setLocation("/care-team")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/20 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4" />
-      </button>
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/care-team")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-      <div className="max-w-5xl mx-auto space-y-6 pt-14 sm:pt-16 pb-16">
-        <div className="rounded-2xl p-6 bg-white/5 border border-white/20 mt-2">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Client Dashboard</h1>
+
+          {/* Info Button - Optional, can be added if needed */}
+        </div>
+      </div>
+
+      <div
+        className="max-w-5xl mx-auto px-4 space-y-6 pb-16"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+        <div className="rounded-2xl p-6 bg-white/5 border border-white/20">
           <p className="text-md text-white/70 mt-1">
             {isTrainer &&
               "Set macro targets, carb directives, and coaching notes."}
