@@ -823,21 +823,35 @@ export default function BeachBodyMealBoard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-6"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-32 overflow-x-hidden"
     >
       <DailyMealProgressBar />
 
-      <Button
-        size="sm"
-        onClick={() => setLocation("/planner")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-        data-testid="button-back-planner"
+      {/* Universal Safe-Area Header Bar */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <Button
+            onClick={() => setLocation("/planner")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
 
-      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+          {/* Page Title */}
+          <h1 className="text-lg font-bold text-white">Beach Body / Hard Body Meal Board</h1>
+        </div>
+      </div>
+
+      {/* Main Content Wrapper */}
+      <div
+        className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="px-4 py-4 flex flex-col gap-3">
 
           {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
@@ -877,12 +891,7 @@ export default function BeachBodyMealBoard() {
             </button>
           </div>
 
-          {/* ROW 2: Title (centered) */}
-          <h1 className="text-center text-2xl font-semibold text-white">
-            Beach Body / Hard Body Meal Board
-          </h1>
-
-          {/* ROW 3: Day/Week Toggle + Duplicate */}
+          {/* ROW 2: Day/Week Toggle + Duplicate */}
           {FEATURES.dayPlanning === "alpha" && (
             <div className="flex items-center justify-between gap-3">
               <DayWeekToggle mode={planningMode} onModeChange={setPlanningMode} />
