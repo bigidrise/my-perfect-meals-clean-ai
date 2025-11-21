@@ -105,9 +105,10 @@ interface FridgeRescueRequest {
   fridgeItems: string[];
   user?: any;
   macroTargets?: {
-    protein: number;
-    carbs: number;
-    fat: number;
+    protein_g?: number;
+    fibrous_carbs_g?: number;
+    starchy_carbs_g?: number;
+    fat_g?: number;
   };
 }
 
@@ -183,7 +184,12 @@ export async function generateFridgeRescueMeals(request: FridgeRescueRequest): P
   
   console.log(`🧊 Generating fridge rescue meals with ingredients: ${fridgeItems.join(', ')}`);
   if (macroTargets) {
-    console.log(`🎯 Macro targets requested: ${macroTargets.protein}g protein, ${macroTargets.carbs}g carbs, ${macroTargets.fat}g fat`);
+    const targets = [];
+    if (macroTargets.protein_g) targets.push(`${macroTargets.protein_g}g protein`);
+    if (macroTargets.fibrous_carbs_g) targets.push(`${macroTargets.fibrous_carbs_g}g fibrous carbs`);
+    if (macroTargets.starchy_carbs_g) targets.push(`${macroTargets.starchy_carbs_g}g starchy carbs`);
+    if (macroTargets.fat_g) targets.push(`${macroTargets.fat_g}g fat`);
+    console.log(`🎯 Macro targets requested: ${targets.join(', ')}`);
   }
 
   const medicalConditionsText = userConditions.length > 0 ? 
@@ -193,18 +199,21 @@ export async function generateFridgeRescueMeals(request: FridgeRescueRequest): P
   const macroTargetingText = macroTargets ? `
 🎯 CRITICAL MACRO TARGETING REQUIREMENT:
 The user is in contest prep mode and needs EXACT macro targets for this meal:
-- Target Protein: ${macroTargets.protein}g (±5g tolerance)
-- Target Carbs: ${macroTargets.carbs}g (±5g tolerance)
-- Target Fat: ${macroTargets.fat}g (±5g tolerance)
-
+${macroTargets.protein_g ? `- Target Protein: ${macroTargets.protein_g}g (±5g tolerance)\n` : ''}${macroTargets.fibrous_carbs_g ? `- Target Fibrous Carbs: ${macroTargets.fibrous_carbs_g}g (±5g tolerance)\n` : ''}${macroTargets.starchy_carbs_g ? `- Target Starchy Carbs: ${macroTargets.starchy_carbs_g}g (±5g tolerance)\n` : ''}${macroTargets.fat_g ? `- Target Fat: ${macroTargets.fat_g}g (±5g tolerance)\n` : ''}
 YOU MUST:
 1. Calculate ingredient quantities precisely to hit these exact macro targets
-2. Stay within ±5g tolerance for each macro (protein, carbs, fat)
-3. Prioritize hitting protein target first, then carbs, then fat if trade-offs needed
-4. Adjust portion sizes and ingredient amounts to achieve exact macros
-5. Return the ACTUAL calculated macros in your response
+2. Stay within ±5g tolerance for each specified macro
+3. Use FIBROUS carbs (vegetables) and STARCHY carbs (rice, potatoes) separately if both targets are provided
+4. Prioritize hitting protein target first, then carbs, then fat if trade-offs needed
+5. Adjust portion sizes and ingredient amounts to achieve exact macros
+6. Return the ACTUAL calculated macros in your response
 
-EXAMPLE: If target is 50g protein, your meal MUST have between 45-55g protein.
+IMPORTANT: 
+- Fibrous carbs = vegetables, leafy greens, broccoli, cauliflower, peppers, etc.
+- Starchy carbs = rice, potatoes, sweet potatoes, bread, pasta, oats, etc.
+- If only one carb target is provided, use appropriate sources
+
+EXAMPLE: If target is 50g protein + 30g starchy carbs, your meal MUST have 45-55g protein and 25-35g starchy carbs.
 
 This is for athlete meal planning - precision is critical for contest preparation.
 ` : "";
@@ -233,9 +242,9 @@ FORMAT: Return as JSON object:
       "ingredients": [{"name": "ingredient from fridge", "quantity": "${macroTargets ? 'PRECISE amount calculated to hit macro targets' : 'realistic amount'}", "unit": "tbsp/cup/etc"}],
       "instructions": "Step-by-step cooking instructions as single string",
       "calories": number (${macroTargets ? 'calculated from hitting macro targets' : '200-500 range'}),
-      "protein": number (${macroTargets ? `${macroTargets.protein}±5 grams - MUST hit this target` : '10-40 grams'}),
-      "carbs": number (${macroTargets ? `${macroTargets.carbs}±5 grams - MUST hit this target` : '15-50 grams'}), 
-      "fat": number (${macroTargets ? `${macroTargets.fat}±5 grams - MUST hit this target` : '5-25 grams'}),
+      "protein": number (${macroTargets?.protein_g ? `${macroTargets.protein_g}±5 grams - MUST hit this target` : '10-40 grams'}),
+      "carbs": number (total carbs ${macroTargets?.fibrous_carbs_g || macroTargets?.starchy_carbs_g ? `- should equal ${(macroTargets.fibrous_carbs_g || 0) + (macroTargets.starchy_carbs_g || 0)}±5g from combining fibrous and starchy sources` : '15-50 grams'}), 
+      "fat": number (${macroTargets?.fat_g ? `${macroTargets.fat_g}±5 grams - MUST hit this target` : '5-25 grams'}),
       "cookingTime": "X minutes",
       "difficulty": "Easy or Medium"
     }

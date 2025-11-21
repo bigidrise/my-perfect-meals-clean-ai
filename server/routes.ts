@@ -482,19 +482,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // 🎯 Validate macro targets if provided
+      // 🎯 Validate macro targets if provided (all fields optional)
       if (macroTargets) {
-        const { protein, carbs, fat } = macroTargets;
-        if (
-          typeof protein !== 'number' || protein < 0 || protein > 200 ||
-          typeof carbs !== 'number' || carbs < 0 || carbs > 200 ||
-          typeof fat !== 'number' || fat < 0 || fat > 200
-        ) {
-          console.error("[FRIDGE] validation error: invalid macroTargets", macroTargets);
-          return res.status(400).json({ 
-            error: "macroTargets must include protein, carbs, and fat as numbers between 0-200"
-          });
+        const { protein_g, fibrous_carbs_g, starchy_carbs_g, fat_g } = macroTargets;
+        
+        // Validate each field only if it exists
+        if (protein_g !== undefined && (typeof protein_g !== 'number' || protein_g < 0 || protein_g > 300)) {
+          return res.status(400).json({ error: "protein_g must be a number between 0-300" });
         }
+        if (fibrous_carbs_g !== undefined && (typeof fibrous_carbs_g !== 'number' || fibrous_carbs_g < 0 || fibrous_carbs_g > 150)) {
+          return res.status(400).json({ error: "fibrous_carbs_g must be a number between 0-150" });
+        }
+        if (starchy_carbs_g !== undefined && (typeof starchy_carbs_g !== 'number' || starchy_carbs_g < 0 || starchy_carbs_g > 300)) {
+          return res.status(400).json({ error: "starchy_carbs_g must be a number between 0-300" });
+        }
+        if (fat_g !== undefined && (typeof fat_g !== 'number' || fat_g < 0 || fat_g > 150)) {
+          return res.status(400).json({ error: "fat_g must be a number between 0-150" });
+        }
+        
         console.log("🎯 Macro targets requested:", macroTargets);
       }
 
