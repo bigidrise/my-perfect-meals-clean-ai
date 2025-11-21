@@ -934,9 +934,9 @@ export default function WeeklyMealBoard() {
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Back to Planner */}
+          {/* Back to Client Dashboard */}
           <Button
-            onClick={() => setLocation("/planner")}
+            onClick={() => setLocation("/pro-client-dashboard")}
             className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
             size="icon"
           >
