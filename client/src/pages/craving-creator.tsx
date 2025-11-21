@@ -499,7 +499,7 @@ export default function CravingCreator() {
 
           {/* Create Craving Form */}
           <div className="w-full max-w-4xl mx-auto">
-            <div className="mt-6">
+            <div className="mt-2">
               <Card className="shadow-2xl bg-black/30 backdrop-blur-lg border border-white/20 w-full max-w-xl mx-auto">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm text-white">
