@@ -1138,17 +1138,37 @@ export default function DiabeticMenuBuilder() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-32 overflow-x-hidden"
     >
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLocation("/diabetic-hub")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to Diabetic Hub */}
+          <Button
+            onClick={() => setLocation("/diabetic-hub")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">
+            Diabetic Meal Builder
+          </h1>
+
+          <div className="ml-auto" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div
+        className="max-w-[1600px] mx-auto px-4 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
       {/* Fixed Client Dashboard Button - Top Right (when accessed from ProCare) */}
       {(() => {
@@ -1331,7 +1351,7 @@ export default function DiabeticMenuBuilder() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 pb-10 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      {/* Week Board Controls */}
         {/* Render day view or week view based on mode */}
         {FEATURES.dayPlanning === "alpha" &&
         planningMode === "day" &&

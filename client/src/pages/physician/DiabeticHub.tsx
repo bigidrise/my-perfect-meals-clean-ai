@@ -143,48 +143,45 @@ export default function DiabeticHub() {
 
   return (
     <>
-      {/* Back Button - Portal Style */}
-      <div
-        className="fixed top-4 left-4 pointer-events-auto"
-        style={{ 
-          zIndex: 2147483647,
-          isolation: 'isolate',
-          transform: 'translateZ(0)',
-          willChange: 'transform'
-        }}
-      >
-        <Button
-          onClick={() => setLocation("/planner")}
-          className="flex items-center gap-2 text-white bg-black/20 backdrop-blur-none border border-white/30 hover:bg-black/40 transition-all duration-200 font-medium rounded-xl shadow-2xl"
-        >
-          <ArrowLeft className="h-4 w-4 text-white" />
-          Planner
-        </Button>
-      </div>
-
-      {/* Premium Feature Banner */}
-      <div
-        className="fixed top-4 right-4 pointer-events-auto"
-        style={{ 
-          zIndex: 2147483647,
-          isolation: 'isolate',
-          transform: 'translateZ(0)',
-          willChange: 'transform'
-        }}
-      >
-        <div className="bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-4 py-2 text-white shadow-2xl">
-          <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4" />
-            <span className="font-semibold text-sm">Premium • $19.99/mo</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 relative">
+      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 relative pb-safe-nav">
         {/* Enhanced Glass Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/10 pointer-events-none" />
 
-        <div className="max-w-6xl mx-auto p-4 md:p-8 pb-24 relative z-10">
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
+        >
+          <div className="px-4 py-3 flex items-center gap-3">
+            {/* Back to Planner */}
+            <Button
+              onClick={() => setLocation("/planner")}
+              className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+              size="icon"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">
+              Diabetic Nutrition Hub
+            </h1>
+
+            {/* Premium Badge */}
+            <div className="ml-auto bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-3 py-1 text-white">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4" />
+                <span className="font-semibold text-xs">Premium</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div
+          className="max-w-6xl mx-auto px-4 space-y-8 pb-24"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+        >
 
           {/* Header Section */}
           <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden mb-8 mt-14">
