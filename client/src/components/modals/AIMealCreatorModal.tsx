@@ -40,7 +40,7 @@ export default function AIMealCreatorModal({
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string>("Proteins");
+  const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const tickerRef = useRef<number | null>(null);
 
@@ -196,19 +196,27 @@ export default function AIMealCreatorModal({
             {/* Category Tabs */}
             {!isLoading && mealSlot !== "snacks" && (
               <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2">
-                {Object.keys(mealIngredients).map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
-                      activeCategory === category
-                        ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
-                        : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
+                {Object.keys(mealIngredients).map((category) => {
+                  const displayName = category === 'proteins' ? 'Proteins' 
+                    : category === 'starchyCarbs' ? 'Starchy Carbs'
+                    : category === 'fibrousCarbs' ? 'Fibrous Carbs'
+                    : category === 'fats' ? 'Fats'
+                    : category === 'fruits' ? 'Fruits'
+                    : category;
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                        activeCategory === category
+                          ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
+                          : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      {displayName}
+                    </button>
+                  );
+                })}
               </div>
             )}
 
