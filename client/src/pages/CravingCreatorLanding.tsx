@@ -53,6 +53,7 @@ export default function CravingCreatorLanding() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
+      style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
     >
       {/* Header */}
       <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">

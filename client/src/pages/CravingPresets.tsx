@@ -110,12 +110,13 @@ export default function CravingPresetsPage() {
   const scaledIngs = selected ? scaleIngredients(selected.ingredients, selected.baseServings, selectedServings, rounding) : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6" style={{ paddingTop: 'calc(1rem + env(safe-area-inset-top))', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
       {/* Back Button */}
       <Button
         onClick={() => setLocation("/craving-creator-landing")}
         variant="ghost"
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-orange-900/40 backdrop-blur-none border border-orange-400/60 hover:bg-orange-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+        className="fixed left-2 sm:left-4 z-50 bg-orange-900/40 backdrop-blur-none border border-orange-400/60 hover:bg-orange-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+        style={{ top: 'calc(0.5rem + env(safe-area-inset-top))' }}
       >
         <ArrowLeft className="h-4 w-4" />
       </Button>
