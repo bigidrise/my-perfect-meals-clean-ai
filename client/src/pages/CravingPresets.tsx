@@ -127,7 +127,7 @@ export default function CravingPresetsPage() {
           </Button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Healthy Premade Cravings</h1>
+          <h1 className="text-lg font-bold text-white">Premade Cravings</h1>
 
           {/* Info Button */}
           <button

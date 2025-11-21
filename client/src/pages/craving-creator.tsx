@@ -419,29 +419,41 @@ export default function CravingCreator() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4"
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
       >
-        {/* Back to Hub button */}
-        <button
-          onClick={() => setLocation("/craving-creator-landing")}
-          className="fixed top-4 left-4 z-50 inline-flex items-center justify-center p-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-lg text-white hover:bg-black/60 transition-all"
-          data-testid="button-back-to-hub"
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
         >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
+          <div className="px-8 py-3 flex items-center gap-3">
+            {/* Back Button */}
+            <button
+              onClick={() => setLocation("/craving-creator-landing")}
+              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+              data-testid="button-back-to-hub"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
 
-        {/* Premium Feature Banner */}
-        <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/30 backdrop-blur-lg border border-white/10 rounded-xl px-3 sm:px-4 py-2 text-white shadow-2xl">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="font-semibold text-xs sm:text-sm">
-              Premium • $19.99/mo
-            </span>
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">Craving Creator</h1>
+
+            {/* Info Button */}
+            <button
+              onClick={() => setShowCravingInfoModal(true)}
+              className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+              aria-label="How to use Craving Creator"
+            >
+              ?
+            </button>
           </div>
         </div>
 
+        {/* Main Content */}
         <div
-          className={`max-w-2xl mx-auto mt-14 ${generatedMeals.length > 0 ? "pb-32" : ""}`}
+          className={`max-w-2xl mx-auto px-4 ${generatedMeals.length > 0 ? "pb-32" : "pb-8"}`}
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
         >
           <div className="flex items-center justify-between mb-6">
             {/* Spacer for layout */}
@@ -512,13 +524,6 @@ export default function CravingCreator() {
                       <label className="block text-xs font-medium text-white">
                         What are you craving?
                       </label>
-                      <button
-                        onClick={() => setShowCravingInfoModal(true)} // Open modal on click
-                        className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-                        aria-label="How to use Craving Creator"
-                      >
-                        ?
-                      </button>
                     </div>
                     <div className="relative">
                       <textarea
