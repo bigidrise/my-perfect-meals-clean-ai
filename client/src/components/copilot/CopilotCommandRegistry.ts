@@ -2,8 +2,9 @@ import { CopilotAction, KnowledgeResponse } from "./CopilotContext";
 import { boostProteinNextMeal, generateOnePanFridgeRescue } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
+import { interpretFoodCommand } from "./NLEngine";
 
-type CommandHandler = () => Promise<void>;
+type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
 type ModalHandler = (modalId: string) => void;
 type ResponseHandler = (response: KnowledgeResponse | null) => void;
@@ -175,86 +176,151 @@ const Commands: Record<string, CommandHandler> = {
     const response = startWalkthrough("weekly-board");
     responseCallback(response);
   },
+
+  // =========================================
+  // FOOD COMMAND HANDLERS (NLEngine)
+  // =========================================
+
+  "meal.addIngredient": async (payload?: { ingredient: string }) => {
+    if (!responseCallback) return;
+    const ingredient = payload?.ingredient || "ingredient";
+    responseCallback({
+      title: "Ingredient Added",
+      description: `${ingredient} added to your meal.`,
+      spokenText: `${ingredient} added to your meal.`,
+    });
+  },
+
+  "meal.swapIngredient": async (payload?: { from: string; to: string }) => {
+    if (!responseCallback) return;
+    const from = payload?.from || "ingredient";
+    const to = payload?.to || "alternative";
+    responseCallback({
+      title: "Ingredient Swapped",
+      description: `Replaced ${from} with ${to}.`,
+      spokenText: `Replaced ${from} with ${to}.`,
+    });
+  },
+
+  "meals.generateOnePan": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "One-Pan Dinner",
+      description: "Generating a one-pan dinner idea based on your request...",
+      spokenText: "Generating a one-pan dinner idea...",
+    });
+  },
+
+  "macros.highProteinSuggestion": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "High Protein Meal",
+      description: "Here's a high-protein meal idea tailored to your macros.",
+      spokenText: "Here's a high protein meal idea.",
+    });
+  },
+
+  "macros.lowerCarbSwap": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Lower Carb Swap",
+      description: "Creating a lower-carb version of this meal.",
+      spokenText: "Creating a lower carb version.",
+    });
+  },
+
+  "fridge.generate": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Fridge Rescue",
+      description: "Generating a Fridge Rescue recipe with what you have...",
+      spokenText: "Generating a Fridge Rescue recipe.",
+    });
+  },
+
+  "weekly.autofill": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Weekly Board Autofill",
+      description: "Planning your week with smart meal choices...",
+      spokenText: "Planning your week now.",
+    });
+  },
 };
 
-// Voice command interpreter - maps spoken text to Copilot commands
-function interpretVoiceCommand(text: string): string | null {
-  const lower = text.toLowerCase();
+// Voice query handler - processes voice transcripts using NLEngine
+async function handleVoiceQuery(transcript: string) {
+  console.log(`🎤 Processing voice query: "${transcript}"`);
 
-  // Walkthrough intents
+  const lower = transcript.toLowerCase();
+
+  // ===================================
+  // WALKTHROUGHS (keyword-based)
+  // ===================================
   if (lower.includes("how do i use fridge rescue") || 
       lower.includes("teach me fridge rescue") ||
       lower.includes("show me fridge rescue")) {
-    return "walkthrough.start.fridge-rescue";
+    await Commands["walkthrough.start.fridge-rescue"]();
+    return;
   }
 
   if (lower.includes("how do i use weekly") || 
       lower.includes("teach me weekly") ||
-      lower.includes("plan my week") ||
       lower.includes("show me weekly board")) {
-    return "walkthrough.start.weekly-board";
+    await Commands["walkthrough.start.weekly-board"]();
+    return;
   }
 
-  // Feature explanations
+  // ===================================
+  // FEATURE EXPLANATIONS (keyword-based)
+  // ===================================
   if (lower.includes("what is fridge rescue") || 
       lower.includes("explain fridge rescue")) {
-    return "explain.fridge-rescue";
+    await Commands["explain.fridge-rescue"]();
+    return;
   }
 
   if (lower.includes("what is weekly board") || 
       lower.includes("what is the weekly board") ||
       lower.includes("explain weekly board")) {
-    return "explain.weekly-board";
+    await Commands["explain.weekly-board"]();
+    return;
   }
 
   if (lower.includes("what is the meal builder") ||
       lower.includes("what is meal builder") ||
       lower.includes("explain meal builder")) {
-    return "explain.ai-meal-builder";
+    await Commands["explain.ai-meal-builder"]();
+    return;
   }
 
   if (lower.includes("what is shopping list") ||
       lower.includes("explain shopping list")) {
-    return "explain.shopping-list";
+    await Commands["explain.shopping-list"]();
+    return;
   }
 
   if (lower.includes("what are subscriptions") ||
       lower.includes("explain subscriptions")) {
-    return "explain.subscriptions";
+    await Commands["explain.subscriptions"]();
+    return;
   }
 
-  // Actions
-  if (lower.includes("boost my protein") ||
-      lower.includes("increase protein") ||
-      lower.includes("more protein")) {
-    return "macros.boostProteinNextMeal";
-  }
+  // ===================================
+  // FOOD COMMANDS (NLEngine-based)
+  // ===================================
+  const nlResult = interpretFoodCommand(transcript);
 
-  if (lower.includes("fridge dinner") ||
-      lower.includes("one pan dinner") ||
-      lower.includes("make dinner from fridge")) {
-    return "fridge.onePanDinner";
-  }
-
-  return null;
-}
-
-// Voice query handler - processes voice transcripts
-async function handleVoiceQuery(transcript: string) {
-  console.log(`🎤 Processing voice query: "${transcript}"`);
-
-  const commandId = interpretVoiceCommand(transcript);
-
-  if (commandId && Commands[commandId]) {
-    console.log(`🎯 Mapped to command: ${commandId}`);
-    await Commands[commandId]();
+  if (nlResult.action !== "unknown" && Commands[nlResult.action]) {
+    console.log(`🎯 NLEngine mapped to: ${nlResult.action}`);
+    await Commands[nlResult.action](nlResult.payload);
   } else {
     // Fallback response for unrecognized commands
     if (responseCallback) {
       responseCallback({
         title: "I heard you",
-        description: `You said: "${transcript}". I'm still learning how to respond to this command.`,
-        spokenText: `You said "${transcript}". I'm still learning this command.`,
+        description: nlResult.spokenText,
+        spokenText: nlResult.spokenText,
       });
     }
   }

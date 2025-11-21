@@ -1,77 +1,195 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
 import { useMicRecorder } from "@/hooks/useMicRecorder";
 import { ChefCapIcon } from "./ChefCapIcon";
+import { useToast } from "@/hooks/use-toast";
 
 export const CopilotSheet: React.FC = () => {
   const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse } = useCopilot();
+  const { toast } = useToast();
 
   // =========================================
-  // AUDIO (ElevenLabs)
+  // AUDIO (ElevenLabs) - with lifecycle management
   // =========================================
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
+    // Cleanup previous audio
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+    }
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
     if (!lastResponse?.spokenText) return;
 
     const speak = async () => {
       try {
+        // Abort any in-flight TTS requests
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort();
+        }
+
+        abortControllerRef.current = new AbortController();
+
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: lastResponse.spokenText }),
+          signal: abortControllerRef.current.signal,
         });
+
+        if (!res.ok) throw new Error("TTS failed");
 
         const buf = await res.arrayBuffer();
         const blob = new Blob([buf], { type: "audio/mpeg" });
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
-      } catch (err) {
-        console.error("TTS error:", err);
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
+          console.error("TTS error:", err);
+        }
       }
     };
 
     speak();
+
+    // Cleanup on unmount or response change
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
   }, [lastResponse]);
 
+  // Cleanup audio when sheet closes
+  useEffect(() => {
+    if (!isOpen) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+        setAudioUrl(null);
+      }
+    }
+  }, [isOpen]);
+
   // =========================================
-  // VOICE INPUT (Whisper)
+  // VOICE INPUT (Whisper) - with error handling
   // =========================================
   const { start, stop, recording } = useMicRecorder();
   const [listening, setListening] = useState(false);
+  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleVoiceStart = async () => {
-    setListening(true);
-    setMode("listening");
-    const audioPromise = start();
+    // Prevent concurrent recordings
+    if (listening || recording) {
+      return;
+    }
 
-    setTimeout(async () => {
-      stop();
-      const blob = await audioPromise;
+    try {
+      setListening(true);
+      setMode("listening");
 
-      const fd = new FormData();
-      fd.append("audio", blob, "audio.webm");
+      const audioPromise = start();
 
-      try {
-        const res = await fetch("/api/voice/transcribe", {
-          method: "POST",
-          body: fd,
-        });
+      // Set timeout to stop recording
+      recordingTimeoutRef.current = setTimeout(async () => {
+        stop();
+        
+        try {
+          const blob = await audioPromise;
 
-        const json = await res.json();
-        const transcript = json.transcript;
+          // Guard against null/undefined blob
+          if (!blob || blob.size === 0) {
+            throw new Error("No audio recorded");
+          }
 
-        // Execute voice command
-        runAction({ type: "custom", payload: { voiceQuery: transcript } });
-      } catch (err) {
-        console.error("Whisper error:", err);
-      } finally {
-        setListening(false);
-        setMode("idle");
+          const fd = new FormData();
+          fd.append("audio", blob, "audio.webm");
+
+          const res = await fetch("/api/voice/transcribe", {
+            method: "POST",
+            body: fd,
+          });
+
+          if (!res.ok) {
+            throw new Error("Transcription failed");
+          }
+
+          const json = await res.json();
+          const transcript = json.transcript?.trim();
+
+          // Guard against empty transcripts
+          if (!transcript) {
+            toast({
+              title: "No speech detected",
+              description: "Please try again and speak clearly.",
+              variant: "destructive",
+            });
+            return;
+          }
+
+          // Execute voice command with valid transcript
+          runAction({ type: "custom", payload: { voiceQuery: transcript } });
+        } catch (err: any) {
+          console.error("Voice processing error:", err);
+          toast({
+            title: "Voice command failed",
+            description: err.message || "Please try again.",
+            variant: "destructive",
+          });
+        } finally {
+          setListening(false);
+          setMode("idle");
+        }
+      }, 4000); // 4 second voice window
+
+    } catch (err: any) {
+      console.error("Microphone error:", err);
+      
+      let errorMessage = "Please try again.";
+      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+        errorMessage = "Microphone permission denied. Please enable it in your browser settings.";
+      } else if (err.name === "NotFoundError") {
+        errorMessage = "No microphone found. Please connect a microphone.";
       }
-    }, 4000); // 4 second voice window
+
+      toast({
+        title: "Microphone error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+
+      setListening(false);
+      setMode("idle");
+    }
   };
+
+  // Cleanup recording timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (recordingTimeoutRef.current) {
+        clearTimeout(recordingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // =========================================
   // WALKTHROUGH STATE
@@ -167,7 +285,17 @@ export const CopilotSheet: React.FC = () => {
                 </div>
 
                 {/* Audio Player */}
-                {audioUrl && <audio autoPlay src={audioUrl} />}
+                {audioUrl && (
+                  <audio 
+                    ref={audioRef}
+                    autoPlay 
+                    src={audioUrl}
+                    onEnded={() => {
+                      URL.revokeObjectURL(audioUrl);
+                      setAudioUrl(null);
+                    }}
+                  />
+                )}
 
                 {/* ============================
                     WALKTHROUGH MODE
