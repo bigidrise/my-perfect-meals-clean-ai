@@ -119,14 +119,31 @@ export default function AIMealCreatorModal({
   }, []);
 
   const toggleIngredient = (ingredientName: string) => {
-    setSelectedIngredients((prev) => {
-      const isSelected = prev.some((i) => i.toLowerCase() === ingredientName.toLowerCase());
-      if (isSelected) {
-        return prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase());
+    const isSelected = selectedIngredients.some((i) => i.toLowerCase() === ingredientName.toLowerCase());
+    
+    if (isSelected) {
+      // Remove from selected
+      setSelectedIngredients(prev => prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase()));
+      // Also remove its cooking style if it had one
+      setCookingStyles(prev => {
+        const updated = { ...prev };
+        delete updated[ingredientName];
+        return updated;
+      });
+    } else {
+      // Check if this ingredient needs prep
+      const normalizedIng = normalizeIngredientName(ingredientName);
+      const needsPrep = NEEDS_PREP.some(prep => normalizeIngredientName(prep) === normalizedIng);
+      
+      if (needsPrep) {
+        // Show prep modal IMMEDIATELY
+        setCurrentIngredient(ingredientName);
+        setPrepModalOpen(true);
       } else {
-        return [...prev, ingredientName];
+        // No prep needed, just add to selected list
+        setSelectedIngredients(prev => [...prev, ingredientName]);
       }
-    });
+    }
   };
 
   const handleGenerateMeal = () => {
@@ -147,46 +164,21 @@ export default function AIMealCreatorModal({
       return;
     }
 
-    // Check if any ingredients need prep
-    const needsPrepIngredients = allIngredients.filter(ing => {
-      const normalizedIng = normalizeIngredientName(ing);
-      return NEEDS_PREP.some(prep => normalizeIngredientName(prep) === normalizedIng);
-    });
-
-    if (needsPrepIngredients.length > 0) {
-      // Queue all ingredients that need prep
-      setNeedsPrepQueue(needsPrepIngredients);
-      setCurrentPrepIndex(0);
-      setPendingIngredients(allIngredients);
-      setCurrentIngredient(needsPrepIngredients[0]);
-      setPrepModalOpen(true);
-    } else {
-      // No prep needed, generate immediately
-      generateMeal(allIngredients, {});
-    }
+    // All prep should already be done (happened when clicking ingredients)
+    // Just generate the meal with selected ingredients and their styles
+    generateMeal(allIngredients, cookingStyles);
   };
 
   const handlePrepSelect = (ingredient: string, style: string) => {
-    const updatedStyles = { ...cookingStyles, [ingredient]: style };
-    setCookingStyles(updatedStyles);
+    // Save the cooking style
+    setCookingStyles(prev => ({ ...prev, [ingredient]: style }));
     
-    // Check if there are more ingredients that need prep
-    const nextIndex = currentPrepIndex + 1;
-    if (nextIndex < needsPrepQueue.length) {
-      // Show prep modal for next ingredient
-      setCurrentPrepIndex(nextIndex);
-      setCurrentIngredient(needsPrepQueue[nextIndex]);
-      // Keep prep modal open for next ingredient
-    } else {
-      // All prep selections done, generate meal
-      setPrepModalOpen(false);
-      if (pendingIngredients.length > 0) {
-        generateMeal(pendingIngredients, updatedStyles);
-        setPendingIngredients([]);
-        setNeedsPrepQueue([]);
-        setCurrentPrepIndex(0);
-      }
-    }
+    // Add ingredient to selected list
+    setSelectedIngredients(prev => [...prev, ingredient]);
+    
+    // Close prep modal - user can continue selecting more ingredients
+    setPrepModalOpen(false);
+    setCurrentIngredient('');
   };
 
   const generateMeal = async (ingredients: string[], styles: Record<string, string>) => {
@@ -399,12 +391,41 @@ export default function AIMealCreatorModal({
           </div>
         )}
 
-        {/* Selected Count */}
+        {/* Selected Ingredients Display Section */}
         {!generating && selectedIngredients.length > 0 && (
-          <div className="text-center mb-3">
-            <p className="text-white/70 text-sm">
-              {selectedIngredients.length} ingredient{selectedIngredients.length !== 1 ? 's' : ''} selected
-            </p>
+          <div className="mb-3 p-3 bg-black/30 border border-white/20 rounded-xl">
+            <p className="text-white/70 text-xs mb-2 font-medium">Selected Ingredients:</p>
+            <div className="flex flex-wrap gap-2">
+              {selectedIngredients.map((ing) => (
+                <div
+                  key={ing}
+                  className="px-2 py-1 bg-emerald-600/20 border border-emerald-500/30 rounded-lg text-xs text-white/90 flex items-center gap-1"
+                >
+                  <span>{cookingStyles[ing] ? `${cookingStyles[ing]} ${ing}` : ing}</span>
+                  <button
+                    onClick={() => toggleIngredient(ing)}
+                    className="text-white/50 hover:text-white/90 ml-1"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Custom Ingredient Input */}
+        {!generating && (
+          <div className="mb-3">
+            <label className="text-white/70 text-xs mb-1 block font-medium">
+              Add Custom Ingredients (comma-separated):
+            </label>
+            <Input
+              placeholder="e.g., tomatoes, garlic, olive oil"
+              value={customIngredients}
+              onChange={(e) => setCustomIngredients(e.target.value)}
+              className="bg-black/40 text-white border-white/20 placeholder:text-white/50"
+            />
           </div>
         )}
 
@@ -412,7 +433,7 @@ export default function AIMealCreatorModal({
         <div className="flex items-center gap-3 mb-3">
           <Button
             onClick={handleGenerateMeal}
-            disabled={generating || selectedIngredients.length === 0}
+            disabled={generating || (selectedIngredients.length === 0 && !customIngredients.trim())}
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white border-0"
           >
             Generate AI Meal
