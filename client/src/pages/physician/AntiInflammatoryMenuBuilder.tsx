@@ -32,7 +32,7 @@ import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
-import MealIngredientPicker from "@/components/MealIngredientPicker";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -420,9 +420,9 @@ export default function AntiInflammatoryMenuBuilder() {
 
     const items = ingredients.map(i => ({
       name: i.name,
-      qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
-      unit: i.unit,
-      note: planningMode === 'day' && activeDayISO 
+      quantity: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : 1),
+      unit: i.unit || "",
+      notes: planningMode === 'day' && activeDayISO 
         ? `${new Date(activeDayISO + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'long' })} Meal Plan`
         : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`
     }));
@@ -476,9 +476,9 @@ export default function AntiInflammatoryMenuBuilder() {
 
     const items = ingredients.map(i => ({
       name: i.name,
-      qty: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : undefined),
-      unit: i.unit,
-      note: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
+      quantity: typeof i.qty === 'number' ? i.qty : (i.qty ? parseFloat(String(i.qty)) : 1),
+      unit: i.unit || "",
+      notes: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`
     }));
 
     useShoppingListStore.getState().addItems(items);
@@ -1559,7 +1559,7 @@ export default function AntiInflammatoryMenuBuilder() {
       />
 
       {/* AI Meal Creator with Ingredient Picker - All Meal Slots */}
-      <MealIngredientPicker
+      <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
