@@ -250,6 +250,37 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   // Dynamic meal tracking (Meal 6+)
   const [dynamicMealCount, setDynamicMealCount] = useState(0);
 
+  // Coach Targets state (Performance Builder)
+  const [coachTargets, setCoachTargets] = useState(() => {
+    const targets = proStore.getTargets(clientId);
+    return {
+      protein: targets.protein || 0,
+      starchy: targets.starchyCarbs || 0,
+      fibrous: targets.fibrousCarbs || 0,
+      fats: targets.fat || 0,
+    };
+  });
+
+  // Track when targets are saved to force coachMacroTargets recalculation
+  const [targetsSaveCount, setTargetsSaveCount] = useState(0);
+
+  // Save coach targets to proStore
+  const saveCoachTargets = useCallback(() => {
+    proStore.setTargets(clientId, {
+      protein: coachTargets.protein,
+      starchyCarbs: coachTargets.starchy,
+      fibrousCarbs: coachTargets.fibrous,
+      fat: coachTargets.fats,
+      flags: proStore.getTargets(clientId).flags,
+      carbDirective: proStore.getTargets(clientId).carbDirective,
+    });
+    setTargetsSaveCount(prev => prev + 1); // Force coachMacroTargets recalculation
+    toast({
+      title: "✅ Coach Targets Saved",
+      description: "Macro targets updated successfully.",
+    });
+  }, [clientId, coachTargets, toast]);
+
   // 🔋 AI Meal Creator localStorage persistence (copy Weekly Meal Board pattern)
   const AI_MEALS_CACHE_KEY = "ai-athlete-meal-creator-cached-meals";
 
@@ -819,13 +850,18 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   // Get coach-set macro targets from ProCare
   const coachMacroTargets = useMemo(() => {
     const targets = proStore.getTargets(clientId);
+    const totalCarbs = (targets.starchyCarbs || 0) + (targets.fibrousCarbs || 0);
+    const protein = targets.protein || 0;
+    const fat = targets.fat || 0;
+    const calories = (protein * 4) + (totalCarbs * 4) + (fat * 9);
+    
     return {
-      calories: targets.kcal || 0,
-      protein: targets.protein || 0,
-      carbs: targets.carbs || 0,
-      fat: targets.fat || 0,
+      calories,
+      protein,
+      carbs: totalCarbs,
+      fat,
     };
-  }, [clientId]);
+  }, [clientId, targetsSaveCount]); // Re-calculate when targets are saved
 
   // Handle Set Macros to Biometrics
   const handleSetMacrosToBiometrics = useCallback(() => {
@@ -1094,40 +1130,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         </div>
       </div>
 
-      {/* Macro Totals Display - Right Above Meal Cards */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="rounded-2xl border border-white/30 bg-black/60 backdrop-blur-lg p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4">
-            Coach-Set Macro Targets
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <div className="text-sm text-white/70">Calories</div>
-              <div className="text-2xl font-bold text-white">
-                {coachMacroTargets.calories}
-              </div>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <div className="text-sm text-white/70">Protein</div>
-              <div className="text-2xl font-bold text-white">
-                {coachMacroTargets.protein}g
-              </div>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <div className="text-sm text-white/70">Carbs</div>
-              <div className="text-2xl font-bold text-white">
-                {coachMacroTargets.carbs}g
-              </div>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <div className="text-sm text-white/70">Fat</div>
-              <div className="text-2xl font-bold text-white">
-                {coachMacroTargets.fat}g
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Meal Cards Grid - Same structure as Weekly Meal Board */}
       <div className="max-w-[1600px] mx-auto px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -1477,6 +1479,81 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     )}
                   </div>
                 </section>
+
+                {/* ================================
+                    COACH TARGETS (Performance Builder)
+                    Repositioned + 2-Column Black Glass
+                ==================================== */}
+                <div className="col-span-full mt-6 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/20 p-6">
+                  <h2 className="text-white text-lg font-bold mb-4 flex items-center gap-2">
+                    🎯 Coach Targets
+                  </h2>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Protein */}
+                    <div className="flex flex-col">
+                      <label className="text-sm text-white/70 mb-1">Protein (g)</label>
+                      <input
+                        type="number"
+                        value={coachTargets.protein || ""}
+                        onChange={(e) =>
+                          setCoachTargets({ ...coachTargets, protein: Number(e.target.value) })
+                        }
+                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    {/* Starchy Carbs */}
+                    <div className="flex flex-col">
+                      <label className="text-sm text-white/70 mb-1">Starchy Carbs (g)</label>
+                      <input
+                        type="number"
+                        value={coachTargets.starchy || ""}
+                        onChange={(e) =>
+                          setCoachTargets({ ...coachTargets, starchy: Number(e.target.value) })
+                        }
+                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    {/* Fibrous Carbs */}
+                    <div className="flex flex-col">
+                      <label className="text-sm text-white/70 mb-1">Fibrous Carbs (g)</label>
+                      <input
+                        type="number"
+                        value={coachTargets.fibrous || ""}
+                        onChange={(e) =>
+                          setCoachTargets({ ...coachTargets, fibrous: Number(e.target.value) })
+                        }
+                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    {/* Fats */}
+                    <div className="flex flex-col">
+                      <label className="text-sm text-white/70 mb-1">Fats (g)</label>
+                      <input
+                        type="number"
+                        value={coachTargets.fats || ""}
+                        onChange={(e) =>
+                          setCoachTargets({ ...coachTargets, fats: Number(e.target.value) })
+                        }
+                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={saveCoachTargets}
+                    className="mt-5 w-full bg-lime-600 hover:bg-lime-700 text-white font-semibold py-3 rounded-xl border border-white/20"
+                  >
+                    Save Coach Targets
+                  </button>
+                </div>
               </>
             );
           })()

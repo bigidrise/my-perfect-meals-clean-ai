@@ -19,9 +19,9 @@ export type ClientProfile = {
 };
 
 export type Targets = {
-  kcal: number;
   protein: number;
-  carbs: number;
+  starchyCarbs: number;
+  fibrousCarbs: number;
   fat: number;
   flags?: {
     // Medical flags (for doctors/dietitians)
@@ -246,11 +246,30 @@ export const proStore = {
   },
 
   getTargets(clientId: string): Targets {
+    const stored = state.targets[clientId];
+    
+    // Migration: Handle old data format (kcal, carbs) → new format (protein, starchyCarbs, fibrousCarbs, fat)
+    if (stored && ('kcal' in stored || 'carbs' in stored)) {
+      const legacy = stored as any;
+      const migrated: Targets = {
+        protein: legacy.protein || 160,
+        starchyCarbs: legacy.carbs ? Math.round(legacy.carbs * 0.7) : 180,
+        fibrousCarbs: legacy.carbs ? Math.round(legacy.carbs * 0.3) : 50,
+        fat: legacy.fat || 70,
+        flags: legacy.flags || {},
+        carbDirective: legacy.carbDirective || {},
+      };
+      // Save migrated version
+      state.targets[clientId] = migrated;
+      saveState(state);
+      return migrated;
+    }
+    
     return (
-      state.targets[clientId] ?? {
-        kcal: 2000,
+      stored ?? {
         protein: 160,
-        carbs: 180,
+        starchyCarbs: 180,
+        fibrousCarbs: 50,
         fat: 70,
         flags: {},
         carbDirective: {},
@@ -260,9 +279,9 @@ export const proStore = {
   setTargets(clientId: string, t: Targets) {
     state.targets[clientId] = {
       ...t,
-      kcal: Math.max(0, Number(t.kcal || 0)),
       protein: Math.max(0, Number(t.protein || 0)),
-      carbs: Math.max(0, Number(t.carbs || 0)),
+      starchyCarbs: Math.max(0, Number(t.starchyCarbs || 0)),
+      fibrousCarbs: Math.max(0, Number(t.fibrousCarbs || 0)),
       fat: Math.max(0, Number(t.fat || 0)),
       carbDirective: {
         starchyCapG:
@@ -361,11 +380,15 @@ export async function generatePlan7d(clientId: string) {
   const t = proStore.getTargets(clientId);
   const p = proStore.getPrefs(clientId);
 
+  // Calculate total calories from new macro structure
+  const totalCarbs = (t.starchyCarbs || 0) + (t.fibrousCarbs || 0);
+  const totalKcal = (t.protein * 4) + (totalCarbs * 4) + (t.fat * 9);
+
   const perSlotKcal: Record<Slot, number> = {
-    breakfast: Math.round(t.kcal * SLOT_WEIGHTS.breakfast),
-    lunch:     Math.round(t.kcal * SLOT_WEIGHTS.lunch),
-    dinner:    Math.round(t.kcal * SLOT_WEIGHTS.dinner),
-    snack:     Math.round(t.kcal * SLOT_WEIGHTS.snack),
+    breakfast: Math.round(totalKcal * SLOT_WEIGHTS.breakfast),
+    lunch:     Math.round(totalKcal * SLOT_WEIGHTS.lunch),
+    dinner:    Math.round(totalKcal * SLOT_WEIGHTS.dinner),
+    snack:     Math.round(totalKcal * SLOT_WEIGHTS.snack),
   };
 
   const slots: Slot[] = ['breakfast','lunch','dinner','snack'];

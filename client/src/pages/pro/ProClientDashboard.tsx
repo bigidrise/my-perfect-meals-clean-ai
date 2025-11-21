@@ -196,20 +196,6 @@ export default function ProClientDashboard() {
           <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
               <label className="text-sm text-white/70 mb-1 block">
-                Calories
-              </label>
-              <Input
-                inputMode="numeric"
-                className="bg-black/30 border-white/30 text-white"
-                value={t.kcal || ""}
-                onChange={(e) =>
-                  setT({ ...t, kcal: e.target.value === "" ? 0 : Number(e.target.value) })
-                }
-                placeholder="kcal"
-              />
-            </div>
-            <div>
-              <label className="text-sm text-white/70 mb-1 block">
                 Protein (g)
               </label>
               <Input
@@ -224,16 +210,30 @@ export default function ProClientDashboard() {
             </div>
             <div>
               <label className="text-sm text-white/70 mb-1 block">
-                Carbs (g)
+                Starchy Carbs (g)
               </label>
               <Input
                 inputMode="numeric"
                 className="bg-black/30 border-white/30 text-white"
-                value={t.carbs || ""}
+                value={t.starchyCarbs || ""}
                 onChange={(e) =>
-                  setT({ ...t, carbs: e.target.value === "" ? 0 : Number(e.target.value) })
+                  setT({ ...t, starchyCarbs: e.target.value === "" ? 0 : Number(e.target.value) })
                 }
-                placeholder="carbs"
+                placeholder="starchy carbs"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-white/70 mb-1 block">
+                Fibrous Carbs (g)
+              </label>
+              <Input
+                inputMode="numeric"
+                className="bg-black/30 border-white/30 text-white"
+                value={t.fibrousCarbs || ""}
+                onChange={(e) =>
+                  setT({ ...t, fibrousCarbs: e.target.value === "" ? 0 : Number(e.target.value) })
+                }
+                placeholder="fibrous carbs"
               />
             </div>
             <div>
@@ -829,6 +829,7 @@ export default function ProClientDashboard() {
               data-testid="button-performance-competition-builder"
             >
               <Trophy className="h-4 w-4 mr-2" /> Performance & Competition Builder
+            </Button>
             <Button
               onClick={() => {
                 if (!clientId) return; // safety guard
