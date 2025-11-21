@@ -330,16 +330,6 @@ export default function GetInspiration() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 mb-8"
         >
-          <div className="text-center mb-4">
-            <div className="text-2xl mb-2">💪 ✨ 💪</div>
-            <h2 className="text-xl font-bold text-md text-white mb-2">
-              Daily Motivation
-            </h2>
-            <p className="text-md text-white/90">
-              Inspirational Quotes to start your day
-            </p>
-          </div>
-
           {/* Quote Display */}
           <div className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300">
             <p className="italic text-md text-white font-medium leading-relaxed text-center">
