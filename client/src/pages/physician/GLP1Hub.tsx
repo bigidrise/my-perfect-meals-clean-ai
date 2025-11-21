@@ -383,7 +383,6 @@ export default function GLP1Hub() {
           </div>
         )}
       </div>
-      </div>
     </div>
   );
 }
