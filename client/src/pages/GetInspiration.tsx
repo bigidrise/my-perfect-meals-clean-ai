@@ -323,21 +323,6 @@ export default function GetInspiration() {
         className="max-w-4xl mx-auto px-4 pb-8"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-        {/* Page Header Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-center mb-8"
-        >
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Inspirational quotes to start your day
-          </h2>
-          <p className="text-sm text-white/70">
-            Quick mindset boosts when you need a reset.
-          </p>
-        </motion.div>
-
         {/* Daily Motivation Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
