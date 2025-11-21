@@ -8,15 +8,30 @@ export default function ProPortal() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="min-h-screen p-4 text-white bg-gradient-to-br from-black/60 via-indigo-600 to-black/80">
-      <div className="max-w-5xl mx-auto space-y-6 pt-2">
-        <button
-          onClick={() => setLocation("/dashboard")}
-          className="mb-4 w-12 h-12 rounded-2xl bg-black/10 hover:bg-black/20 active:bg-black/20 flex items-center justify-center transition-colors shrink-0 overflow-hidden"
-        >
-          <ArrowLeft className="h-4 w-4 text-white shrink-0" />
-        </button>
+    <div className="min-h-screen text-white bg-gradient-to-br from-black/60 via-indigo-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/dashboard")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Pro Portal</h1>
+        </div>
+      </div>
+
+      <div
+        className="max-w-5xl mx-auto px-4 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <Card className="bg-black/20 backdrop-blur-lg border-white/20">
           <CardHeader>
             <CardTitle className="text-2xl text-white">Pro Portal</CardTitle>

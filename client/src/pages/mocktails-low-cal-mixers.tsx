@@ -60,7 +60,7 @@ export default function MocktailsLowCalMixersPage() {
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Mocktails & Low-Cal Mixers</h1>
+          <h1 className="text-lg font-bold text-white">Mocktails & Mixers</h1>
 
           {/* Info Button */}
           <button

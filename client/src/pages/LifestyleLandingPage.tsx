@@ -49,7 +49,7 @@ export default function LifestyleLandingPage() {
       testId: "card-restaurant-guide",
     },
     {
-      title: "Healthy Kids Meals Hub",
+      title: "Kids Meals Hub",
       description: "Nutritious, kid-friendly meals that children love",
       icon: Baby,
       route: "/healthy-kids-meals",

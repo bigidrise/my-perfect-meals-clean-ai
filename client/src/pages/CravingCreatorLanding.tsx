@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Brain, Sparkles, Info } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface CravingFeature {
   title: string;
@@ -34,8 +38,9 @@ export default function CravingCreatorLanding() {
       testId: "card-create-your-own",
     },
     {
-      title: "Healthy Premade Cravings",
-      description: "20 smarter recipes that satisfy the feeling you're chasing — with servings 1–10",
+      title: "Premade Cravings",
+      description:
+        "20 smarter recipes that satisfy the feeling you're chasing — with servings 1–10",
       icon: Sparkles,
       route: "/craving-presets",
       gradient: "from-orange-500/20 to-orange-600/20",
@@ -92,18 +97,20 @@ export default function CravingCreatorLanding() {
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-40 rounded-xl overflow-hidden">
-            <img 
-              src="/images/cravings/satisfy-cravings.jpg" 
+            <img
+              src="/images/cravings/satisfy-cravings.jpg"
               alt="Satisfy your cravings"
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23a855f7;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3ESatisfy Smartly%3C/text%3E%3C/svg%3E";
+                e.currentTarget.src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23a855f7;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3ESatisfy Smartly%3C/text%3E%3C/svg%3E";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-3 left-3 right-3">
               <p className="text-white/90 text-sm">
-                Satisfy your cravings without derailing your goals — smarter choices that hit the spot.
+                Satisfy your cravings without derailing your goals — smarter
+                choices that hit the spot.
               </p>
             </div>
           </div>
@@ -142,16 +149,22 @@ export default function CravingCreatorLanding() {
       {showInfoModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Craving Creator Hub</h2>
+            <h2 className="text-xl font-bold text-white mb-4">
+              How to Use Craving Creator Hub
+            </h2>
             <div className="space-y-3 text-white/90 text-sm mb-6">
               <p>
-                <strong>Create Your Own:</strong> Use the original AI Craving Creator to generate custom meals based on what you're craving.
+                <strong>Create Your Own:</strong> Use the original AI Craving
+                Creator to generate custom meals based on what you're craving.
               </p>
               <p>
-                <strong>Healthy Premade Cravings:</strong> Choose from 20 smarter recipes designed to satisfy cravings while supporting your goals. Select servings from 1-10.
+                <strong>Premade Cravings:</strong> Choose from 20 smarter
+                recipes designed to satisfy cravings while supporting your
+                goals. Select servings from 1-10.
               </p>
               <p className="text-lime-400 font-medium mt-4">
-                💡 Tip: Both options scale ingredients automatically and can be added to your weekly meal plan!
+                💡 Tip: Both options scale ingredients automatically and can be
+                added to your weekly meal plan!
               </p>
             </div>
             <button

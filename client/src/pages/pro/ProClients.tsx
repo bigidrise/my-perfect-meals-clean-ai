@@ -46,32 +46,42 @@ export default function ProClients(){
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen p-4 text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+      className="min-h-screen text-white bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      <div className="max-w-5xl mx-auto space-y-6 pt-2">
-        <button
-          onClick={() => setLocation("/care-team")}
-          className="mb-4 w-12 h-12 rounded-2xl bg-black/10 hover:bg-black/20 active:bg-black/20 flex items-center justify-center transition-colors shrink-0 overflow-hidden"
-          data-testid="button-back"
-        >
-          <ArrowLeft className="h-4 w-4 text-white shrink-0" />
-        </button>
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/care-team")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-        <div className="rounded-2xl p-6 bg-white/5 border border-white/20 mt-12">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">👥 Pro Portal — Clients</h1>
-              <p className="text-white mt-1">Add clients and open their dashboards.</p>
-            </div>
-            <Button
-              onClick={() => setShowArchived(!showArchived)}
-              variant="outline"
-              className="bg-white/5 border-white/20 text-white hover:bg-white/10"
-            >
-              {showArchived ? "Show Active" : "Show Archived"}
-            </Button>
-          </div>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Pro Portal — Clients</h1>
+
+          {/* Archive Toggle Button */}
+          <Button
+            onClick={() => setShowArchived(!showArchived)}
+            variant="outline"
+            size="sm"
+            className="ml-auto bg-white/5 border-white/20 text-white hover:bg-white/10"
+          >
+            {showArchived ? "Show Active" : "Show Archived"}
+          </Button>
         </div>
+      </div>
+
+      <div
+        className="max-w-5xl mx-auto px-4 space-y-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         <Card className="bg-white/5 border border-white/20">
           <CardHeader><CardTitle className="text-white">Add Client</CardTitle></CardHeader>
