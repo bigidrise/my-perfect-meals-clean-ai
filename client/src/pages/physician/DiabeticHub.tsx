@@ -497,7 +497,7 @@ export default function DiabeticHub() {
                 <ChefHat className="h-6 w-6" />
               </div>
               <div>
-                <h2 className="text-lg font-medium text-white">AI Diabetic Meal Generator</h2>
+                <h2 className="text-lg font-semi-bold text-white">AI Diabetic Meal Generator</h2>
                 <p className="text-white/80 text-sm">Low-GI meals based on your guardrails</p>
               </div>
             </div>
