@@ -1,4 +1,5 @@
 import { CopilotAction } from "./CopilotContext";
+import { boostProteinNextMeal, generateOnePanFridgeRescue } from "@/lib/copilotActions";
 
 type CommandHandler = () => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -17,7 +18,11 @@ export function setModalHandler(fn: ModalHandler) {
 
 const Commands: Record<string, CommandHandler> = {
   "macros.boostProteinNextMeal": async () => {
-    console.log("➡️ Executing: macros.boostProteinNextMeal");
+    if (!navigationCallback) {
+      console.warn("⚠️ Navigation not available");
+      return;
+    }
+    await boostProteinNextMeal(navigationCallback);
   },
 
   "macros.lightenDinner": async () => {
@@ -73,7 +78,15 @@ const Commands: Record<string, CommandHandler> = {
   },
 
   "fridge.onePanDinner": async () => {
-    console.log("➡️ Executing: fridge.onePanDinner");
+    if (!navigationCallback) {
+      console.warn("⚠️ Navigation not available");
+      return;
+    }
+    
+    const userId = localStorage.getItem("userId") || "1";
+    const fridgeItems: string[] = [];
+    
+    await generateOnePanFridgeRescue(userId, fridgeItems, navigationCallback);
   },
 
   "fridge.suggestAdds": async () => {
@@ -135,7 +148,7 @@ export async function executeCommand(action: CopilotAction) {
       }
 
       case "custom": {
-        console.log("📦 Custom action payload:", action.payload);
+        console.log("🤖 AI Query:", action.payload);
         break;
       }
 

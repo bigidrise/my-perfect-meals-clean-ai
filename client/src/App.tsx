@@ -20,12 +20,24 @@ import { ForcedUpdateModal } from "@/components/ForcedUpdateModal";
 import { updateApp } from "@/lib/updateApp";
 import { CopilotSystem } from "@/components/copilot/CopilotSystem";
 import type { CopilotAction } from "@/components/copilot/CopilotContext";
+import { setNavigationHandler, setModalHandler } from "@/components/copilot/CopilotCommandRegistry";
 import { useLocation } from "wouter";
 
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const { versionState } = useVersionCheck();
   const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    setNavigationHandler((path) => {
+      console.log("🧭 Copilot navigating to:", path);
+      setLocation(path);
+    });
+
+    setModalHandler((modalId) => {
+      console.log("🪟 Copilot opening modal:", modalId);
+    });
+  }, [setLocation]);
 
   useEffect(() => {
     // Quick app readiness check

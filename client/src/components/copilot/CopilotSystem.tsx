@@ -14,10 +14,10 @@ export const CopilotSystem: React.FC<CopilotSystemProps> = ({
   onAction: customOnAction,
 }) => {
   const handleAction = async (action: CopilotAction) => {
+    await executeCommand(action);
+    
     if (customOnAction) {
       await customOnAction(action);
-    } else {
-      await executeCommand(action);
     }
   };
 
