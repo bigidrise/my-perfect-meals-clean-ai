@@ -136,7 +136,7 @@ export default function DashboardNew() {
             className="p-2 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-black/70 hover:border-orange-500/30 transition-all"
             data-testid="button-my-hub"
           >
-            <HubControlIcon size="sm" />
+            <HubControlIcon size="lg" />
           </button>
         </ProfileSheet>
       </div>
