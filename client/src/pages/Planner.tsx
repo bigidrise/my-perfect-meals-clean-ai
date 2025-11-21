@@ -55,7 +55,7 @@ export default function Planner() {
       testId: "card-anti-inflammatory",
     },
     {
-      title: "Beach Body / Hard Body Meal Builder",
+      title: "Beach Body Meal Builder",
       description:
         "Contest prep and leaning out AI created meal plans designed for rapid change",
       icon: Trophy,
