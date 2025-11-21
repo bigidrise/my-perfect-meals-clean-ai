@@ -750,7 +750,7 @@ export default function BeachBodyMealBoard() {
   const macroData = useTodayMacros();
 
   const totals = useMemo(() => {
-    if (!board) return { calories: 0, protein: 0, carbs: 0, fat: 0, fibrous: 0, starchy: 0 };
+    if (!board) return { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
     let allMeals: Meal[] = [];
     if (FEATURES.dayPlanning === "alpha" && planningMode === "day" && activeDayISO) {
@@ -775,10 +775,8 @@ export default function BeachBodyMealBoard() {
       protein: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.protein ?? 0), 0)),
       carbs: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.carbs ?? 0), 0)),
       fat: Math.round(allMeals.reduce((sum, meal) => sum + (meal.nutrition?.fat ?? 0), 0)),
-      fibrous: macroData.fibrous || 0,
-      starchy: macroData.starchy || 0,
     };
-  }, [board, planningMode, activeDayISO, macroData]);
+  }, [board, planningMode, activeDayISO]);
 
   React.useEffect(() => {
     if (error) {
@@ -1437,7 +1435,6 @@ export default function BeachBodyMealBoard() {
                   })()}
                   dateISO={activeDayISO}
                   variant="day"
-                  source="beach-body-meal-board"
                 />
               </div>
             )}
@@ -1520,9 +1517,9 @@ export default function BeachBodyMealBoard() {
             <MacroFixCoach
               totals={totals}
               targets={{
-                protein: targets.protein || 0,
-                starchy: targets.starchy || 0,
-                fibrous: targets.fibrous || 0,
+                protein: targets.proteinGrams || 0,
+                starchy: 0,
+                fibrous: 0,
               }}
               onFix={openMacroFix}
               onHelp={() => alert(HELP_TEXT)}
@@ -1611,7 +1608,6 @@ export default function BeachBodyMealBoard() {
       <QuickAddMacrosModal
         open={fixOpen}
         onOpenChange={setFixOpen}
-        defaultKind={fixKind}
         source="beach-body-board"
         onSaved={() => {
           window.dispatchEvent(new Event("macros:updated"));
