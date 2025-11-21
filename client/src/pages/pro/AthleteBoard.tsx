@@ -925,7 +925,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Professional Meal Board</h1>
+          <h1 className="text-lg font-bold text-white">Performance & Competiton </h1>
 
           {/* Info Button */}
           <button
