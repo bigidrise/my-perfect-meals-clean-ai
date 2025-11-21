@@ -1,6 +1,7 @@
 import { CopilotAction, KnowledgeResponse } from "./CopilotContext";
 import { boostProteinNextMeal, generateOnePanFridgeRescue } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
+import { startWalkthrough } from "./commands/startWalkthrough";
 
 type CommandHandler = () => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -154,6 +155,24 @@ const Commands: Record<string, CommandHandler> = {
       return;
     }
     const response = await explainFeature("shopping-list");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.fridge-rescue": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = startWalkthrough("fridge-rescue");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.weekly-board": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = startWalkthrough("weekly-board");
     responseCallback(response);
   },
 };

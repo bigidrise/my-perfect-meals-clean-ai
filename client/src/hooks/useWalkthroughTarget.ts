@@ -8,5 +8,5 @@ export const useWalkthroughTarget = (id: string) => {
     registerTarget(id);
 
     return () => unregisterTarget(id);
-  }, [id]);
+  }, [id, registerTarget, unregisterTarget]);
 };

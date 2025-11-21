@@ -44,6 +44,13 @@ export interface KnowledgeResponse {
   description: string;
   howTo?: string[];
   tips?: string[];
+  type?: "knowledge" | "walkthrough";
+  steps?: WalkthroughStep[];
+}
+
+export interface WalkthroughStep {
+  text: string;
+  targetId?: string;
 }
 
 interface CopilotState {
@@ -53,6 +60,7 @@ interface CopilotState {
   suggestions: CopilotSuggestion[];
   lastQuery: string;
   lastResponse: KnowledgeResponse | null;
+  targetRegistry: Set<string>;
 }
 
 interface CopilotContextValue extends CopilotState {
@@ -65,6 +73,8 @@ interface CopilotContextValue extends CopilotState {
   runAction: (action: CopilotAction) => void;
   setLastQuery: (q: string) => void;
   setLastResponse: (response: KnowledgeResponse | null) => void;
+  registerTarget: (id: string) => void;
+  unregisterTarget: (id: string) => void;
 }
 
 const CopilotContext = createContext<CopilotContextValue | null>(null);
@@ -95,6 +105,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
   const [suggestions, setSuggestions] = useState<CopilotSuggestion[]>([]);
   const [lastQuery, setLastQuery] = useState("");
   const [lastResponse, setLastResponse] = useState<KnowledgeResponse | null>(null);
+  const [targetRegistry, setTargetRegistry] = useState<Set<string>>(new Set());
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -109,6 +120,18 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       ...info,
       tags: info.tags ?? prev.tags,
     }));
+  }, []);
+
+  const registerTarget = useCallback((id: string) => {
+    setTargetRegistry((prev) => new Set(prev).add(id));
+  }, []);
+
+  const unregisterTarget = useCallback((id: string) => {
+    setTargetRegistry((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
   }, []);
 
   const runAction = useCallback(
@@ -145,6 +168,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       suggestions,
       lastQuery,
       lastResponse,
+      targetRegistry,
       open,
       close,
       toggle,
@@ -154,6 +178,8 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       runAction,
       setLastQuery,
       setLastResponse,
+      registerTarget,
+      unregisterTarget,
     }),
     [
       isOpen,
@@ -162,11 +188,14 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       suggestions,
       lastQuery,
       lastResponse,
+      targetRegistry,
       open,
       close,
       toggle,
       setContextInfo,
       runAction,
+      registerTarget,
+      unregisterTarget,
     ],
   );
 

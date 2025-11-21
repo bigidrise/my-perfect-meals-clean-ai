@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
 import { ChefCapIcon } from "./ChefCapIcon";
@@ -18,10 +18,13 @@ export const CopilotSheet: React.FC = () => {
     setLastResponse,
   } = useCopilot();
 
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
   const handleSuggestionClick = (id: string) => {
     const s = suggestions.find((s) => s.id === id);
     if (!s) return;
     setLastResponse(null);
+    setCurrentStepIndex(0);
     setMode("thinking");
     runAction(s.action);
     setTimeout(() => setMode("idle"), 400);
@@ -110,7 +113,53 @@ export const CopilotSheet: React.FC = () => {
                 </div>
 
                 {/* Knowledge Response Display */}
-                {lastResponse?.title && (
+                {lastResponse?.title && lastResponse.type === "walkthrough" && lastResponse.steps && (
+                  <div className="mt-3 px-4 pb-2">
+                    <div className="rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500/10 to-amber-500/5 p-4">
+                      <button
+                        onClick={() => {
+                          setLastResponse(null);
+                          setCurrentStepIndex(0);
+                        }}
+                        className="float-right text-xs text-white/40 hover:text-white/70"
+                      >
+                        ✕
+                      </button>
+                      <h2 className="text-lg font-semibold mb-1 text-white">{lastResponse.title}</h2>
+                      <p className="text-white/80 text-xs mb-4">Step {currentStepIndex + 1} of {lastResponse.steps.length}</p>
+
+                      <p className="text-white/90 text-base mb-4">{lastResponse.steps[currentStepIndex].text}</p>
+
+                      {lastResponse.steps[currentStepIndex].targetId && (
+                        <p className="text-xs text-orange-400/80 mb-4 italic">
+                          💡 Look for: {lastResponse.steps[currentStepIndex].targetId}
+                        </p>
+                      )}
+
+                      {currentStepIndex < lastResponse.steps.length - 1 ? (
+                        <button
+                          className="w-full py-2.5 bg-gradient-to-r from-orange-600 to-orange-500 rounded-xl text-sm font-semibold text-white shadow-md hover:from-orange-500 hover:to-orange-400"
+                          onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
+                        >
+                          Next Step →
+                        </button>
+                      ) : (
+                        <button
+                          className="w-full py-2.5 bg-gradient-to-r from-green-600 to-green-500 rounded-xl text-sm font-semibold text-white shadow-md hover:from-green-500 hover:to-green-400"
+                          onClick={() => {
+                            setLastResponse(null);
+                            setCurrentStepIndex(0);
+                          }}
+                        >
+                          ✓ Finish Walkthrough
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Knowledge Explanation Display */}
+                {lastResponse?.title && lastResponse.type !== "walkthrough" && (
                   <div className="mt-3 px-4 pb-2">
                     <div className="rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500/10 to-amber-500/5 p-4">
                       <button
