@@ -97,29 +97,44 @@ export default function GLP1Hub() {
   };
 
   return (
-    <div className="min-h-screen p-4 pb-16 bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
-      {/* Back to Planner Hub */}
-      <button
-        type="button"
-        onClick={() => setLocation("/planner")}
-        aria-label="Back to Planner Hub"
-        className="fixed top-12 left-4 z-[9999] bg-black/10 border border-white/20 text-white hover:bg-black/20 rounded-2xl px-3 py-2 flex items-center gap-2"
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="w-5 h-5" />Planner
-        <span className="text-sm font-medium"></span>
-      </button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to Planner */}
+          <Button
+            onClick={() => setLocation("/planner")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
 
-      {/* Premium Feature Banner */}
-      <div className="fixed top-4 right-4 z-[9999] bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-4 py-2 text-white shadow-2xl">
-        <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4" />
-          <span className="font-semibold text-sm">Premium • $19.99/mo</span>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">
+            GLP-1 Hub
+          </h1>
+
+          {/* Premium Badge */}
+          <div className="ml-auto bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-3 py-1 text-white">
+            <div className="flex items-center gap-2">
+              <Activity className="w-4 h-4" />
+              <span className="font-semibold text-xs">Premium</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto space-y-6 pt-14">
+      {/* Main Content */}
+      <div
+        className="max-w-2xl mx-auto px-4 space-y-6 pb-16"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         {/* Header with Black Glass Background */}
-        <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center mt-14">
+        <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
             <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
             <button
@@ -367,6 +382,7 @@ export default function GLP1Hub() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
