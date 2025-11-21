@@ -517,37 +517,44 @@ const FridgeRescuePage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
       >
-        <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "instant" });
-              setLocation("/lifestyle");
-            }}
-            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/20 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
+        >
+          <div className="px-8 py-3 flex items-center gap-3">
+            {/* Back Button */}
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "instant" });
+                setLocation("/lifestyle");
+              }}
+              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
 
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 mb-8 mt-12">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-white">
-                🧊 Fridge Rescue
-              </h1>
-              <button
-                onClick={() => setShowInfoModal(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-                aria-label="How to use Fridge Rescue"
-              >
-                ?
-              </button>
-            </div>
-            <p className="text-white text-sm">
-              Don't know what to cook? Tell us what's in your fridge, and we'll
-              help you make a meal fast.
-            </p>
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
+
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+              aria-label="How to use Fridge Rescue"
+            >
+              ?
+            </button>
           </div>
+        </div>
+
+        {/* Main Content */}
+        <div
+          className="max-w-4xl mx-auto px-6"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+        >
 
           <div className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-2xl mx-auto">
             <div className="space-y-4">
@@ -681,7 +688,7 @@ const FridgeRescuePage = () => {
                       {meal.medicalBadges && meal.medicalBadges.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           <HealthBadgesPopover
-                            badges={meal.medicalBadges.map((b) => b.badge)}
+                            badges={meal.medicalBadges.map((b: any) => b.badge || b.label || b.id || b.condition)}
                             className="mt-2"
                           />
                         </div>
