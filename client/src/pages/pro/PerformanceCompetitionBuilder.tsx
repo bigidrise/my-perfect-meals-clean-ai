@@ -914,37 +914,43 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-4 py-3 flex items-center gap-2">
-          {/* Back Button */}
-          <button
-            onClick={() => setLocation(mode === "athlete" ? "/procare-cover" : "/dashboard")}
-            className="flex items-center justify-center text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg flex-shrink-0"
-            data-testid="button-back-dashboard"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-
-          {/* Title */}
-          <h1 className="text-base font-bold text-white flex-1 min-w-0 truncate">Performance & Competition Builder</h1>
-
-          {/* Info Button */}
-          <button
-            onClick={() => setShowInfoModal(true)}
-            className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border flex-shrink-0"
-            aria-label="How to use Performance & Competition Builder"
-          >
-            ?
-          </button>
-
-          {/* Client Dashboard Button (only in ProCare mode) */}
-          {mode === "procare" && (
+        <div className="px-4 py-3 flex flex-col gap-2">
+          {/* Row 1: Main Navigation */}
+          <div className="flex items-center gap-2">
+            {/* Back Button */}
             <button
-              onClick={() => setLocation(`/pro/clients/${clientId}`)}
+              onClick={() => setLocation(mode === "athlete" ? "/procare-cover" : "/dashboard")}
               className="flex items-center justify-center text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg flex-shrink-0"
-              data-testid="button-client-dashboard"
+              data-testid="button-back-dashboard"
             >
-              <Target className="h-5 w-5" />
+              <ArrowLeft className="h-5 w-5" />
             </button>
+
+            {/* Title */}
+            <h1 className="text-base font-bold text-white flex-1 min-w-0 truncate">Performance & Competition Builder</h1>
+
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border flex-shrink-0"
+              aria-label="How to use Performance & Competition Builder"
+            >
+              ?
+            </button>
+          </div>
+
+          {/* Row 2: Client Dashboard Button (only in ProCare mode) */}
+          {mode === "procare" && (
+            <div className="flex items-center">
+              <button
+                onClick={() => setLocation(`/pro/clients/${clientId}`)}
+                className="flex items-center gap-2 text-white/90 hover:bg-white/10 transition-all duration-200 px-3 py-1.5 rounded-lg text-sm font-medium"
+                data-testid="button-client-dashboard-text"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Client Dashboard</span>
+              </button>
+            </div>
           )}
         </div>
       </div>
