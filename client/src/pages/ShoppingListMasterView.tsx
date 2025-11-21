@@ -32,11 +32,6 @@ import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
@@ -320,88 +315,14 @@ export default function ShoppingListMasterView() {
           </h1>
 
           {/* Info Button */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white text-sm font-bold flash-border ml-auto"
-                aria-label="How to use shopping list"
-                data-testid="shopping-list-info-button"
-              >
-                ?
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white max-h-[500px] overflow-y-auto">
-              <div className="space-y-3">
-                <h3 className="font-semibold text-orange-400 flex items-center gap-2">
-                  <Info className="h-4 w-4 text-orange-400" />
-                  How to Use Your Shopping List
-                </h3>
-                <div className="text-sm text-white/90 space-y-3">
-                  <div>
-                    <p className="font-semibold text-white mb-2">
-                      4 Ways to Add Items:
-                    </p>
-                    <ul className="space-y-2 text-white/80">
-                      <li>
-                        <strong className="text-white">Enter Barcode</strong> —
-                        Type barcode numbers manually (no camera needed). Great
-                        for products with barcodes.
-                      </li>
-                      <li>
-                        <strong className="text-white">Voice Add</strong> —
-                        Speak multiple items naturally: "milk, eggs, chicken
-                        breast." Hands-free and fast!
-                      </li>
-                      <li>
-                        <strong className="text-white">Bulk Add</strong> — Paste
-                        entire grocery lists from notes or emails. Supports
-                        newlines and commas.
-                      </li>
-                      <li>
-                        <strong className="text-white">Add Other Items</strong>{" "}
-                        — Detailed form for specific brands, quantities, and
-                        notes. Perfect for "Charmin toilet paper" or "Heinz
-                        ketchup."
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="border-t border-white/10 pt-2">
-                    <p className="font-semibold text-white mb-1">
-                      Meal Ingredients:
-                    </p>
-                    <p className="text-white/80">
-                      Items from your meal plans automatically appear here. Add
-                      household items using the methods above for one complete
-                      list.
-                    </p>
-                  </div>
-
-                  <div className="border-t border-white/10 pt-2">
-                    <p className="font-semibold text-white mb-1">
-                      Shop at Walmart:
-                    </p>
-                    <p className="text-white/80">
-                      Click "Shop at Walmart" to open Walmart's website with all
-                      your unchecked items pre-searched. Perfect for online
-                      ordering or price checking!
-                    </p>
-                  </div>
-
-                  <div className="border-t border-white/10 pt-2">
-                    <p className="font-semibold text-white mb-1">Tips:</p>
-                    <ul className="list-disc list-inside space-y-1 text-white/80">
-                      <li>Delete items you already have at home</li>
-                      <li>
-                        Check items off as you shop—they move to the bottom
-                      </li>
-                      <li>Use "Clear Purchased" to remove checked items</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <button
+            onClick={() => setInstructionsOpen(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use shopping list"
+            data-testid="shopping-list-info-button"
+          >
+            ?
+          </button>
         </div>
       </div>
 
@@ -982,6 +903,63 @@ export default function ShoppingListMasterView() {
                   Add Items
                 </Button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Info Modal */}
+        {instructionsOpen && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
+              <h2 className="text-xl font-bold text-white mb-4">How to Use Your Shopping List</h2>
+              <div className="space-y-3 text-white/90 text-sm mb-6">
+                <div>
+                  <p className="font-semibold text-white mb-2">4 Ways to Add Items:</p>
+                  <ul className="space-y-2 text-white/80">
+                    <li>
+                      <strong className="text-white">Enter Barcode</strong> — Type barcode numbers manually (no camera needed). Great for products with barcodes.
+                    </li>
+                    <li>
+                      <strong className="text-white">Voice Add</strong> — Speak multiple items naturally: "milk, eggs, chicken breast." Hands-free and fast!
+                    </li>
+                    <li>
+                      <strong className="text-white">Bulk Add</strong> — Paste entire grocery lists from notes or emails. Supports newlines and commas.
+                    </li>
+                    <li>
+                      <strong className="text-white">Add Other Items</strong> — Detailed form for specific brands, quantities, and notes. Perfect for "Charmin toilet paper" or "Heinz ketchup."
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="border-t border-white/10 pt-2">
+                  <p className="font-semibold text-white mb-1">Meal Ingredients:</p>
+                  <p className="text-white/80">
+                    Items from your meal plans automatically appear here. Add household items using the methods above for one complete list.
+                  </p>
+                </div>
+
+                <div className="border-t border-white/10 pt-2">
+                  <p className="font-semibold text-white mb-1">Shop at Walmart:</p>
+                  <p className="text-white/80">
+                    Click "Shop at Walmart" to open Walmart's website with all your unchecked items pre-searched. Perfect for online ordering or price checking!
+                  </p>
+                </div>
+
+                <div className="border-t border-white/10 pt-2">
+                  <p className="font-semibold text-white mb-1">Tips:</p>
+                  <ul className="list-disc list-inside space-y-1 text-white/80">
+                    <li>Delete items you already have at home</li>
+                    <li>Check items off as you shop—they move to the bottom</li>
+                    <li>Use "Clear Purchased" to remove checked items</li>
+                  </ul>
+                </div>
+              </div>
+              <button
+                onClick={() => setInstructionsOpen(false)}
+                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got It!
+              </button>
             </div>
           </div>
         )}
