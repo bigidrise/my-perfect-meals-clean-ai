@@ -828,8 +828,7 @@ export default function ProClientDashboard() {
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-performance-competition-builder"
             >
-              <Trophy className="h-4 w-4 mr-2" /> Professional/ Trainer Meal
-              Board
+              <Trophy className="h-4 w-4 mr-2" /> Performance & Competition Builder
             </Button>
           </CardContent>
         </Card>

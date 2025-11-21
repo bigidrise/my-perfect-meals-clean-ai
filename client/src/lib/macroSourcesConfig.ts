@@ -100,10 +100,10 @@ export const MACRO_SOURCES = [
     route: "/lean-and-social"
   },
   {
-    label: "Elite Athlete Meal Board",
+    label: "Performance & Competition Builder",
     slug: "athlete-meal-board",
     get route() {
-      // Dynamically resolve to the last used athlete board clientId
+      // Dynamically resolve to the last used Performance Competition Builder clientId
       return `/athlete-meal-board/${getLastAthleteClientId()}`;
     }
   }

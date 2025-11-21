@@ -117,7 +117,7 @@ export function AthleteMealPickerDrawer({
             <button
               onClick={() => setShowInfoModal(true)}
               className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-              aria-label="How to use Performance Competition Builder"
+              aria-label="How to use Performance & Competition Builder"
             >
               ?
             </button>
@@ -240,7 +240,7 @@ export function AthleteMealPickerDrawer({
     {showInfoModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
         <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-          <h3 className="text-xl font-bold text-white mb-4">How to Use Competition Prep Meals</h3>
+          <h3 className="text-xl font-bold text-white mb-4">How to Use Performance & Competition Builder</h3>
 
           <div className="space-y-4 text-white/90 text-sm">
             <p>Pre-designed athlete meals optimized for lean muscle building and performance.</p>

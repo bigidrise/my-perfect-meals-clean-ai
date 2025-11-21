@@ -125,8 +125,8 @@ import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
 // Wrapper components for Performance Competition Builder boards
-const AthleteBoardStandalone = (_props: any) => <PerformanceCompetitionBuilder mode="athlete" />;
-const AthleteBoardProCare = (_props: any) => <PerformanceCompetitionBuilder mode="procare" />;
+const PerformanceCompetitionBuilderStandalone = (_props: any) => <PerformanceCompetitionBuilder mode="athlete" />;
+const PerformanceCompetitionBuilderProCare = (_props: any) => <PerformanceCompetitionBuilder mode="procare" />;
 
 export default function Router() {
   const [location] = useLocation();
@@ -287,8 +287,8 @@ export default function Router() {
         <Route path="/pro/clients" component={withPageErrorBoundary(ProClients, "Pro Clients")} />
         <Route path="/pro/clients/:id" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
         <Route path="/pro-client-dashboard" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
-        <Route path="/athlete-board" component={AthleteBoardStandalone} />
-        <Route path="/pro/clients/:id/athlete-board" component={AthleteBoardProCare} />
+        <Route path="/athlete-board" component={PerformanceCompetitionBuilderStandalone} />
+        <Route path="/pro/clients/:id/athlete-board" component={PerformanceCompetitionBuilderProCare} />
 
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
         <Route path="/diabetic-hub" component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")} />
