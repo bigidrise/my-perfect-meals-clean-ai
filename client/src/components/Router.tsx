@@ -124,7 +124,7 @@ import SupplementHubLanding from "@/pages/SupplementHubLanding";
 import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
-// Wrapper components for athlete boards
+// Wrapper components for Performance Competition Builder boards
 const AthleteBoardStandalone = (_props: any) => <PerformanceCompetitionBuilder mode="athlete" />;
 const AthleteBoardProCare = (_props: any) => <PerformanceCompetitionBuilder mode="procare" />;
 

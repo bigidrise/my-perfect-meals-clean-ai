@@ -2,6 +2,7 @@
 // Central registry of all pages that can add macros to biometrics
 
 const LS_LAST_ATHLETE_CLIENT = 'mpm_last_athlete_client_id';
+const LAST_ATHLETE_CLIENT_KEY = LS_LAST_ATHLETE_CLIENT; // Using the constant defined above
 
 // Helper to get the last used athlete board clientId
 function getLastAthleteClientId(): string {
@@ -115,8 +116,13 @@ export function getMacroSourceBySlug(slug: string) {
 }
 
 // Store the last used athlete board clientId for routing
-export function saveLastAthleteClientId(clientId: string) {
+export function saveLastPerformanceClientId(clientId: string): void {
   try {
-    localStorage.setItem(LS_LAST_ATHLETE_CLIENT, clientId);
-  } catch {}
+    localStorage.setItem(LAST_ATHLETE_CLIENT_KEY, clientId);
+  } catch (error) {
+    console.error("Failed to save last performance client ID:", error);
+  }
 }
+
+// Legacy alias for backward compatibility
+export const saveLastAthleteClientId = saveLastPerformanceClientId;

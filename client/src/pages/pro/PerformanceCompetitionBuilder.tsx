@@ -50,7 +50,7 @@ import { DuplicateWeekModal } from "@/components/DuplicateWeekModal";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import { proStore } from "@/lib/proData";
 import { linkUserToClient } from "@/lib/macroResolver";
-import { saveLastAthleteClientId } from "@/lib/macroSourcesConfig";
+import { saveLastPerformanceClientId } from "@/lib/macroSourcesConfig";
 import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
@@ -140,7 +140,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     } else if (clientId) {
       // Save clientId for "Came From" dropdown routing (procare mode only)
       if (mode === "procare") {
-        saveLastAthleteClientId(clientId);
+        saveLastPerformanceClientId(clientId);
       }
     }
   }, [clientId, setLocation, mode]);
@@ -850,7 +850,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     linkUserToClient("anon", clientId);
 
     // Save clientId for "Came From" dropdown routing
-    saveLastAthleteClientId(clientId);
+    saveLastPerformanceClientId(clientId);
 
     toast({
       title: "Macros Set to Biometrics!",
