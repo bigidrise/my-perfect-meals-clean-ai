@@ -154,7 +154,12 @@ export default function DashboardNew() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-32 flex flex-col gap-4">
+      {/* Main Content */}
+      <div
+        className="max-w-6xl mx-auto px-4 pb-32 flex flex-col gap-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+
         {/* Hero Image Section with Welcome Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
