@@ -20,5 +20,6 @@ export const startWalkthrough = (id: string): KnowledgeResponse => {
       text: step.text,
       targetId: step.targetId,
     })),
+    spokenText: steps[0].text,
   };
 };

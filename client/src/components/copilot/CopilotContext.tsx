@@ -46,6 +46,7 @@ export interface KnowledgeResponse {
   tips?: string[];
   type?: "knowledge" | "walkthrough";
   steps?: WalkthroughStep[];
+  spokenText?: string;
 }
 
 export interface WalkthroughStep {

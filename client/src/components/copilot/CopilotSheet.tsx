@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
 import { ChefCapIcon } from "./ChefCapIcon";
@@ -19,6 +19,24 @@ export const CopilotSheet: React.FC = () => {
   } = useCopilot();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (lastResponse?.spokenText) {
+      fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: lastResponse.spokenText }),
+      })
+        .then((res) => res.arrayBuffer())
+        .then((buffer) => {
+          const blob = new Blob([buffer], { type: "audio/mpeg" });
+          const url = URL.createObjectURL(blob);
+          setAudioUrl(url);
+        })
+        .catch((err) => console.error("TTS error:", err));
+    }
+  }, [lastResponse]);
 
   const handleSuggestionClick = (id: string) => {
     const s = suggestions.find((s) => s.id === id);
@@ -267,6 +285,11 @@ export const CopilotSheet: React.FC = () => {
                     {mode === "thinking" ? "Thinking…" : "Send"}
                   </button>
                 </form>
+
+                {/* TTS Audio Player */}
+                {audioUrl && (
+                  <audio autoPlay src={audioUrl} />
+                )}
               </div>
             </div>
           </motion.div>

@@ -12,5 +12,8 @@ export const explainFeature = async (featureId: string) => {
     };
   }
 
-  return data;
+  return {
+    ...data,
+    spokenText: `${data.title}. ${data.description}. ${data.howTo?.join(" ") || ""}`,
+  };
 };
