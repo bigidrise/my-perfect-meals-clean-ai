@@ -1,0 +1,7 @@
+f2260826c75dab45db7d326813ccd098  client/src/components/modals/AIMealCreatorModal.tsx
+d5288a7e9a121e75aa943c97d3de86c3  client/src/components/PreparationModal.tsx
+eb7f1ac4f581a1e3d784bac1ebb23083  client/src/pages/WeeklyMealBoard.tsx
+ce1aff68634b10e70ecbb7a20cf021a5  client/src/pages/BeachBodyMealBoard.tsx
+803e8dd1dcade610f4143b4fc2fd77ef  client/src/pages/pro/AthleteBoard.tsx
+6bc9a9a2354067c0f8c57f90f0387fa9  client/src/pages/Planner.tsx
+e43f2831f6a95fc192ce80cf88278d03  server/routes/manualMacros.ts
