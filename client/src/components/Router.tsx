@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
 import { Switch, Route, useLocation } from "wouter";
+import GeneralNutritionBuilder from "@/pages/pro/GeneralNutritionBuilder";
 import ScrollRestorer from "@/components/ScrollRestorer";
 import BottomNav from "@/components/BottomNav";
 import { withPageErrorBoundary } from "@/components/PageErrorBoundary";
@@ -125,8 +126,12 @@ import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
 // Wrapper components for Performance Competition Builder boards
-const PerformanceCompetitionBuilderStandalone = (_props: any) => <PerformanceCompetitionBuilder mode="athlete" />;
-const PerformanceCompetitionBuilderProCare = (_props: any) => <PerformanceCompetitionBuilder mode="procare" />;
+const PerformanceCompetitionBuilderStandalone = (_props: any) => (
+  <PerformanceCompetitionBuilder mode="athlete" />
+);
+const PerformanceCompetitionBuilderProCare = (_props: any) => (
+  <PerformanceCompetitionBuilder mode="procare" />
+);
 
 export default function Router() {
   const [location] = useLocation();
@@ -138,33 +143,35 @@ export default function Router() {
 
   // Pages where BottomNav should NOT appear (pre-login/onboarding pages + shopping list generators)
   const hideBottomNavRoutes = [
-    '/',
-    '/auth',
-    '/welcome',
-    '/forgot-password',
-    '/reset-password',
-    '/onboarding',
-    '/onboarding-v2',
-    '/onboarding-legacy',
-    '/pricing',
-    '/checkout/success',
-    '/weekly-meal-board',
-    '/weekly',
-    '/performance-competition-builder',
-    '/beach-body-meal-board',
-    '/craving-creator',
-    '/craving-presets',
-    '/glp1-meal-builder',
-    '/diabetic-menu-builder',
-    '/anti-inflammatory-menu-builder',
-    '/toddler-meals',
-    '/kids-meals',
-    '/alcohol/lean-and-social',
-    '/mocktails-low-cal-mixers',
+    "/",
+    "/auth",
+    "/welcome",
+    "/forgot-password",
+    "/reset-password",
+    "/onboarding",
+    "/onboarding-v2",
+    "/onboarding-legacy",
+    "/pricing",
+    "/checkout/success",
+    "/weekly-meal-board",
+    "/weekly",
+    "/performance-competition-builder",
+    "/beach-body-meal-board",
+    "/craving-creator",
+    "/craving-presets",
+    "/glp1-meal-builder",
+    "/diabetic-menu-builder",
+    "/anti-inflammatory-menu-builder",
+    "/toddler-meals",
+    "/kids-meals",
+    "/alcohol/lean-and-social",
+    "/mocktails-low-cal-mixers",
   ];
 
   // Check for dynamic routes (e.g., /pro/clients/:id/performance-competition-builder)
-  const shouldShowBottomNav = !hideBottomNavRoutes.includes(location) && !location.includes('/performance-competition-builder');
+  const shouldShowBottomNav =
+    !hideBottomNavRoutes.includes(location) &&
+    !location.includes("/performance-competition-builder");
 
   // The rest of the original routes are kept below.
 
@@ -183,10 +190,22 @@ export default function Router() {
         <Route path="/family-info" component={FamilyInfoPage} />
         <Route path="/admin-moderation" component={AdminModerationPage} />
         {/* DELETED: CommunityTestPage, CommunityPage routes */}
-        <Route path="/onboarding" component={withPageErrorBoundary(Onboarding, "Onboarding")} />
-        <Route path="/onboarding-v2" component={withPageErrorBoundary(OnboardingV2, "Onboarding V2")} />
-        <Route path="/onboarding-legacy" component={withPageErrorBoundary(Onboarding, "Onboarding")} />
-        <Route path="/dashboard" component={withPageErrorBoundary(DashboardNew, "Dashboard")} />
+        <Route
+          path="/onboarding"
+          component={withPageErrorBoundary(Onboarding, "Onboarding")}
+        />
+        <Route
+          path="/onboarding-v2"
+          component={withPageErrorBoundary(OnboardingV2, "Onboarding V2")}
+        />
+        <Route
+          path="/onboarding-legacy"
+          component={withPageErrorBoundary(Onboarding, "Onboarding")}
+        />
+        <Route
+          path="/dashboard"
+          component={withPageErrorBoundary(DashboardNew, "Dashboard")}
+        />
         <Route path="/tutorials" component={TutorialHub} />
         <Route path="/learn" component={Learn} />
         <Route path="/get-inspiration" component={GetInspiration} />
@@ -194,7 +213,6 @@ export default function Router() {
         {/* Profile functionality in My Hub (ProfileSheet) - no separate /profile page needed */}
         {/* Settings functionality now in My Hub (ProfileSheet) */}
         {/* DELETED: AffiliatesPage, FoundersPage, FoundersSubmit, Changelog routes */}
-
         {/* DELETED: MealPlanning, LowGlycemicCarbPage, AiMealCreatorPage, MealPlanningHubRevised routes */}
         <Route path="/lifestyle" component={LifestyleLandingPage} />
         <Route path="/healthy-kids-meals" component={HealthyKidsMeals} />
@@ -206,23 +224,34 @@ export default function Router() {
         <Route path="/ab-testing-demo" component={ABTestingDemo} />
         {/* DELETED: HolidayFeastPlannerPage, MealFinderPage, BreakfastMealsHub, LunchMealsHub, DinnerMealsHub, SnacksMealsHub, CulturalCuisinesPage, VegetableFiberInfo, PotluckPlanner routes */}
         <Route path="/restaurant-guide" component={RestaurantGuidePage} />
-
         {/* DELETED: SmartWeekBuilder, AdultBeverageHubPage routes */}
-        <Route path="/macro-counter" component={withPageErrorBoundary(MacroCounter, "Macro Counter")} />
-
+        <Route
+          path="/macro-counter"
+          component={withPageErrorBoundary(MacroCounter, "Macro Counter")}
+        />
         {/* DELETED: All kids meal routes, all alcohol hub routes */}
-
-        <Route path="/my-biometrics" component={withPageErrorBoundary(MyBiometrics, "My Biometrics")} />
-
+        <Route
+          path="/my-biometrics"
+          component={withPageErrorBoundary(MyBiometrics, "My Biometrics")}
+        />
         {/* Biometric sub-pages */}
-        <Route path="/biometrics" component={withPageErrorBoundary(MyBiometrics, "Biometrics")} />
-        <Route path="/biometrics/body-composition" component={withPageErrorBoundary(BodyComposition, "Body Composition")} />
-        <Route path="/biometrics/sleep" component={withPageErrorBoundary(Sleep, "Sleep Tracking")} />
-
+        <Route
+          path="/biometrics"
+          component={withPageErrorBoundary(MyBiometrics, "Biometrics")}
+        />
+        <Route
+          path="/biometrics/body-composition"
+          component={withPageErrorBoundary(BodyComposition, "Body Composition")}
+        />
+        <Route
+          path="/biometrics/sleep"
+          component={withPageErrorBoundary(Sleep, "Sleep Tracking")}
+        />
         {/* ✅ NEW: Unified Food Logging Routes */}
-        {/* <Route path="/food" component={FoodLogToday} /> */} {/* TEMPORARILY DISABLED - File missing */}
-        {/* <Route path="/food/history" component={FoodLogHistory} /> */} {/* TEMPORARILY DISABLED - File missing */}
-
+        {/* <Route path="/food" component={FoodLogToday} /> */}{" "}
+        {/* TEMPORARILY DISABLED - File missing */}
+        {/* <Route path="/food/history" component={FoodLogHistory} /> */}{" "}
+        {/* TEMPORARILY DISABLED - File missing */}
         {/* 🔄 REDIRECTS: Old meal logging URLs to new unified system */}
         <Route path="/meal-log/history">
           {() => {
@@ -236,13 +265,9 @@ export default function Router() {
             return null;
           }}
         </Route>
-
         {/* DELETED: WellnessHub, DailyJournalPage, WomensHealthHubEducational, MensHealthHubEducational routes */}
-
         {/* DELETED: Redirects to deleted hormone hub pages */}
-
         {/* DELETED: InspirationJournal, DailyJournal, WeeklyNewsletter, TrackWater routes */}
-
         {/* DELETED: All meal planning hub pages, specialty routes: MasterShoppingList, VoiceSettings, SimplePlanPage, SupplementHub, LabValueSupport, LearnToCook, KidsMealsHub, BloodSugarHub, BodyComposition, CycleTracking, Calendar, SupplementEducation, SuccessStories, DailySummary, WinePairing, MealPairingAI, UpgradePage, WellnessCompanion, StressEatingSolution, PlanBuilderHub */}
         {/* Cafeteria Setup route: show page if enabled; otherwise Coming Soon */}
         <Route path="/cafeteria-setup">
@@ -254,83 +279,192 @@ export default function Router() {
             ctaHref="/weekly-meal-board"
           />
         </Route>
-
         {/* DELETED: TemplateHub route */}
-        <Route path="/weekly" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
+        <Route
+          path="/weekly"
+          component={withPageErrorBoundary(
+            WeeklyMealBoard,
+            "Weekly Meal Board",
+          )}
+        />
         {/* DELETED: PlanBuilderTurbo, ProteinPlannerPage, PlanBuilderHub, CompetitionBeachbodyBoard routes */}
-        <Route path="/planner" component={withPageErrorBoundary(Planner, "Planner")} />
-        <Route path="/weekly-meal-board" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
+        <Route
+          path="/planner"
+          component={withPageErrorBoundary(Planner, "Planner")}
+        />
+        <Route
+          path="/weekly-meal-board"
+          component={withPageErrorBoundary(
+            WeeklyMealBoard,
+            "Weekly Meal Board",
+          )}
+        />
         <Route path="/beach-body-meal-board" component={BeachBodyMealBoard} />
-
         {/* Legacy redirects - redirect Classic Builder to Weekly Meal Board */}
-        <Route path="/plan-builder/classic" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
-        <Route path="/builder/classic" component={withPageErrorBoundary(WeeklyMealBoard, "Weekly Meal Board")} />
+        <Route
+          path="/plan-builder/classic"
+          component={withPageErrorBoundary(
+            WeeklyMealBoard,
+            "Weekly Meal Board",
+          )}
+        />
+        <Route
+          path="/builder/classic"
+          component={withPageErrorBoundary(
+            WeeklyMealBoard,
+            "Weekly Meal Board",
+          )}
+        />
         {/* DELETED: PlanBuilderTurbo route */}
-
         {/* DELETED: CravingHub, CravingPresetsPage, SearchPage, PhysicianReportView, SmartMenuBuilder routes */}
-
         {/* DELETED: GLP1Hub, GLP1MealBuilder, SpecialtyDietsHub, HormonePresetDetail, HormonePreviewWeeklyBoard, ToughDayCompanion, DiabetesSupport routes */}
-
         {/* Health Support Routes */}
-
         {/* Meal Log History Route */}
-        {/* <Route path="/meal-log-history" component={MealLogHistoryPage} /> */} {/* TEMPORARILY DISABLED - File missing */}
-
+        {/* <Route path="/meal-log-history" component={MealLogHistoryPage} /> */}{" "}
+        {/* TEMPORARILY DISABLED - File missing */}
         {/* Shopping List Routes */}
-        <Route path="/shopping-list-v2" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
-        <Route path="/shopping-list" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
-
+        <Route
+          path="/shopping-list-v2"
+          component={withPageErrorBoundary(
+            ShoppingListMasterView,
+            "Shopping List",
+          )}
+        />
+        <Route
+          path="/shopping-list"
+          component={withPageErrorBoundary(
+            ShoppingListMasterView,
+            "Shopping List",
+          )}
+        />
         {/* ProCare Feature Routes (ProCare Cover → Care Team → Pro Portal → Client Dashboard → Performance & Competition Builder) */}
-        <Route path="/procare-cover" component={withPageErrorBoundary(ProCareCover, "ProCare Cover")} />
-        <Route path="/care-team" component={withPageErrorBoundary(CareTeam, "Care Team")} />
-        <Route path="/pro-portal" component={withPageErrorBoundary(ProPortal, "Pro Portal")} />
-        <Route path="/pro/clients" component={withPageErrorBoundary(ProClients, "Pro Clients")} />
-        <Route path="/pro/clients/:id" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
-        <Route path="/pro-client-dashboard" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
-        <Route path="/performance-competition-builder" component={PerformanceCompetitionBuilderStandalone} />
-        <Route path="/pro/clients/:id/performance-competition-builder" component={PerformanceCompetitionBuilderProCare} />
-
+        <Route
+          path="/procare-cover"
+          component={withPageErrorBoundary(ProCareCover, "ProCare Cover")}
+        />
+        <Route
+          path="/care-team"
+          component={withPageErrorBoundary(CareTeam, "Care Team")}
+        />
+        <Route
+          path="/pro-portal"
+          component={withPageErrorBoundary(ProPortal, "Pro Portal")}
+        />
+        <Route
+          path="/pro/clients"
+          component={withPageErrorBoundary(ProClients, "Pro Clients")}
+        />
+        <Route
+          path="/pro/clients/:id"
+          component={withPageErrorBoundary(
+            ProClientDashboard,
+            "Client Dashboard",
+          )}
+        />
+        <Route
+          path="/pro-client-dashboard"
+          component={withPageErrorBoundary(
+            ProClientDashboard,
+            "Client Dashboard",
+          )}
+        />
+        <Route
+          path="/performance-competition-builder"
+          component={PerformanceCompetitionBuilderStandalone}
+        />
+        <Route
+          path="/pro/clients/:id/general-nutrition-builder"
+          component={GeneralNutritionBuilder}
+        />
+        <Route
+          path="/pro/clients/:id/performance-competition-builder"
+          component={PerformanceCompetitionBuilderProCare}
+        />
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
-        <Route path="/diabetic-hub" component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")} />
-        <Route path="/diabetes-support" component={withPageErrorBoundary(DiabetesSupportPage, "Diabetes Support")} />
-        <Route path="/diabetic-menu-builder" component={withPageErrorBoundary(DiabeticMenuBuilder, "Diabetic Menu Builder")} />
-        <Route path="/glp1-hub" component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")} />
-        <Route path="/glp1-meal-builder" component={withPageErrorBoundary(GLP1MealBuilder, "GLP-1 Meal Builder")} />
-        <Route path="/medical-diets-hub" component={withPageErrorBoundary(MedicalDietsHub, "Medical Diets Hub")} />
-        <Route path="/anti-inflammatory-menu-builder" component={withPageErrorBoundary(AntiInflammatoryMenuBuilder, "Anti-Inflammatory Menu Builder")} />
-
+        <Route
+          path="/diabetic-hub"
+          component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")}
+        />
+        <Route
+          path="/diabetes-support"
+          component={withPageErrorBoundary(
+            DiabetesSupportPage,
+            "Diabetes Support",
+          )}
+        />
+        <Route
+          path="/diabetic-menu-builder"
+          component={withPageErrorBoundary(
+            DiabeticMenuBuilder,
+            "Diabetic Menu Builder",
+          )}
+        />
+        <Route
+          path="/glp1-hub"
+          component={withPageErrorBoundary(GLP1Hub, "GLP-1 Hub")}
+        />
+        <Route
+          path="/glp1-meal-builder"
+          component={withPageErrorBoundary(
+            GLP1MealBuilder,
+            "GLP-1 Meal Builder",
+          )}
+        />
+        <Route
+          path="/medical-diets-hub"
+          component={withPageErrorBoundary(
+            MedicalDietsHub,
+            "Medical Diets Hub",
+          )}
+        />
+        <Route
+          path="/anti-inflammatory-menu-builder"
+          component={withPageErrorBoundary(
+            AntiInflammatoryMenuBuilder,
+            "Anti-Inflammatory Menu Builder",
+          )}
+        />
         {/* Craving Creator Routes */}
-        <Route path="/craving-creator-landing" component={CravingCreatorLanding} />
+        <Route
+          path="/craving-creator-landing"
+          component={CravingCreatorLanding}
+        />
         <Route path="/craving-hub" component={CravingHub} />
         <Route path="/craving-presets" component={CravingPresets} />
-
         {/* Alcohol Hub Routes */}
         <Route path="/alcohol-hub" component={AlcoholHubLanding} />
-        <Route path="/alcohol/lean-and-social" component={AlcoholLeanAndSocial} />
+        <Route
+          path="/alcohol/lean-and-social"
+          component={AlcoholLeanAndSocial}
+        />
         <Route path="/alcohol-smart-sips" component={AlcoholSmartSips} />
-        <Route path="/mocktails-low-cal-mixers" component={MocktailsLowCalMixers} />
+        <Route
+          path="/mocktails-low-cal-mixers"
+          component={MocktailsLowCalMixers}
+        />
         <Route path="/beer-pairing" component={BeerPairing} />
         <Route path="/bourbon-spirits" component={BourbonSpirits} />
         <Route path="/alcohol-log" component={AlcoholLog} />
         <Route path="/meal-pairing-ai" component={MealPairingAI} />
         <Route path="/weaning-off-tool" component={WeaningOffTool} />
         <Route path="/wine-pairing" component={WinePairing} />
-
         {/* Lifestyle Hub (formerly Emotion AI) */}
         <Route path="/lifestyle" component={LifestyleLandingPage} />
         <Route path="/emotion-ai" component={LifestyleLandingPage} />
-
         {/* Meal Finder Route */}
         <Route path="/meal-finder" component={MealFinder} />
-
         {/* Founders Route */}
         <Route path="/founders" component={FoundersPage} />
-
         {/* Supplement Hub Routes */}
-        <Route path="/supplement-hub-landing" component={SupplementHubLanding} />
+        <Route
+          path="/supplement-hub-landing"
+          component={SupplementHubLanding}
+        />
         <Route path="/supplement-hub" component={SupplementHub} />
-        <Route path="/supplement-education" component={SupplementEducationPage} />
-
+        <Route
+          path="/supplement-education"
+          component={SupplementEducationPage}
+        />
         {/* 404 fallback */}
         <Route component={NotFound} />
       </Switch>

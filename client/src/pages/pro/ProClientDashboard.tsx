@@ -832,14 +832,17 @@ export default function ProClientDashboard() {
             </Button>
             <Button
               onClick={() => {
+                if (!clientId) return; // safety guard
+
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation(`/anti-inflammatory-menu-builder?clientId=${clientId}`);
+                setLocation(`/pro/clients/${clientId}/general-nutrition-builder`);
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-general-nutrition-builder"
             >
               🌿 General Nutrition Builder
             </Button>
+
           </CardContent>
         </Card>
       </div>
