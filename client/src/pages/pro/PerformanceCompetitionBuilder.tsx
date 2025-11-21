@@ -113,7 +113,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
   // Route params
   const [, athleteParams] = useRoute("/athlete-meal-board/:clientId");
-  const [, proParams] = useRoute("/pro/clients/:id/athlete-board");
+  const [, proParams] = useRoute("/pro/clients/:id/performance-competition-builder");
   const routeClientId = athleteParams?.clientId || proParams?.id;
 
   // Get current user ID for standalone mode
@@ -327,17 +327,17 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
   // Load/save tour progress from localStorage
   useEffect(() => {
-    const infoSeen = localStorage.getItem("athlete-board-info-seen");
+    const infoSeen = localStorage.getItem("performance-competition-builder-info-seen");
     if (infoSeen === "true") {
       setHasSeenInfo(true);
     }
 
-    const dailyTotalsInfoSeen = localStorage.getItem("athlete-board-daily-totals-info-seen");
+    const dailyTotalsInfoSeen = localStorage.getItem("performance-competition-builder-daily-totals-info-seen");
     if (dailyTotalsInfoSeen === "true") {
       setHasSeenDailyTotalsInfo(true);
     }
 
-    const savedStep = localStorage.getItem("athlete-board-tour-step");
+    const savedStep = localStorage.getItem("performance-competition-builder-tour-step");
     if (savedStep === "breakfast" || savedStep === "lunch" || savedStep === "dinner" || savedStep === "snacks" || savedStep === "complete") {
       setTourStep(savedStep);
     }
@@ -347,7 +347,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   const handleInfoModalClose = () => {
     setShowInfoModal(false);
     setHasSeenInfo(true);
-    localStorage.setItem("athlete-board-info-seen", "true");
+    localStorage.setItem("performance-competition-builder-info-seen", "true");
   };
 
   // Update tour step when meals are created
@@ -361,7 +361,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     // Check meal completion and advance tour
     if (tourStep === "breakfast" && lists.breakfast.length > 0) {
       setTourStep("lunch");
-      localStorage.setItem("athlete-board-tour-step", "lunch");
+      localStorage.setItem("performance-competition-builder-tour-step", "lunch");
 
       // Show Daily Totals info after first meal
       if (!hasSeenDailyTotalsInfo) {
@@ -369,13 +369,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       }
     } else if (tourStep === "lunch" && lists.lunch.length > 0) {
       setTourStep("dinner");
-      localStorage.setItem("athlete-board-tour-step", "dinner");
+      localStorage.setItem("performance-competition-builder-tour-step", "dinner");
     } else if (tourStep === "dinner" && lists.dinner.length > 0) {
       setTourStep("snacks");
-      localStorage.setItem("athlete-board-tour-step", "snacks");
+      localStorage.setItem("performance-competition-builder-tour-step", "snacks");
     } else if (tourStep === "snacks" && lists.snacks.length > 0) {
       setTourStep("complete");
-      localStorage.setItem("athlete-board-tour-step", "complete");
+      localStorage.setItem("performance-competition-builder-tour-step", "complete");
     }
   }, [board, tourStep, planningMode, activeDayISO, hasSeenDailyTotalsInfo]);
 
@@ -2149,7 +2149,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         if (!open) {
           setShowDailyTotalsInfo(false);
           setHasSeenDailyTotalsInfo(true);
-          localStorage.setItem("athlete-board-daily-totals-info-seen", "true");
+          localStorage.setItem("performance-competition-builder-daily-totals-info-seen", "true");
         }
       }}>
         <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">

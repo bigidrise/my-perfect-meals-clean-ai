@@ -150,7 +150,7 @@ export default function Router() {
     '/checkout/success',
     '/weekly-meal-board',
     '/weekly',
-    '/athlete-board',
+    '/performance-competition-builder',
     '/beach-body-meal-board',
     '/craving-creator',
     '/craving-presets',
@@ -163,8 +163,8 @@ export default function Router() {
     '/mocktails-low-cal-mixers',
   ];
 
-  // Check for dynamic routes (e.g., /pro/clients/:id/athlete-board)
-  const shouldShowBottomNav = !hideBottomNavRoutes.includes(location) && !location.includes('/athlete-board');
+  // Check for dynamic routes (e.g., /pro/clients/:id/performance-competition-builder)
+  const shouldShowBottomNav = !hideBottomNavRoutes.includes(location) && !location.includes('/performance-competition-builder');
 
   // The rest of the original routes are kept below.
 
@@ -280,15 +280,15 @@ export default function Router() {
         <Route path="/shopping-list-v2" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
         <Route path="/shopping-list" component={withPageErrorBoundary(ShoppingListMasterView, "Shopping List")} />
 
-        {/* ProCare Feature Routes (ProCare Cover → Care Team → Pro Portal → Client Dashboard → Athlete Board) */}
+        {/* ProCare Feature Routes (ProCare Cover → Care Team → Pro Portal → Client Dashboard → Performance & Competition Builder) */}
         <Route path="/procare-cover" component={withPageErrorBoundary(ProCareCover, "ProCare Cover")} />
         <Route path="/care-team" component={withPageErrorBoundary(CareTeam, "Care Team")} />
         <Route path="/pro-portal" component={withPageErrorBoundary(ProPortal, "Pro Portal")} />
         <Route path="/pro/clients" component={withPageErrorBoundary(ProClients, "Pro Clients")} />
         <Route path="/pro/clients/:id" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
         <Route path="/pro-client-dashboard" component={withPageErrorBoundary(ProClientDashboard, "Client Dashboard")} />
-        <Route path="/athlete-board" component={PerformanceCompetitionBuilderStandalone} />
-        <Route path="/pro/clients/:id/athlete-board" component={PerformanceCompetitionBuilderProCare} />
+        <Route path="/performance-competition-builder" component={PerformanceCompetitionBuilderStandalone} />
+        <Route path="/pro/clients/:id/performance-competition-builder" component={PerformanceCompetitionBuilderProCare} />
 
         {/* Physician Hub Routes (Diabetic, GLP-1, Medical Diets, Clinical Lifestyle) */}
         <Route path="/diabetic-hub" component={withPageErrorBoundary(DiabeticHub, "Diabetic Hub")} />
