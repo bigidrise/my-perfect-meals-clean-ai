@@ -411,26 +411,7 @@ export default function ShoppingListMasterView() {
         {/* Add Other Items Section */}
         <AddOtherItems />
 
-        {/* Access / Entitlement Card */}
-        <div className="rounded-2xl border border-white/20 bg-black/60 text-white p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-lg font-semibold">Shopping Delivery</div>
-              <div className="text-sm text-white/80">$29.99 / month</div>
-            </div>
-
-            {/* Locked state (show this by default) */}
-            <button className="rounded-xl px-4 py-2 border border-white/30 bg-white/10 hover:bg-white/20 text-white transition-colors">
-              Unlock Shopping Delivery
-            </button>
-
-            {/* Active state (swap the two elements when entitled) */}
-            {/* <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-emerald-500/20 border border-emerald-300/40 text-emerald-200 text-xs">Active — Shopping Delivery</div>
-            <button className="rounded-xl px-3 py-2 border border-white/30 bg-white/10 hover:bg-white/20 text-white text-sm">
-              Manage Subscription
-            </button> */}
-          </div>
-        </div>
+        I don't think I have any pricing anywhere on the app anymore just on the pricing page
 
         {/* Walmart Card - Single Integration */}
         <div className="rounded-2xl border border-white/20 bg-black/60 text-white p-4 sm:p-5">
