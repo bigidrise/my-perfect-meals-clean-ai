@@ -1,19 +1,42 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Check, ChevronDown, ChevronUp, Edit2, Home, Info, ShoppingCart, Mic, ListPlus } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Edit2,
+  Home,
+  Info,
+  ShoppingCart,
+  Mic,
+  ListPlus,
+} from "lucide-react";
 import { useLocation } from "wouter";
 import TrashButton from "@/components/ui/TrashButton";
-import { useShoppingListStore, ShoppingListItem } from "@/stores/shoppingListStore";
+import {
+  useShoppingListStore,
+  ShoppingListItem,
+} from "@/stores/shoppingListStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
@@ -22,25 +45,25 @@ export default function ShoppingListMasterView() {
   // Extract "from" query parameter once on mount
   const [fromSlug, setFromSlug] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get('from') || '';
+    return params.get("from") || "";
   });
 
   // Subscribe to Zustand store
-  const items = useShoppingListStore(s => s.items);
-  const addItem = useShoppingListStore(s => s.addItem);
-  const toggleItem = useShoppingListStore(s => s.toggleItem);
-  const removeItem = useShoppingListStore(s => s.removeItem);
-  const clearChecked = useShoppingListStore(s => s.clearChecked);
-  const clearAll = useShoppingListStore(s => s.clearAll);
-  const updateItem = useShoppingListStore(s => s.updateItem);
-  const replaceItems = useShoppingListStore(s => s.replaceItems);
+  const items = useShoppingListStore((s) => s.items);
+  const addItem = useShoppingListStore((s) => s.addItem);
+  const toggleItem = useShoppingListStore((s) => s.toggleItem);
+  const removeItem = useShoppingListStore((s) => s.removeItem);
+  const clearChecked = useShoppingListStore((s) => s.clearChecked);
+  const clearAll = useShoppingListStore((s) => s.clearAll);
+  const updateItem = useShoppingListStore((s) => s.updateItem);
+  const replaceItems = useShoppingListStore((s) => s.replaceItems);
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [opts, setOpts] = useState({ 
-    groupByAisle: false, 
-    excludePantryStaples: false, 
-    scopeByWeek: false, 
-    rounding: 'friendly' as 'friendly' | 'none'
+  const [opts, setOpts] = useState({
+    groupByAisle: false,
+    excludePantryStaples: false,
+    scopeByWeek: false,
+    rounding: "friendly" as "friendly" | "none",
   });
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [purchasedOpen, setPurchasedOpen] = useState(true);
@@ -54,20 +77,32 @@ export default function ShoppingListMasterView() {
   const recognitionRef = useRef<any | null>(null);
 
   const toggleOpt = useCallback(<K extends keyof typeof opts>(key: K) => {
-    setOpts(prev => ({ ...prev, [key]: !prev[key] }));
+    setOpts((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
-  const counts = useMemo(()=>({
-    total: items.length,
-    checked: items.filter(i=>i.isChecked).length
-  }), [items]);
+  const counts = useMemo(
+    () => ({
+      total: items.length,
+      checked: items.filter((i) => i.isChecked).length,
+    }),
+    [items],
+  );
 
-  const onInlineEdit = useCallback((id: string, field: "quantity"|"unit"|"name"|"notes") => {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const v = field === "quantity" ? Number(e.target.value) : e.target.value;
-      updateItem(id, field === "quantity" ? { quantity: Number.isFinite(v as number) ? (v as number) : 1 } : { [field]: v });
-    };
-  }, [updateItem]);
+  const onInlineEdit = useCallback(
+    (id: string, field: "quantity" | "unit" | "name" | "notes") => {
+      return (e: React.ChangeEvent<HTMLInputElement>) => {
+        const v =
+          field === "quantity" ? Number(e.target.value) : e.target.value;
+        updateItem(
+          id,
+          field === "quantity"
+            ? { quantity: Number.isFinite(v as number) ? (v as number) : 1 }
+            : { [field]: v },
+        );
+      };
+    },
+    [updateItem],
+  );
 
   const onClearChecked = useCallback(() => {
     if (!confirm("Clear all checked items?")) return;
@@ -81,12 +116,18 @@ export default function ShoppingListMasterView() {
 
   const onCopyToClipboard = useCallback(async () => {
     const mealItems = items
-      .filter(i => !i.isChecked)
-      .map(i => `• ${i.name}${i.quantity ? ` — ${i.quantity}${i.unit ? ' ' + i.unit : ''}` : ''}`);
+      .filter((i) => !i.isChecked)
+      .map(
+        (i) =>
+          `• ${i.name}${i.quantity ? ` — ${i.quantity}${i.unit ? " " + i.unit : ""}` : ""}`,
+      );
 
-    const otherItems = readOtherItems().items
-      .filter(i => !i.checked)
-      .map(i => `• ${i.brand ? i.brand + ' ' : ''}${i.name} — ${i.qty} ${i.unit} (${i.category})`);
+    const otherItems = readOtherItems()
+      .items.filter((i) => !i.checked)
+      .map(
+        (i) =>
+          `• ${i.brand ? i.brand + " " : ""}${i.name} — ${i.qty} ${i.unit} (${i.category})`,
+      );
 
     const sections = [];
     if (mealItems.length > 0) {
@@ -101,7 +142,10 @@ export default function ShoppingListMasterView() {
 
     try {
       await navigator.clipboard.writeText(text);
-      toast({ title: "Copied to clipboard", description: `${totalCount} items copied` });
+      toast({
+        title: "Copied to clipboard",
+        description: `${totalCount} items copied`,
+      });
     } catch {
       const el = document.createElement("textarea");
       el.value = text;
@@ -111,20 +155,27 @@ export default function ShoppingListMasterView() {
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
-      toast({ title: "Copied to clipboard", description: `${totalCount} items copied` });
+      toast({
+        title: "Copied to clipboard",
+        description: `${totalCount} items copied`,
+      });
     }
   }, [items, toast]);
 
-  const uncheckedItems = useMemo(() => items.filter(i => !i.isChecked), [items]);
-  const checkedItems = useMemo(() => items.filter(i => i.isChecked), [items]);
+  const uncheckedItems = useMemo(
+    () => items.filter((i) => !i.isChecked),
+    [items],
+  );
+  const checkedItems = useMemo(() => items.filter((i) => i.isChecked), [items]);
 
   const handleShopAtWalmart = useCallback(() => {
-    const activeItems = items.filter(i => !i.isChecked);
+    const activeItems = items.filter((i) => !i.isChecked);
 
     if (activeItems.length === 0) {
       toast({
         title: "No items to send",
-        description: "Add items to your shopping list before sending to Walmart.",
+        description:
+          "Add items to your shopping list before sending to Walmart.",
       });
       return;
     }
@@ -143,31 +194,46 @@ export default function ShoppingListMasterView() {
   const parseItemsFromText = useCallback((raw: string): string[] => {
     return raw
       .split(/[\n,;]+/g)
-      .map(s => s.trim())
+      .map((s) => s.trim())
       .filter(Boolean);
   }, []);
 
-  const addManyItems = useCallback((raw: string) => {
-    const names = parseItemsFromText(raw);
-    if (!names.length) {
-      toast({ title: "No items found", description: "Type or say at least one item name." });
-      return;
-    }
-    names.forEach(name => {
-      addItem({
-        name,
-        quantity: 1,
-        unit: ""
+  const addManyItems = useCallback(
+    (raw: string) => {
+      const names = parseItemsFromText(raw);
+      if (!names.length) {
+        toast({
+          title: "No items found",
+          description: "Type or say at least one item name.",
+        });
+        return;
+      }
+      names.forEach((name) => {
+        addItem({
+          name,
+          quantity: 1,
+          unit: "",
+        });
       });
-    });
-    toast({ title: "Items added", description: `${names.length} items added to your shopping list.` });
-  }, [addItem, parseItemsFromText, toast]);
+      toast({
+        title: "Items added",
+        description: `${names.length} items added to your shopping list.`,
+      });
+    },
+    [addItem, parseItemsFromText, toast],
+  );
 
   const startListening = useCallback(() => {
     try {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        toast({ title: "Voice not supported", description: "Your browser does not support voice input. You can type items instead." });
+        toast({
+          title: "Voice not supported",
+          description:
+            "Your browser does not support voice input. You can type items instead.",
+        });
         return;
       }
 
@@ -178,7 +244,7 @@ export default function ShoppingListMasterView() {
 
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript as string;
-        setVoiceText(prev => prev ? `${prev}, ${transcript}` : transcript);
+        setVoiceText((prev) => (prev ? `${prev}, ${transcript}` : transcript));
       };
 
       recognition.onerror = () => {
@@ -193,7 +259,10 @@ export default function ShoppingListMasterView() {
       recognition.start();
       setIsListening(true);
     } catch {
-      toast({ title: "Voice error", description: "Unable to start voice recognition." });
+      toast({
+        title: "Voice error",
+        description: "Unable to start voice recognition.",
+      });
       setIsListening(false);
     }
   }, [toast]);
@@ -209,7 +278,7 @@ export default function ShoppingListMasterView() {
     setIsListening(false);
   }, []);
 
-  const groupedUnchecked = useMemo(()=>{
+  const groupedUnchecked = useMemo(() => {
     if (!opts.groupByAisle) return { All: uncheckedItems };
     const map: Record<string, ShoppingListItem[]> = {};
     for (const it of uncheckedItems) {
@@ -219,7 +288,7 @@ export default function ShoppingListMasterView() {
     return map;
   }, [uncheckedItems, opts.groupByAisle]);
 
-  const groupedChecked = useMemo(()=>{
+  const groupedChecked = useMemo(() => {
     if (!opts.groupByAisle) return { All: checkedItems };
     const map: Record<string, ShoppingListItem[]> = {};
     for (const it of checkedItems) {
@@ -230,7 +299,7 @@ export default function ShoppingListMasterView() {
   }, [checkedItems, opts.groupByAisle]);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -243,14 +312,6 @@ export default function ShoppingListMasterView() {
       >
         <div className="px-4 py-3 flex items-center gap-3">
           {/* Back Button */}
-          <Button
-            onClick={() => setLocation("/dashboard")}
-            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
-            size="icon"
-            data-testid="button-back-dashboard"
-          >
-            <Home className="h-5 w-5" />
-          </Button>
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
@@ -261,7 +322,7 @@ export default function ShoppingListMasterView() {
           {/* Info Button */}
           <Popover>
             <PopoverTrigger asChild>
-              <button 
+              <button
                 className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white text-sm font-bold flash-border ml-auto"
                 aria-label="How to use shopping list"
                 data-testid="shopping-list-info-button"
@@ -275,55 +336,76 @@ export default function ShoppingListMasterView() {
                   <Info className="h-4 w-4 text-orange-400" />
                   How to Use Your Shopping List
                 </h3>
-                      <div className="text-sm text-white/90 space-y-3">
-                        <div>
-                          <p className="font-semibold text-white mb-2">4 Ways to Add Items:</p>
-                          <ul className="space-y-2 text-white/80">
-                            <li>
-                              <strong className="text-white">Enter Barcode</strong> — Type barcode numbers manually (no camera needed). Great for products with barcodes.
-                            </li>
-                            <li>
-                              <strong className="text-white">Voice Add</strong> — Speak multiple items naturally: "milk, eggs, chicken breast." Hands-free and fast!
-                            </li>
-                            <li>
-                              <strong className="text-white">Bulk Add</strong> — Paste entire grocery lists from notes or emails. Supports newlines and commas.
-                            </li>
-                            <li>
-                              <strong className="text-white">Add Other Items</strong> — Detailed form for specific brands, quantities, and notes. Perfect for "Charmin toilet paper" or "Heinz ketchup."
-                            </li>
-                          </ul>
-                        </div>
-                        
-                        <div className="border-t border-white/10 pt-2">
-                          <p className="font-semibold text-white mb-1">Meal Ingredients:</p>
-                          <p className="text-white/80">
-                            Items from your meal plans automatically appear here. Add household items using the methods above for one complete list.
-                          </p>
-                        </div>
+                <div className="text-sm text-white/90 space-y-3">
+                  <div>
+                    <p className="font-semibold text-white mb-2">
+                      4 Ways to Add Items:
+                    </p>
+                    <ul className="space-y-2 text-white/80">
+                      <li>
+                        <strong className="text-white">Enter Barcode</strong> —
+                        Type barcode numbers manually (no camera needed). Great
+                        for products with barcodes.
+                      </li>
+                      <li>
+                        <strong className="text-white">Voice Add</strong> —
+                        Speak multiple items naturally: "milk, eggs, chicken
+                        breast." Hands-free and fast!
+                      </li>
+                      <li>
+                        <strong className="text-white">Bulk Add</strong> — Paste
+                        entire grocery lists from notes or emails. Supports
+                        newlines and commas.
+                      </li>
+                      <li>
+                        <strong className="text-white">Add Other Items</strong>{" "}
+                        — Detailed form for specific brands, quantities, and
+                        notes. Perfect for "Charmin toilet paper" or "Heinz
+                        ketchup."
+                      </li>
+                    </ul>
+                  </div>
 
-                        <div className="border-t border-white/10 pt-2">
-                          <p className="font-semibold text-white mb-1">Shop at Walmart:</p>
-                          <p className="text-white/80">
-                            Click "Shop at Walmart" to open Walmart's website with all your unchecked items pre-searched. Perfect for online ordering or price checking!
-                          </p>
-                        </div>
+                  <div className="border-t border-white/10 pt-2">
+                    <p className="font-semibold text-white mb-1">
+                      Meal Ingredients:
+                    </p>
+                    <p className="text-white/80">
+                      Items from your meal plans automatically appear here. Add
+                      household items using the methods above for one complete
+                      list.
+                    </p>
+                  </div>
 
-                        <div className="border-t border-white/10 pt-2">
-                          <p className="font-semibold text-white mb-1">Tips:</p>
-                          <ul className="list-disc list-inside space-y-1 text-white/80">
-                            <li>Delete items you already have at home</li>
-                            <li>Check items off as you shop—they move to the bottom</li>
-                            <li>Use "Clear Purchased" to remove checked items</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                  <div className="border-t border-white/10 pt-2">
+                    <p className="font-semibold text-white mb-1">
+                      Shop at Walmart:
+                    </p>
+                    <p className="text-white/80">
+                      Click "Shop at Walmart" to open Walmart's website with all
+                      your unchecked items pre-searched. Perfect for online
+                      ordering or price checking!
+                    </p>
+                  </div>
+
+                  <div className="border-t border-white/10 pt-2">
+                    <p className="font-semibold text-white mb-1">Tips:</p>
+                    <ul className="list-disc list-inside space-y-1 text-white/80">
+                      <li>Delete items you already have at home</li>
+                      <li>
+                        Check items off as you shop—they move to the bottom
+                      </li>
+                      <li>Use "Clear Purchased" to remove checked items</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
-      <div 
+      <div
         className="container mx-auto p-4 max-w-4xl space-y-4"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
       >
@@ -365,25 +447,36 @@ export default function ShoppingListMasterView() {
 
           {/* Options */}
           <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-white/80 text-sm" data-testid="option-group-by-aisle">
-              <Checkbox 
-                checked={opts.groupByAisle} 
-                onCheckedChange={()=>toggleOpt("groupByAisle")} 
+            <div
+              className="flex items-center gap-2 text-white/80 text-sm"
+              data-testid="option-group-by-aisle"
+            >
+              <Checkbox
+                checked={opts.groupByAisle}
+                onCheckedChange={() => toggleOpt("groupByAisle")}
                 className="h-3 w-3 border-white/40"
               />
               <span>Group by aisle</span>
             </div>
-            <div className="flex items-center gap-2 text-white/80 text-sm" data-testid="option-exclude-pantry">
-              <Checkbox 
-                checked={opts.excludePantryStaples} 
-                onCheckedChange={()=>toggleOpt("excludePantryStaples")} 
+            <div
+              className="flex items-center gap-2 text-white/80 text-sm"
+              data-testid="option-exclude-pantry"
+            >
+              <Checkbox
+                checked={opts.excludePantryStaples}
+                onCheckedChange={() => toggleOpt("excludePantryStaples")}
                 className="h-3 w-3 border-white/40"
               />
               <span>Exclude pantry staples</span>
             </div>
             <select
               value={opts.rounding}
-              onChange={(e)=>setOpts({ ...opts, rounding: e.target.value as "none" | "friendly" })}
+              onChange={(e) =>
+                setOpts({
+                  ...opts,
+                  rounding: e.target.value as "none" | "friendly",
+                })
+              }
               className="bg-white/10 border border-white/20 text-white/90 text-sm rounded-md px-2 py-1"
               title="Rounding"
               data-testid="select-rounding"
@@ -432,9 +525,9 @@ export default function ShoppingListMasterView() {
                 </span>
               </div>
               <div className="text-xs text-white/70 mt-2 max-w-md">
-                Tap the button below to open your shopping list as a search on Walmart.com.
-                You can choose your preferred brands, add to cart, and complete pickup or delivery
-                inside Walmart.
+                Tap the button below to open your shopping list as a search on
+                Walmart.com. You can choose your preferred brands, add to cart,
+                and complete pickup or delivery inside Walmart.
               </div>
             </div>
 
@@ -479,26 +572,33 @@ export default function ShoppingListMasterView() {
           <div className="rounded-2xl bg-white/5 border border-white/20 p-12 text-center backdrop-blur">
             <ShoppingCart className="h-16 w-16 text-white/30 mx-auto mb-4" />
             <p className="text-white/60 text-lg">Your shopping list is empty</p>
-            <p className="text-white/40 text-sm mt-2">Paste items or quick add to get started</p>
+            <p className="text-white/40 text-sm mt-2">
+              Paste items or quick add to get started
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {Object.entries(groupedUnchecked).map(([cat, arr])=>(
-              <div key={cat} className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
+            {Object.entries(groupedUnchecked).map(([cat, arr]) => (
+              <div
+                key={cat}
+                className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h3 className="text-white font-semibold">{cat}</h3>
-                    <span className="text-white/50 text-xs">{arr.length} items</span>
+                    <span className="text-white/50 text-xs">
+                      {arr.length} items
+                    </span>
                   </div>
                   <div className="flex gap-2">
-                    <Button 
+                    <Button
                       size="sm"
                       className="h-9 px-3 text-sm bg-white/10 border border-white/25 text-white active:scale-[.98]"
                       onClick={() => {
-                        const updated = items.map(i => 
-                          (cat === "All" || i.category === cat) 
-                            ? {...i, isChecked: true} 
-                            : i
+                        const updated = items.map((i) =>
+                          cat === "All" || i.category === cat
+                            ? { ...i, isChecked: true }
+                            : i,
                         );
                         replaceItems(updated);
                       }}
@@ -506,14 +606,14 @@ export default function ShoppingListMasterView() {
                     >
                       Check all
                     </Button>
-                    <Button 
+                    <Button
                       size="sm"
                       className="h-9 px-3 text-sm bg-white/10 border border-white/25 text-white active:scale-[.98]"
                       onClick={() => {
-                        const updated = items.map(i => 
-                          (cat === "All" || i.category === cat) 
-                            ? {...i, isChecked: false} 
-                            : i
+                        const updated = items.map((i) =>
+                          cat === "All" || i.category === cat
+                            ? { ...i, isChecked: false }
+                            : i,
                         );
                         replaceItems(updated);
                       }}
@@ -524,11 +624,11 @@ export default function ShoppingListMasterView() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  {arr.map(item => (
-                    <div 
-                      key={item.id} 
+                  {arr.map((item) => (
+                    <div
+                      key={item.id}
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                        item.isChecked ? 'bg-white/5 opacity-50' : 'bg-white/10'
+                        item.isChecked ? "bg-white/5 opacity-50" : "bg-white/10"
                       }`}
                     >
                       <Checkbox
@@ -548,7 +648,9 @@ export default function ShoppingListMasterView() {
                             }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
-                                updateItem(item.id, { name: (e.target as HTMLInputElement).value });
+                                updateItem(item.id, {
+                                  name: (e.target as HTMLInputElement).value,
+                                });
                                 setEditingId(null);
                               }
                             }}
@@ -560,8 +662,12 @@ export default function ShoppingListMasterView() {
                             onBlur={onInlineEdit(item.id, "quantity")}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
-                                const val = Number((e.target as HTMLInputElement).value);
-                                updateItem(item.id, { quantity: Number.isFinite(val) ? val : 1 });
+                                const val = Number(
+                                  (e.target as HTMLInputElement).value,
+                                );
+                                updateItem(item.id, {
+                                  quantity: Number.isFinite(val) ? val : 1,
+                                });
                               }
                             }}
                             className="w-16 bg-black/30 border-white/30 text-white h-8"
@@ -573,7 +679,9 @@ export default function ShoppingListMasterView() {
                             onBlur={onInlineEdit(item.id, "unit")}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
-                                updateItem(item.id, { unit: (e.target as HTMLInputElement).value });
+                                updateItem(item.id, {
+                                  unit: (e.target as HTMLInputElement).value,
+                                });
                               }
                             }}
                             className="w-20 bg-black/30 border-white/30 text-white h-8"
@@ -591,7 +699,9 @@ export default function ShoppingListMasterView() {
                         </>
                       ) : (
                         <>
-                          <div className={`flex-1 text-white ${item.isChecked ? 'line-through' : ''}`}>
+                          <div
+                            className={`flex-1 text-white ${item.isChecked ? "line-through" : ""}`}
+                          >
                             {item.name}
                           </div>
                           <div className="text-white/70 text-sm shrink-0">
@@ -636,17 +746,23 @@ export default function ShoppingListMasterView() {
                       Purchased Today ({checkedItems.length})
                     </span>
                   </div>
-                  {purchasedOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                  {purchasedOpen ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
                 </button>
                 {purchasedOpen && (
                   <div className="p-4 pt-0 space-y-4">
-                    {Object.entries(groupedChecked).map(([cat, arr])=>(
+                    {Object.entries(groupedChecked).map(([cat, arr]) => (
                       <div key={cat}>
-                        <h4 className="text-white/70 text-sm font-semibold mb-2">{cat}</h4>
+                        <h4 className="text-white/70 text-sm font-semibold mb-2">
+                          {cat}
+                        </h4>
                         <div className="space-y-2">
-                          {arr.map(item => (
-                            <div 
-                              key={item.id} 
+                          {arr.map((item) => (
+                            <div
+                              key={item.id}
                               className="flex items-center gap-3 p-2 rounded-lg bg-white/5 opacity-60"
                             >
                               <Checkbox
@@ -687,7 +803,9 @@ export default function ShoppingListMasterView() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
             <div className="w-full max-w-md rounded-2xl bg-black/90 border border-white/20 p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-white text-lg font-semibold">Voice Add Items</h2>
+                <h2 className="text-white text-lg font-semibold">
+                  Voice Add Items
+                </h2>
                 <Button
                   size="icon"
                   variant="ghost"
@@ -701,8 +819,11 @@ export default function ShoppingListMasterView() {
                 </Button>
               </div>
               <p className="text-xs text-white/70">
-                Speak your items naturally, like: <span className="italic">"milk, eggs, chicken breast, spinach"</span>. 
-                You can also edit the text below before adding.
+                Speak your items naturally, like:{" "}
+                <span className="italic">
+                  "milk, eggs, chicken breast, spinach"
+                </span>
+                . You can also edit the text below before adding.
               </p>
               <textarea
                 value={voiceText}
@@ -713,7 +834,9 @@ export default function ShoppingListMasterView() {
               />
               <div className="flex items-center justify-between">
                 <div className="text-xs text-white/60">
-                  {isListening ? "Listening..." : "Tap Start to capture your voice."}
+                  {isListening
+                    ? "Listening..."
+                    : "Tap Start to capture your voice."}
                 </div>
                 <div className="flex gap-2">
                   {!isListening ? (
@@ -760,7 +883,9 @@ export default function ShoppingListMasterView() {
         {barcodeModalOpen && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-black/90 border border-white/20 rounded-2xl p-6 w-full max-w-sm space-y-4">
-              <h3 className="text-white text-xl font-semibold">Enter Barcode</h3>
+              <h3 className="text-white text-xl font-semibold">
+                Enter Barcode
+              </h3>
               <Input
                 value={barcodeText}
                 onChange={(e) => setBarcodeText(e.target.value)}
@@ -787,13 +912,13 @@ export default function ShoppingListMasterView() {
                         name: "Unknown Item",
                         quantity: 1,
                         unit: "",
-                        notes: `Barcode: ${barcodeText.trim()}`
+                        notes: `Barcode: ${barcodeText.trim()}`,
                       });
                       setBarcodeText("");
                       setBarcodeModalOpen(false);
                       toast({
                         title: "Item added",
-                        description: `Barcode ${barcodeText.trim()} added`
+                        description: `Barcode ${barcodeText.trim()} added`,
                       });
                     }
                   }}
@@ -812,7 +937,9 @@ export default function ShoppingListMasterView() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
             <div className="w-full max-w-md rounded-2xl bg-black/90 border border-white/20 p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-white text-lg font-semibold">Bulk Add Items</h2>
+                <h2 className="text-white text-lg font-semibold">
+                  Bulk Add Items
+                </h2>
                 <Button
                   size="icon"
                   variant="ghost"

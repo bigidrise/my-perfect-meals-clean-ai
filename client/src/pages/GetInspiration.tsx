@@ -309,31 +309,35 @@ export default function GetInspiration() {
         className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-4 py-3 flex items-center gap-3">
-          {/* Back to Dashboard */}
-          <Button
-            onClick={() => setLocation("/dashboard")}
-            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
-            size="icon"
-            data-testid="button-home"
-          >
-            <Home className="h-5 w-5" />
-          </Button>
-
+        <div className="px-8 py-3 flex items-center gap-3">
           {/* Title */}
           <h1 className="text-lg font-bold text-white">
             Get Inspiration
           </h1>
-
           <div className="ml-auto" />
         </div>
       </div>
 
       {/* Main Content */}
-      <div 
+      <div
         className="max-w-4xl mx-auto px-4 pb-8"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
+        {/* Page Header Card */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-center mb-8"
+        >
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Inspirational quotes to start your day
+          </h2>
+          <p className="text-sm text-white/70">
+            Quick mindset boosts when you need a reset.
+          </p>
+        </motion.div>
+
         {/* Daily Motivation Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}

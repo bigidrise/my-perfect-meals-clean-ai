@@ -861,15 +861,7 @@ export default function MyBiometrics() {
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Back to Dashboard */}
-          <Button
-            onClick={() => setLocation("/dashboard")}
-            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
-            size="icon"
-            data-testid="button-back-dashboard"
-          >
-            <Home className="h-5 w-5" />
-          </Button>
+        
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
