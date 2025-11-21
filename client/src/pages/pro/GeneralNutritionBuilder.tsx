@@ -1713,7 +1713,8 @@ export default function WeeklyMealBoard() {
         open={premadePickerOpen}
         onClose={() => setPremadePickerOpen(false)}
         mealType={premadePickerSlot}
-        onMealSelect={handlePremadeSelect} // Pass the handler here
+        onMealSelect={handlePremadeSelect}
+        showMacroTargeting={true}
       />
       </div>
     </motion.div>

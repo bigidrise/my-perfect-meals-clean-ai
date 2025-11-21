@@ -521,6 +521,9 @@ export default function MealPremadePicker({
       
       console.log(`🎨 Generating ${mealType} meal with ingredients:`, ingredientsList);
       
+      // Get custom macro targets if enabled
+      const customMacroTargets = macroTargetingState.serializeForRequest();
+      
       // Use the SAME endpoint as the working AI Meal Creator
       const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
@@ -528,7 +531,8 @@ export default function MealPremadePicker({
         body: JSON.stringify({
           fridgeItems: ingredientsList,
           userId: 1,
-          mealType: mealType // Pass meal type to help with image generation
+          mealType: mealType, // Pass meal type to help with image generation
+          ...(customMacroTargets && { macroTargets: customMacroTargets })
         }),
         signal: abortControllerRef.current.signal
       });
@@ -644,6 +648,11 @@ export default function MealPremadePicker({
             {mealType.charAt(0).toUpperCase() + mealType.slice(1)} Premades
           </DialogTitle>
         </DialogHeader>
+
+        {/* Macro Targeting Controls - Trainer Features Only */}
+        {showMacroTargeting && (
+          <MacroTargetingControls state={macroTargetingState} />
+        )}
 
         {/* Category Tabs - Purple Style (Matching Meal Ingredient Picker) */}
         <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">

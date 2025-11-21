@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 
 export interface MacroTargets {
   protein: number | '';
-  carbs: number | '';
+  fibrousCarbs: number | '';
+  starchyCarbs: number | '';
   fat: number | '';
 }
 
@@ -12,12 +13,17 @@ export interface MacroTargetingState {
   toggleEnabled: () => void;
   updateTarget: (field: keyof MacroTargets, value: number | '') => void;
   applyPreset: (preset: MacroTargets) => void;
-  serializeForRequest: () => { protein_g: number; carbs_g: number; fat_g: number } | null;
+  serializeForRequest: () => { 
+    protein_g?: number; 
+    fibrous_carbs_g?: number; 
+    starchy_carbs_g?: number; 
+    fat_g?: number 
+  } | null;
 }
 
 const PRESETS = {
-  PRESET_1: { protein: 50, carbs: 30, fat: 20 },
-  PRESET_2: { protein: 40, carbs: 40, fat: 15 },
+  PRESET_1: { protein: 50, fibrousCarbs: 15, starchyCarbs: 30, fat: 20 },
+  PRESET_2: { protein: 40, fibrousCarbs: 20, starchyCarbs: 40, fat: 15 },
 };
 
 /**
@@ -30,7 +36,8 @@ export function useMacroTargeting(storageKey: string): MacroTargetingState {
   const [enabled, setEnabled] = useState(false);
   const [targets, setTargets] = useState<MacroTargets>({
     protein: '',
-    carbs: '',
+    fibrousCarbs: '',
+    starchyCarbs: '',
     fat: '',
   });
 
@@ -43,7 +50,8 @@ export function useMacroTargeting(storageKey: string): MacroTargetingState {
         setEnabled(parsed.enabled || false);
         setTargets({
           protein: parsed.protein ?? '',
-          carbs: parsed.carbs ?? '',
+          fibrousCarbs: parsed.fibrousCarbs ?? '',
+          starchyCarbs: parsed.starchyCarbs ?? '',
           fat: parsed.fat ?? '',
         });
       }
@@ -60,7 +68,8 @@ export function useMacroTargeting(storageKey: string): MacroTargetingState {
         JSON.stringify({
           enabled,
           protein: targets.protein,
-          carbs: targets.carbs,
+          fibrousCarbs: targets.fibrousCarbs,
+          starchyCarbs: targets.starchyCarbs,
           fat: targets.fat,
         })
       );
@@ -81,23 +90,37 @@ export function useMacroTargeting(storageKey: string): MacroTargetingState {
     setTargets(preset);
   }, []);
 
-  const serializeForRequest = useCallback((): { protein_g: number; carbs_g: number; fat_g: number } | null => {
+  const serializeForRequest = useCallback((): { 
+    protein_g?: number; 
+    fibrous_carbs_g?: number; 
+    starchy_carbs_g?: number; 
+    fat_g?: number 
+  } | null => {
     if (!enabled) return null;
 
-    const protein = typeof targets.protein === 'number' ? targets.protein : null;
-    const carbs = typeof targets.carbs === 'number' ? targets.carbs : null;
-    const fat = typeof targets.fat === 'number' ? targets.fat : null;
+    const result: { 
+      protein_g?: number; 
+      fibrous_carbs_g?: number; 
+      starchy_carbs_g?: number; 
+      fat_g?: number 
+    } = {};
 
-    // Only return if all three values are valid numbers
-    if (protein !== null && carbs !== null && fat !== null) {
-      return {
-        protein_g: protein,
-        carbs_g: carbs,
-        fat_g: fat,
-      };
+    // Add only the fields that have valid numbers (all fields are optional)
+    if (typeof targets.protein === 'number' && targets.protein > 0) {
+      result.protein_g = targets.protein;
+    }
+    if (typeof targets.fibrousCarbs === 'number' && targets.fibrousCarbs > 0) {
+      result.fibrous_carbs_g = targets.fibrousCarbs;
+    }
+    if (typeof targets.starchyCarbs === 'number' && targets.starchyCarbs > 0) {
+      result.starchy_carbs_g = targets.starchyCarbs;
+    }
+    if (typeof targets.fat === 'number' && targets.fat > 0) {
+      result.fat_g = targets.fat;
     }
 
-    return null;
+    // Return the object if at least one field is set, otherwise null
+    return Object.keys(result).length > 0 ? result : null;
   }, [enabled, targets]);
 
   return {

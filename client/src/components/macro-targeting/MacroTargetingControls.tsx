@@ -26,12 +26,12 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
       {enabled && (
         <div className="space-y-2 mt-3 animate-in fade-in duration-200">
           <p className="text-white/60 text-xs mb-2">
-            AI will generate a meal hitting these exact macros (±5g tolerance)
+            AI will generate a meal hitting these macros (±5g tolerance). All fields are optional.
           </p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="text-white/80 text-xs font-medium block mb-1">
-                Protein grams
+                Protein (g)
               </label>
               <Input
                 type="number"
@@ -49,16 +49,34 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
 
             <div>
               <label className="text-white/80 text-xs font-medium block mb-1">
-                Carb grams
+                Fibrous Carbs (g)
               </label>
               <Input
                 type="number"
                 min="0"
                 max="200"
-                value={targets.carbs}
+                value={targets.fibrousCarbs}
                 onChange={(e) => {
                   const newValue = e.target.value === '' ? '' : Number(e.target.value);
-                  updateTarget('carbs', newValue);
+                  updateTarget('fibrousCarbs', newValue);
+                }}
+                placeholder="15"
+                className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+              />
+            </div>
+
+            <div>
+              <label className="text-white/80 text-xs font-medium block mb-1">
+                Starchy Carbs (g)
+              </label>
+              <Input
+                type="number"
+                min="0"
+                max="200"
+                value={targets.starchyCarbs}
+                onChange={(e) => {
+                  const newValue = e.target.value === '' ? '' : Number(e.target.value);
+                  updateTarget('starchyCarbs', newValue);
                 }}
                 placeholder="30"
                 className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
@@ -67,7 +85,7 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
 
             <div>
               <label className="text-white/80 text-xs font-medium block mb-1">
-                Fat grams
+                Fat (g)
               </label>
               <Input
                 type="number"
@@ -89,13 +107,13 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
               onClick={() => applyPreset(PRESETS.PRESET_1)}
               className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
             >
-              50p / 30c / 20f
+              50p / 15fc / 30sc / 20f
             </button>
             <button
               onClick={() => applyPreset(PRESETS.PRESET_2)}
               className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
             >
-              40p / 40c / 15f
+              40p / 20fc / 40sc / 15f
             </button>
           </div>
         </div>
