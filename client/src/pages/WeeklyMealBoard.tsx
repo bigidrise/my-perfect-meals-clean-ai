@@ -956,9 +956,7 @@ export default function WeeklyMealBoard() {
 
           {/* Info & Teach Me Buttons */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center h-10 w-10">
-              <InfoButton featureId="weekly-meal-board" size={20} />
-            </div>
+            
             <button
               onClick={() => {
                 open();

@@ -536,6 +536,7 @@ const FridgeRescuePage = () => {
               className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
             >
               <ArrowLeft className="h-5 w-5" />
+              <span className="text-sm font-medium">Back</span>
             </button>
 
             {/* Title */}
@@ -543,13 +544,7 @@ const FridgeRescuePage = () => {
 
             {/* Info & Teach Me Buttons */}
             <div className="ml-auto flex items-center gap-2">
-              <button
-                onClick={() => setShowInfoModal(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold"
-                aria-label="How to use Fridge Rescue"
-              >
-                ?
-              </button>
+              
               <button
                 onClick={() => {
                   open();
