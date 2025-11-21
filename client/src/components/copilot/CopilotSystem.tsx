@@ -1,13 +1,32 @@
-import React from "react";
-import { CopilotProvider, CopilotAction } from "./CopilotContext";
+import React, { useEffect } from "react";
+import { CopilotProvider, CopilotAction, useCopilot } from "./CopilotContext";
 import { CopilotButton } from "./CopilotButton";
 import { CopilotSheet } from "./CopilotSheet";
-import { executeCommand } from "./CopilotCommandRegistry";
+import { executeCommand, setResponseHandler } from "./CopilotCommandRegistry";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
   onAction?: (action: CopilotAction) => void | Promise<void>;
 }
+
+const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { setLastResponse } = useCopilot();
+
+  useEffect(() => {
+    setResponseHandler((response) => {
+      console.log("📖 Setting knowledge response:", response?.title);
+      setLastResponse(response);
+    });
+  }, [setLastResponse]);
+
+  return (
+    <>
+      {children}
+      <CopilotButton />
+      <CopilotSheet />
+    </>
+  );
+};
 
 export const CopilotSystem: React.FC<CopilotSystemProps> = ({ 
   children,
@@ -23,9 +42,9 @@ export const CopilotSystem: React.FC<CopilotSystemProps> = ({
 
   return (
     <CopilotProvider onAction={handleAction}>
-      {children}
-      <CopilotButton />
-      <CopilotSheet />
+      <CopilotSystemInner>
+        {children}
+      </CopilotSystemInner>
     </CopilotProvider>
   );
 };

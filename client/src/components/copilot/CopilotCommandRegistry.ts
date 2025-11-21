@@ -1,12 +1,15 @@
-import { CopilotAction } from "./CopilotContext";
+import { CopilotAction, KnowledgeResponse } from "./CopilotContext";
 import { boostProteinNextMeal, generateOnePanFridgeRescue } from "@/lib/copilotActions";
+import { explainFeature } from "./commands/explainFeature";
 
 type CommandHandler = () => Promise<void>;
 type NavigationHandler = (path: string) => void;
 type ModalHandler = (modalId: string) => void;
+type ResponseHandler = (response: KnowledgeResponse | null) => void;
 
 let navigationCallback: NavigationHandler | null = null;
 let modalCallback: ModalHandler | null = null;
+let responseCallback: ResponseHandler | null = null;
 
 export function setNavigationHandler(fn: NavigationHandler) {
   navigationCallback = fn;
@@ -14,6 +17,10 @@ export function setNavigationHandler(fn: NavigationHandler) {
 
 export function setModalHandler(fn: ModalHandler) {
   modalCallback = fn;
+}
+
+export function setResponseHandler(fn: ResponseHandler) {
+  responseCallback = fn;
 }
 
 const Commands: Record<string, CommandHandler> = {
@@ -103,6 +110,51 @@ const Commands: Record<string, CommandHandler> = {
 
   "meals.addHiddenVeggies": async () => {
     console.log("➡️ Executing: meals.addHiddenVeggies");
+  },
+
+  "explain.fridge-rescue": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = await explainFeature("fridge-rescue");
+    responseCallback(response);
+  },
+
+  "explain.weekly-board": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = await explainFeature("weekly-board");
+    responseCallback(response);
+  },
+
+  "explain.subscriptions": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = await explainFeature("subscriptions");
+    responseCallback(response);
+  },
+
+  "explain.ai-meal-builder": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = await explainFeature("ai-meal-builder");
+    responseCallback(response);
+  },
+
+  "explain.shopping-list": async () => {
+    if (!responseCallback) {
+      console.warn("⚠️ Response handler not available");
+      return;
+    }
+    const response = await explainFeature("shopping-list");
+    responseCallback(response);
   },
 };
 

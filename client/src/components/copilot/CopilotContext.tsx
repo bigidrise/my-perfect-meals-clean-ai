@@ -39,12 +39,20 @@ export interface CopilotSuggestion {
   emphasis?: "low" | "medium" | "high";
 }
 
+export interface KnowledgeResponse {
+  title: string;
+  description: string;
+  howTo?: string[];
+  tips?: string[];
+}
+
 interface CopilotState {
   isOpen: boolean;
   mode: CopilotMode;
   contextInfo: CopilotContextInfo;
   suggestions: CopilotSuggestion[];
   lastQuery: string;
+  lastResponse: KnowledgeResponse | null;
 }
 
 interface CopilotContextValue extends CopilotState {
@@ -56,6 +64,7 @@ interface CopilotContextValue extends CopilotState {
   setSuggestions: (suggestions: CopilotSuggestion[]) => void;
   runAction: (action: CopilotAction) => void;
   setLastQuery: (q: string) => void;
+  setLastResponse: (response: KnowledgeResponse | null) => void;
 }
 
 const CopilotContext = createContext<CopilotContextValue | null>(null);
@@ -85,6 +94,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
   });
   const [suggestions, setSuggestions] = useState<CopilotSuggestion[]>([]);
   const [lastQuery, setLastQuery] = useState("");
+  const [lastResponse, setLastResponse] = useState<KnowledgeResponse | null>(null);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -134,6 +144,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       contextInfo,
       suggestions,
       lastQuery,
+      lastResponse,
       open,
       close,
       toggle,
@@ -142,6 +153,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       setSuggestions,
       runAction,
       setLastQuery,
+      setLastResponse,
     }),
     [
       isOpen,
@@ -149,6 +161,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       contextInfo,
       suggestions,
       lastQuery,
+      lastResponse,
       open,
       close,
       toggle,
