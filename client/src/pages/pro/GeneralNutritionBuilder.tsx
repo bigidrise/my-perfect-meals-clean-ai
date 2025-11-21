@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
+import { proStore } from "@/lib/proData";
 import { MealCard, Meal } from "@/components/MealCard";
 import { getWeekBoard, saveWeekBoard, removeMealFromCurrentWeek, getCurrentWeekBoard, getWeekBoardByDate, putWeekBoard, type WeekBoard, weekDates, getDayLists, setDayLists, cloneDayLists } from "@/lib/boardApi";
 import { MealPickerDrawer } from "@/components/pickers/MealPickerDrawer";
@@ -77,6 +78,21 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Get clientId from route params for Pro context
+  const [, params] = useRoute("/pro/clients/:id/general-nutrition-builder");
+  const clientId = params?.id || "1"; // Default to "1" for standalone mode
+
+  // Coach Targets - READ ONLY (set from Client Dashboard)
+  const coachTargetsDisplay = useMemo(() => {
+    const targets = proStore.getTargets(clientId);
+    return {
+      protein: targets.protein || 0,
+      starchy: targets.starchyCarbs || 0,
+      fibrous: targets.fibrousCarbs || 0,
+      fats: targets.fat || 0,
+    };
+  }, [clientId]);
 
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
@@ -1298,6 +1314,54 @@ export default function WeeklyMealBoard() {
           </section>
           ))
         )}
+
+        {/* ================================
+            COACH TARGETS (General Nutrition Builder) - READ ONLY
+            Set from Client Dashboard
+        ==================================== */}
+        <div className="col-span-full mt-6 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/20 p-6">
+          <h2 className="text-white text-lg font-bold mb-4 flex items-center gap-2">
+            🎯 Coach Targets
+          </h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* Protein */}
+            <div className="flex flex-col">
+              <label className="text-sm text-white/70 mb-1">Protein (g)</label>
+              <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                {coachTargetsDisplay.protein}
+              </div>
+            </div>
+
+            {/* Starchy Carbs */}
+            <div className="flex flex-col">
+              <label className="text-sm text-white/70 mb-1">Starchy Carbs (g)</label>
+              <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                {coachTargetsDisplay.starchy}
+              </div>
+            </div>
+
+            {/* Fibrous Carbs */}
+            <div className="flex flex-col">
+              <label className="text-sm text-white/70 mb-1">Fibrous Carbs (g)</label>
+              <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                {coachTargetsDisplay.fibrous}
+              </div>
+            </div>
+
+            {/* Fats */}
+            <div className="flex flex-col">
+              <label className="text-sm text-white/70 mb-1">Fats (g)</label>
+              <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                {coachTargetsDisplay.fats}
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-4 text-sm text-white/60 text-center">
+            Set targets from Client Dashboard
+          </p>
+        </div>
 
         {/* Daily Totals Summary */}
         <div className="col-span-full">

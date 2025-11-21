@@ -250,8 +250,8 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   // Dynamic meal tracking (Meal 6+)
   const [dynamicMealCount, setDynamicMealCount] = useState(0);
 
-  // Coach Targets state (Performance Builder)
-  const [coachTargets, setCoachTargets] = useState(() => {
+  // Coach Targets - READ ONLY (set from Client Dashboard)
+  const coachTargetsDisplay = useMemo(() => {
     const targets = proStore.getTargets(clientId);
     return {
       protein: targets.protein || 0,
@@ -259,27 +259,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       fibrous: targets.fibrousCarbs || 0,
       fats: targets.fat || 0,
     };
-  });
-
-  // Track when targets are saved to force coachMacroTargets recalculation
-  const [targetsSaveCount, setTargetsSaveCount] = useState(0);
-
-  // Save coach targets to proStore
-  const saveCoachTargets = useCallback(() => {
-    proStore.setTargets(clientId, {
-      protein: coachTargets.protein,
-      starchyCarbs: coachTargets.starchy,
-      fibrousCarbs: coachTargets.fibrous,
-      fat: coachTargets.fats,
-      flags: proStore.getTargets(clientId).flags,
-      carbDirective: proStore.getTargets(clientId).carbDirective,
-    });
-    setTargetsSaveCount(prev => prev + 1); // Force coachMacroTargets recalculation
-    toast({
-      title: "✅ Coach Targets Saved",
-      description: "Macro targets updated successfully.",
-    });
-  }, [clientId, coachTargets, toast]);
+  }, [clientId]);
 
   // 🔋 AI Meal Creator localStorage persistence (copy Weekly Meal Board pattern)
   const AI_MEALS_CACHE_KEY = "ai-athlete-meal-creator-cached-meals";
@@ -861,7 +841,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       carbs: totalCarbs,
       fat,
     };
-  }, [clientId, targetsSaveCount]); // Re-calculate when targets are saved
+  }, [clientId]);
 
   // Handle Set Macros to Biometrics
   const handleSetMacrosToBiometrics = useCallback(() => {
@@ -1481,8 +1461,8 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 </section>
 
                 {/* ================================
-                    COACH TARGETS (Performance Builder)
-                    Repositioned + 2-Column Black Glass
+                    COACH TARGETS (Performance Builder) - READ ONLY
+                    Set from Client Dashboard
                 ==================================== */}
                 <div className="col-span-full mt-6 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/20 p-6">
                   <h2 className="text-white text-lg font-bold mb-4 flex items-center gap-2">
@@ -1493,66 +1473,39 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                     {/* Protein */}
                     <div className="flex flex-col">
                       <label className="text-sm text-white/70 mb-1">Protein (g)</label>
-                      <input
-                        type="number"
-                        value={coachTargets.protein || ""}
-                        onChange={(e) =>
-                          setCoachTargets({ ...coachTargets, protein: Number(e.target.value) })
-                        }
-                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
-                        placeholder="0"
-                      />
+                      <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                        {coachTargetsDisplay.protein}
+                      </div>
                     </div>
 
                     {/* Starchy Carbs */}
                     <div className="flex flex-col">
                       <label className="text-sm text-white/70 mb-1">Starchy Carbs (g)</label>
-                      <input
-                        type="number"
-                        value={coachTargets.starchy || ""}
-                        onChange={(e) =>
-                          setCoachTargets({ ...coachTargets, starchy: Number(e.target.value) })
-                        }
-                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
-                        placeholder="0"
-                      />
+                      <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                        {coachTargetsDisplay.starchy}
+                      </div>
                     </div>
 
                     {/* Fibrous Carbs */}
                     <div className="flex flex-col">
                       <label className="text-sm text-white/70 mb-1">Fibrous Carbs (g)</label>
-                      <input
-                        type="number"
-                        value={coachTargets.fibrous || ""}
-                        onChange={(e) =>
-                          setCoachTargets({ ...coachTargets, fibrous: Number(e.target.value) })
-                        }
-                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
-                        placeholder="0"
-                      />
+                      <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                        {coachTargetsDisplay.fibrous}
+                      </div>
                     </div>
 
                     {/* Fats */}
                     <div className="flex flex-col">
                       <label className="text-sm text-white/70 mb-1">Fats (g)</label>
-                      <input
-                        type="number"
-                        value={coachTargets.fats || ""}
-                        onChange={(e) =>
-                          setCoachTargets({ ...coachTargets, fats: Number(e.target.value) })
-                        }
-                        className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2"
-                        placeholder="0"
-                      />
+                      <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2">
+                        {coachTargetsDisplay.fats}
+                      </div>
                     </div>
                   </div>
 
-                  <button
-                    onClick={saveCoachTargets}
-                    className="mt-5 w-full bg-lime-600 hover:bg-lime-700 text-white font-semibold py-3 rounded-xl border border-white/20"
-                  >
-                    Save Coach Targets
-                  </button>
+                  <p className="mt-4 text-sm text-white/60 text-center">
+                    Set targets from Client Dashboard
+                  </p>
                 </div>
               </>
             );
