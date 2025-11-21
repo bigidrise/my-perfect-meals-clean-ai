@@ -18,9 +18,14 @@ import { useVersionCheck } from "@/hooks/useVersionCheck";
 import { UpdateBanner } from "@/components/UpdateBanner";
 import { ForcedUpdateModal } from "@/components/ForcedUpdateModal";
 import { updateApp } from "@/lib/updateApp";
+import { CopilotSystem } from "@/components/copilot/CopilotSystem";
+import type { CopilotAction } from "@/components/copilot/CopilotContext";
+import { useLocation } from "wouter";
+
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const { versionState } = useVersionCheck();
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     // Quick app readiness check
@@ -41,6 +46,27 @@ export default function App() {
     updateApp();
   };
 
+  const handleCopilotAction = (action: CopilotAction) => {
+    switch (action.type) {
+      case "navigate":
+        if (action.to) {
+          setLocation(action.to);
+        }
+        break;
+      case "open-modal":
+        console.log("[Copilot] Open modal:", action.id);
+        // Hook into modal system when needed
+        break;
+      case "run-command":
+        console.log("[Copilot] Run command:", action.id);
+        // Hook into command bus when needed
+        break;
+      case "custom":
+        console.log("[Copilot] Custom action:", action.payload);
+        break;
+    }
+  };
+
   if (!isAppReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black flex items-center justify-center">
@@ -59,7 +85,7 @@ export default function App() {
           <AuthProvider>
             <AudioProvider>
               <ScrollManager />
-              
+
               {/* Forced Update Modal (blocks app access if version too old) */}
               {versionState?.forceUpdate && versionState.remoteInfo && (
                 <ForcedUpdateModal
@@ -68,16 +94,17 @@ export default function App() {
                   onUpdate={handleUpdate}
                 />
               )}
-              
+
               {/* Update Banner removed - focus event auto-reload handles updates */}
-              
-              <AppRouter>
-                <Router />
-              </AppRouter>
-              <AvatarSelector />
-              <ChefVoiceAssistant />
-              <VoiceConcierge />
-              <Toaster />
+              <CopilotSystem onAction={handleCopilotAction}>
+                <AppRouter>
+                  <Router />
+                </AppRouter>
+                <AvatarSelector />
+                <ChefVoiceAssistant />
+                <VoiceConcierge />
+                <Toaster />
+              </CopilotSystem>
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>
