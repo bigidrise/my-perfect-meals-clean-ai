@@ -1195,10 +1195,10 @@ export default function GLP1MealBuilder() {
 
       {/* Main Content Wrapper */}
       <div
-        className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4rem)" }}
+        className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5.5rem)", marginTop: "0.5rem" }}
       >
-        <div className="px-4 py-4 flex flex-col gap-3">
+        <div className="px-4 py-3 flex flex-col gap-3">
           {/* ROW 1: Week Dates (centered) */}
           <div className="flex justify-center">
             <div className="flex items-center gap-3">
