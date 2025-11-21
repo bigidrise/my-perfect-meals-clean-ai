@@ -949,6 +949,15 @@ export default function WeeklyMealBoard() {
           </h1>
 
           <div className="ml-auto" />
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="flex items-center justify-center h-10 w-10 rounded-2xl bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl flash-border"
+            aria-label="How to use Weekly Meal Board"
+          >
+            ?
+          </button>
         </div>
       </div>
 
@@ -960,8 +969,8 @@ export default function WeeklyMealBoard() {
       <div className="mb-6 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl">
         <div className="px-4 py-4 flex flex-col gap-3">
 
-          {/* ROW 1: Week Navigation + Info Button */}
-          <div className="flex items-center justify-center relative">
+          {/* ROW 1: Week Navigation */}
+          <div className="flex items-center justify-center">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -983,13 +992,6 @@ export default function WeeklyMealBoard() {
                 ›
               </button>
             </div>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="absolute right-0 flex items-center justify-center h-10 w-10 rounded-2xl bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
-              aria-label="How to use Weekly Meal Board"
-            >
-              ?
-            </button>
           </div>
 
           {/* ROW 2: Title (Centered) */}
