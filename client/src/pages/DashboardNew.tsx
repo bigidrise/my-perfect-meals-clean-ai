@@ -8,8 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card
-  import { Settings, Sparkles } from "lucide-react";
+} from "@/components/ui/card";
 import {
   Calculator,
   ShoppingCart,
@@ -18,10 +17,10 @@ import {
   User,
   TrendingUp,
   Flame,
-  Grid,
   Camera,
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
+import { HubControlIcon } from "@/components/icons/HubControlIcon";
 import OpenAI from "openai"; // Import OpenAI
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -137,7 +136,7 @@ export default function DashboardNew() {
             className="p-2 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-black/70 hover:border-orange-500/30 transition-all"
             data-testid="button-my-hub"
           >
-            <Grid className="h-6 w-6 text-orange-400" />
+            <HubControlIcon size="sm" />
           </button>
         </ProfileSheet>
       </div>
