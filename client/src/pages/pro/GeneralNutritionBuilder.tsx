@@ -945,7 +945,7 @@ export default function WeeklyMealBoard() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">
-            Weekly Meal Board
+            General Nutrition Builder
           </h1>
 
           <div className="ml-auto" />
@@ -1536,7 +1536,7 @@ export default function WeeklyMealBoard() {
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
-        showMacroTargeting={false}
+        showMacroTargeting={true}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
