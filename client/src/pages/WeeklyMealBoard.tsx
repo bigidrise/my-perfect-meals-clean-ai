@@ -37,6 +37,7 @@ import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { InfoButton } from "@/components/common/InfoButton";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -78,6 +79,7 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { runAction, open } = useCopilot();
 
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
@@ -952,9 +954,23 @@ export default function WeeklyMealBoard() {
 
           <div className="ml-auto" />
 
-          {/* Info Button */}
-          <div className="flex items-center justify-center h-10 w-10">
-            <InfoButton featureId="weekly-meal-board" size={20} />
+          {/* Info & Teach Me Buttons */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center h-10 w-10">
+              <InfoButton featureId="weekly-meal-board" size={20} />
+            </div>
+            <button
+              onClick={() => {
+                open();
+                runAction({
+                  type: "run-command",
+                  id: "walkthrough.start.weekly-board",
+                });
+              }}
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 hover:bg-white/10"
+            >
+              Teach me
+            </button>
           </div>
         </div>
       </div>
@@ -1143,6 +1159,7 @@ export default function WeeklyMealBoard() {
                     <Button
                       size="sm"
                       variant="ghost"
+                      data-wt="weekly-empty-slot"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
                     >
@@ -1209,7 +1226,10 @@ export default function WeeklyMealBoard() {
                     />
                   ))}
                   {dayLists[key as keyof typeof dayLists].length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                    <div 
+                      data-wt="weekly-empty-slot"
+                      className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm"
+                    >
                       <p className="mb-2">No {label.toLowerCase()} meals yet</p>
                       <p className="text-xs text-white/40">Use "Create with AI" or "+" to add meals</p>
                     </div>

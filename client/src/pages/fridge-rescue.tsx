@@ -34,6 +34,7 @@ import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
 import MacroBridgeButton from "@/components/biometrics/MacroBridgeButton";
 import TrashButton from "@/components/ui/TrashButton";
 import PhaseGate from "@/components/PhaseGate";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -160,6 +161,7 @@ interface MealData {
 const FridgeRescuePage = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { runAction, open } = useCopilot();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
 
@@ -539,14 +541,28 @@ const FridgeRescuePage = () => {
             {/* Title */}
             <h1 className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
 
-            {/* Info Button */}
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-              aria-label="How to use Fridge Rescue"
-            >
-              ?
-            </button>
+            {/* Info & Teach Me Buttons */}
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                onClick={() => setShowInfoModal(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold"
+                aria-label="How to use Fridge Rescue"
+              >
+                ?
+              </button>
+              <button
+                onClick={() => {
+                  open();
+                  runAction({
+                    type: "run-command",
+                    id: "walkthrough.start.fridge-rescue",
+                  });
+                }}
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 hover:bg-white/10"
+              >
+                Teach me
+              </button>
+            </div>
           </div>
         </div>
 
@@ -576,6 +592,7 @@ const FridgeRescuePage = () => {
                   <div className="relative">
                     <textarea
                       id="ingredients"
+                      data-wt="fridge-add-button"
                       value={ingredients}
                       onChange={(e) => setIngredients(e.target.value)}
                       placeholder="e.g., chicken breast, broccoli, rice, onions, eggs"
@@ -615,6 +632,7 @@ const FridgeRescuePage = () => {
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
+                  data-wt="fridge-create-meal-button"
                   className="w-full bg-black/30 backdrop-blur-lg hover:bg-black/40 border border-white/20 disabled:bg-black/10 disabled:opacity-50 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
                 >
                   <div className="flex items-center gap-2">
