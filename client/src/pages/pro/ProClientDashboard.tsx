@@ -203,7 +203,10 @@ export default function ProClientDashboard() {
                 className="bg-black/30 border-white/30 text-white"
                 value={t.protein || ""}
                 onChange={(e) =>
-                  setT({ ...t, protein: e.target.value === "" ? 0 : Number(e.target.value) })
+                  setT({
+                    ...t,
+                    protein: e.target.value === "" ? 0 : Number(e.target.value),
+                  })
                 }
                 placeholder="protein"
               />
@@ -217,7 +220,11 @@ export default function ProClientDashboard() {
                 className="bg-black/30 border-white/30 text-white"
                 value={t.starchyCarbs || ""}
                 onChange={(e) =>
-                  setT({ ...t, starchyCarbs: e.target.value === "" ? 0 : Number(e.target.value) })
+                  setT({
+                    ...t,
+                    starchyCarbs:
+                      e.target.value === "" ? 0 : Number(e.target.value),
+                  })
                 }
                 placeholder="starchy carbs"
               />
@@ -231,7 +238,11 @@ export default function ProClientDashboard() {
                 className="bg-black/30 border-white/30 text-white"
                 value={t.fibrousCarbs || ""}
                 onChange={(e) =>
-                  setT({ ...t, fibrousCarbs: e.target.value === "" ? 0 : Number(e.target.value) })
+                  setT({
+                    ...t,
+                    fibrousCarbs:
+                      e.target.value === "" ? 0 : Number(e.target.value),
+                  })
                 }
                 placeholder="fibrous carbs"
               />
@@ -245,7 +256,10 @@ export default function ProClientDashboard() {
                 className="bg-black/30 border-white/30 text-white"
                 value={t.fat || ""}
                 onChange={(e) =>
-                  setT({ ...t, fat: e.target.value === "" ? 0 : Number(e.target.value) })
+                  setT({
+                    ...t,
+                    fat: e.target.value === "" ? 0 : Number(e.target.value),
+                  })
                 }
                 placeholder="fat"
               />
@@ -405,7 +419,15 @@ export default function ProClientDashboard() {
               </Button>
               <Button
                 onClick={async () => {
-                  if (t.kcal < 100) {
+                  // Calculate values from NEW 4-field structure
+                  const protein = t.protein || 0;
+                  const starchyCarbs = t.starchyCarbs || 0;
+                  const fibrousCarbs = t.fibrousCarbs || 0;
+                  const fat = t.fat || 0;
+                  const totalCarbs = starchyCarbs + fibrousCarbs;
+                  const calories = Math.round((protein * 4) + (totalCarbs * 4) + (fat * 9));
+
+                  if (calories < 100) {
                     toast({
                       title: "Cannot Set Empty Macros",
                       description: "Please set macro targets first",
@@ -416,21 +438,28 @@ export default function ProClientDashboard() {
 
                   try {
                     // Save macros to localStorage AND database for this client
-                    const { setMacroTargets } = await import("@/lib/dailyLimits");
-                    await setMacroTargets({
-                      calories: t.kcal,
-                      protein_g: t.protein,
-                      carbs_g: t.carbs,
-                      fat_g: t.fat,
-                    }, clientId);
+                    const { setMacroTargets } = await import(
+                      "@/lib/dailyLimits"
+                    );
+                    await setMacroTargets(
+                      {
+                        calories: calories,
+                        protein_g: protein,
+                        carbs_g: totalCarbs,
+                        fat_g: fat,
+                      },
+                      clientId,
+                    );
 
                     // Link the client ID for ProCare integration
-                    const { linkUserToClient } = await import("@/lib/macroResolver");
+                    const { linkUserToClient } = await import(
+                      "@/lib/macroResolver"
+                    );
                     linkUserToClient(clientId, clientId);
 
                     toast({
                       title: "✅ Macros Set to Biometrics!",
-                      description: `${t.kcal} kcal coach-set targets saved for ${client?.name}`,
+                      description: `${calories} kcal coach-set targets saved for ${client?.name}`,
                     });
 
                     setLocation("/my-biometrics");
@@ -447,7 +476,7 @@ export default function ProClientDashboard() {
                 data-testid="button-set-macros-biometrics-red"
               >
                 <Target className="h-5 w-5 mr-2" />
-                Set Macros  Biometrics
+                Send Macros to Biometrics
               </Button>
             </div>
           </CardContent>
@@ -737,7 +766,9 @@ export default function ProClientDashboard() {
             <CardContent className="space-y-2">
               <div className="bg-black/30 border border-amber-400/30 rounded-xl p-4">
                 <p className="text-white/60 text-sm mb-2">
-                  Diabetes guardrails control blood sugar targets, carb limits, and meal personalization. View and edit patient protocols below.
+                  Diabetes guardrails control blood sugar targets, carb limits,
+                  and meal personalization. View and edit patient protocols
+                  below.
                 </p>
                 <Button
                   onClick={() => {
@@ -764,7 +795,8 @@ export default function ProClientDashboard() {
             <CardContent className="space-y-2">
               <div className="bg-black/30 border border-purple-400/30 rounded-xl p-4">
                 <p className="text-white/60 text-sm mb-2">
-                  GLP-1 guardrails are managed in the dedicated GLP-1 Hub. View and edit patient-specific protocols below.
+                  GLP-1 guardrails are managed in the dedicated GLP-1 Hub. View
+                  and edit patient-specific protocols below.
                 </p>
                 <Button
                   onClick={() => {
@@ -807,7 +839,9 @@ export default function ProClientDashboard() {
             <Button
               onClick={() => {
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation(`/anti-inflammatory-menu-builder?clientId=${clientId}`);
+                setLocation(
+                  `/anti-inflammatory-menu-builder?clientId=${clientId}`,
+                );
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-anti-inflammatory-hub"
@@ -823,26 +857,30 @@ export default function ProClientDashboard() {
             <h2 className="text-lg font-bold text-white mb-2">Trainers</h2>
             <Button
               onClick={() =>
-                setLocation(`/pro/clients/${clientId}/performance-competition-builder`)
+                setLocation(
+                  `/pro/clients/${clientId}/performance-competition-builder`,
+                )
               }
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-performance-competition-builder"
             >
-              <Trophy className="h-4 w-4 mr-2" /> Performance & Competition Builder
+              <Trophy className="h-4 w-4 mr-2" /> Performance & Competition
+              Builder
             </Button>
             <Button
               onClick={() => {
                 if (!clientId) return; // safety guard
 
                 localStorage.setItem("pro-client-id", clientId);
-                setLocation(`/pro/clients/${clientId}/general-nutrition-builder`);
+                setLocation(
+                  `/pro/clients/${clientId}/general-nutrition-builder`,
+                );
               }}
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
               data-testid="button-general-nutrition-builder"
             >
               🌿 General Nutrition Builder
             </Button>
-
           </CardContent>
         </Card>
       </div>
