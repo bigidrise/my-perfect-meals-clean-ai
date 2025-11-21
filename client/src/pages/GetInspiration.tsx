@@ -482,6 +482,6 @@ export default function GetInspiration() {
           </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
