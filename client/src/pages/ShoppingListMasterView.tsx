@@ -236,41 +236,45 @@ export default function ShoppingListMasterView() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      <Button
-        onClick={() => setLocation("/dashboard")}
-        className="fixed top-4 left-4 z-50 bg-black/30 hover:bg-black/50 text-white rounded-2xl border border-white/10 backdrop-blur-none"
-        size="sm"
-        data-testid="button-back-dashboard"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <Home className="h-4 w-4" />
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <Button
+            onClick={() => setLocation("/dashboard")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+            data-testid="button-back-dashboard"
+          >
+            <Home className="h-5 w-5" />
+          </Button>
 
-      <div className="container mx-auto p-4 max-w-4xl space-y-4 pt-16">
-        {/* Header */}
-        <div className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-white text-2xl font-md flex items-center gap-2">
-                  <ShoppingCart className="h-6 w-6" />
-                  Master Shopping List
-                </h1>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button 
-                      className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white text-sm font-bold flash-border"
-                      aria-label="How to use shopping list"
-                      data-testid="shopping-list-info-button"
-                    >
-                      ?
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white max-h-[500px] overflow-y-auto">
-                    <div className="space-y-3">
-                      <h3 className="font-semibold text-orange-400 flex items-center gap-2">
-                        <Info className="h-4 w-4 text-orange-400" />
-                        How to Use Your Shopping List
-                      </h3>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5" />
+            Master Shopping List
+          </h1>
+
+          {/* Info Button */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button 
+                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white text-sm font-bold flash-border ml-auto"
+                aria-label="How to use shopping list"
+                data-testid="shopping-list-info-button"
+              >
+                ?
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 bg-black/90 border-orange-400/50 text-white max-h-[500px] overflow-y-auto">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-orange-400 flex items-center gap-2">
+                  <Info className="h-4 w-4 text-orange-400" />
+                  How to Use Your Shopping List
+                </h3>
                       <div className="text-sm text-white/90 space-y-3">
                         <div>
                           <p className="font-semibold text-white mb-2">4 Ways to Add Items:</p>
@@ -316,11 +320,17 @@ export default function ShoppingListMasterView() {
                     </div>
                   </PopoverContent>
                 </Popover>
-              </div>
-              <div className="text-white/70 text-sm mt-1">
-                {counts.total} items • {counts.checked} checked
-              </div>
-            </div>
+        </div>
+      </div>
+
+      <div 
+        className="container mx-auto p-4 max-w-4xl space-y-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
+      >
+        {/* Stats */}
+        <div className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
+          <div className="text-white/70 text-sm">
+            {counts.total} items • {counts.checked} checked
           </div>
 
           {/* Add Item Actions */}
