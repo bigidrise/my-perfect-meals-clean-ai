@@ -15,7 +15,7 @@ import {
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
 import { AddSnackModal } from "@/components/AddSnackModal";
-import MealIngredientPicker from "@/components/MealIngredientPicker";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
@@ -444,14 +444,14 @@ export default function BeachBodyMealBoard() {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note:
+            : 1,
+      unit: i.unit || "",
+      notes:
         planningMode === "day" && activeDayISO
           ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Beach Body Plan`
           : `Beach Body Meal Plan (${formatWeekLabel(weekStartISO)})`,
@@ -501,14 +501,14 @@ export default function BeachBodyMealBoard() {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note: `Beach Body Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
+            : 1,
+      unit: i.unit || "",
+      notes: `Beach Body Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
     }));
 
     useShoppingListStore.getState().addItems(items);
@@ -1588,7 +1588,7 @@ export default function BeachBodyMealBoard() {
         meal={shoppingListModal.meal}
       />
 
-      <MealIngredientPicker
+      <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
