@@ -166,14 +166,6 @@ export default function DiabeticHub() {
             <h1 className="text-lg font-bold text-white">
               Diabetic Nutrition Hub
             </h1>
-
-            {/* Premium Badge */}
-            <div className="ml-auto bg-purple-600/90 backdrop-blur-lg border border-purple-400/50 rounded-xl px-3 py-1 text-white">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4" />
-                <span className="font-semibold text-xs">Premium</span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -188,7 +180,7 @@ export default function DiabeticHub() {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
             <div className="flex items-center justify-center gap-3 mb-4">
               <h1 className="text-2xl md:text-2xl font-semibold text-white relative z-10">
-                🩺 Diabetic Nutrition Hub
+            
               </h1>
               <button
                 onClick={() => setShowInfoModal(true)}

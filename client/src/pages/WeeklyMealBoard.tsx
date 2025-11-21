@@ -994,7 +994,7 @@ export default function WeeklyMealBoard() {
 
           {/* ROW 2: Title (Centered) */}
           <h1 className="text-center text-2xl font-semibold text-white">
-            Weekly Meal Board
+            
           </h1>
 
           {/* ROW 3: Day/Week Toggle + Duplicate */}
