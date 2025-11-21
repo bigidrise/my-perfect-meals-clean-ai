@@ -525,14 +525,14 @@ export default function DiabeticMenuBuilder() {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note:
+            : 0,
+      unit: i.unit || "",
+      notes:
         planningMode === "day" && activeDayISO
           ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Meal Plan`
           : `Weekly Meal Plan (${formatWeekLabel(weekStartISO)})`,
@@ -587,14 +587,14 @@ export default function DiabeticMenuBuilder() {
 
     const items = ingredients.map((i) => ({
       name: i.name,
-      qty:
+      quantity:
         typeof i.qty === "number"
           ? i.qty
           : i.qty
             ? parseFloat(String(i.qty))
-            : undefined,
-      unit: i.unit,
-      note: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
+            : 0,
+      unit: i.unit || "",
+      notes: `Weekly Meal Plan (${formatWeekLabel(weekStartISO)}) - All 7 Days`,
     }));
 
     useShoppingListStore.getState().addItems(items);

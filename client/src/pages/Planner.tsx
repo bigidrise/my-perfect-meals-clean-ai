@@ -76,36 +76,45 @@ export default function Planner() {
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
       <PlannerGuidedTour />
-      {/* Header Banner - Planner */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
-        <div className="px-4 py-3 flex items-center gap-3">
-          <Calendar className="h-6 w-6 text-orange-500" />
-          <h1 className="text-lg font-bold text-white">Planner</h1>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 px-4 py-8 pt-20">
-        <div className="max-w-2xl mx-auto space-y-4">
-          {/* Hero Image Section */}
-          <div className="relative h-48 rounded-xl overflow-hidden">
-            <img
-              src="/images/planner-hero.jpg"
-              alt="Medical meal planning"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src =
-                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EPlanner%3C/text%3E%3C/svg%3E";
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4">
-              <h2 className="text-2xl font-bold text-white mb-1"></h2>
-              <p className="text-white/90 text-sm">
-                Tailored meal planning for your specific health needs and goals.
-              </p>
+          {/* Header Banner - Planner */}
+          <div
+            className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
+            style={{ top: "env(safe-area-inset-top, 0px)" }}
+          >
+            <div className="px-4 py-3 flex items-center gap-3">
+              <Calendar className="h-6 w-6 text-orange-500" />
+              <h1 className="text-lg font-bold text-white">Planner</h1>
             </div>
           </div>
+
+          {/* Main Content */}
+          <div
+            className="flex-1 px-4 py-8"
+            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+          >
+            <div className="max-w-2xl mx-auto space-y-4">
+              {/* Hero Image Section */}
+              <div className="relative h-48 rounded-xl overflow-hidden">
+                <img
+                  src="/images/planner-hero.jpg"
+                  alt="Medical meal planning"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%233b82f6;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3EPlanner%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h2 className="text-2xl font-bold text-white mb-1"></h2>
+                  <p className="text-white/90 text-sm">
+                    Tailored meal planning for your specific health needs and goals.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
           {/* Planner Features - Vertical Stack */}
           <div className="flex flex-col gap-3">
@@ -135,8 +144,6 @@ export default function Planner() {
               );
             })}
           </div>
-        </div>
-      </div>
     </motion.div>
   );
 }
