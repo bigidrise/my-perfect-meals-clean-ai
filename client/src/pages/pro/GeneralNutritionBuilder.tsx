@@ -1365,7 +1365,7 @@ export default function WeeklyMealBoard() {
 
         {/* Daily Totals Summary */}
         <div className="col-span-full">
-          <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-lg p-6">
+          <div className="rounded-2xl border border-white/20 bg-black/30 backdrop-blur-xl p-6">
             <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
               Daily Totals
               {(() => {
@@ -1398,9 +1398,10 @@ export default function WeeklyMealBoard() {
                 return null;
               })()}
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-xl font-semi-bold text-white">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label className="text-sm text-white/70 mb-1">Calories</label>
+                <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                   {Math.round((() => {
                     if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board) {
                       const dayLists = getDayLists(board, activeDayISO);
@@ -1411,10 +1412,10 @@ export default function WeeklyMealBoard() {
                       .reduce((sum, meal) => sum + (meal.nutrition?.calories ?? 0), 0);
                   })())}
                 </div>
-                <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Calories</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl font-semi-bold text-white">
+              <div className="flex flex-col">
+                <label className="text-sm text-white/70 mb-1">Protein (g)</label>
+                <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                   {Math.round((() => {
                     if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board) {
                       const dayLists = getDayLists(board, activeDayISO);
@@ -1425,10 +1426,10 @@ export default function WeeklyMealBoard() {
                       .reduce((sum, meal) => sum + (meal.nutrition?.protein ?? 0), 0);
                   })())}
                 </div>
-                <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Protein</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl font-semi-bold text-white">
+              <div className="flex flex-col">
+                <label className="text-sm text-white/70 mb-1">Carbs (g)</label>
+                <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                   {Math.round((() => {
                     if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board) {
                       const dayLists = getDayLists(board, activeDayISO);
@@ -1439,10 +1440,10 @@ export default function WeeklyMealBoard() {
                       .reduce((sum, meal) => sum + (meal.nutrition?.carbs ?? 0), 0);
                   })())}
                 </div>
-                <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Carbs</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl font-semi-bold text-white">
+              <div className="flex flex-col">
+                <label className="text-sm text-white/70 mb-1">Fat (g)</label>
+                <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                   {Math.round((() => {
                     if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board) {
                       const dayLists = getDayLists(board, activeDayISO);
@@ -1453,7 +1454,6 @@ export default function WeeklyMealBoard() {
                       .reduce((sum, meal) => sum + (meal.nutrition?.fat ?? 0), 0);
                   })())}
                 </div>
-                <div className="text-xs uppercase tracking-wide text-white/70 mt-1">Fat</div>
               </div>
             </div>
           </div>

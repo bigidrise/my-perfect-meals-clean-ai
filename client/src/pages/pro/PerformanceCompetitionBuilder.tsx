@@ -1692,7 +1692,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
 
           {/* Daily Totals Summary */}
           <div className="col-span-full">
-            <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/95 backdrop-blur-lg p-6">
+            <div className="rounded-2xl border border-white/20 bg-black/30 backdrop-blur-xl p-6">
               <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
                 {planningMode === "day" && activeDayISO
                   ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Totals`
@@ -1727,9 +1727,10 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   return null;
                 })()}
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Calories</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                     {Math.round(
                       (() => {
                         if (
@@ -1762,12 +1763,10 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                       })(),
                     )}
                   </div>
-                  <div className="text-xs uppercase tracking-wide text--200/70 mt-1">
-                    Calories
-                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Protein (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                     {Math.round(
                       (() => {
                         if (
@@ -1798,14 +1797,11 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                         );
                       })(),
                     )}
-                    g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Protein
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Carbs (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                     {Math.round(
                       (() => {
                         if (
@@ -1836,14 +1832,11 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                         );
                       })(),
                     )}
-                    g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Carbs
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Fat (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                     {Math.round(
                       (() => {
                         if (
@@ -1874,43 +1867,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                         );
                       })(),
                     )}
-                    g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Fat
-                  </div>
-                </div>
-              </div>
-
-              {/* Coach-Set Macro Targets for Biometrics */}
-              <div className="mt-6 pt-6 border-t border-white/20">
-                <h4 className="text-white/80 text-sm mb-3 text-center">
-                  Coach-Set Macro Targets
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-white-300">
-                      {coachMacroTargets.calories}
-                    </div>
-                    <div className="text-xs text-white/60">Calories/day</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-white-300">
-                      {coachMacroTargets.protein}g
-                    </div>
-                    <div className="text-xs text-white/60">Protein/day</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-white-300">
-                      {coachMacroTargets.carbs}g
-                    </div>
-                    <div className="text-xs text-white/60">Carbs/day</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-white-300">
-                      {coachMacroTargets.fat}g
-                    </div>
-                    <div className="text-xs text-white/60">Fat/day</div>
                   </div>
                 </div>
               </div>
