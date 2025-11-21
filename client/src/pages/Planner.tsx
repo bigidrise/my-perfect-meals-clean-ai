@@ -112,37 +112,36 @@ export default function Planner() {
                   </p>
                 </div>
               </div>
+
+              {/* Planner Features - Vertical Stack */}
+              <div className="flex flex-col gap-3">
+                {plannerFeatures.map((feature) => {
+                  const Icon = feature.icon;
+                  return (
+                    <Card
+                      key={feature.testId}
+                      className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl shadow-md"
+                      onClick={() => handleCardClick(feature.route)}
+                      data-testid={feature.testId}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            <Icon className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                            <h3 className="text-sm font-semibold text-white">
+                              {feature.title}
+                            </h3>
+                          </div>
+                          <p className="text-xs text-white/80 ml-6">
+                            {feature.description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-
-
-          {/* Planner Features - Vertical Stack */}
-          <div className="flex flex-col gap-3">
-            {plannerFeatures.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <Card
-                  key={feature.testId}
-                  className="cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95 bg-black/30 backdrop-blur-lg border border-white/10 hover:border-orange-500/50 rounded-xl shadow-md"
-                  onClick={() => handleCardClick(feature.route)}
-                  data-testid={feature.testId}
-                >
-                  <CardContent className="p-3">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <Icon className="h-4 w-4 text-orange-500 flex-shrink-0" />
-                        <h3 className="text-sm font-semibold text-white">
-                          {feature.title}
-                        </h3>
-                      </div>
-                      <p className="text-xs text-white/80 ml-6">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
           </div>
     </motion.div>
   );
