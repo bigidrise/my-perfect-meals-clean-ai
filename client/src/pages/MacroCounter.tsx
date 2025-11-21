@@ -179,7 +179,7 @@ function BodyTypeGuide() {
 const advance = (step: string) => {
   const coachMode = localStorage.getItem("coachMode") === "guided";
   if (!coachMode) return;
-  
+
   window.dispatchEvent(
     new CustomEvent("macro:nextStep", { detail: { step } })
   );
@@ -274,7 +274,7 @@ export default function MacroCounter() {
   const results = useMemo(() => {
     // Don't calculate until activity is selected
     if (!activity) return null;
-    
+
     const bmr = mifflin({ sex, kg, cm, age });
     const tdee = Math.round(bmr * ACTIVITY_FACTORS[activity as keyof typeof ACTIVITY_FACTORS]);
     const target = goalAdjust(tdee, goal);
@@ -296,395 +296,414 @@ export default function MacroCounter() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white px-4 pt-8 pb-32"
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white pb-32"
       >
-      <Button
-        onClick={() => setLocation("/dashboard")}
-        className="fixed top-4 left-4 z-50 bg-black/30 hover:bg-black/50 text-white rounded-2xl border border-white/10 backdrop-blur-none"
-        size="sm"
-        data-testid="button-back-dashboard"
-      >
-        <Home className="h-4 w-4" />
-      </Button>
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
+        >
+          <div className="px-4 py-3 flex items-center gap-3">
+            {/* Back to Dashboard */}
+            <Button
+              onClick={() => setLocation("/dashboard")}
+              className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+              size="icon"
+              data-testid="button-back-dashboard"
+            >
+              <Home className="h-5 w-5" />
+            </Button>
 
-      <div className="max-w-5xl mx-auto space-y-6 pt-14">
-        <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-          <CardHeader className="text-center relative">
-            <CardTitle className="text-2xl font-bold text-white">Macro Calculator</CardTitle>
-            <p className="text-white/90 text-sm mt-2">
-              Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
-              <b>gain</b>.
-            </p>
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">
+              Macro Calculator
+            </h1>
+
+            {/* Info Button */}
             <button
               onClick={() => setShowInfoModal(true)}
-              className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 border border-white/20 text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-bold backdrop-blur-lg flash-border"
+              className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
               title="Macro Calculator info"
             >
               ?
             </button>
-          </CardHeader>
-        </Card>
-
-        {/* ⚠️ RENDER GUARD: Goal & Body Type cards MUST ALWAYS render */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
-            <CardContent className="p-5">
-              <h3 className="text-lg font-semibold flex items-center">
-                <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
-              </h3>
-              <RadioGroup
-                value={goal}
-                onValueChange={(v: Goal) => {setGoal(v); advance("goal");}}
-                className="mt-3 grid grid-cols-3 gap-3"
-              >
-                {[
-                  { v: "loss", label: "Cut" },
-                  { v: "maint", label: "Maintain" },
-                  { v: "gain", label: "Gain" },
-                ].map((g) => (
-                  <Label
-                    key={g.v}
-                    htmlFor={g.v}
-                    onClick={() => {
-                      setGoal(g.v as Goal); 
-                      advance("goal");
-                      // Auto-scroll to body type card on every click
-                      setTimeout(() => {
-                        const bodyCard = document.getElementById("bodytype-card");
-                        if (bodyCard) {
-                          bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                      }, 200);
-                    }}
-                    className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
-                  >
-                    <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
-                    {g.label}
-                  </Label>
-                ))}
-              </RadioGroup>
-            </CardContent>
-          </Card>
-
-          <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white">
-            <CardContent className="p-5">
-              <h3 className="text-lg font-semibold flex items-center">
-                <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
-              </h3>
-              <BodyTypeGuide />
-              <RadioGroup
-                value={bodyType}
-                onValueChange={(v: BodyType) => {setBodyType(v); advance("body-type");}}
-                className="mt-3 grid grid-cols-3 gap-3"
-              >
-                {[
-                  { v: "ecto", label: "Ectomorph" },
-                  { v: "meso", label: "Mesomorph" },
-                  { v: "endo", label: "Endomorph" },
-                ].map((b) => (
-                  <Label
-                    key={b.v}
-                    htmlFor={b.v}
-                    onClick={() => {
-                      setBodyType(b.v as BodyType);
-                      advance("body-type");
-                      // Auto-scroll to details card on every click
-                      setTimeout(() => {
-                        const detailsCard = document.getElementById("details-card");
-                        if (detailsCard) {
-                          detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                      }, 200);
-                    }}
-                    className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
-                  >
-                    <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
-                    {b.label}
-                  </Label>
-                ))}
-              </RadioGroup>
-            </CardContent>
-          </Card>
+          </div>
         </div>
 
-        {/* ⚠️ RENDER GUARD: This card MUST ALWAYS render - DO NOT wrap in conditionals */}
-        {/* Inputs - Always show */}
-        <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
-          <CardContent className="p-5">
-            <h3 className="text-lg font-semibold flex items-center">
-              <Ruler className="h-5 w-5 mr-2" /> Your Details
-            </h3>
-            <div className="grid md:grid-cols-2 gap-4 mt-4">
-              <div className="space-y-3">
-                <div className="text-xs text-white font-semibold">Units</div>
-                <RadioGroup value={units} onValueChange={(v: Units) => setUnits(v)} className="grid grid-cols-2 gap-2">
-                  {(["imperial", "metric"] as const).map((u) => (
-                    <Label
-                      key={u}
-                      htmlFor={`u-${u}`}
-                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                        units === u ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                      }`}
-                    >
-                      <RadioGroupItem id={`u-${u}`} value={u} className="sr-only" />
-                      {u === "imperial" ? "US / Imperial" : "Metric"}
-                    </Label>
-                  ))}
-                </RadioGroup>
+        {/* Main Content */}
+        <div
+          className="max-w-5xl mx-auto space-y-6 px-4"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+        >
+          <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
+            <CardHeader className="text-center">
+              <p className="text-white/90 text-sm">
+                Understand what macros you need for <b>cut</b>, <b>maintenance</b>, or{" "}
+                <b>gain</b>.
+              </p>
+            </CardHeader>
+          </Card>
 
-                <div className="text-xs text-white font-semibold">Sex</div>
-                <RadioGroup value={sex} onValueChange={(v: Sex) => setSex(v)} className="grid grid-cols-2 gap-2">
-                  {(["female", "male"] as const).map((s) => (
-                    <Label
-                      key={s}
-                      htmlFor={`sex-${s}`}
-                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                        sex === s ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                      }`}
-                    >
-                      <RadioGroupItem id={`sex-${s}`} value={s} className="sr-only" />
-                      {s}
-                    </Label>
-                  ))}
-                </RadioGroup>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="col-span-3">
-                    <div className="text-xs text-white font-semibold">Age</div>
-                    <Input
-                      type="number"
-                      className="bg-black/60 border-white/50 text-white placeholder-white"
-                      value={age || ""}
-                      onChange={(e) => setAge(e.target.value === "" ? 0 : toNum(e.target.value))}
-                    />
-                  </div>
-
-                  {units === "imperial" ? (
-                    <>
-                      <div>
-                        <div className="text-xs text-white font-semibold">Height (ft)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white placeholder-white"
-                          value={heightFt || ""}
-                          onChange={(e) => setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value))}
-                        />
-                      </div>
-                      <div>
-                        <div className="text-xs text-white font-semibold">Height (in)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white placeholder-white"
-                          value={heightIn || ""}
-                          onChange={(e) => setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value))}
-                        />
-                      </div>
-                      <div>
-                        <div className="text-xs text-white font-semibold">Weight (lbs)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white placeholder-white"
-                          value={weightLbs || ""}
-                          onChange={(e) => setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value))}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="col-span-2">
-                        <div className="text-xs text-white font-semibold">Height (cm)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white placeholder-white"
-                          value={heightCm || ""}
-                          onChange={(e) => setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value))}
-                        />
-                      </div>
-                      <div>
-                        <div className="text-xs text-white font-semibold">Weight (kg)</div>
-                        <Input
-                          type="number"
-                          className="bg-black/60 border-white/50 text-white placeholder-white"
-                          value={weightKg || ""}
-                          onChange={(e) => setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value))}
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="text-xs text-white font-semibold">Activity</div>
-                <RadioGroup
-                  value={activity}
-                  onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
-                    setActivity(v);
-                    advance("details");
-                    // Auto-scroll to Sync Weight button after activity is selected
-                    setTimeout(() => {
-                      const button = document.getElementById("sync-weight-button");
-                      if (button) {
-                        button.scrollIntoView({ behavior: "smooth", block: "center" });
-                      }
-                    }, 300);
-                  }}
-                  className="grid grid-cols-2 md:grid-cols-3 gap-2"
-                >
-                  {(
-                    [
-                      ["sedentary", "Sedentary"],
-                      ["light", "Light"],
-                      ["moderate", "Moderate"],
-                      ["very", "Very Active"],
-                      ["extra", "Extra"],
-                    ] as const
-                  ).map(([k, label]) => (
-                    <Label
-                      key={k}
-                      htmlFor={`act-${k}`}
-                      onClick={() => {
-                        setActivity(k);
-                        advance("details");
-                        // Auto-scroll to Sync Weight button on every click
-                        setTimeout(() => {
-                          const button = document.getElementById("sync-weight-button");
-                          if (button) {
-                            button.scrollIntoView({ behavior: "smooth", block: "center" });
-                          }
-                        }, 300);
-                      }}
-                      className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
-                        activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
-                      }`}
-                    >
-                      <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
-                      {label}
-                    </Label>
-                  ))}
-                </RadioGroup>
-
-                {/* Sync Weight Button - appears after activity is selected */}
-                {activity && (
-                  <Button
-                    id="sync-weight-button"
-                    onClick={() => {
-                      const weight = units === "imperial" ? weightLbs : weightKg;
-                      if (!weight || weight <= 0) {
-                        toast({ title: "Enter weight first", description: "Please enter a valid weight before syncing.", variant: "destructive" });
-                        return;
-                      }
-                      localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
-                      toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
-                      advance("sync-weight");
-                    }}
-                    className="w-full bg-lime-700 border-2 border-lime-600 text-white hover:bg-lime-800 hover:border-lime-700 font-semibold mt-4"
-                    data-testid="button-sync-weight"
-                  >
-                    <Scale className="h-4 w-4 mr-2" />
-                    Sync Weight
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Results - Only show when activity is selected */}
-        {results && (
-          <>
-            <Card className="bg-zinc-900/80 border border-white/30 text-white">
+          {/* ⚠️ RENDER GUARD: Goal & Body Type cards MUST ALWAYS render */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card id="goal-card" className="bg-zinc-900/80 border border-white/30 text-white">
               <CardContent className="p-5">
-                <h3 className="text-lg font-semibold flex items-center mb-4">
-                  <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
+                <h3 className="text-lg font-semibold flex items-center">
+                  <Activity className="h-5 w-5 mr-2 text-emerald-300" />Choose Your Goal
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 mb-2">
-                    <div className="text-base font-bold text-white">Total Calories</div>
-                    <div className="text-2xl font-bold text-emerald-300">{results.target} kcal</div>
-                  </div>
-                  <MacroRow label="Protein" grams={results.macros.protein.g} />
-                  <MacroRow 
-                    label="Carbs - Starchy" 
-                    grams={getStarchyCarbs(sex, goal)} 
-                  />
-                  <MacroRow 
-                    label="Carbs - Fibrous" 
-                    grams={results.macros.carbs.g - getStarchyCarbs(sex, goal)} 
-                  />
-                  <MacroRow label="Fats" grams={results.macros.fat.g} />
-                </div>
+                <RadioGroup
+                  value={goal}
+                  onValueChange={(v: Goal) => {setGoal(v); advance("goal");}}
+                  className="mt-3 grid grid-cols-3 gap-3"
+                >
+                  {[
+                    { v: "loss", label: "Cut" },
+                    { v: "maint", label: "Maintain" },
+                    { v: "gain", label: "Gain" },
+                  ].map((g) => (
+                    <Label
+                      key={g.v}
+                      htmlFor={g.v}
+                      onClick={() => {
+                        setGoal(g.v as Goal);
+                        advance("goal");
+                        // Auto-scroll to body type card on every click
+                        setTimeout(() => {
+                          const bodyCard = document.getElementById("bodytype-card");
+                          if (bodyCard) {
+                            bodyCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                          }
+                        }, 200);
+                      }}
+                      className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${goal === g.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
+                    >
+                      <RadioGroupItem id={g.v} value={g.v} className="sr-only" />
+                      {g.label}
+                    </Label>
+                  ))}
+                </RadioGroup>
               </CardContent>
             </Card>
 
-            {/* Save Targets */}
-            <div className="flex justify-center">
-              <Button
-                id="calc-button"
-                disabled={isSaving}
-                onClick={async () => {
-                  advance("calc");
-                  setIsSaving(true);
-
-                  try {
-                    await setMacroTargets({
-                      calories: results.target,
-                      protein_g: results.macros.protein.g,
-                      carbs_g: results.macros.carbs.g,
-                      fat_g: results.macros.fat.g,
-                    }, user?.id);
-
-                    toast({
-                      title: "Macro Targets Set!",
-                      description: "Your targets have been saved.",
-                    });
-                    setLocation("/my-biometrics");
-                  } catch (error) {
-                    console.error("Failed to save macro targets:", error);
-                    toast({
-                      title: "Save Failed",
-                      description: "Failed to save your macro targets. Please try again.",
-                      variant: "destructive",
-                    });
-                  } finally {
-                    setIsSaving(false);
-                  }
-                }}
-                className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Target className="h-5 w-5 mr-2" /> 
-                {isSaving ? "Saving..." : "Set Macro Targets"}
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
-            <h3 className="text-xl font-bold text-white mb-4">About Macro Calculator</h3>
-            
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>
-                The Macro Calculator helps you determine your personalized calorie and macro targets based on your goal (cut, maintain, or gain), body type, activity level, and biometric data.
-              </p>
-              <p className="text-white/80">
-                Use the "Set Macro Targets" button to save your calculated targets to My Biometrics for daily tracking.
-              </p>
-            </div>
-
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
+            <Card id="bodytype-card" className="bg-zinc-900/80 border border-white/30 text-white">
+              <CardContent className="p-5">
+                <h3 className="text-lg font-semibold flex items-center">
+                  <User2 className="h-5 w-5 mr-2 text-pink-300" />What's Your Body Type
+                </h3>
+                <BodyTypeGuide />
+                <RadioGroup
+                  value={bodyType}
+                  onValueChange={(v: BodyType) => {setBodyType(v); advance("body-type");}}
+                  className="mt-3 grid grid-cols-3 gap-3"
+                >
+                  {[
+                    { v: "ecto", label: "Ectomorph" },
+                    { v: "meso", label: "Mesomorph" },
+                    { v: "endo", label: "Endomorph" },
+                  ].map((b) => (
+                    <Label
+                      key={b.v}
+                      htmlFor={b.v}
+                      onClick={() => {
+                        setBodyType(b.v as BodyType);
+                        advance("body-type");
+                        // Auto-scroll to details card on every click
+                        setTimeout(() => {
+                          const detailsCard = document.getElementById("details-card");
+                          if (detailsCard) {
+                            detailsCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                          }
+                        }, 200);
+                      }}
+                      className={`px-3 py-2 border rounded-lg cursor-pointer text-center ${bodyType === b.v ? "bg-white/15 border-white" : "border-white/40 hover:border-white/70"}`}
+                    >
+                      <RadioGroupItem id={b.v} value={b.v} className="sr-only" />
+                      {b.label}
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </CardContent>
+            </Card>
           </div>
+
+          {/* ⚠️ RENDER GUARD: This card MUST ALWAYS render - DO NOT wrap in conditionals */}
+          {/* Inputs - Always show */}
+          <Card id="details-card" className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5">
+            <CardContent className="p-5">
+              <h3 className="text-lg font-semibold flex items-center">
+                <Ruler className="h-5 w-5 mr-2" /> Your Details
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 mt-4">
+                <div className="space-y-3">
+                  <div className="text-xs text-white font-semibold">Units</div>
+                  <RadioGroup value={units} onValueChange={(v: Units) => setUnits(v)} className="grid grid-cols-2 gap-2">
+                    {(["imperial", "metric"] as const).map((u) => (
+                      <Label
+                        key={u}
+                        htmlFor={`u-${u}`}
+                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                          units === u ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                        }`}
+                      >
+                        <RadioGroupItem id={`u-${u}`} value={u} className="sr-only" />
+                        {u === "imperial" ? "US / Imperial" : "Metric"}
+                      </Label>
+                    ))}
+                  </RadioGroup>
+
+                  <div className="text-xs text-white font-semibold">Sex</div>
+                  <RadioGroup value={sex} onValueChange={(v: Sex) => setSex(v)} className="grid grid-cols-2 gap-2">
+                    {(["female", "male"] as const).map((s) => (
+                      <Label
+                        key={s}
+                        htmlFor={`sex-${s}`}
+                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                          sex === s ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                        }`}
+                      >
+                        <RadioGroupItem id={`sex-${s}`} value={s} className="sr-only" />
+                        {s}
+                      </Label>
+                    ))}
+                  </RadioGroup>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-3">
+                      <div className="text-xs text-white font-semibold">Age</div>
+                      <Input
+                        type="number"
+                        className="bg-black/60 border-white/50 text-white placeholder-white"
+                        value={age || ""}
+                        onChange={(e) => setAge(e.target.value === "" ? 0 : toNum(e.target.value))}
+                      />
+                    </div>
+
+                    {units === "imperial" ? (
+                      <>
+                        <div>
+                          <div className="text-xs text-white font-semibold">Height (ft)</div>
+                          <Input
+                            type="number"
+                            className="bg-black/60 border-white/50 text-white placeholder-white"
+                            value={heightFt || ""}
+                            onChange={(e) => setHeightFt(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          />
+                        </div>
+                        <div>
+                          <div className="text-xs text-white font-semibold">Height (in)</div>
+                          <Input
+                            type="number"
+                            className="bg-black/60 border-white/50 text-white placeholder-white"
+                            value={heightIn || ""}
+                            onChange={(e) => setHeightIn(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          />
+                        </div>
+                        <div>
+                          <div className="text-xs text-white font-semibold">Weight (lbs)</div>
+                          <Input
+                            type="number"
+                            className="bg-black/60 border-white/50 text-white placeholder-white"
+                            value={weightLbs || ""}
+                            onChange={(e) => setWeightLbs(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="col-span-2">
+                          <div className="text-xs text-white font-semibold">Height (cm)</div>
+                          <Input
+                            type="number"
+                            className="bg-black/60 border-white/50 text-white placeholder-white"
+                            value={heightCm || ""}
+                            onChange={(e) => setHeightCm(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          />
+                        </div>
+                        <div>
+                          <div className="text-xs text-white font-semibold">Weight (kg)</div>
+                          <Input
+                            type="number"
+                            className="bg-black/60 border-white/50 text-white placeholder-white"
+                            value={weightKg || ""}
+                            onChange={(e) => setWeightKg(e.target.value === "" ? 0 : toNum(e.target.value))}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="text-xs text-white font-semibold">Activity</div>
+                  <RadioGroup
+                    value={activity}
+                    onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
+                      setActivity(v);
+                      advance("details");
+                      // Auto-scroll to Sync Weight button after activity is selected
+                      setTimeout(() => {
+                        const button = document.getElementById("sync-weight-button");
+                        if (button) {
+                          button.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                      }, 300);
+                    }}
+                    className="grid grid-cols-2 md:grid-cols-3 gap-2"
+                  >
+                    {(
+                      [
+                        ["sedentary", "Sedentary"],
+                        ["light", "Light"],
+                        ["moderate", "Moderate"],
+                        ["very", "Very Active"],
+                        ["extra", "Extra"],
+                      ] as const
+                    ).map(([k, label]) => (
+                      <Label
+                        key={k}
+                        htmlFor={`act-${k}`}
+                        onClick={() => {
+                          setActivity(k);
+                          advance("details");
+                          // Auto-scroll to Sync Weight button on every click
+                          setTimeout(() => {
+                            const button = document.getElementById("sync-weight-button");
+                            if (button) {
+                              button.scrollIntoView({ behavior: "smooth", block: "center" });
+                            }
+                          }, 300);
+                        }}
+                        className={`px-3 py-2 border rounded-lg text-sm cursor-pointer text-white ${
+                          activity === k ? "border-white bg-white/15" : "border-white/40 hover:border-white/70"
+                        }`}
+                      >
+                        <RadioGroupItem id={`act-${k}`} value={k} className="sr-only" />
+                        {label}
+                      </Label>
+                    ))}
+                  </RadioGroup>
+
+                  {/* Sync Weight Button - appears after activity is selected */}
+                  {activity && (
+                    <Button
+                      id="sync-weight-button"
+                      onClick={() => {
+                        const weight = units === "imperial" ? weightLbs : weightKg;
+                        if (!weight || weight <= 0) {
+                          toast({ title: "Enter weight first", description: "Please enter a valid weight before syncing.", variant: "destructive" });
+                          return;
+                        }
+                        localStorage.setItem("pending-weight-sync", JSON.stringify({ weight, units, timestamp: Date.now() }));
+                        toast({ title: "✓ Weight ready to sync", description: "Go to My Biometrics to save it to your history." });
+                        advance("sync-weight");
+                      }}
+                      className="w-full bg-lime-700 border-2 border-lime-600 text-white hover:bg-lime-800 hover:border-lime-700 font-semibold mt-4"
+                      data-testid="button-sync-weight"
+                    >
+                      <Scale className="h-4 w-4 mr-2" />
+                      Sync Weight
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Results - Only show when activity is selected */}
+          {results && (
+            <>
+              <Card className="bg-zinc-900/80 border border-white/30 text-white">
+                <CardContent className="p-5">
+                  <h3 className="text-lg font-semibold flex items-center mb-4">
+                    <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your Daily Macro Targets
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 mb-2">
+                      <div className="text-base font-bold text-white">Total Calories</div>
+                      <div className="text-2xl font-bold text-emerald-300">{results.target} kcal</div>
+                    </div>
+                    <MacroRow label="Protein" grams={results.macros.protein.g} />
+                    <MacroRow
+                      label="Carbs - Starchy"
+                      grams={getStarchyCarbs(sex, goal)}
+                    />
+                    <MacroRow
+                      label="Carbs - Fibrous"
+                      grams={results.macros.carbs.g - getStarchyCarbs(sex, goal)}
+                    />
+                    <MacroRow label="Fats" grams={results.macros.fat.g} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Save Targets */}
+              <div className="flex justify-center">
+                <Button
+                  id="calc-button"
+                  disabled={isSaving}
+                  onClick={async () => {
+                    advance("calc");
+                    setIsSaving(true);
+
+                    try {
+                      await setMacroTargets({
+                        calories: results.target,
+                        protein_g: results.macros.protein.g,
+                        carbs_g: results.macros.carbs.g,
+                        fat_g: results.macros.fat.g,
+                      }, user?.id);
+
+                      toast({
+                        title: "Macro Targets Set!",
+                        description: "Your targets have been saved.",
+                      });
+                      setLocation("/my-biometrics");
+                    } catch (error) {
+                      console.error("Failed to save macro targets:", error);
+                      toast({
+                        title: "Save Failed",
+                        description: "Failed to save your macro targets. Please try again.",
+                        variant: "destructive",
+                      });
+                    } finally {
+                      setIsSaving(false);
+                    }
+                  }}
+                  className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Target className="h-5 w-5 mr-2" />
+                  {isSaving ? "Saving..." : "Set Macro Targets"}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
-      )}
-    </motion.div>
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
+              <h3 className="text-xl font-bold text-white mb-4">About Macro Calculator</h3>
+
+              <div className="space-y-4 text-white/90 text-sm">
+                <p>
+                  The Macro Calculator helps you determine your personalized calorie and macro targets based on your goal (cut, maintain, or gain), body type, activity level, and biometric data.
+                </p>
+                <p className="text-white/80">
+                  Use the "Set Macro Targets" button to save your calculated targets to My Biometrics for daily tracking.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        )}
+      </motion.div>
     </>
   );
 }
