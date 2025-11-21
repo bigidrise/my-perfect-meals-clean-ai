@@ -11,13 +11,13 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
   const { enabled, targets, toggleEnabled, updateTarget, applyPreset } = state;
 
   return (
-    <div className="mb-3 p-3 bg-black/30 border border-pink-500/30 rounded-lg">
+    <div className="mb-3 p-3 bg-black/30 border border-emerald-500/30 rounded-lg">
       <div className="flex items-center justify-between mb-2">
         <label className="text-white text-sm font-semibold flex items-center gap-2 cursor-pointer">
           <Checkbox
             checked={enabled}
             onCheckedChange={toggleEnabled}
-            className="h-4 w-4 border-pink-400/50 data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-500"
+            className="h-4 w-4 border-emerald-400/50 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-500"
           />
           🎯 Set Macro Targets
         </label>
@@ -43,7 +43,7 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
                   updateTarget('protein', newValue);
                 }}
                 placeholder="50"
-                className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                className="bg-black/40 border-emerald-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
               />
             </div>
 
@@ -61,7 +61,7 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
                   updateTarget('fibrousCarbs', newValue);
                 }}
                 placeholder="15"
-                className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                className="bg-black/40 border-emerald-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
               />
             </div>
 
@@ -79,7 +79,7 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
                   updateTarget('starchyCarbs', newValue);
                 }}
                 placeholder="30"
-                className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                className="bg-black/40 border-emerald-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
               />
             </div>
 
@@ -97,7 +97,7 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
                   updateTarget('fat', newValue);
                 }}
                 placeholder="20"
-                className="bg-black/40 border-pink-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
+                className="bg-black/40 border-emerald-500/30 text-white placeholder:text-white/30 text-sm h-9 text-center font-semibold"
               />
             </div>
           </div>
@@ -105,13 +105,13 @@ export function MacroTargetingControls({ state }: MacroTargetingControlsProps) {
           <div className="flex gap-2 mt-2">
             <button
               onClick={() => applyPreset(PRESETS.PRESET_1)}
-              className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
+              className="flex-1 px-2 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 rounded text-white/80 text-xs transition-all"
             >
               50p / 15fc / 30sc / 20f
             </button>
             <button
               onClick={() => applyPreset(PRESETS.PRESET_2)}
-              className="flex-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 rounded text-white/80 text-xs transition-all"
+              className="flex-1 px-2 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 rounded text-white/80 text-xs transition-all"
             >
               40p / 20fc / 40sc / 15f
             </button>
