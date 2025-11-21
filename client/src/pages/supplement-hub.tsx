@@ -88,11 +88,7 @@ const HeroImage: React.FC<{ url: string; alt?: string }> = ({
   alt = "Supplement partner",
 }) => (
   <div className="w-full rounded-xl overflow-hidden border border-white/20 bg-black/20 backdrop-blur-lg">
-    <img
-      src={url}
-      alt={alt}
-      className="w-full h-auto object-cover"
-    />
+    <img src={url} alt={alt} className="w-full h-auto object-cover" />
   </div>
 );
 
@@ -149,7 +145,6 @@ export default function SupplementHub() {
         className="mx-auto max-w-screen-md px-4 pb-24"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-
         {/* Live Partner: Nutritional Frontiers (Nutraceuticals / Homeopathy-friendly) */}
         <CardShell className="p-6 mb-6">
           <div className="flex items-start justify-between gap-3">
@@ -235,8 +230,6 @@ export default function SupplementHub() {
           </div>
         </CardShell>
 
-        
-
         {/* Coming Soon / Future Partners */}
         <section className="space-y-4">
           <SectionTitle>More Partners</SectionTitle>
@@ -312,19 +305,6 @@ export default function SupplementHub() {
           </CardShell>
         </section>
 
-        {/* Scroll to top */}
-        {showScrollTop && (
-          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-            <button
-              onClick={scrollToTop}
-              className="bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 rounded-full w-14 h-14 p-0 shadow-xl"
-              aria-label="Scroll to top"
-            >
-              <ArrowUp className="h-6 w-6 mx-auto" />
-            </button>
-          </div>
-        )}
-
         {/* Info Modal */}
         <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
           <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
@@ -336,20 +316,37 @@ export default function SupplementHub() {
             </DialogHeader>
             <div className="space-y-4 text-white/90">
               <p>
-                Browse our curated supplement partners offering clinician-grade nutraceuticals and sports nutrition products.
+                Browse our curated supplement partners offering clinician-grade
+                nutraceuticals and sports nutrition products.
               </p>
               <div>
                 <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
                 <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-                  <li>Review our official partner (Nutritional Frontiers) for clinician-grade supplements</li>
-                  <li>Use the member access code (31878) to register as a patient</li>
-                  <li>Browse products with therapeutic dosing and transparent labels</li>
-                  <li>Check out the "Coming Soon" section for upcoming sports nutrition partners</li>
-                  <li>All products are 3rd-party tested with cGMP/NSF manufacturing</li>
+                  <li>
+                    Review our official partner (Nutritional Frontiers) for
+                    clinician-grade supplements
+                  </li>
+                  <li>
+                    Use the member access code (31878) to register as a patient
+                  </li>
+                  <li>
+                    Browse products with therapeutic dosing and transparent
+                    labels
+                  </li>
+                  <li>
+                    Check out the "Coming Soon" section for upcoming sports
+                    nutrition partners
+                  </li>
+                  <li>
+                    All products are 3rd-party tested with cGMP/NSF
+                    manufacturing
+                  </li>
                 </ul>
               </div>
               <p className="text-emerald-400 font-medium">
-                💡 Tip: We feature two distinct lanes - Clinician-grade Nutraceuticals for functional wellness and Sports Nutrition for performance goals.
+                💡 Tip: We feature two distinct lanes - Clinician-grade
+                Nutraceuticals for functional wellness and Sports Nutrition for
+                performance goals.
               </p>
             </div>
             <Button
