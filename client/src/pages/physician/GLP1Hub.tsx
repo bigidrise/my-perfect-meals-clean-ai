@@ -117,6 +117,15 @@ export default function GLP1Hub() {
           <h1 className="text-lg font-bold text-white">
             GLP-1 Hub
           </h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold"
+            aria-label="How to use GLP-1 Hub"
+          >
+            ?
+          </button>
         </div>
       </div>
 
@@ -125,21 +134,6 @@ export default function GLP1Hub() {
         className="max-w-2xl mx-auto px-4 space-y-6 pb-16"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-        {/* Header with Black Glass Background */}
-        <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-white text-center">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <h1 className="text-2xl font-semibold">GLP-1 Hub</h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-              aria-label="How to use GLP-1 Hub"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-white/90 text-sm">Track your GLP-1 medication - simple, reliable, and always with you.</p>
-        </div>
-
         {/* Important Medical Note Dropdown */}
         <section className="bg-black/40 backdrop-blur-lg border border-purple-300/30 rounded-2xl overflow-hidden shadow-lg">
           <button
