@@ -80,7 +80,10 @@ export default function LifestyleLandingPage() {
       <LifestyleGuidedTour />
 
       {/* Header Banner */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+      <div
+        className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
         <div className="px-4 py-3 flex items-center gap-3">
           <Sparkles className="h-6 w-6 text-orange-500" />
           <h1 className="text-lg font-bold text-white">Lifestyle</h1>
@@ -88,7 +91,10 @@ export default function LifestyleLandingPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 py-8 pt-20">
+      <div
+        className="flex-1 px-4 py-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-48 rounded-xl overflow-hidden">
@@ -97,7 +103,8 @@ export default function LifestyleLandingPage() {
               alt="Lifestyle nutrition"
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3ELifestyle%3C/text%3E%3C/svg%3E";
+                e.currentTarget.src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='24' font-family='sans-serif' dy='.3em'%3ELifestyle%3C/text%3E%3C/svg%3E";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
