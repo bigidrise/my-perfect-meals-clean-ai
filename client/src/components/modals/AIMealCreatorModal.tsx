@@ -38,6 +38,7 @@ export default function AIMealCreatorModal({
 
   const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [customIngredients, setCustomIngredients] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -45,6 +46,8 @@ export default function AIMealCreatorModal({
   const [currentIngredient, setCurrentIngredient] = useState('');
   const [pendingIngredients, setPendingIngredients] = useState<string[]>([]);
   const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
+  const [needsPrepQueue, setNeedsPrepQueue] = useState<string[]>([]);
+  const [currentPrepIndex, setCurrentPrepIndex] = useState(0);
   const tickerRef = useRef<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
@@ -127,29 +130,39 @@ export default function AIMealCreatorModal({
   };
 
   const handleGenerateMeal = () => {
-    if (selectedIngredients.length === 0) {
+    // Combine selected checkboxes + custom ingredients
+    const customItems = customIngredients
+      .split(',')
+      .map(i => i.trim())
+      .filter(i => i);
+    
+    const allIngredients = [...selectedIngredients, ...customItems];
+    
+    if (allIngredients.length === 0) {
       toast({
         title: "No ingredients selected",
-        description: "Please select at least one ingredient",
+        description: "Please select at least one ingredient or add custom ingredients",
         variant: "destructive"
       });
       return;
     }
 
-    // Check if any selected ingredients need prep
-    const needsPrepIngredients = selectedIngredients.filter(ing => {
+    // Check if any ingredients need prep
+    const needsPrepIngredients = allIngredients.filter(ing => {
       const normalizedIng = normalizeIngredientName(ing);
       return NEEDS_PREP.some(prep => normalizeIngredientName(prep) === normalizedIng);
     });
 
     if (needsPrepIngredients.length > 0) {
-      // Show prep modal for first ingredient that needs it
-      setPendingIngredients(selectedIngredients);
+      // Queue all ingredients that need prep
+      setNeedsPrepQueue(needsPrepIngredients);
+      setCurrentPrepIndex(0);
+      setPendingIngredients(allIngredients);
       setCurrentIngredient(needsPrepIngredients[0]);
       setPrepModalOpen(true);
     } else {
       // No prep needed, generate immediately
-      generateMeal(selectedIngredients, {});
+      generateMeal(allIngredients, {});
     }
   };
 
@@ -157,10 +170,22 @@ export default function AIMealCreatorModal({
     const updatedStyles = { ...cookingStyles, [ingredient]: style };
     setCookingStyles(updatedStyles);
     
-    // Generate meal with selected style
-    if (pendingIngredients.length > 0) {
-      generateMeal(pendingIngredients, updatedStyles);
-      setPendingIngredients([]);
+    // Check if there are more ingredients that need prep
+    const nextIndex = currentPrepIndex + 1;
+    if (nextIndex < needsPrepQueue.length) {
+      // Show prep modal for next ingredient
+      setCurrentPrepIndex(nextIndex);
+      setCurrentIngredient(needsPrepQueue[nextIndex]);
+      // Keep prep modal open for next ingredient
+    } else {
+      // All prep selections done, generate meal
+      setPrepModalOpen(false);
+      if (pendingIngredients.length > 0) {
+        generateMeal(pendingIngredients, updatedStyles);
+        setPendingIngredients([]);
+        setNeedsPrepQueue([]);
+        setCurrentPrepIndex(0);
+      }
     }
   };
 
@@ -250,6 +275,7 @@ export default function AIMealCreatorModal({
   const handleCancel = () => {
     cleanupGeneration();
     setSelectedIngredients([]);
+    setCustomIngredients("");
     setSearchQuery("");
     onOpenChange(false);
   };
