@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from '@/components/ui/input';
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import PreparationModal, { normalizeIngredientName } from "@/components/PreparationModal";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
