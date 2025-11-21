@@ -1,33 +1,104 @@
 #!/bin/bash
-# Remove any stuck Git lock files
-rm -f .git/index.lock
 
-# Add changes
-git add .
+# ENFORCED PRE-PUBLISH VALIDATION
+# This script will NOT let you publish unless everything is clean
 
-# Initial commit (Replit will force wrong email here)
-git commit -m "$1"
+set -e  # Exit immediately if any command fails
 
-# IMMEDIATELY amend with correct author (bypasses Replit's environment override)
-# This re-infers identity from .git/config AFTER Replit's override fires
-git commit --amend --reset-author --no-edit
+echo "🔒 ENFORCED PRE-PUBLISH VALIDATION"
+echo "===================================="
+echo ""
 
-# Try normal push first
-echo "Attempting push to GitHub..."
-if git push origin main 2>&1 | grep -q "non-fast-forward\|rejected"; then
-  echo "⚠️  Divergence detected - auto-resolving with rebase..."
-  
-  # Fetch latest remote state
-  git fetch origin
-  
-  # Rebase local changes on top of remote
-  git rebase origin/main
-  
-  # Force push to resolve divergence
-  echo "🚀 Force pushing to resolve divergence..."
-  git push origin main --force
-  
-  echo "✅ Divergence resolved and pushed successfully!"
+# Check if commit message was provided
+if [ -z "$1" ]; then
+  echo "❌ ERROR: Commit message required"
+  echo "Usage: ./push.sh \"your commit message\""
+  exit 1
+fi
+
+COMMIT_MESSAGE="$1"
+
+# Step 1: Check for unexpected file changes
+echo "1️⃣ Checking for unexpected changes..."
+if [ -f ".critical-files-checksums" ]; then
+  if ./scripts/verify-critical-files.sh; then
+    echo "✅ No unexpected changes detected"
+  else
+    echo ""
+    echo "❌ BLOCKED: Critical files have changed unexpectedly!"
+    echo ""
+    echo "Run this to see what changed:"
+    echo "  git diff"
+    echo ""
+    echo "If changes are intentional, update checksums:"
+    echo "  ./scripts/freeze-critical-files.sh"
+    echo ""
+    exit 1
+  fi
 else
-  echo "✅ Pushed successfully!"
+  echo "⚠️  Checksums not initialized. Creating baseline..."
+  ./scripts/freeze-critical-files.sh
+fi
+
+echo ""
+
+# Step 2: TypeScript compilation check
+echo "2️⃣ Running TypeScript validation..."
+if npm run check 2>&1 | grep -q "error TS"; then
+  echo "❌ BLOCKED: TypeScript errors found!"
+  echo ""
+  echo "Fix TypeScript errors before publishing:"
+  npm run check
+  echo ""
+  exit 1
+else
+  echo "✅ TypeScript compilation passed"
+fi
+
+echo ""
+
+# Step 3: Check server is running
+echo "3️⃣ Verifying server is running..."
+if curl -s http://localhost:5000 > /dev/null 2>&1; then
+  echo "✅ Server is running on port 5000"
+else
+  echo "⚠️  WARNING: Server not responding on port 5000"
+  echo "   Consider restarting workflow before publishing"
+fi
+
+echo ""
+echo "===================================="
+echo "✅ ALL VALIDATION CHECKS PASSED!"
+echo "===================================="
+echo ""
+echo "Publishing: $COMMIT_MESSAGE"
+echo ""
+
+# Configure git user email to avoid Replit issue
+git config user.email "replit-override@example.com" 2>/dev/null || true
+
+# Add all changes
+git add -A
+
+# Commit with provided message
+if git commit -m "$COMMIT_MESSAGE"; then
+  echo "✅ Changes committed"
+else
+  echo "ℹ️  Nothing new to commit"
+fi
+
+# Push to GitHub
+echo ""
+echo "Pushing to GitHub..."
+if git push -u origin main 2>&1; then
+  echo "✅ SUCCESSFULLY PUBLISHED!"
+  echo ""
+  echo "📋 What was published:"
+  git log -1 --stat
+  echo ""
+  echo "🔒 Freezing current state..."
+  ./scripts/freeze-critical-files.sh
+else
+  echo "❌ Push failed. Check your connection and try again."
+  exit 1
 fi

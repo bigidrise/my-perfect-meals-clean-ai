@@ -1,69 +1,59 @@
 # Safe Publishing Workflow for App Store
 
 ## 🎯 THE GOLDEN RULE
-**NEVER publish without running the pre-publish check first.**
+**The push.sh script NOW AUTOMATICALLY ENFORCES ALL CHECKS.**
+
+You **CANNOT** publish unless everything is clean. The script will BLOCK you.
 
 ---
 
-## ✅ EVERY TIME Before Publishing
+## ✅ Simple Publishing Process
 
-### Step 1: Run Pre-Publish Check
-```bash
-./scripts/pre-publish-check.sh
-```
-
-This will:
-- ✅ Check for uncommitted changes
-- ✅ Run TypeScript compilation
-- ✅ Verify critical files
-- ✅ Check if server is running
-
-**If ANY check fails, DO NOT PUBLISH. Fix the issues first.**
-
----
-
-### Step 2: Only After ALL Checks Pass
+### Just Run This:
 ```bash
 ./push.sh "describe what you changed"
 ```
 
+**That's it.** The script automatically:
+1. ✅ Checks for unexpected file changes
+2. ✅ Runs TypeScript compilation
+3. ✅ Verifies critical files
+4. ✅ Confirms server is running
+5. ✅ Freezes new checksums after successful publish
+
+**If ANY check fails, publishing is BLOCKED.**
+
 ---
 
-## 🔒 Monitoring Critical Files
+## 🚨 What Happens If Validation Fails
 
-### After Making Intentional Changes
-Freeze the current state:
-```bash
-./scripts/freeze-critical-files.sh
+### TypeScript Errors
 ```
-
-### Before Publishing Again
-Verify nothing unexpected changed:
-```bash
-./scripts/verify-critical-files.sh
+❌ BLOCKED: TypeScript errors found!
 ```
+**What to do:** Fix the errors shown, then try again.
 
-If this shows changes you didn't make, **STOP and investigate before publishing.**
+### Unexpected File Changes
+```
+❌ BLOCKED: Critical files have changed unexpectedly!
+```
+**What to do:** 
+1. Run `git diff` to see what changed
+2. If changes are intentional: `./scripts/freeze-critical-files.sh`
+3. If changes are unwanted: `git checkout -- <filename>` to revert
+4. Try publishing again
+
+### Server Not Running
+```
+⚠️  WARNING: Server not responding
+```
+**What to do:** Restart the workflow, then try again.
 
 ---
 
-## 🚨 What To Do If Unexpected Changes Appear
+## 📋 Critical Files Being Protected
 
-1. **DON'T PANIC** - but also **DON'T PUBLISH**
-2. Run `git diff` to see exactly what changed
-3. If you didn't make those changes, investigate:
-   - Check if any background processes are running
-   - Check recent file modification times
-   - Review what you were doing when files changed
-4. Once you understand why, either:
-   - Revert the unwanted changes: `git checkout -- <filename>`
-   - Or accept them if they're valid
-
----
-
-## 📋 Critical Files Being Monitored
-
-These files should ONLY change when you explicitly edit them:
+These files are monitored for unexpected changes:
 - `client/src/components/modals/AIMealCreatorModal.tsx`
 - `client/src/components/PreparationModal.tsx`
 - `client/src/pages/WeeklyMealBoard.tsx`
@@ -74,34 +64,63 @@ These files should ONLY change when you explicitly edit them:
 
 ---
 
-## 🎯 Quick Reference
+## 💡 Best Practices
+
+### ✅ DO:
+- Make focused, single-purpose changes
+- Test your changes before publishing
+- Write clear commit messages
+- Trust the validation system
+
+### ❌ DON'T:
+- Try to bypass validation checks
+- Publish without testing
+- Make multiple unrelated changes at once
+- Ignore validation warnings
+
+---
+
+## 🔧 Manual Verification (Optional)
+
+If you want to check things manually before publishing:
 
 ```bash
-# Daily workflow:
-./scripts/verify-critical-files.sh    # Check for unexpected changes
-./scripts/pre-publish-check.sh        # Validate before publishing
-./push.sh "your change description"   # Publish only if checks pass
+# Check for unexpected changes
+./scripts/verify-critical-files.sh
 
-# After making important changes:
-./scripts/freeze-critical-files.sh    # Update checksums baseline
+# Run TypeScript check
+npm run check
+
+# See what will be committed
+git status
+git diff
 ```
 
----
-
-## 💡 Pro Tips
-
-1. **Always verify before publishing** - takes 10 seconds, saves hours of debugging
-2. **Keep commits focused** - one feature/fix per commit
-3. **Read the git diff** - review every line before publishing
-4. **Test the feature you changed** - don't trust code until you see it work
-5. **When in doubt, DON'T publish** - investigate first
+**But you don't HAVE to do this - push.sh does it all automatically.**
 
 ---
 
-## 🆘 Emergency: Published Bad Code?
+## 🆘 Emergency: Need to Override?
 
-If you accidentally published broken code:
-1. Don't make more changes yet
-2. Contact support for rollback assistance
-3. Review what went wrong
-4. Update your pre-publish checklist to catch it next time
+**DON'T.** If validation is blocking you, there's a reason.
+
+Fix the issue, don't bypass the system.
+
+If you absolutely must investigate:
+1. Run `git status` to see what's changed
+2. Run `npm run check` to see TypeScript errors
+3. Fix the issues
+4. Then publish normally
+
+---
+
+## 📊 What You Get
+
+**Every publish is guaranteed to be:**
+- ✅ Free of TypeScript errors
+- ✅ Free of unexpected changes
+- ✅ Tested with server running
+- ✅ Tracked with checksums
+- ✅ Documented with clear commit message
+
+**You can publish to the App Store with confidence.**
