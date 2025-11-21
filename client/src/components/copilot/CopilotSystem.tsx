@@ -2,21 +2,19 @@ import React from "react";
 import { CopilotProvider, CopilotAction } from "./CopilotContext";
 import { CopilotButton } from "./CopilotButton";
 import { CopilotSheet } from "./CopilotSheet";
+import { executeCommand } from "./CopilotCommandRegistry";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
-  onAction?: (action: CopilotAction) => void;
 }
 
-/**
- * Wrap your app shell with <CopilotSystem> to enable the global copilot.
- */
-export const CopilotSystem: React.FC<CopilotSystemProps> = ({
-  children,
-  onAction,
-}) => {
+export const CopilotSystem: React.FC<CopilotSystemProps> = ({ children }) => {
+  const handleAction = async (action: CopilotAction) => {
+    await executeCommand(action);
+  };
+
   return (
-    <CopilotProvider onAction={onAction}>
+    <CopilotProvider onAction={handleAction}>
       {children}
       <CopilotButton />
       <CopilotSheet />

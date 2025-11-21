@@ -89,13 +89,17 @@ const Commands = {
   "emotion.simplifyTonight": async () => {
     console.log("➡️ Simplifying plan for stress/fatigue...");
   },
+
+  // ===== MEALS =====
+  "meals.addHiddenVeggies": async () => {
+    console.log("➡️ Adding vegetables without changing flavor...");
+  },
 };
 
-// Executing an action:
 export async function executeCommand(action: CopilotAction) {
   switch (action.type) {
     case "run-command": {
-      const fn = Commands[action.id];
+      const fn = Commands[action.id as keyof typeof Commands];
       if (!fn) {
         console.warn("⚠️ Unknown command:", action.id);
         return;
