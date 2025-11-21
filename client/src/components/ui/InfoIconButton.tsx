@@ -1,37 +1,53 @@
 import { Info } from "lucide-react";
 import { forwardRef } from "react";
+import { motion } from "framer-motion";
 
-interface InfoIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface InfoIconButtonProps {
   size?: number;
+  glow?: boolean;
+  className?: string;
+  title?: string;
+  onClick?: () => void;
+  disabled?: boolean;
 }
 
 const InfoIconButton = forwardRef<HTMLButtonElement, InfoIconButtonProps>(
-  ({ size = 24, className = "", title = "More information", ...props }, ref) => {
-    const iconSize = size * 0.9; // 28.8px icon in 32px button (much larger than the original 24px)
-
+  ({ size = 17, glow = true, className = "", title = "More information", onClick, disabled }, ref) => {
     return (
-      <button
+      <motion.button
         ref={ref}
         title={title}
-        className={`
-          bg-yellow-500 hover:bg-yellow-600
-          border-2 border-yellow-400
-          text-black rounded-2xl
-          flex items-center justify-center
-          transition-colors
-          ${className}
-        `}
-        style={{
-          width: `${size}px`,
-          height: `${size}px`
-        }}
-        {...props}
+        onClick={onClick}
+        disabled={disabled}
+        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.08 }}
+        className={`relative flex items-center justify-center ${className}`}
+        style={{ width: size, height: size }}
       >
-        <Info
-          style={{ width: iconSize, height: iconSize }}
-          strokeWidth={7.5}
+        {/* BACKGROUND CIRCLE */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gray-400/20 border border-white/15 backdrop-blur-sm"
+          animate={
+            glow
+              ? {
+                  boxShadow: [
+                    "0 0 0px rgba(251,146,60,0.0)",
+                    "0 0 8px rgba(251,146,60,0.45)",
+                    "0 0 0px rgba(251,146,60,0.0)",
+                  ],
+                }
+              : {}
+          }
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
-      </button>
+
+        {/* INFO ICON */}
+        <Info
+          className="relative z-10 text-gray-200"
+          style={{ width: size * 0.6, height: size * 0.6 }}
+          strokeWidth={2.5}
+        />
+      </motion.button>
     );
   }
 );
