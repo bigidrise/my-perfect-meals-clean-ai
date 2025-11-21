@@ -33,7 +33,7 @@ import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
-import MealIngredientPicker from "@/components/MealIngredientPicker";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -1510,7 +1510,7 @@ export default function WeeklyMealBoard() {
       />
 
       {/* AI Meal Creator with Ingredient Picker - All Meal Slots */}
-      <MealIngredientPicker
+      <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
