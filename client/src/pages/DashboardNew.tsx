@@ -127,7 +127,10 @@ export default function DashboardNew() {
       className="min-h-screen bg-black"
     >
       {/* Fixed My Hub - Top Right */}
-      <div className="fixed top-4 right-4 z-50">
+      <div
+        className="fixed right-4 z-50"
+        style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}
+      >
         <ProfileSheet>
           <button
             className="p-2 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-black/70 hover:border-orange-500/30 transition-all"
@@ -137,6 +140,7 @@ export default function DashboardNew() {
           </button>
         </ProfileSheet>
       </div>
+
 
       {/* Header Banner */}
       <div
