@@ -1139,38 +1139,55 @@ export default function GLP1MealBuilder() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-32 overflow-x-hidden"
     >
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLocation("/glp1-hub")}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to GLP-1 Hub */}
+          <Button
+            onClick={() => setLocation("/glp1-hub")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
 
-      {/* Fixed Client Dashboard Button - Top Right (when accessed from ProCare) */}
-      {(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const clientId = urlParams.get("clientId");
-        if (clientId) {
-          return (
-            <Button
-              size="sm"
-              onClick={() => setLocation(`/pro/clients/${clientId}`)}
-              className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-              data-testid="button-client-dashboard"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Client Dashboard
-            </Button>
-          );
-        }
-        return null;
-      })()}
+          {/* Page Title */}
+          <h1 className="text-lg font-bold text-white">GLP-1 Meal Board</h1>
 
-      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+          {/* Optional: Client Dashboard Button (same position, now safe-area aware) */}
+          <div className="ml-auto">
+            {(() => {
+              const urlParams = new URLSearchParams(window.location.search);
+              const clientId = urlParams.get("clientId");
+              if (clientId) {
+                return (
+                  <Button
+                    size="sm"
+                    onClick={() => setLocation(`/pro/clients/${clientId}`)}
+                    className="bg-black/60 hover:bg-black/80 text-white rounded-xl border border-white/20 backdrop-blur-sm px-3 py-2 flex items-center gap-2"
+                    data-testid="button-client-dashboard"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Client Dashboard
+                  </Button>
+                );
+              }
+              return null;
+            })()}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Wrapper */}
+      <div
+        className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="px-4 py-4 flex flex-col gap-3">
           {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
           <div className="relative flex justify-center">
