@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { Home, Mic, Save, Download, Trash2 } from "lucide-react";
+import { Home, Mic, Save, Download, Trash2, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
@@ -311,9 +311,11 @@ export default function GetInspiration() {
       >
         <div className="px-8 py-3 flex items-center gap-3">
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">
-            Get Inspiration
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
+            <Lightbulb className="h-5 w-5 text-white" />
+            <span>Get Inspiration</span>
           </h1>
+
           <div className="ml-auto" />
         </div>
       </div>
@@ -331,7 +333,7 @@ export default function GetInspiration() {
           className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 mb-8"
         >
           <div className="text-center mb-4">
-            <p className="text-md text-white/90">
+            <p className="text-lg text-semi-bold text-white">
               Inspirational Quotes to start your day
             </p>
           </div>
@@ -367,8 +369,8 @@ export default function GetInspiration() {
           className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 mb-8"
         >
           <div className="text-center mb-6">
-            <div className="text-4xl mb-3">🧠</div>
-            <h2 className="text-xl font-bold text-white mb-2">
+            <div className="text-2xl mb-3">🧠</div>
+            <h2 className="text-lg font-bold text-white mb-2">
               Daily Health Journal
             </h2>
             <p className="text-white/90 italic text-sm">
