@@ -447,7 +447,7 @@ export default function ProClientDashboard() {
                 data-testid="button-set-macros-biometrics-red"
               >
                 <Target className="h-5 w-5 mr-2" />
-                Set Macros in Biometrics
+                Set Macros  Biometrics
               </Button>
             </div>
           </CardContent>
@@ -829,7 +829,6 @@ export default function ProClientDashboard() {
               data-testid="button-performance-competition-builder"
             >
               <Trophy className="h-4 w-4 mr-2" /> Performance & Competition Builder
-            </Button>
             <Button
               onClick={() => {
                 if (!clientId) return; // safety guard
