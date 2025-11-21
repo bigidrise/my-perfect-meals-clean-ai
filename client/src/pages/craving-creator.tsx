@@ -106,7 +106,7 @@ function loadCravingCache(): CachedCravingState | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const parsed = JSON.JSON.parse(raw);
+    const parsed = JSON.parse(raw);
     // Minimal sanity checks
     if (!parsed?.generatedMeal?.id) return null;
     return parsed as CachedCravingState;
