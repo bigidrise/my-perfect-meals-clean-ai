@@ -937,44 +937,58 @@ export default function AntiInflammatoryMenuBuilder() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-32 overflow-x-hidden"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-32 overflow-x-hidden"
     >
-      {/* Conditional Back Button - Changes based on navigation source */}
-      {(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const clientId = urlParams.get('clientId');
-        
-        // If coming from ProCare (has clientId), show "Client Dashboard"
-        if (clientId) {
-          return (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setLocation(`/pro/clients/${clientId}`)}
-              className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-              data-testid="button-client-dashboard"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Client Dashboard
-            </Button>
-          );
-        }
-        
-        // Otherwise, show "Planner" (default navigation from Planner page)
-        return (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setLocation("/planner")}
-            className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Planner
-          </Button>
-        );
-      })()}
+      {/* Universal Safe-Area Header Bar */}
+      <div
+        className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="relative h-20 flex items-center justify-center">
+          {/* Conditional Back Button - Changes based on navigation source */}
+          <div className="absolute left-2 sm:left-4">
+            {(() => {
+              const urlParams = new URLSearchParams(window.location.search);
+              const clientId = urlParams.get('clientId');
+              
+              // If coming from ProCare (has clientId), show "Client Dashboard"
+              if (clientId) {
+                return (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setLocation(`/pro/clients/${clientId}`)}
+                    className="bg-black/60 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+                    data-testid="button-client-dashboard"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Client Dashboard
+                  </Button>
+                );
+              }
+              
+              // Otherwise, show "Planner" (default navigation from Planner page)
+              return (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setLocation("/planner")}
+                  className="bg-black/10 backdrop-blur-none rounded-2xl border border-white/20 text-white hover:bg-black/80 px-3 sm:px-4 py-2"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Planner
+                </Button>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
 
-      <div className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4">
+      {/* Main Content Wrapper */}
+      <div
+        className="mb-6 mt-2 border border-zinc-800 bg-zinc-900/60 backdrop-blur rounded-2xl mx-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="px-4 py-4 flex flex-col gap-3">
           
           {/* ROW 1: Week Dates (centered) + ? Button (absolute top-right) */}
