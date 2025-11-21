@@ -54,7 +54,7 @@ import ShoppingListPreviewModal from "@/components/ShoppingListPreviewModal";
 import { useWeeklyBoard } from "@/hooks/useWeeklyBoard";
 import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
-import MealIngredientPicker from "@/components/MealIngredientPicker";
+import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import {
@@ -1952,7 +1952,7 @@ export default function DiabeticMenuBuilder() {
       />
 
       {/* AI Meal Creator with Ingredient Picker - All Meal Slots */}
-      <MealIngredientPicker
+      <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
