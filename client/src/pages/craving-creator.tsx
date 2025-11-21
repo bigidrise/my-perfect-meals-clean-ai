@@ -471,18 +471,7 @@ export default function CravingCreator() {
             )}
           </div>
 
-          <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              {replaceId
-                ? `Replace: ${replaceName || "Meal"}`
-                : "Craving Creator"}
-            </h1>
-            <p className="text-white/90 mb-2 text-sm">
-              {replaceId
-                ? "Create a replacement meal for your weekly plan"
-                : "Use the Craving Creator to make delicious meals, snacks, or desserts!"}
-            </p>
-          </div>
+          
 
           {isDeclinedMeal && (
             <Card className="mb-6 w-full max-w-xl mx-auto bg-black/20 backdrop-blur-lg border border-white/20 shadow-lg">

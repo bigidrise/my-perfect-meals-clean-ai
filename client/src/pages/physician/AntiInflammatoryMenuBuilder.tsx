@@ -955,7 +955,7 @@ export default function AntiInflammatoryMenuBuilder() {
           </Button>
 
           {/* Page Title */}
-          <h1 className="text-lg font-bold text-white">Anti-Inflammatory Meal Board</h1>
+          <h1 className="text-lg font-bold text-white">Anti-Inflammatory Builder</h1>
 
           {/* Info Button + Optional Client Dashboard Button */}
           <div className="ml-auto flex items-center gap-2">

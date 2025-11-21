@@ -186,9 +186,7 @@ export default function DiabeticHub() {
             </Button>
 
             {/* Title */}
-            <h1 className="text-lg font-bold text-white">
-              Diabetic Nutrition Hub
-            </h1>
+            <h1 className="text-lg font-bold text-white">Diabetic Hub</h1>
 
             {/* Question Mark Button */}
             <button
@@ -443,7 +441,6 @@ export default function DiabeticHub() {
           </section>
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-8" />
 
           {/* 7-Day Glucose Trend */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
@@ -606,10 +603,8 @@ export default function DiabeticHub() {
           </section>
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-8" />
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-8" />
 
           {/* AI Meal Generator */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
