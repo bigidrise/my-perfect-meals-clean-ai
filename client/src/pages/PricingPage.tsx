@@ -11,6 +11,7 @@ import { PLAN_SKUS, getPlansByGroup } from "@/data/planSkus";
 import { startCheckout } from "@/lib/checkout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { InfoButton } from "@/components/common/InfoButton";
 
 export default function PricingPage() {
   const [, setLocation] = useLocation();
@@ -136,6 +137,11 @@ export default function PricingPage() {
       >
         <Home className="h-4 w-4 text-white" />
       </button>
+
+      {/* Info Button - Top Right */}
+      <div className="fixed top-4 right-4 z-50">
+        <InfoButton featureId="pricing" size={18} />
+      </div>
 
       <div className="container max-w-6xl mx-auto px-4">
         {/* Collapsible Header (Black Glass) */}

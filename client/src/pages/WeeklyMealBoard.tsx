@@ -36,6 +36,7 @@ import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { InfoButton } from "@/components/common/InfoButton";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -952,13 +953,9 @@ export default function WeeklyMealBoard() {
           <div className="ml-auto" />
 
           {/* Info Button */}
-          <button
-            onClick={() => setShowInfoModal(true)}
-            className="flex items-center justify-center h-10 w-10 rounded-2xl bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl flash-border"
-            aria-label="How to use Weekly Meal Board"
-          >
-            ?
-          </button>
+          <div className="flex items-center justify-center h-10 w-10">
+            <InfoButton featureId="weekly-meal-board" size={20} />
+          </div>
         </div>
       </div>
 

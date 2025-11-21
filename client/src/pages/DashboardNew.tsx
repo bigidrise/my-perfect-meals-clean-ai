@@ -24,6 +24,7 @@ import { HubControlIcon } from "@/components/icons/HubControlIcon";
 import OpenAI from "openai"; // Import OpenAI
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { InfoButton } from "@/components/common/InfoButton";
 
 interface FeatureCard {
   title: string;
@@ -154,6 +155,9 @@ export default function DashboardNew() {
             className="h-16 w-16 object-contain"
           />
           <h1 className="text-lg font-bold text-white">My Perfect Meals</h1>
+          <div className="ml-auto">
+            <InfoButton featureId="dashboard" size={18} />
+          </div>
         </div>
       </div>
 
