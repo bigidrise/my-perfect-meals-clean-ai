@@ -143,7 +143,7 @@ export default function ProClientDashboard() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -283,8 +283,8 @@ export default function ProClientDashboard() {
                       checked={!!t.flags?.lowSodium}
                       onChange={(e) =>
                         setT({
-                          ...t,
-                          flags: { ...t.flags, lowSodium: e.target.checked },
+                          ...t.flags,
+                          lowSodium: e.target.checked,
                         })
                       }
                     />
@@ -823,10 +823,10 @@ export default function ProClientDashboard() {
             <h2 className="text-lg font-bold text-white mb-2">Trainers</h2>
             <Button
               onClick={() =>
-                setLocation(`/pro/clients/${clientId}/athlete-board`)
+                setLocation(`/pro/clients/${clientId}/performance-competition-builder`)
               }
               className="w-full sm:w-[400px] bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 text-white font-semibold rounded-xl shadow-lg"
-              data-testid="button-athlete-board"
+              data-testid="button-performance-competition-builder"
             >
               <Trophy className="h-4 w-4 mr-2" /> Professional/ Trainer Meal
               Board

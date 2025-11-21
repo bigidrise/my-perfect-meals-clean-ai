@@ -80,7 +80,7 @@ import ProCareCover from "@/pages/ProCareCover";
 import ProPortal from "@/pages/ProPortal";
 import ProClients from "@/pages/pro/ProClients";
 import ProClientDashboard from "@/pages/pro/ProClientDashboard";
-import AthleteBoard from "@/pages/pro/AthleteBoard";
+import PerformanceCompetitionBuilder from "@/pages/pro/PerformanceCompetitionBuilder";
 
 // Physician Hub Pages
 import DiabeticHub from "@/pages/physician/DiabeticHub";
@@ -125,8 +125,8 @@ import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
 // Wrapper components for athlete boards
-const AthleteBoardStandalone = (_props: any) => <AthleteBoard mode="athlete" />;
-const AthleteBoardProCare = (_props: any) => <AthleteBoard mode="procare" />;
+const AthleteBoardStandalone = (_props: any) => <PerformanceCompetitionBuilder mode="athlete" />;
+const AthleteBoardProCare = (_props: any) => <PerformanceCompetitionBuilder mode="procare" />;
 
 export default function Router() {
   const [location] = useLocation();
