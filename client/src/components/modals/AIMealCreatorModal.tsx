@@ -383,7 +383,14 @@ export default function AIMealCreatorModal({
         )}
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-3">
+          <Button
+            onClick={handleGenerateMeal}
+            disabled={generating || selectedIngredients.length === 0}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+          >
+            Generate AI Meal
+          </Button>
           <Button
             onClick={handleCancel}
             variant="outline"
@@ -391,13 +398,6 @@ export default function AIMealCreatorModal({
             disabled={generating}
           >
             Cancel
-          </Button>
-          <Button
-            onClick={handleGenerateMeal}
-            disabled={generating || selectedIngredients.length === 0}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white border-0"
-          >
-            Generate AI Meal
           </Button>
         </div>
 
