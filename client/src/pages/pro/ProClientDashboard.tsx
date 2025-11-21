@@ -447,7 +447,7 @@ export default function ProClientDashboard() {
                 data-testid="button-set-macros-biometrics-red"
               >
                 <Target className="h-5 w-5 mr-2" />
-                Set Macros to Biometrics
+                Set Macros in Biometrics
               </Button>
             </div>
           </CardContent>
