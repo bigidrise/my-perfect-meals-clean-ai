@@ -492,14 +492,9 @@ export default function DiabeticHub() {
           {/* AI Meal Generator */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
-            <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg">
-                <ChefHat className="h-6 w-6" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semi-bold text-white">AI Diabetic Meal Generator</h2>
-                <p className="text-white/80 text-sm">Low-GI meals based on your guardrails</p>
-              </div>
+            <div className="mb-6 relative z-10">
+              <h2 className="text-lg font-semi-bold text-white">AI Diabetic Meal Generator</h2>
+              <p className="text-white/80 text-sm">Low-GI meals based on your guardrails</p>
             </div>
 
             <button
