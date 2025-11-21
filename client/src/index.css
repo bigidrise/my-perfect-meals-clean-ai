@@ -46,8 +46,8 @@
 .flash-green-strong {
   /* animation: pulseLime 1.1s infinite; */
   border-radius: 0.75rem;
-  outline: 2px solid rgba(163, 230, 53, 0.7);
-  outline-offset: 2px;
+  /* outline: 2px solid rgba(163, 230, 53, 0.7); */
+  /* outline-offset: 2px; */
 }
 
 .flash-white {
@@ -755,7 +755,7 @@
 
 .flash-border {
   /* animation: pulseBorderLime 1.3s ease-in-out infinite; */
-  border: 2px solid rgba(163, 230, 53, 1) !important;
+  /* border: 2px solid rgba(163, 230, 53, 1) !important; */
   border-radius: 1rem;
 }
 
