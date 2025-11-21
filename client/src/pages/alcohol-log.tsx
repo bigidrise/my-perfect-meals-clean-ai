@@ -189,33 +189,44 @@ export default function AlcoholLogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/alcohol-hub")}
-          className="fixed top-4 left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 rounded-2xl hover:bg-black/30 text-white"
-          data-testid="button-back-to-hub"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/alcohol-hub")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            data-testid="button-back-to-hub"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-        {/* Header */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-gray-400 to-black/80 transition mb-8 mt-12">
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Alcohol Log</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Alcohol Log"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+
+      <div
+        className="max-w-4xl mx-auto px-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+        {/* Main Content Card */}
+        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-gray-400 to-black/80 transition mb-8">
           <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
-                <Wine className="h-6 w-6 text-rose-400" />
-                Alcohol Log
-                <button
-                  onClick={() => setShowInfoModal(true)}
-                  className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-                  aria-label="How to use Alcohol Log"
-                >
-                  ?
-                </button>
-              </CardTitle>
               <p className="text-sm text-white/90 mt-2">
                 Voluntary logging. Simple charts. Alcohol calories/carbs are informational and do <strong>not</strong> reduce your food targets.
               </p>

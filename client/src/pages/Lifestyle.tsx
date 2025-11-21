@@ -68,7 +68,10 @@ const Lifestyle = ({ user }) => {
       <LifestyleGuidedTour />
 
       {/* Header Banner */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+      <div
+        className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
         <div className="px-4 py-3 flex items-center gap-3">
           <Sparkles className="h-6 w-6 text-orange-500" />
           <h1 className="text-lg font-bold text-white">Lifestyle</h1>
@@ -76,7 +79,10 @@ const Lifestyle = ({ user }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 py-8 pt-20">
+      <div
+        className="flex-1 px-4 pb-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-48 rounded-xl overflow-hidden">

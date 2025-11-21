@@ -330,33 +330,39 @@ export default function AlcoholLeanAndSocial() {
 
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-black/60 via-orange-600 to-black/80">
-      <div className="max-w-6xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/alcohol-hub")}
-          className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-rose-900/40 backdrop-blur-none border border-rose-400/60 hover:bg-rose-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/alcohol-hub")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-        {/* Header */}
-        <div className="text-center mb-8 mt-14 bg-black/20 backdrop-blur-lg border border-rose-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(244,63,94,0.15)]">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Wine className="h-5 w-5 text-rose-300" />
-            <h1 className="text-2xl font-bold text-white">Lean & Social</h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-lg font-bold flash-border"
-              aria-label="How to use Lean & Social"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-sm text-white/90 max-w-2xl mx-auto">
-            Diet-friendly drinks and wines for staying social while staying lean
-          </p>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Lean & Social</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Lean & Social"
+          >
+            ?
+          </button>
         </div>
+      </div>
+
+      <div
+        className="max-w-6xl mx-auto px-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         {/* Drinks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">

@@ -101,36 +101,40 @@ export default function AlcoholHubLanding() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
-      {/* Header */}
-      <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={() => setLocation("/lifestyle")}
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/10"
-              data-testid="button-back-to-lifestyle"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex items-center gap-2">
-              <Wine className="h-6 w-6 text-orange-400" />
-              <h1 className="text-xl font-bold text-white">Spirits & Lifestyle Hub</h1>
-            </div>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="ml-auto flex items-center justify-center h-10 w-10 rounded-full bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl"
-              aria-label="How to use Spirits & Lifestyle Hub"
-            >
-              ?
-            </button>
-          </div>
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/lifestyle")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            data-testid="button-back-to-lifestyle"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Spirits & Lifestyle Hub</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Spirits & Lifestyle Hub"
+          >
+            ?
+          </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 py-8">
+      <div
+        className="flex-1 px-4 pb-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-40 rounded-xl overflow-hidden">

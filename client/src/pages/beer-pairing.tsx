@@ -168,33 +168,39 @@ export default function BeerPairingMode() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-6">
-      <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => setLocation("/alcohol-hub")}
-          className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-orange-900/40 backdrop-blur-none border border-orange-400/60 hover:bg-orange-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/alcohol-hub")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-        <div className="bg-black/50 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 text-center mb-8 mt-14 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
-          <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
-            <span className="text-2xl">🍺</span>
-          </div>
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <h1 className="text-2xl font-bold text-white">Beer Pairing Mode</h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-              aria-label="How to use Beer Pairing"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-sm text-white/90">
-            Find the best beer styles and specific picks to match your meal, taste, and ABV preferences.
-          </p>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Beer Pairing Mode</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Beer Pairing"
+          >
+            ?
+          </button>
         </div>
+      </div>
+
+      <div
+        className="max-w-4xl mx-auto px-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         <Card className="bg-black/50 border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>

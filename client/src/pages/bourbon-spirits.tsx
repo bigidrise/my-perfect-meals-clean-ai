@@ -142,43 +142,39 @@ export default function BourbonSpiritsPage() {
     "text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white data-[state=checked]:bg-white/10";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Navigation Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setLocation("/alcohol-hub")}
-          className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-orange-900/40 backdrop-blur-none border border-orange-400/60 hover:bg-orange-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-
-        {/* Glass Title Card */}
-        <div className="bg-black/30 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.15)] rounded-2xl p-8 text-center mb-12 mt-14">
-          <div
-            className="flex items-center justify-center gap-3 mb-3"
-            aria-hidden="true"
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <button
+            onClick={() => setLocation("/alcohol-hub")}
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
           >
-            <span className="text-2xl leading-none">🥃</span>
-          </div>
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-              Bourbon &amp; Spirits Pairing
-            </h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-              aria-label="How to use Bourbon & Spirits Pairing"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-md text-white/90 max-w-2xl mx-auto">
-            Get expert master distiller recommendations for premium bourbon and
-            spirits with your meals.
-          </p>
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Bourbon & Spirits Pairing</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use Bourbon & Spirits Pairing"
+          >
+            ?
+          </button>
         </div>
+      </div>
+
+      <div
+        className="max-w-4xl mx-auto px-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         {/* Pairing Form */}
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
