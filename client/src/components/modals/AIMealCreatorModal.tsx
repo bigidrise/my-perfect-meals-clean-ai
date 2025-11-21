@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,14 +8,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from '@/components/ui/input';
 import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import PreparationModal, { normalizeIngredientName } from "@/components/PreparationModal";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
 import { mealIngredients } from "@/data/mealIngredients";
-import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
-import { computeTargetsFromOnboarding } from "@/lib/targets";
+import { useMacroTargeting } from "@/hooks/useMacroTargeting";
+import { MacroTargetingControls } from "@/components/macro-targeting/MacroTargetingControls";
 
 interface AIMealCreatorModalProps {
   open: boolean;
@@ -54,12 +53,8 @@ export default function AIMealCreatorModal({
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
 
-  // Fetch macro targets for trainer features
-  const profile = useOnboardingProfile();
-  const macroTargets = useMemo(() => {
-    if (!showMacroTargeting || !profile) return null;
-    return computeTargetsFromOnboarding(profile);
-  }, [showMacroTargeting, profile]);
+  // Macro targeting for trainer features
+  const macroTargetingState = useMacroTargeting('macroTargets::trainer::aiMealCreator');
 
   // List of ingredients that need cooking style selection (matching MealPremadePicker)
   const NEEDS_PREP = [
@@ -203,6 +198,9 @@ export default function AIMealCreatorModal({
         return style ? `${style} ${ing}` : ing;
       });
 
+      // Get custom macro targets if enabled
+      const customMacroTargets = macroTargetingState.serializeForRequest();
+
       const response = await fetch("/api/meals/fridge-rescue", {
         method: "POST",
         headers: {
@@ -211,7 +209,8 @@ export default function AIMealCreatorModal({
         body: JSON.stringify({
           fridgeItems: ingredientsWithStyles,
           userId: 1,
-          mealType: mealSlot
+          mealType: mealSlot,
+          ...(customMacroTargets && { macroTargets: customMacroTargets })
         }),
         signal: abortControllerRef.current.signal
       });
@@ -318,29 +317,9 @@ export default function AIMealCreatorModal({
           </p>
         </div>
 
-        {/* Macro Targets Banner - Trainer Features Only */}
-        {showMacroTargeting && macroTargets && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-400/30 rounded-xl backdrop-blur-sm">
-            <h3 className="text-white/90 text-xs font-semibold mb-2 text-center">Client's Daily Macro Targets</h3>
-            <div className="grid grid-cols-4 gap-2">
-              <div className="text-center">
-                <div className="text-lg font-bold text-white">{macroTargets.protein || '—'}g</div>
-                <div className="text-[10px] uppercase tracking-wide text-white/70">Protein</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-white">{macroTargets.carbs || '—'}g</div>
-                <div className="text-[10px] uppercase tracking-wide text-white/70">Carbs</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-white">{macroTargets.fat || '—'}g</div>
-                <div className="text-[10px] uppercase tracking-wide text-white/70">Fat</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-white">{macroTargets.calories || '—'}</div>
-                <div className="text-[10px] uppercase tracking-wide text-white/70">Calories</div>
-              </div>
-            </div>
-          </div>
+        {/* Macro Targeting Controls - Trainer Features Only */}
+        {showMacroTargeting && (
+          <MacroTargetingControls state={macroTargetingState} />
         )}
 
         {/* Category Tabs - Purple Style (Matching MealPremadePicker) */}

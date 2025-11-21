@@ -9,6 +9,8 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import PreparationModal, { normalizeIngredientName } from '@/components/PreparationModal';
+import { useMacroTargeting } from '@/hooks/useMacroTargeting';
+import { MacroTargetingControls } from '@/components/macro-targeting/MacroTargetingControls';
 import { 
   AI_PREMADE_BREAKFAST_MEALS, 
   getBreakfastMealsByCategory,
@@ -36,6 +38,7 @@ interface MealPremadePickerProps {
   onMealSelect?: (meal: any) => void;
   mealType?: 'breakfast' | 'lunch' | 'dinner';
   dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory';
+  showMacroTargeting?: boolean;
 }
 
 // Map category names to display names
@@ -314,7 +317,8 @@ export default function MealPremadePicker({
   onClose,
   onMealSelect,
   mealType = 'breakfast',
-  dietType = 'weekly'
+  dietType = 'weekly',
+  showMacroTargeting = false
 }: MealPremadePickerProps) {
   // Determine which premade set to use based on meal type and diet type
   const premadeData = mealType === 'breakfast' 
@@ -335,6 +339,9 @@ export default function MealPremadePicker({
   const tickerRef = useRef<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
+
+  // Macro targeting for trainer features
+  const macroTargetingState = useMacroTargeting('macroTargets::trainer::premadePicker');
 
   const startProgressTicker = () => {
     if (tickerRef.current) return;
