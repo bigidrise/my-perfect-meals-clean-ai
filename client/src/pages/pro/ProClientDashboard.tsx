@@ -158,9 +158,10 @@ export default function ProClientDashboard() {
           {/* Back Button */}
           <button
             onClick={() => setLocation("/care-team")}
-            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
           </button>
 
           {/* Title */}
@@ -419,15 +420,7 @@ export default function ProClientDashboard() {
               </Button>
               <Button
                 onClick={async () => {
-                  // Calculate values from NEW 4-field structure
-                  const protein = t.protein || 0;
-                  const starchyCarbs = t.starchyCarbs || 0;
-                  const fibrousCarbs = t.fibrousCarbs || 0;
-                  const fat = t.fat || 0;
-                  const totalCarbs = starchyCarbs + fibrousCarbs;
-                  const calories = Math.round((protein * 4) + (totalCarbs * 4) + (fat * 9));
-
-                  if (calories < 100) {
+                  if (t.kcal < 100) {
                     toast({
                       title: "Cannot Set Empty Macros",
                       description: "Please set macro targets first",
@@ -443,10 +436,10 @@ export default function ProClientDashboard() {
                     );
                     await setMacroTargets(
                       {
-                        calories: calories,
-                        protein_g: protein,
-                        carbs_g: totalCarbs,
-                        fat_g: fat,
+                        calories: t.kcal,
+                        protein_g: t.protein,
+                        carbs_g: t.carbs,
+                        fat_g: t.fat,
                       },
                       clientId,
                     );
@@ -459,7 +452,7 @@ export default function ProClientDashboard() {
 
                     toast({
                       title: "✅ Macros Set to Biometrics!",
-                      description: `${calories} kcal coach-set targets saved for ${client?.name}`,
+                      description: `${t.kcal} kcal coach-set targets saved for ${client?.name}`,
                     });
 
                     setLocation("/my-biometrics");

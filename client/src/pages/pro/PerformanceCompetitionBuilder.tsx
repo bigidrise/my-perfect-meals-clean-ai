@@ -936,10 +936,11 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             {/* Back Button */}
             <button
               onClick={() => setLocation(mode === "athlete" ? "/procare-cover" : "/dashboard")}
-              className="flex items-center justify-center text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg flex-shrink-0"
+              className="flex items-center justify-center text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg text-md font-medium flex-shrink-0"
               data-testid="button-back-dashboard"
             >
               <ArrowLeft className="h-5 w-5" />
+              <span className="text-sm font-medium">Back</span>
             </button>
 
             {/* Title */}
@@ -960,10 +961,10 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             <div className="flex items-center">
               <button
                 onClick={() => setLocation(`/pro/clients/${clientId}`)}
-                className="flex items-center gap-2 text-white/90 hover:bg-white/10 transition-all duration-200 px-3 py-1.5 rounded-lg text-sm font-medium"
+                className="flex items-center text-white/90 hover:bg-white/10 transition-all duration-200 px-3 py-1.5 rounded-lg text-md font-medium"
                 data-testid="button-client-dashboard-text"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-5 w-5" />
                 <span>Client Dashboard</span>
               </button>
             </div>

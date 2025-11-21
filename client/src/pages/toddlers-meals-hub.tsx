@@ -141,9 +141,10 @@ export default function ToddlersMealsHub() {
           {/* Back Button */}
           <button
             onClick={() => setLocation("/healthy-kids-meals")}
-            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
           </button>
 
           {/* Title */}
