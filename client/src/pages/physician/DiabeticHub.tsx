@@ -1,10 +1,29 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ArrowLeft, Activity, Target, TrendingUp, ChefHat, Home, Utensils } from "lucide-react";
+import {
+  ArrowLeft,
+  Activity,
+  Target,
+  TrendingUp,
+  ChefHat,
+  Home,
+  Utensils,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSaveDiabetesProfile, useLogGlucose, useGlucoseLogs, useDiabetesProfile } from "@/hooks/useDiabetes";
+import {
+  useSaveDiabetesProfile,
+  useLogGlucose,
+  useGlucoseLogs,
+  useDiabetesProfile,
+} from "@/hooks/useDiabetes";
 import { useToast } from "@/hooks/use-toast";
 import { GLUCOSE_THRESHOLDS } from "@/content/diabetesEducation";
 import { DIABETIC_PRESETS } from "@/data/diabeticPresets";
@@ -34,7 +53,8 @@ export default function DiabeticHub() {
 
   // Guardrail state (hydrated from server)
   const [glucoseReading, setGlucoseReading] = useState("");
-  const [glucoseContext, setGlucoseContext] = useState<GlucoseContext>("PRE_MEAL");
+  const [glucoseContext, setGlucoseContext] =
+    useState<GlucoseContext>("PRE_MEAL");
   const [fastingMin, setFastingMin] = useState("80");
   const [fastingMax, setFastingMax] = useState("120");
   const [postMealMax, setPostMealMax] = useState("140");
@@ -60,7 +80,10 @@ export default function DiabeticHub() {
 
   // Connect to copilot system: show info modal on first visit if coach mode is enabled
   useEffect(() => {
-    if (localStorage.getItem("coachMode") === "guided" && !localStorage.getItem("diabetic-hub-info-seen")) {
+    if (
+      localStorage.getItem("coachMode") === "guided" &&
+      !localStorage.getItem("diabetic-hub-info-seen")
+    ) {
       setShowInfoModal(true);
     }
   }, []);
@@ -117,7 +140,7 @@ export default function DiabeticHub() {
   };
 
   const handleApplyPreset = (presetId: string) => {
-    const preset = DIABETIC_PRESETS.find(p => p.id === presetId);
+    const preset = DIABETIC_PRESETS.find((p) => p.id === presetId);
     if (!preset) return;
 
     setFastingMin(String(preset.guardrails.fastingMin));
@@ -129,9 +152,9 @@ export default function DiabeticHub() {
     setMealFrequency(String(preset.guardrails.mealFrequency));
     setSelectedPreset(presetId);
 
-    toast({ 
+    toast({
       title: `Applied ${preset.name}`,
-      description: preset.description 
+      description: preset.description,
     });
   };
 
@@ -183,7 +206,6 @@ export default function DiabeticHub() {
           className="max-w-6xl mx-auto px-4 space-y-8 pb-24"
           style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
         >
-
           {/* Doctor / Coach Guardrail Card */}
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
@@ -192,13 +214,19 @@ export default function DiabeticHub() {
                 <Target className="h-6 w-6" />
               </div>
               <div>
-                <h2 className="text-lg font-medium text-white">Doctor / Coach Guardrails</h2>
-                <p className="text-white/80 text-sm">Set your clinical targets and constraints</p>
+                <h2 className="text-lg font-bold text-white">
+                  Doctor / Coach Guardrails
+                </h2>
+                <p className="text-white/80 text-sm">
+                  Set your clinical targets and constraints
+                </p>
               </div>
             </div>
 
             <div className="mb-6 relative z-10">
-              <label className="block text-sm text-white mb-2">Apply Clinical Preset</label>
+              <label className="block text-sm text-white mb-2">
+                Apply Clinical Preset
+              </label>
               <Select value={selectedPreset} onValueChange={handleApplyPreset}>
                 <SelectTrigger className="w-full bg-white/20 border-white/40 text-white [&>span]:text-white">
                   <SelectValue placeholder="Choose a preset or customize below..." />
@@ -213,14 +241,19 @@ export default function DiabeticHub() {
               </Select>
               {selectedPreset && (
                 <p className="text-white/70 text-xs mt-2">
-                  {DIABETIC_PRESETS.find(p => p.id === selectedPreset)?.description}
+                  {
+                    DIABETIC_PRESETS.find((p) => p.id === selectedPreset)
+                      ?.description
+                  }
                 </p>
               )}
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10 mb-6">
               <div>
-                <label className="block text-sm text-white mb-2">Fasting Range (mg/dL)</label>
+                <label className="block text-sm text-white mb-2">
+                  Fasting Range (mg/dL)
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="number"
@@ -240,7 +273,9 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">Post-Meal Max (mg/dL)</label>
+                <label className="block text-sm text-white mb-2">
+                  Post-Meal Max (mg/dL)
+                </label>
                 <input
                   type="number"
                   value={postMealMax}
@@ -250,7 +285,9 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">Daily Carb Limit (g)</label>
+                <label className="block text-sm text-white mb-2">
+                  Daily Carb Limit (g)
+                </label>
                 <input
                   type="number"
                   value={dailyCarbLimit}
@@ -260,7 +297,9 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">Fiber Minimum (g)</label>
+                <label className="block text-sm text-white mb-2">
+                  Fiber Minimum (g)
+                </label>
                 <input
                   type="number"
                   value={fiberMin}
@@ -270,7 +309,9 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">GI Cap (Max)</label>
+                <label className="block text-sm text-white mb-2">
+                  GI Cap (Max)
+                </label>
                 <input
                   type="number"
                   value={giCap}
@@ -280,7 +321,9 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">Meal Frequency (per day)</label>
+                <label className="block text-sm text-white mb-2">
+                  Meal Frequency (per day)
+                </label>
                 <input
                   type="number"
                   value={mealFrequency}
@@ -290,13 +333,15 @@ export default function DiabeticHub() {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleSaveGuardrails}
               disabled={saveMutation.isPending}
               className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
-              <span className="relative z-10">{saveMutation.isPending ? "Saving..." : "Save Guardrails"}</span>
+              <span className="relative z-10">
+                {saveMutation.isPending ? "Saving..." : "Save Guardrails"}
+              </span>
             </button>
           </section>
 
@@ -307,7 +352,7 @@ export default function DiabeticHub() {
               <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg">
                 <Activity className="h-6 w-6" />
               </div>
-              <h2 className="text-lg font-medium text-white">
+              <h2 className="text-lg font-bold text-white">
                 Blood Sugar Tracker
               </h2>
             </div>
@@ -331,7 +376,12 @@ export default function DiabeticHub() {
                   <label className="block text-sm text-white mb-2">
                     Context
                   </label>
-                  <Select value={glucoseContext} onValueChange={(val) => setGlucoseContext(val as GlucoseContext)}>
+                  <Select
+                    value={glucoseContext}
+                    onValueChange={(val) =>
+                      setGlucoseContext(val as GlucoseContext)
+                    }
+                  >
                     <SelectTrigger className="w-full bg-white/20 border-white/40 text-white">
                       <SelectValue />
                     </SelectTrigger>
@@ -343,29 +393,44 @@ export default function DiabeticHub() {
                   </Select>
                 </div>
 
-                <button 
+                <button
                   onClick={handleLogGlucose}
                   disabled={logMutation.isPending}
                   className="w-full px-6 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-orange-600/90 text-white font-semi-bold transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
-                  <span className="relative z-10">{logMutation.isPending ? "Logging..." : "Log Reading"}</span>
+                  <span className="relative z-10">
+                    {logMutation.isPending ? "Logging..." : "Log Reading"}
+                  </span>
                 </button>
               </div>
 
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-6 border border-orange-400/30">
-                <div className="text-white font-medium text-sm mb-2">Last Reading</div>
+                <div className="text-white font-medium text-sm mb-2">
+                  Last Reading
+                </div>
                 <div className="text-xl font-medium text-white mb-2">
                   {latestReading ? `${lastValue} mg/dL` : "No readings yet"}
                 </div>
                 {latestReading && (
                   <>
-                    <div className={`text-sm mb-3 ${inRange ? "text-green-200" : "text-yellow-200"}`}>
+                    <div
+                      className={`text-sm mb-3 ${inRange ? "text-green-200" : "text-yellow-200"}`}
+                    >
                       {inRange ? "✅ In Target Range" : "⚠️ Outside Target"}
                     </div>
                     {glucoseLogs?.data && glucoseLogs.data.length > 1 && (
                       <div className="text-white/80 text-sm mb-2">
-                        7-Day Avg: {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
+                        7-Day Avg:{" "}
+                        {Math.round(
+                          glucoseLogs.data
+                            .slice(0, 7)
+                            .reduce(
+                              (sum: number, log: any) => sum + log.valueMgdl,
+                              0,
+                            ) / Math.min(7, glucoseLogs.data.length),
+                        )}{" "}
+                        mg/dL
                       </div>
                     )}
                   </>
@@ -387,7 +452,7 @@ export default function DiabeticHub() {
               <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white shadow-lg">
                 <TrendingUp className="h-6 w-6" />
               </div>
-              <h2 className="text-lg font-medium text-white">
+              <h2 className="text-lg font-bold text-white">
                 7-Day Glucose Trend
               </h2>
             </div>
@@ -397,43 +462,74 @@ export default function DiabeticHub() {
                 {/* Visual Chart */}
                 <div className="h-64 bg-yellow-500/10 backdrop-blur-sm rounded-xl border border-yellow-400/30 p-4 relative overflow-hidden">
                   <div className="absolute inset-0 flex items-end justify-around px-4 pb-4">
-                    {glucoseLogs.data.slice(0, 7).reverse().map((log: any, index: number) => {
-                      const maxHeight = 240;
-                      const minValue = 50;
-                      const maxValue = 250;
-                      const normalizedHeight = ((log.valueMgdl - minValue) / (maxValue - minValue)) * maxHeight;
-                      const height = Math.max(20, Math.min(normalizedHeight, maxHeight));
-                      const isInRange = log.valueMgdl >= targetMin && log.valueMgdl <= targetMax;
+                    {glucoseLogs.data
+                      .slice(0, 7)
+                      .reverse()
+                      .map((log: any, index: number) => {
+                        const maxHeight = 240;
+                        const minValue = 50;
+                        const maxValue = 250;
+                        const normalizedHeight =
+                          ((log.valueMgdl - minValue) / (maxValue - minValue)) *
+                          maxHeight;
+                        const height = Math.max(
+                          20,
+                          Math.min(normalizedHeight, maxHeight),
+                        );
+                        const isInRange =
+                          log.valueMgdl >= targetMin &&
+                          log.valueMgdl <= targetMax;
 
-                      return (
-                        <div key={index} className="flex flex-col items-center gap-2" style={{ width: '12%' }}>
-                          <div className="text-white text-xs font-semibold">{log.valueMgdl}</div>
-                          <div 
-                            className={`w-full rounded-t-lg transition-all ${
-                              isInRange ? 'bg-green-500' : 'bg-orange-500'
-                            }`}
-                            style={{ height: `${height}px` }}
-                          />
-                          <div className="text-white/60 text-xs text-center">
-                            {new Date(log.recordedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        return (
+                          <div
+                            key={index}
+                            className="flex flex-col items-center gap-2"
+                            style={{ width: "12%" }}
+                          >
+                            <div className="text-white text-xs font-semibold">
+                              {log.valueMgdl}
+                            </div>
+                            <div
+                              className={`w-full rounded-t-lg transition-all ${
+                                isInRange ? "bg-green-500" : "bg-orange-500"
+                              }`}
+                              style={{ height: `${height}px` }}
+                            />
+                            <div className="text-white/60 text-xs text-center">
+                              {new Date(log.recordedAt).toLocaleDateString(
+                                undefined,
+                                { month: "short", day: "numeric" },
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 </div>
 
                 {/* Statistics */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-emerald-500/20 backdrop-blur-sm rounded-xl p-4 border border-emerald-400/30">
-                    <div className="text-emerald-200 text-xs mb-1">7-Day Average</div>
+                    <div className="text-emerald-200 text-xs mb-1">
+                      7-Day Average
+                    </div>
                     <div className="text-white text-lg font-semi-bold">
-                      {Math.round(glucoseLogs.data.slice(0, 7).reduce((sum: number, log: any) => sum + log.valueMgdl, 0) / Math.min(7, glucoseLogs.data.length))} mg/dL
+                      {Math.round(
+                        glucoseLogs.data
+                          .slice(0, 7)
+                          .reduce(
+                            (sum: number, log: any) => sum + log.valueMgdl,
+                            0,
+                          ) / Math.min(7, glucoseLogs.data.length),
+                      )}{" "}
+                      mg/dL
                     </div>
                   </div>
 
                   <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30">
-                    <div className="text-blue-200 text-xs mb-1">Target Range</div>
+                    <div className="text-blue-200 text-xs mb-1">
+                      Target Range
+                    </div>
                     <div className="text-white text-lg font-semi-bold">
                       {targetMin}-{targetMax} mg/dL
                     </div>
@@ -442,7 +538,18 @@ export default function DiabeticHub() {
                   <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-4 border border-purple-400/30">
                     <div className="text-purple-200 text-xs mb-1">In Range</div>
                     <div className="text-white text-lg font-semi-bold">
-                      {Math.round((glucoseLogs.data.slice(0, 7).filter((log: any) => log.valueMgdl >= targetMin && log.valueMgdl <= targetMax).length / Math.min(7, glucoseLogs.data.length)) * 100)}%
+                      {Math.round(
+                        (glucoseLogs.data
+                          .slice(0, 7)
+                          .filter(
+                            (log: any) =>
+                              log.valueMgdl >= targetMin &&
+                              log.valueMgdl <= targetMax,
+                          ).length /
+                          Math.min(7, glucoseLogs.data.length)) *
+                          100,
+                      )}
+                      %
                     </div>
                   </div>
                 </div>
@@ -450,25 +557,38 @@ export default function DiabeticHub() {
                 {/* Recent Readings Table */}
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
                   <div className="px-4 py-3 bg-white/10 border-b border-white/20">
-                    <h3 className="text-white font-semi-bold">Recent Readings</h3>
+                    <h3 className="text-white font-semi-bold">
+                      Recent Readings
+                    </h3>
                   </div>
                   <div className="divide-y divide-white/10">
-                    {glucoseLogs.data.slice(0, 7).map((log: any, index: number) => {
-                      const isInRange = log.valueMgdl >= targetMin && log.valueMgdl <= targetMax;
-                      return (
-                        <div key={index} className="px-4 py-3 flex justify-between items-center hover:bg-white/5">
-                          <div>
-                            <span className={`text-lg font-semi-bold ${isInRange ? 'text-green-400' : 'text-orange-400'}`}>
-                              {log.valueMgdl} mg/dL
-                            </span>
-                            <span className="text-white/60 text-sm ml-2">({log.context})</span>
+                    {glucoseLogs.data
+                      .slice(0, 7)
+                      .map((log: any, index: number) => {
+                        const isInRange =
+                          log.valueMgdl >= targetMin &&
+                          log.valueMgdl <= targetMax;
+                        return (
+                          <div
+                            key={index}
+                            className="px-4 py-3 flex justify-between items-center hover:bg-white/5"
+                          >
+                            <div>
+                              <span
+                                className={`text-lg font-semi-bold ${isInRange ? "text-green-400" : "text-orange-400"}`}
+                              >
+                                {log.valueMgdl} mg/dL
+                              </span>
+                              <span className="text-white/60 text-sm ml-2">
+                                ({log.context})
+                              </span>
+                            </div>
+                            <div className="text-white/60 text-sm">
+                              {new Date(log.recordedAt).toLocaleString()}
+                            </div>
                           </div>
-                          <div className="text-white/60 text-sm">
-                            {new Date(log.recordedAt).toLocaleString()}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -477,7 +597,9 @@ export default function DiabeticHub() {
                 <div className="text-center text-white/80">
                   <TrendingUp className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium">No readings yet</p>
-                  <p className="text-sm">Log your first glucose reading above to start tracking</p>
+                  <p className="text-sm">
+                    Log your first glucose reading above to start tracking
+                  </p>
                 </div>
               </div>
             )}
@@ -493,8 +615,12 @@ export default function DiabeticHub() {
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="mb-6 relative z-10">
-              <h2 className="text-lg font-semi-bold text-white">AI Diabetic Meal Generator</h2>
-              <p className="text-white/80 text-sm">Low-GI meals based on your guardrails</p>
+              <h2 className="text-lg font-bold text-white">
+                AI Diabetic Meal Generator
+              </h2>
+              <p className="text-white/80 text-sm">
+                Low-GI meals based on your guardrails
+              </p>
             </div>
 
             <button
@@ -505,28 +631,49 @@ export default function DiabeticHub() {
               <span className="relative z-10"> Diabetic Meal Builder </span>
             </button>
           </section>
-
         </div>
 
         {/* Info Modal */}
         {showInfoModal && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Diabetic Nutrition Hub</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                How to Use Diabetic Nutrition Hub
+              </h3>
 
               <div className="space-y-4 text-white/90 text-sm">
-                <p>Welcome to the Diabetic Nutrition Hub! This feature helps you manage Type 2 Diabetes with comprehensive tracking and meal planning.</p>
+                <p>
+                  Welcome to the Diabetic Nutrition Hub! This feature helps you
+                  manage Type 2 Diabetes with comprehensive tracking and meal
+                  planning.
+                </p>
                 <div>
-                  <h4 className="font-semibold text-blue-400 mb-2">Available Tools:</h4>
+                  <h4 className="font-semibold text-blue-400 mb-2">
+                    Available Tools:
+                  </h4>
                   <ul className="list-disc list-inside space-y-2 ml-2">
-                    <li><strong>Doctor Guardrails:</strong> Set clinical targets for glucose, carbs, fiber, GI, and meal frequency</li>
-                    <li><strong>Blood Sugar Tracker:</strong> Log glucose readings with context (fasting, pre-meal, post-meal)</li>
-                    <li><strong>7-Day Trend:</strong> Visualize your glucose patterns and track time in range</li>
-                    <li><strong>AI Meal Generator:</strong> Get personalized low-GI meals based on your guardrails</li>
+                    <li>
+                      <strong>Doctor Guardrails:</strong> Set clinical targets
+                      for glucose, carbs, fiber, GI, and meal frequency
+                    </li>
+                    <li>
+                      <strong>Blood Sugar Tracker:</strong> Log glucose readings
+                      with context (fasting, pre-meal, post-meal)
+                    </li>
+                    <li>
+                      <strong>7-Day Trend:</strong> Visualize your glucose
+                      patterns and track time in range
+                    </li>
+                    <li>
+                      <strong>AI Meal Generator:</strong> Get personalized
+                      low-GI meals based on your guardrails
+                    </li>
                   </ul>
                 </div>
                 <p className="text-blue-300 font-medium">
-                  💡 Tip: Start by setting your guardrails with your doctor's recommendations, then use the meal generator to build compliant meal plans!
+                  💡 Tip: Start by setting your guardrails with your doctor's
+                  recommendations, then use the meal generator to build
+                  compliant meal plans!
                 </p>
               </div>
 
