@@ -110,34 +110,41 @@ export default function CravingPresetsPage() {
   const scaledIngs = selected ? scaleIngredients(selected.ingredients, selected.baseServings, selectedServings, rounding) : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6">
-      {/* Back Button */}
-      <Button
-        onClick={() => setLocation("/craving-creator-landing")}
-        variant="ghost"
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-orange-900/40 backdrop-blur-none border border-orange-400/60 hover:bg-orange-800/50 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <ArrowLeft className="h-4 w-4" />
-      </Button>
+        <div className="px-8 py-3 flex items-center gap-3">
+          {/* Back Button */}
+          <Button
+            onClick={() => setLocation("/craving-creator-landing")}
+            variant="ghost"
+            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
 
-      <div className="max-w-6xl mx-auto pt-16">
-        {/* Header */}
-        <div className="text-center mb-8 bg-black/20 backdrop-blur-lg border border-orange-400/70 rounded-2xl p-8 shadow-[0_0_30px_rgba(249,115,22,0.15)]">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <ChefHat className="h-5 w-5 text-orange-300" />
-            <h1 className="text-xl font-bold text-white">Healthy Premade Cravings</h1>
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-              aria-label="How to use premade cravings"
-            >
-              ?
-            </button>
-          </div>
-          <p className="text-sm text-white/90 max-w-2xl mx-auto">
-            Pick a craving, choose servings (1–10), and we'll scale ingredients automatically
-          </p>
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">Healthy Premade Cravings</h1>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
+            aria-label="How to use premade cravings"
+          >
+            ?
+          </button>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div
+        className="max-w-6xl mx-auto px-4 pb-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
 
         {/* Controls */}
         <Card className="mb-6 bg-black/50 backdrop-blur-sm border border-orange-400/70">
