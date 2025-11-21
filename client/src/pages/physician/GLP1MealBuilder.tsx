@@ -2161,7 +2161,6 @@ export default function GLP1MealBuilder() {
           </div>
         </DialogContent>
       </Dialog>
-      </div>
     </motion.div>
   );
 }
