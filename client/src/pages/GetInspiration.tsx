@@ -298,33 +298,42 @@ export default function GetInspiration() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20">
-      {/* Fixed Home Button */}
-      <Button
-        onClick={() => setLocation("/dashboard")}
-        variant="ghost"
-        className="fixed top-4 left-4 z-50 text-white hover:bg-white/10 bg-black/40 backdrop-blur-none border border-white/20 shadow-lg"
-        data-testid="button-home"
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
+    >
+      {/* Universal Safe-Area Header */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <Home className="w-5 h-5" />
-      </Button>
+        <div className="px-4 py-3 flex items-center gap-3">
+          {/* Back to Dashboard */}
+          <Button
+            onClick={() => setLocation("/dashboard")}
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center h-10 w-10 p-0"
+            size="icon"
+            data-testid="button-home"
+          >
+            <Home className="h-5 w-5" />
+          </Button>
 
-      <div className="max-w-4xl mx-auto px-4 pt-20 pb-8">
-        {/* Page Header with Black Glass Background */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 text-center mb-8"
-        >
-          <h1 className="text-2xl font-bold text-white mb-2">
+          {/* Title */}
+          <h1 className="text-lg font-bold text-white">
             Get Inspiration
           </h1>
-          <p className="text-white/90 text-sm">
-            Daily Motivation and Journaling
-          </p>
-        </motion.div>
 
+          <div className="ml-auto" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div 
+        className="max-w-4xl mx-auto px-4 pb-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
         {/* Daily Motivation Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
