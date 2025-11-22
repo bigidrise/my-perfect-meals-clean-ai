@@ -22,7 +22,6 @@ const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <>
       {children}
-      <CopilotButton />
       <CopilotSheet />
     </>
   );
