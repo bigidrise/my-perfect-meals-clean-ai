@@ -84,7 +84,7 @@ export default function BottomNav() {
           </div>
 
           {/* CENTER COPILOT BUTTON */}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-5 z-10">
+          <div className="absolute left-1/2 -translate-x-1/2 -top-3 z-10">
             <motion.button
               onClick={toggle}
               className="flex items-center justify-center w-16 h-16 rounded-full bg-black/70 border-2 border-white/15 backdrop-blur-xl shadow-lg shadow-orange-500/60 hover:shadow-orange-500/100 hover:border-orange-400/100 transition-all duration-300"
