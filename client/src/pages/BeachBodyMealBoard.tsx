@@ -43,8 +43,6 @@ import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
 import { DuplicateDayModal } from "@/components/DuplicateDayModal";
 import { DuplicateWeekModal } from "@/components/DuplicateWeekModal";
-import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
-import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MacroFixCoach, { MacroKind } from "@/components/MacroFixCoach";
 import QuickAddMacrosModal from "@/components/modals/QuickAddMacrosModal";
@@ -823,7 +821,6 @@ export default function BeachBodyMealBoard() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-32 overflow-x-hidden"
     >
-      <DailyMealProgressBar />
 
       {/* Universal Safe-Area Header Bar */}
       <div

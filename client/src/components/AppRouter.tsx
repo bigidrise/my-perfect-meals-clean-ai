@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import WelcomeGate from "./WelcomeGate";
-import { TourProvider } from "@/contexts/TourContext";
 import DiabeticHub from "@/pages/physician/DiabeticHub";
 import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
@@ -79,10 +78,6 @@ export default function AppRouter({ children }: AppRouterProps) {
     );
   }
 
-  // Show normal app wrapped in TourProvider
-  return (
-    <TourProvider>
-      {children}
-    </TourProvider>
-  );
+  // Show normal app
+  return <>{children}</>;
 }

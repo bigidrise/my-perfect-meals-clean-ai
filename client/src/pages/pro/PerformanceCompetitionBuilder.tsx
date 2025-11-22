@@ -51,9 +51,7 @@ import { setMacroTargets } from "@/lib/dailyLimits";
 import { proStore } from "@/lib/proData";
 import { linkUserToClient } from "@/lib/macroResolver";
 import { saveLastPerformanceClientId } from "@/lib/macroSourcesConfig";
-import MealBuilderGuidedTour from "@/components/guided/MealBuilderGuidedTour";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
-import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // Helper function to create new snacks
@@ -923,7 +921,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
     >
-      <DailyMealProgressBar />
       
       {/* Universal Safe-Area Header */}
       <div

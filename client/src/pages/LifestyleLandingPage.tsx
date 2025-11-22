@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, RefrigeratorIcon, Utensils, Baby, Wine } from "lucide-react";
-import LifestyleGuidedTour from "@/components/guided/LifestyleGuidedTour";
 
 interface AIFeature {
   title: string;
@@ -77,7 +76,6 @@ export default function LifestyleLandingPage() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
-      <LifestyleGuidedTour />
 
       {/* Header Banner */}
       <div

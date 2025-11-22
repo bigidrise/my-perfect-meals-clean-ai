@@ -13,7 +13,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import MacroCalculatorGuidedTour from "@/components/guided/MacroCalculatorGuidedTour";
 import {
   Activity,
   User2,
@@ -331,7 +330,6 @@ export default function MacroCounter() {
 
   return (
     <>
-      <MacroCalculatorGuidedTour />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
