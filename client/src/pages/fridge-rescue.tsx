@@ -540,7 +540,7 @@ const FridgeRescuePage = () => {
             </button>
 
             {/* Title */}
-            <h1 className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
+            <h1 data-wt="fridge-rescue-header" className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
 
             {/* Info & Teach Me Buttons */}
             <div className="ml-auto flex items-center gap-2">
@@ -587,7 +587,7 @@ const FridgeRescuePage = () => {
                   <div className="relative">
                     <textarea
                       id="ingredients"
-                      data-wt="fridge-add-button"
+                      data-wt="fridge-text-input"
                       value={ingredients}
                       onChange={(e) => setIngredients(e.target.value)}
                       placeholder="e.g., chicken breast, broccoli, rice, onions, eggs"
@@ -596,6 +596,7 @@ const FridgeRescuePage = () => {
                     />
                     {ingredients.trim() && (
                       <TrashButton
+                        data-wt="fridge-clear-ingredients-button"
                         onClick={() => setIngredients("")}
                         size="sm"
                         ariaLabel="Clear ingredients"
@@ -627,7 +628,7 @@ const FridgeRescuePage = () => {
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
-                  data-wt="fridge-create-meal-button"
+                  data-wt="fridge-generate-button"
                   className="w-full bg-black/30 backdrop-blur-lg hover:bg-black/40 border border-white/20 disabled:bg-black/10 disabled:opacity-50 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
                 >
                   <div className="flex items-center gap-2">
@@ -654,6 +655,7 @@ const FridgeRescuePage = () => {
                 {meals.map((meal, index) => (
                   <Card
                     key={meal.id}
+                    data-wt="fridge-meal-card"
                     className="overflow-hidden bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl flex flex-col h-full"
                   >
                     <div className="relative">
@@ -784,6 +786,7 @@ const FridgeRescuePage = () => {
                           <div className="flex gap-2">
                             {replaceCtx && (
                               <Button
+                                data-wt="fridge-save-meal-button"
                                 variant="outline"
                                 size="sm"
                                 onClick={() => addMealToPlan(meal)}
@@ -829,6 +832,7 @@ const FridgeRescuePage = () => {
                       {/* Action Buttons */}
                       <div className="mt-auto pt-4 space-y-2">
                         <MacroBridgeButton
+                          data-wt="fridge-send-to-shopping-button"
                           meal={{
                             protein: meal.protein || 0,
                             carbs: meal.carbs || 0,
