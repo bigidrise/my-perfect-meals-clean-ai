@@ -138,4 +138,83 @@ export const WalkthroughRegistry: Record<string, WalkthroughStep[]> = {
     { id: "step-4", text: "Your saved entries show up here for future review.", targetId: "journal-entry-list", waitForUser: false },
     { id: "complete", text: "You're ready to journal! Keep tracking your thoughts." },
   ],
+
+  // ==============================
+  // 🔥 PROACCESS CARE TEAM WALKTHROUGH
+  // ==============================
+  "proaccess-careteam": [
+    { id: "step-1", text: "Start by inviting your client by email.", targetId: "pro-invite-email", waitForUser: false },
+    { id: "step-2", text: "Choose your role — trainer or physician.", targetId: "pro-role-selector", waitForUser: false },
+    { id: "step-3", text: "Tap to send the invitation with the access code.", targetId: "pro-send-invite-button", waitForUser: false },
+    { id: "step-4", text: "If you have a code from a client, put it here.", targetId: "pro-access-code-input", waitForUser: false },
+    { id: "step-5", text: "Tap to link the client to your Care Team.", targetId: "pro-link-code-button", waitForUser: false },
+    { id: "step-6", text: "Your linked clients appear here.", targetId: "pro-active-team-list", waitForUser: false },
+    { id: "step-7", text: "Tap a client to manage them.", targetId: "pro-careteam-member", waitForUser: false },
+    { id: "step-8", text: "Tap to open the ProPortal dashboard.", targetId: "pro-open-proportal-button", waitForUser: false },
+    { id: "step-9", text: "Enter the client's name here.", targetId: "pro-client-name-input", waitForUser: false },
+    { id: "step-10", text: "Optional: enter their email for communication.", targetId: "pro-client-email-input", waitForUser: false },
+    { id: "step-11", text: "Tap to create a new client card.", targetId: "pro-add-client-button", waitForUser: false },
+    { id: "step-12", text: "Here's your client. Tap Open to manage them.", targetId: "pro-client-card", waitForUser: false },
+    { id: "step-13", text: "Tap Open to go to their dashboard.", targetId: "pro-client-open-button", waitForUser: false },
+    { id: "step-14", text: "Enter the daily protein target here.", targetId: "pro-macro-protein", waitForUser: false },
+    { id: "step-15", text: "Set daily starchy carbs.", targetId: "pro-macro-starchy", waitForUser: false },
+    { id: "step-16", text: "Set daily fibrous carbs.", targetId: "pro-macro-fibrous", waitForUser: false },
+    { id: "step-17", text: "Enter recommended fats per day.", targetId: "pro-macro-fat", waitForUser: false },
+    { id: "step-18", text: "Tap to save all macro targets.", targetId: "pro-macro-save", waitForUser: false },
+    { id: "step-19", text: "Enable high-protein protocol if needed.", targetId: "pro-high-protein-toggle", waitForUser: false },
+    { id: "step-20", text: "Enable carb cycling protocol.", targetId: "pro-carb-cycle-toggle", waitForUser: false },
+    { id: "step-21", text: "Enable anti-inflammatory protocol.", targetId: "pro-anti-inflammatory-toggle", waitForUser: false },
+    { id: "step-22", text: "Tap here to send macro targets to Biometrics.", targetId: "pro-send-to-biometrics-button", waitForUser: false },
+    { id: "step-23", text: "Set custom daily starchy carb directives.", targetId: "pro-carb-directive-starchy", waitForUser: false },
+    { id: "step-24", text: "Set custom daily fibrous directives.", targetId: "pro-carb-directive-fibrous", waitForUser: false },
+    { id: "step-25", text: "Save carbohydrate directives here.", targetId: "pro-directive-save", waitForUser: false },
+    { id: "step-26", text: "Physician-specific builder: Diabetic.", targetId: "pro-physician-diabetes", waitForUser: false },
+    { id: "step-27", text: "Physician-specific builder: GLP-1.", targetId: "pro-physician-glp1", waitForUser: false },
+    { id: "step-28", text: "Physician-specific builder: Anti-inflammatory.", targetId: "pro-physician-antiinflammatory", waitForUser: false },
+    { id: "step-29", text: "Trainer-specific builder: Performance & Competitive.", targetId: "pro-trainer-performance", waitForUser: false },
+    { id: "step-30", text: "Trainer-specific builder: General Nutrition.", targetId: "pro-trainer-general", waitForUser: false },
+    { id: "complete", text: "You're all set with ProAccess Care Team!" },
+  ],
+
+  // ==============================
+  // 🔥 DIABETIC HUB WALKTHROUGH
+  // ==============================
+  "diabetic-hub": [
+    { id: "step-1", text: "Choose a clinical preset like Strict Control or Cardiac Diet.", targetId: "dia-preset-selector", waitForUser: false },
+    { id: "step-2", text: "Set your fasting glucose range exactly as your doctor recommends.", targetId: "dia-fasting-range-input", waitForUser: false },
+    { id: "step-3", text: "Set your post-meal glucose range.", targetId: "dia-postmeal-range-input", waitForUser: false },
+    { id: "step-4", text: "Enter your daily carbohydrate limit.", targetId: "dia-carb-limit-input", waitForUser: false },
+    { id: "step-5", text: "Set your minimum daily fiber goal.", targetId: "dia-fiber-min-input", waitForUser: false },
+    { id: "step-6", text: "Set a glycemic index cap for safe meal creation.", targetId: "dia-gi-cap-input", waitForUser: false },
+    { id: "step-7", text: "Tap to save all clinical guardrails.", targetId: "dia-save-guardrails-button", waitForUser: false },
+    { id: "step-8", text: "Enter your blood sugar reading here.", targetId: "dia-bg-input", waitForUser: false },
+    { id: "step-9", text: "Choose fasting, pre-meal, or post-meal.", targetId: "dia-bg-type-selector", waitForUser: false },
+    { id: "step-10", text: "Tap to log your blood sugar.", targetId: "dia-bg-log-button", waitForUser: false },
+    { id: "step-11", text: "View your 7-day glucose trend here.", targetId: "dia-bg-trend-graph", waitForUser: false },
+    { id: "step-12", text: "Tap to open the Diabetic Menu Builder for blood-sugar-safe meals.", targetId: "dia-open-menu-builder-button", waitForUser: false },
+    { id: "complete", text: "You're ready to manage diabetes with guardrails!" },
+  ],
+
+  // ==============================
+  // 🔥 GLP-1 HUB WALKTHROUGH
+  // ==============================
+  "glp1-hub": [
+    { id: "step-1", text: "Tap Open Tracker to begin logging your dose.", targetId: "glp1-open-tracker-button", waitForUser: false },
+    { id: "step-2", text: "Enter the dose you injected today.", targetId: "glp1-dose-input", waitForUser: false },
+    { id: "step-3", text: "Confirm or adjust the date of your injection.", targetId: "glp1-date-field", waitForUser: false },
+    { id: "step-4", text: "Confirm or adjust the injection time.", targetId: "glp1-time-field", waitForUser: false },
+    { id: "step-5", text: "Select where you injected: abdomen, thigh, upper arm, or buttock.", targetId: "glp1-site-selector", waitForUser: false },
+    { id: "step-6", text: "Tap here to save your dose to your history.", targetId: "glp1-save-dose-button", waitForUser: false },
+    { id: "step-7", text: "Your past injection records appear here.", targetId: "glp1-dose-history-list", waitForUser: false },
+    { id: "step-8", text: "Choose a GLP-1 preset based on your doctor's instructions.", targetId: "glp1-preset-selector", waitForUser: false },
+    { id: "step-9", text: "Set your maximum meal volume to avoid discomfort.", targetId: "glp1-max-volume-input", waitForUser: false },
+    { id: "step-10", text: "Set your daily minimum protein target.", targetId: "glp1-protein-min-input", waitForUser: false },
+    { id: "step-11", text: "Set your maximum fat intake per day.", targetId: "glp1-fat-max-input", waitForUser: false },
+    { id: "step-12", text: "Set your minimum fiber intake per day.", targetId: "glp1-fiber-min-input", waitForUser: false },
+    { id: "step-13", text: "Set your hydration goal for the day.", targetId: "glp1-hydration-goal-input", waitForUser: false },
+    { id: "step-14", text: "Enter how many meals per day you're having on GLP-1.", targetId: "glp1-meals-per-day-input", waitForUser: false },
+    { id: "step-15", text: "Tap here to activate all GLP-1 clinical guardrails.", targetId: "glp1-save-guardrails-button", waitForUser: false },
+    { id: "step-16", text: "Next, tap here to generate GLP-1-safe meals.", targetId: "glp1-open-menu-builder-button", waitForUser: false },
+    { id: "complete", text: "Perfect! You're ready to use GLP-1 Hub." },
+  ],
 };

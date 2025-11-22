@@ -285,4 +285,121 @@ export const AppKnowledge: Record<string, FeatureKnowledge> = {
       "journal.save",
     ],
   },
+
+  // ============================
+  // 🔥 PROACCESS CARE TEAM
+  // ============================
+  "proaccess-careteam": {
+    id: "proaccess-careteam",
+    title: "ProAccess Care Team",
+    description:
+      "Connect with trainers or physicians through ProAccess. Invite clients, link with access codes, manage macro targets, and direct clients to the proper nutrition builders.",
+    howTo: [
+      "Begin by inviting a client using the 'Invite by Email' button.",
+      "Choose your professional role — trainer, doctor, dietitian, or health pro.",
+      "The client receives an email with an access code.",
+      "Enter that code in the 'Connect with Access Code' field and tap 'Link with Code.'",
+      "You'll see your Active Care Team list appear with each linked client.",
+      "Tap 'Open ProPortal' to access the client's dashboard.",
+      "Enter or edit client name and email, then tap Add Client.",
+      "Open the client card to access the dashboard.",
+      "Set macro targets such as protein, starchy carbs, fibrous carbs, and fats.",
+      "Use protocol toggles like High Protein, Carb Cycling, or Anti-Inflammatory.",
+      "Tap Save Targets to save macros to the client's Meal Board.",
+      "Tap 'Send Macros to Biometrics' to sync their macro targets to their Biometrics page.",
+      "Use carbohydrate directives for starchy and fibrous carbs to set custom daily targets.",
+      "Depending on your role, you can access the appropriate menu builders:",
+      "Physicians: Diabetic, GLP-1, or Anti-Inflammatory builders.",
+      "Trainers: Performance & Competitive, or General Nutrition builders.",
+    ],
+    tips: [
+      "Use email invites for long-term coaching relationships.",
+      "Use access codes if connecting quickly in person.",
+      "Review macros weekly and update targets based on progress.",
+      "Direct clients to specialty builders for highly tailored meal plans.",
+    ],
+    relatedCommands: [
+      "pro.inviteClient",
+      "pro.linkCode",
+      "pro.openPortal",
+      "pro.addClient",
+      "pro.saveMacros",
+      "pro.sendToBiometrics",
+      "pro.saveDirectives",
+      "pro.navigateMenuBuilder",
+    ],
+  },
+
+  // ============================
+  // 🔥 DIABETIC HUB
+  // ============================
+  "diabetic-hub": {
+    id: "diabetic-hub",
+    title: "Diabetic Hub",
+    description:
+      "Set doctor-approved guardrails and track your blood sugar so AI meals match your clinical needs.",
+    howTo: [
+      "Start by choosing a clinical preset such as Strict Control, Cardiac Diet, or Liberal for elderly users.",
+      "Set your fasting glucose target range as instructed by your doctor.",
+      "Set your post-meal glucose target for after eating.",
+      "Enter your daily carbohydrate limit to help guide meal planning.",
+      "Set your minimum daily fiber goal to help with blood sugar stability.",
+      "Choose a glycemic index cap to keep meals within safe ranges.",
+      "Tap Save Guardrails to activate clinical guardrails for meal creation.",
+      "Use the Blood Sugar Tracker to log glucose readings.",
+      "Choose whether the reading was fasting, pre-meal, or post-meal.",
+      "Tap Log Reading to save and update your trends.",
+      "View your 7-day glucose trend graph to monitor stability and progress.",
+      "Tap the Diabetic Menu Builder to go create meals that automatically follow your glucose guardrails.",
+    ],
+    tips: [
+      "Use guardrails exactly as your physician directs.",
+      "Log readings consistently — AI becomes more accurate as your data grows.",
+      "Review your 7-day trend graph weekly for better diabetes awareness.",
+    ],
+    relatedCommands: [
+      "diabetes.setPreset",
+      "diabetes.saveGuardrails",
+      "diabetes.logReading",
+      "diabetes.goToMenuBuilder",
+    ],
+  },
+
+  // ============================
+  // 🔥 GLP-1 HUB
+  // ============================
+  "glp1-hub": {
+    id: "glp1-hub",
+    title: "GLP-1 Hub",
+    description:
+      "Track your GLP-1 medication, save dosage history, and create meals based on GLP-1 clinical guardrails.",
+    howTo: [
+      "Tap Open Tracker to begin logging your dose.",
+      "Enter your dose amount in the dose field.",
+      "Your date and time will appear automatically, or you can adjust them manually.",
+      "Tap Select Site and choose where you injected: abdomen, thigh, upper arm, or buttock.",
+      "Tap Save to log the dose to your injection history.",
+      "Scroll down to view your full GLP-1 injection history.",
+      "Under GLP-1 Guardrails, choose a preset to match your doctor's guidance.",
+      "Set your maximum meal volume to reduce nausea.",
+      "Set your minimum daily protein target.",
+      "Set your fat maximum to avoid gastric slowdown.",
+      "Set your daily fiber minimum for gut stability.",
+      "Set a hydration goal to manage GLP-1-related dehydration.",
+      "Enter how many meals per day you're eating.",
+      "Tap Save Guardrails to activate GLP-1-safe AI meal creation.",
+      "Tap GLP-1 Menu Builder to generate meals based on your guardrails.",
+    ],
+    tips: [
+      "Log each dose consistently so you always know when the next one is due.",
+      "Use smaller meal volumes if you experience fullness or nausea.",
+      "Aim for higher protein and consistent hydration.",
+      "Guardrails automatically influence all GLP-1 menu builder meals.",
+    ],
+    relatedCommands: [
+      "glp1.logDose",
+      "glp1.saveGuardrails",
+      "glp1.goToMenuBuilder",
+    ],
+  },
 };

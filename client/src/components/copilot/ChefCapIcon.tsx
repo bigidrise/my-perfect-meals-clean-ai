@@ -26,7 +26,7 @@ export const ChefCapIcon: React.FC<ChefCapIconProps> = ({
           justifyContent: 'center'
         }}
       >
-        👨‍🍳
+        👨🏿‍🍳
       </span>
 
       {/* Subtle glow effect */}

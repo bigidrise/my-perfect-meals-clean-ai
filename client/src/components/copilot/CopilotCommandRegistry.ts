@@ -17,7 +17,7 @@ let modalCallback: ModalHandler | null = null;
 let responseCallback: ResponseHandler | null = null;
 
 // Track which feature the user is actively interacting with
-type ActiveFeature = "weekly-board" | "fridge-rescue" | null;
+type ActiveFeature = "weekly-board" | "fridge-rescue" | "proaccess-careteam" | "diabetic-hub" | "glp1-hub" | null;
 let lastActiveFeature: ActiveFeature = null;
 
 export function setNavigationHandler(fn: NavigationHandler) {
@@ -602,6 +602,188 @@ const Commands: Record<string, CommandHandler> = {
       spokenText: "Saving your journal entry.",
     });
   },
+
+  // =========================================
+  // PROACCESS CARE TEAM
+  // =========================================
+  "explain.proaccess-careteam": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("proaccess-careteam");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.proaccess-careteam": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("proaccess-careteam");
+    responseCallback(response);
+  },
+
+  "pro.inviteClient": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Invite Client",
+      description: "Opening invite client form.",
+      spokenText: "Opening invite client form.",
+    });
+  },
+
+  "pro.linkCode": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Link Code",
+      description: "Ready to link client with access code.",
+      spokenText: "Ready to link with access code.",
+    });
+  },
+
+  "pro.openPortal": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "ProPortal",
+      description: "Opening ProPortal dashboard.",
+      spokenText: "Opening ProPortal.",
+    });
+  },
+
+  "pro.addClient": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Add Client",
+      description: "Adding new client to your Care Team.",
+      spokenText: "Adding new client.",
+    });
+  },
+
+  "pro.saveMacros": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Macros Saved",
+      description: "Client macro targets saved.",
+      spokenText: "Saving macro targets.",
+    });
+  },
+
+  "pro.sendToBiometrics": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Sent to Biometrics",
+      description: "Macro targets synced to client Biometrics.",
+      spokenText: "Syncing macros to Biometrics.",
+    });
+  },
+
+  "pro.saveDirectives": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Directives Saved",
+      description: "Carb directives saved.",
+      spokenText: "Saving carb directives.",
+    });
+  },
+
+  "pro.navigateMenuBuilder": async (payload?: { builder: string }) => {
+    if (!responseCallback) return;
+    const builder = payload?.builder || "menu builder";
+    responseCallback({
+      title: "Opening Builder",
+      description: `Opening ${builder} menu builder.`,
+      spokenText: `Opening ${builder} builder.`,
+    });
+  },
+
+  // =========================================
+  // DIABETIC HUB
+  // =========================================
+  "explain.diabetic-hub": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("diabetic-hub");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.diabetic-hub": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("diabetic-hub");
+    responseCallback(response);
+  },
+
+  "diabetes.setPreset": async (payload?: { preset: string }) => {
+    if (!responseCallback) return;
+    const preset = payload?.preset || "preset";
+    responseCallback({
+      title: "Preset Set",
+      description: `Diabetic preset set to ${preset}.`,
+      spokenText: `Setting preset to ${preset}.`,
+    });
+  },
+
+  "diabetes.saveGuardrails": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Guardrails Saved",
+      description: "Clinical guardrails activated.",
+      spokenText: "Saving guardrails.",
+    });
+  },
+
+  "diabetes.logReading": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Blood Sugar Logged",
+      description: "Blood sugar reading saved.",
+      spokenText: "Logging blood sugar reading.",
+    });
+  },
+
+  "diabetes.goToMenuBuilder": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Diabetic Menu Builder",
+      description: "Opening Diabetic Menu Builder.",
+      spokenText: "Opening Diabetic Menu Builder.",
+    });
+  },
+
+  // =========================================
+  // GLP-1 HUB
+  // =========================================
+  "explain.glp1-hub": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("glp1-hub");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.glp1-hub": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("glp1-hub");
+    responseCallback(response);
+  },
+
+  "glp1.logDose": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Dose Logged",
+      description: "GLP-1 dose saved to history.",
+      spokenText: "Logging GLP-1 dose.",
+    });
+  },
+
+  "glp1.saveGuardrails": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Guardrails Saved",
+      description: "GLP-1 guardrails activated.",
+      spokenText: "Saving GLP-1 guardrails.",
+    });
+  },
+
+  "glp1.goToMenuBuilder": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "GLP-1 Menu Builder",
+      description: "Opening GLP-1 Menu Builder.",
+      spokenText: "Opening GLP-1 Menu Builder.",
+    });
+  },
 };
 
 // Voice query handler - processes voice transcripts using NLEngine + explicit intents
@@ -1110,6 +1292,174 @@ async function handleVoiceQuery(transcript: string) {
     lower.includes("save this entry")
   ) {
     await Commands["journal.save"]();
+    return;
+  }
+
+  // ===================================
+  // PROACCESS CARE TEAM INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me proaccess") ||
+    lower.includes("how do i use proaccess") ||
+    lower.includes("show me proaccess")
+  ) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["walkthrough.start.proaccess-careteam"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is proaccess") ||
+    lower.includes("explain proaccess") ||
+    lower.includes("what is the care team")
+  ) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["explain.proaccess-careteam"]();
+    return;
+  }
+
+  if (lower.includes("invite a client") || lower.includes("send an invite")) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["pro.inviteClient"]();
+    return;
+  }
+
+  if (lower.includes("link with code") || lower.includes("connect with access code")) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["pro.linkCode"]();
+    return;
+  }
+
+  if (lower.includes("open pro portal") || lower.includes("open the portal")) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["pro.openPortal"]();
+    return;
+  }
+
+  if (lower.includes("save macros") || lower.includes("update macros")) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["pro.saveMacros"]();
+    return;
+  }
+
+  if (lower.includes("send macros to biometrics")) {
+    lastActiveFeature = "proaccess-careteam";
+    await Commands["pro.sendToBiometrics"]();
+    return;
+  }
+
+  // ===================================
+  // DIABETIC HUB INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me diabetic hub") ||
+    lower.includes("how do i use diabetic hub") ||
+    lower.includes("show me diabetic hub")
+  ) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["walkthrough.start.diabetic-hub"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is the diabetic hub") ||
+    lower.includes("explain diabetic hub") ||
+    lower.includes("what are diabetic guardrails")
+  ) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["explain.diabetic-hub"]();
+    return;
+  }
+
+  if (lower.includes("strict control")) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.setPreset"]({ preset: "strict" });
+    return;
+  }
+
+  if (lower.includes("cardiac diet")) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.setPreset"]({ preset: "cardiac" });
+    return;
+  }
+
+  if (lower.includes("liberal") || lower.includes("elderly preset")) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.setPreset"]({ preset: "elderly" });
+    return;
+  }
+
+  if (lower.includes("save guardrails") || lower.includes("update guardrails")) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.saveGuardrails"]();
+    return;
+  }
+
+  if (
+    lower.includes("log my blood sugar") ||
+    lower.includes("add my glucose")
+  ) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.logReading"]({ text: transcript });
+    return;
+  }
+
+  if (
+    lower.includes("diabetic menu builder") ||
+    lower.includes("open diabetic builder")
+  ) {
+    lastActiveFeature = "diabetic-hub";
+    await Commands["diabetes.goToMenuBuilder"]();
+    return;
+  }
+
+  // ===================================
+  // GLP-1 HUB INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me glp 1") ||
+    lower.includes("how do i use glp 1") ||
+    lower.includes("show me the glp 1 hub")
+  ) {
+    lastActiveFeature = "glp1-hub";
+    await Commands["walkthrough.start.glp1-hub"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is glp 1 hub") ||
+    lower.includes("explain glp 1 hub") ||
+    lower.includes("what is the glp 1 tracker")
+  ) {
+    lastActiveFeature = "glp1-hub";
+    await Commands["explain.glp1-hub"]();
+    return;
+  }
+
+  if (
+    lower.includes("log my dose") ||
+    lower.includes("add my glp 1 dose")
+  ) {
+    lastActiveFeature = "glp1-hub";
+    await Commands["glp1.logDose"]({ text: transcript });
+    return;
+  }
+
+  if (
+    lower.includes("save my glp 1 guardrails") ||
+    lower.includes("update glp 1 guardrails")
+  ) {
+    lastActiveFeature = "glp1-hub";
+    await Commands["glp1.saveGuardrails"]();
+    return;
+  }
+
+  if (
+    lower.includes("open glp 1 menu builder") ||
+    lower.includes("go to glp 1 menu builder")
+  ) {
+    lastActiveFeature = "glp1-hub";
+    await Commands["glp1.goToMenuBuilder"]();
     return;
   }
 
