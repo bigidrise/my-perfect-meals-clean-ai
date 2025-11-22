@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Mic } from "lucide-react";
 import { useCopilot } from "./CopilotContext";
 import { ChefCapIcon } from "./ChefCapIcon";
 
@@ -18,21 +17,6 @@ export const CopilotButton: React.FC = () => {
       }}
     >
       <ChefCapIcon size={26} />
-      
-      {/* Microphone badge in top-right corner */}
-      <motion.div
-        className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-white flex items-center justify-center shadow-lg"
-        animate={{
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        <Mic className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-      </motion.div>
     </motion.button>
   );
 };
