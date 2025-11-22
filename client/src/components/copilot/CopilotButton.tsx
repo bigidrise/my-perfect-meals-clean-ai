@@ -16,7 +16,7 @@ export const CopilotButton: React.FC = () => {
         boxShadow: '0 0 15px rgba(251,146,60,0.3), 0 0 25px rgba(251,146,60,0.2)'
       }}
     >
-      <ChefCapIcon size={50} />
+      <ChefCapIcon size={54} />
     </motion.button>
   );
 };
