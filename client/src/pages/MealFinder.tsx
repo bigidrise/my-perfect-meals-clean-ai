@@ -203,8 +203,9 @@ export default function MealFinder() {
         variant="ghost"
         size="sm"
         onClick={handleGoBack}
-        className="fixed top-2 left-2 sm:top-4 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+        className="fixed left-2 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
         style={{
+          top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)',
           zIndex: 2147483647,
           position: 'fixed',
           isolation: 'isolate',
@@ -215,7 +216,13 @@ export default function MealFinder() {
         <ArrowLeft className="h-4 w-4 text-white" />
       </Button>
 
-      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6 overflow-x-hidden">
+      <div 
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 p-4 sm:p-6 overflow-x-hidden"
+        style={{
+          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)'
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-0">
           <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
             <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
