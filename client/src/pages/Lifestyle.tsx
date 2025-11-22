@@ -4,7 +4,6 @@ import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import { Sparkles, Brain, UtensilsCrossed, Wine, Baby, Activity } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import LifestyleGuidedTour from '@/components/guided/LifestyleGuidedTour';
 
 const Lifestyle = ({ user }: { user?: any }) => {
   const [, setLocation] = useLocation();
@@ -65,8 +64,6 @@ const Lifestyle = ({ user }: { user?: any }) => {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
-      <LifestyleGuidedTour />
-
       {/* Header Banner */}
       <div
         className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"

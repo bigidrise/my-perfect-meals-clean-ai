@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trophy, Users, Crown } from "lucide-react";
-import ProCareGuidedTour from "@/components/guided/ProCareGuidedTour";
 
 interface ProCareFeature {
   title: string;
@@ -49,7 +48,6 @@ export default function ProCareCover() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
-      <ProCareGuidedTour />
       {/* Header Banner - ProCare */}
       <div
         className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
