@@ -935,40 +935,36 @@ export default function WeeklyMealBoard() {
         className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-4 py-3 flex items-center gap-3">
+        <div className="px-4 py-3 flex items-center gap-2">
           {/* Back to Planner */}
           <Button
             onClick={() => setLocation("/planner")}
-            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center gap-2 px-3 h-10"
+            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center gap-1.5 px-2.5 h-9 flex-shrink-0"
           >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-medium">Back</span>
+            <ArrowLeft className="h-4 w-4" />
+            <span className="text-xs font-medium">Back</span>
           </Button>
 
-
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">
+          <h1 className="text-base font-bold text-white flex-shrink truncate">
             Weekly Meal Builder
           </h1>
 
-          <div className="ml-auto" />
+          <div className="flex-grow" />
 
-          {/* Info & Teach Me Buttons */}
-          <div className="flex items-center gap-2">
-            
-            <button
-              onClick={() => {
-                open();
-                runAction({
-                  type: "run-command",
-                  id: "walkthrough.start.weekly-board",
-                });
-              }}
-              className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 hover:bg-white/10"
-            >
-              Teach me
-            </button>
-          </div>
+          {/* Teach Me Button */}
+          <button
+            onClick={() => {
+              open();
+              runAction({
+                type: "run-command",
+                id: "walkthrough.start.weekly-board",
+              });
+            }}
+            className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-white/80 hover:bg-white/10 flex-shrink-0 whitespace-nowrap"
+          >
+            Teach me
+          </button>
         </div>
       </div>
 
