@@ -1271,7 +1271,7 @@ export default function AntiInflammatoryMenuBuilder() {
                     size="sm"
                     variant="ghost"
                     className="text-white/70 hover:bg-white/10 text-xs font-medium"
-                    onClick={onAddSnack}
+                    onClick={() => openPicker("snacks")}
                   >
                     Add Snack
                   </Button>
