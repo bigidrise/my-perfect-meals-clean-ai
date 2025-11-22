@@ -339,7 +339,7 @@ export default function GetInspiration() {
           </div>
 
           {/* Quote Display */}
-          <div className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300">
+          <div data-wt="insp-quote-display" className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300">
             <p className="italic text-md text-white font-medium leading-relaxed text-center">
               "{quote}"
             </p>
@@ -347,6 +347,7 @@ export default function GetInspiration() {
 
           {/* Get New Inspiration Button */}
           <button
+            data-wt="insp-get-button"
             onClick={getNewQuote}
             className="bg-gradient-to-br from-black/90 via-orange-600 to-black/90 text-white p-4 rounded-xl shadow-2xl hover:shadow-2xl transform transition-all duration-200 w-full border-2 border-orange-300/0 hover:border-orange-300/90"
             data-testid="button-new-quote"
@@ -380,6 +381,7 @@ export default function GetInspiration() {
 
           {/* Text Area */}
           <textarea
+            data-wt="journal-textarea"
             value={currentEntry}
             onChange={(e) => setCurrentEntry(e.target.value)}
             placeholder="Speak or type your thoughts..."
@@ -390,6 +392,7 @@ export default function GetInspiration() {
           {/* Action Buttons */}
           <div className="flex gap-3 mb-4">
             <Button
+              data-wt="journal-voice-input"
               onClick={toggleListening}
               className={`flex-1 ${
                 isListening
@@ -407,6 +410,7 @@ export default function GetInspiration() {
             </Button>
 
             <Button
+              data-wt="journal-save-button"
               onClick={saveEntry}
               className="flex-1 bg-gradient-to-br from-black/90 via-orange-600 to-black/90 text-white border-2 border-orange-300/40 hover:border-orange-300/90 transition-all"
               data-testid="button-save-entry"
@@ -440,7 +444,7 @@ export default function GetInspiration() {
             <h2 className="text-xl font-semibold text-white mb-4">
               Past Entries
             </h2>
-            <div className="space-y-4">
+            <div data-wt="journal-entry-list" className="space-y-4">
               {entries.map((entry) => (
                 <div
                   key={entry.id}

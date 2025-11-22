@@ -882,7 +882,7 @@ export default function MyBiometrics() {
 
 
         {/* MACROS */}
-        <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
+        <Card data-wt="bio-macro-total-display" className="bg-black/30 backdrop-blur-lg border border-white/10">
           <CardHeader>
             <CardTitle className="text-white text-lg flex items-center gap-2">
               <BarChart3 className="h-5 w-5"/> 
@@ -1021,6 +1021,7 @@ export default function MyBiometrics() {
 
               {/* Photo Upload Button */}
               <Button
+                data-wt="bio-scan-button"
                 onClick={handlePhotoUpload}
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white mb-3"
                 data-testid="button-photo-upload"
@@ -1031,19 +1032,19 @@ export default function MyBiometrics() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <label className="text-xs text-white/80 font-medium mb-1 block">Protein (g)</label>
-                  <Input type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={p} onChange={e=>setP(e.target.value)} data-testid="input-protein" />
+                  <Input data-wt="bio-manual-protein" type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={p} onChange={e=>setP(e.target.value)} data-testid="input-protein" />
                 </div>
                 <div>
                   <label className="text-xs text-white/80 font-medium mb-1 block">Carbs (g)</label>
-                  <Input type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={c} onChange={e=>setC(e.target.value)} data-testid="input-carbs" />
+                  <Input data-wt="bio-manual-carbs" type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={c} onChange={e=>setC(e.target.value)} data-testid="input-carbs" />
                 </div>
                 <div>
                   <label className="text-xs text-white/80 font-medium mb-1 block">Fat (g)</label>
-                  <Input type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={f} onChange={e=>setF(e.target.value)} data-testid="input-fat" />
+                  <Input data-wt="bio-manual-fat" type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={f} onChange={e=>setF(e.target.value)} data-testid="input-fat" />
                 </div>
                 <div>
                   <label className="text-xs text-white/80 font-medium mb-1 block">Calories</label>
-                  <Input type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={k} onChange={e=>setK(e.target.value)} data-testid="input-calories" />
+                  <Input data-wt="bio-manual-calories" type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={k} onChange={e=>setK(e.target.value)} data-testid="input-calories" />
                 </div>
               </div>
 
@@ -1052,7 +1053,7 @@ export default function MyBiometrics() {
                     - This allows users to top-off macros at the meal board level with food source profiles
                     - Profile system applies heuristic tails (e.g., chicken adds ~12% fat to protein logged)
                     - Implementation: Add dropdown + logic to MacroBridgeFooter or similar meal board components */}
-                <Button onClick={addMacros} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-add-macros"><PlusCircle className="h-4 w-4 mr-1"/> Add</Button>
+                <Button data-wt="bio-manual-add-button" onClick={addMacros} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-add-macros"><PlusCircle className="h-4 w-4 mr-1"/> Add</Button>
                 <Button onClick={resetToday} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-reset-today"><RotateCcw className="h-4 w-4 mr-1"/> Reset Today</Button>
               </div>
 
@@ -1083,7 +1084,7 @@ export default function MyBiometrics() {
               )}
 
               <div className="space-y-2 mt-2">
-                <Row label="Calories" value={`${todayRow.kcal} / ${activeTargets.calories} kcal`}><ProgressBar value={todayRow.kcal} goal={activeTargets.calories}/></Row>
+                <Row data-wt="bio-calories-today" label="Calories" value={`${todayRow.kcal} / ${activeTargets.calories} kcal`}><ProgressBar value={todayRow.kcal} goal={activeTargets.calories}/></Row>
                 <Row label="Protein" value={`${todayRow.protein} / ${activeTargets.protein_g} g`}><ProgressBar value={todayRow.protein} goal={activeTargets.protein_g}/></Row>
                 <Row label="Carbs" value={`${todayRow.carbs} / ${activeTargets.carbs_g} g`}><ProgressBar value={todayRow.carbs} goal={activeTargets.carbs_g}/></Row>
                 <Row label="Fat" value={`${todayRow.fat} / ${activeTargets.fat_g} g`}><ProgressBar value={todayRow.fat} goal={activeTargets.fat_g}/></Row>
@@ -1092,7 +1093,7 @@ export default function MyBiometrics() {
         </Card>
 
         {/* Calories chart - continuous 30 days (matches Steps) */}
-        <Card className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl">
+        <Card data-wt="bio-graph" className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-white text-xl flex items-center gap-2"><BarChart3 className="h-5 w-5"/> Calories</CardTitle>
               <ViewToggle value={caloriesView} onChange={setCaloriesView} />
@@ -1122,14 +1123,14 @@ export default function MyBiometrics() {
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <div>
                   <div className="text-xs text-white/70">Weight (lb)</div>
-                  <Input inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} data-testid="input-weight" />
+                  <Input data-wt="bio-weight-input" inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} data-testid="input-weight" />
                 </div>
                 <div>
                   <div className="text-xs text-white/70">Waist (in)</div>
                   <Input inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={waistIn} onChange={e=>setWaistIn(e.target.value)} data-testid="input-waist" />
                 </div>
               </div>
-              <Button onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2" data-testid="button-save-weight">Save Weight</Button>
+              <Button data-wt="bio-weight-save-button" onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2" data-testid="button-save-weight">Save Weight</Button>
               <ReadOnlyNote>
                 Track your weight progress here over time. Your weight data automatically syncs with the <strong>Macro Calculator</strong>.
               </ReadOnlyNote>
@@ -1291,7 +1292,7 @@ function WaterLog() {
   const pct = Math.min(100, (water.ounces / goal) * 100);
 
   return (
-    <div className="flex flex-col items-center space-y-4 text-center">
+    <div data-wt="bio-water-counter" className="flex flex-col items-center space-y-4 text-center">
       <div className="relative w-32 h-32">
         <svg className="w-full h-full -rotate-90">
           <circle cx="64" cy="64" r="60" stroke="rgba(255,255,255,0.1)" strokeWidth="8" fill="none" />
@@ -1315,10 +1316,10 @@ function WaterLog() {
       </div>
 
       <div className="flex gap-2">
-        <Button onClick={() => addWater(8)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-8oz">
+        <Button data-wt="bio-water-plus8" onClick={() => addWater(8)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-8oz">
           +8 oz
         </Button>
-        <Button onClick={() => addWater(16)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-16oz">
+        <Button data-wt="bio-water-plus16" onClick={() => addWater(16)} className="bg-sky-600 hover:bg-sky-700 text-white" data-testid="button-add-16oz">
           +16 oz
         </Button>
         <Button onClick={resetWater} className="bg-black/30 border border-white/20 text-white hover:bg-black/50" data-testid="button-reset-water">

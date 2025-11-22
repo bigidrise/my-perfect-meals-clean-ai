@@ -343,6 +343,265 @@ const Commands: Record<string, CommandHandler> = {
       spokenText: "Sending your week to the shopping list.",
     });
   },
+
+  // =========================================
+  // MASTER SHOPPING LIST
+  // =========================================
+  "explain.shopping-master": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("shopping-master");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.shopping-master": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("shopping-master");
+    responseCallback(response);
+  },
+
+  "shopping.addItem": async (payload?: { item: string }) => {
+    if (!responseCallback) return;
+    const item = payload?.item || "item";
+    responseCallback({
+      title: "Item Added",
+      description: `${item} added to your shopping list.`,
+      spokenText: `Adding ${item} to your shopping list.`,
+    });
+  },
+
+  "shopping.bulkAdd": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Bulk Add",
+      description: "Opening bulk add to add multiple items at once.",
+      spokenText: "Opening bulk add.",
+    });
+  },
+
+  "shopping.scanBarcode": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Barcode Scanner",
+      description: "Opening barcode scanner to add items.",
+      spokenText: "Opening barcode scanner.",
+    });
+  },
+
+  "shopping.markPurchased": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Item Checked",
+      description: "Item marked as purchased.",
+      spokenText: "Marking item as purchased.",
+    });
+  },
+
+  "shopping.removeItem": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Item Removed",
+      description: "Item removed from shopping list.",
+      spokenText: "Removing item.",
+    });
+  },
+
+  "shopping.orderDelivery": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Delivery",
+      description: "Opening delivery options for your shopping list.",
+      spokenText: "Opening delivery options.",
+    });
+  },
+
+  // =========================================
+  // BIOMETRICS & DAILY MACROS
+  // =========================================
+  "explain.biometrics": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("biometrics");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.biometrics": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("biometrics");
+    responseCallback(response);
+  },
+
+  "biometrics.scanLabel": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Photo Scan",
+      description: "Opening photo upload to scan nutrition labels.",
+      spokenText: "Opening photo scanner.",
+    });
+  },
+
+  "biometrics.addMacros": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Macros Added",
+      description: "Meal macros imported to your daily tracker.",
+      spokenText: "Adding meal macros.",
+    });
+  },
+
+  "biometrics.addManual": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Manual Entry",
+      description: "Adding your manual macros to today's total.",
+      spokenText: "Adding your macros.",
+    });
+  },
+
+  "biometrics.updateWeight": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Weight Saved",
+      description: "Your weight has been recorded.",
+      spokenText: "Saving your weight.",
+    });
+  },
+
+  "biometrics.logWater": async (payload?: { amount: number }) => {
+    if (!responseCallback) return;
+    const amount = payload?.amount || 8;
+    responseCallback({
+      title: "Water Logged",
+      description: `${amount} ounces of water added.`,
+      spokenText: `Adding ${amount} ounces of water.`,
+    });
+  },
+
+  "biometrics.resetWater": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Water Reset",
+      description: "Water tracker has been reset.",
+      spokenText: "Resetting water tracker.",
+    });
+  },
+
+  // =========================================
+  // MACRO CALCULATOR
+  // =========================================
+  "explain.macro-calculator": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("macro-calculator");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.macro-calculator": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("macro-calculator");
+    responseCallback(response);
+  },
+
+  "macro.setGoal": async (payload?: { goal: string }) => {
+    if (!responseCallback) return;
+    const goal = payload?.goal || "maintain";
+    responseCallback({
+      title: "Goal Set",
+      description: `Goal set to ${goal}.`,
+      spokenText: `Setting your goal to ${goal}.`,
+    });
+  },
+
+  "macro.setBodyType": async (payload?: { type: string }) => {
+    if (!responseCallback) return;
+    const type = payload?.type || "mesomorph";
+    responseCallback({
+      title: "Body Type Set",
+      description: `Body type set to ${type}.`,
+      spokenText: `Setting body type to ${type}.`,
+    });
+  },
+
+  "macro.syncWeight": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Weight Synced",
+      description: "Latest weight pulled from Biometrics.",
+      spokenText: "Syncing your weight.",
+    });
+  },
+
+  "macro.calculate": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Calculating",
+      description: "Calculating your macro targets now.",
+      spokenText: "Calculating your macros.",
+    });
+  },
+
+  "macro.setTargets": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Targets Saved",
+      description: "Macro targets saved to Biometrics page.",
+      spokenText: "Saving your macro targets.",
+    });
+  },
+
+  // =========================================
+  // GET INSPIRATION
+  // =========================================
+  "explain.get-inspiration": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("get-inspiration");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.get-inspiration": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("get-inspiration");
+    responseCallback(response);
+  },
+
+  "inspiration.getQuote": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "New Quote",
+      description: "Loading a fresh inspiration quote for you.",
+      spokenText: "Loading a new quote.",
+    });
+  },
+
+  // =========================================
+  // DAILY HEALTH JOURNAL
+  // =========================================
+  "explain.daily-journal": async () => {
+    if (!responseCallback) return;
+    const response = await explainFeature("daily-journal");
+    responseCallback(response);
+  },
+
+  "walkthrough.start.daily-journal": async () => {
+    if (!responseCallback) return;
+    const response = startWalkthrough("daily-journal");
+    responseCallback(response);
+  },
+
+  "journal.newEntry": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "New Entry",
+      description: "Starting a new journal entry.",
+      spokenText: "Starting a new journal entry.",
+    });
+  },
+
+  "journal.save": async () => {
+    if (!responseCallback) return;
+    responseCallback({
+      title: "Entry Saved",
+      description: "Your journal entry has been saved.",
+      spokenText: "Saving your journal entry.",
+    });
+  },
 };
 
 // Voice query handler - processes voice transcripts using NLEngine + explicit intents
@@ -560,6 +819,297 @@ async function handleVoiceQuery(transcript: string) {
     lower.includes("explain subscriptions")
   ) {
     await Commands["explain.subscriptions"]();
+    return;
+  }
+
+  // ===================================
+  // MASTER SHOPPING LIST INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me shopping list") ||
+    lower.includes("how do i use shopping list") ||
+    lower.includes("show me shopping list") ||
+    lower.includes("teach me master shopping") ||
+    lower.includes("show me master shopping")
+  ) {
+    await Commands["walkthrough.start.shopping-master"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is the shopping list") ||
+    lower.includes("explain shopping list") ||
+    lower.includes("what is master shopping list") ||
+    lower.includes("explain master shopping")
+  ) {
+    await Commands["explain.shopping-master"]();
+    return;
+  }
+
+  if (
+    lower.includes("scan") ||
+    lower.includes("barcode") ||
+    lower.includes("scan barcode")
+  ) {
+    await Commands["shopping.scanBarcode"]();
+    return;
+  }
+
+  if (
+    lower.includes("bulk add") ||
+    lower.includes("add several items") ||
+    lower.includes("add many items")
+  ) {
+    await Commands["shopping.bulkAdd"]();
+    return;
+  }
+
+  if (
+    lower.includes("check this off") ||
+    lower.includes("mark this purchased") ||
+    lower.includes("mark purchased")
+  ) {
+    await Commands["shopping.markPurchased"]();
+    return;
+  }
+
+  if (
+    lower.includes("delete this item") ||
+    lower.includes("remove this item") ||
+    lower.includes("delete item")
+  ) {
+    await Commands["shopping.removeItem"]();
+    return;
+  }
+
+  if (
+    lower.includes("order this") ||
+    lower.includes("deliver my groceries") ||
+    lower.includes("send this for delivery")
+  ) {
+    await Commands["shopping.orderDelivery"]();
+    return;
+  }
+
+  // ===================================
+  // BIOMETRICS & DAILY MACROS INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me biometrics") ||
+    lower.includes("how do i use biometrics") ||
+    lower.includes("show me biometrics") ||
+    lower.includes("teach me macros") ||
+    lower.includes("show me daily macros")
+  ) {
+    await Commands["walkthrough.start.biometrics"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is biometrics") ||
+    lower.includes("explain biometrics") ||
+    lower.includes("what is the macro tracker") ||
+    lower.includes("what is the macros page") ||
+    lower.includes("explain macros")
+  ) {
+    await Commands["explain.biometrics"]();
+    return;
+  }
+
+  if (
+    lower.includes("scan this") ||
+    lower.includes("scan the label") ||
+    lower.includes("log from photo") ||
+    lower.includes("photo macros")
+  ) {
+    await Commands["biometrics.scanLabel"]();
+    return;
+  }
+
+  if (
+    lower.includes("add 8 ounces") ||
+    lower.includes("add eight ounces")
+  ) {
+    await Commands["biometrics.logWater"]({ amount: 8 });
+    return;
+  }
+
+  if (
+    lower.includes("add 16 ounces") ||
+    lower.includes("add sixteen ounces")
+  ) {
+    await Commands["biometrics.logWater"]({ amount: 16 });
+    return;
+  }
+
+  if (
+    lower.includes("reset water") ||
+    lower.includes("clear water")
+  ) {
+    await Commands["biometrics.resetWater"]();
+    return;
+  }
+
+  if (
+    lower.includes("log my weight") ||
+    lower.includes("save my weight")
+  ) {
+    await Commands["biometrics.updateWeight"]({ text: transcript });
+    return;
+  }
+
+  // ===================================
+  // MACRO CALCULATOR INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me macro calculator") ||
+    lower.includes("how do i use macros") ||
+    lower.includes("show me macro calculator") ||
+    lower.includes("teach me the calculator")
+  ) {
+    await Commands["walkthrough.start.macro-calculator"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is the macro calculator") ||
+    lower.includes("explain macro calculator") ||
+    lower.includes("what are macro targets")
+  ) {
+    await Commands["explain.macro-calculator"]();
+    return;
+  }
+
+  if (
+    lower.includes("i want to cut") ||
+    lower.includes("set my goal to cut") ||
+    lower.includes("goal cut")
+  ) {
+    await Commands["macro.setGoal"]({ goal: "cut" });
+    return;
+  }
+
+  if (
+    lower.includes("maintain") ||
+    lower.includes("goal maintain")
+  ) {
+    await Commands["macro.setGoal"]({ goal: "maintain" });
+    return;
+  }
+
+  if (
+    lower.includes("gain") ||
+    lower.includes("goal gain")
+  ) {
+    await Commands["macro.setGoal"]({ goal: "gain" });
+    return;
+  }
+
+  if (lower.includes("ectomorph")) {
+    await Commands["macro.setBodyType"]({ type: "ectomorph" });
+    return;
+  }
+
+  if (lower.includes("mesomorph")) {
+    await Commands["macro.setBodyType"]({ type: "mesomorph" });
+    return;
+  }
+
+  if (lower.includes("endomorph")) {
+    await Commands["macro.setBodyType"]({ type: "endomorph" });
+    return;
+  }
+
+  if (
+    lower.includes("sync my weight") ||
+    lower.includes("update my weight")
+  ) {
+    await Commands["macro.syncWeight"]();
+    return;
+  }
+
+  if (
+    lower.includes("calculate my macros") ||
+    lower.includes("show my macros")
+  ) {
+    await Commands["macro.calculate"]();
+    return;
+  }
+
+  if (
+    lower.includes("save my macro targets") ||
+    lower.includes("set macro targets")
+  ) {
+    await Commands["macro.setTargets"]();
+    return;
+  }
+
+  // ===================================
+  // GET INSPIRATION INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me inspiration") ||
+    lower.includes("how do i use inspiration") ||
+    lower.includes("show me inspiration")
+  ) {
+    await Commands["walkthrough.start.get-inspiration"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is inspiration") ||
+    lower.includes("explain inspiration") ||
+    lower.includes("what is get inspiration")
+  ) {
+    await Commands["explain.get-inspiration"]();
+    return;
+  }
+
+  if (
+    lower.includes("give me inspiration") ||
+    lower.includes("inspire me") ||
+    lower.includes("show me a quote") ||
+    lower.includes("get inspiration")
+  ) {
+    await Commands["inspiration.getQuote"]();
+    return;
+  }
+
+  // ===================================
+  // DAILY HEALTH JOURNAL INTENTS
+  // ===================================
+  if (
+    lower.includes("teach me journal") ||
+    lower.includes("how do i use the journal") ||
+    lower.includes("show me the journal")
+  ) {
+    await Commands["walkthrough.start.daily-journal"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is the journal") ||
+    lower.includes("explain the journal") ||
+    lower.includes("explain daily journal")
+  ) {
+    await Commands["explain.daily-journal"]();
+    return;
+  }
+
+  if (
+    lower.includes("add a journal entry") ||
+    lower.includes("start a journal entry") ||
+    lower.includes("i want to journal")
+  ) {
+    await Commands["journal.newEntry"]();
+    return;
+  }
+
+  if (
+    lower.includes("save my journal") ||
+    lower.includes("save this entry")
+  ) {
+    await Commands["journal.save"]();
     return;
   }
 

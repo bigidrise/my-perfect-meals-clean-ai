@@ -115,7 +115,7 @@ function applyBodyTypeTilt(base: any, bodyType: BodyType) {
 function BodyTypeGuide() {
   return (
     <div className="mb-3">
-      <details className="rounded-xl border border-white/15 bg-white/5 p-3">
+      <details data-wt="mc-bodytype-info" className="rounded-xl border border-white/15 bg-white/5 p-3">
         <summary className="cursor-pointer select-none text-sm font-semibold text-white/90">
           Body Type Guide (tap to expand)
         </summary>
@@ -388,6 +388,7 @@ export default function MacroCounter() {
                   Choose Your Goal
                 </h3>
                 <RadioGroup
+                  data-wt="mc-goal-selector"
                   value={goal}
                   onValueChange={(v: Goal) => {
                     setGoal(v);
@@ -443,6 +444,7 @@ export default function MacroCounter() {
                 </h3>
                 <BodyTypeGuide />
                 <RadioGroup
+                  data-wt="mc-bodytype-selector"
                   value={bodyType}
                   onValueChange={(v: BodyType) => {
                     setBodyType(v);
@@ -502,6 +504,7 @@ export default function MacroCounter() {
                 <div className="space-y-3">
                   <div className="text-xs text-white font-semibold">Units</div>
                   <RadioGroup
+                    data-wt="mc-units-selector"
                     value={units}
                     onValueChange={(v: Units) => setUnits(v)}
                     className="grid grid-cols-2 gap-2"
@@ -528,6 +531,7 @@ export default function MacroCounter() {
 
                   <div className="text-xs text-white font-semibold">Sex</div>
                   <RadioGroup
+                    data-wt="mc-gender-selector"
                     value={sex}
                     onValueChange={(v: Sex) => setSex(v)}
                     className="grid grid-cols-2 gap-2"
@@ -558,6 +562,7 @@ export default function MacroCounter() {
                         Age
                       </div>
                       <Input
+                        data-wt="mc-age-input"
                         type="number"
                         className="bg-black/60 border-white/50 text-white placeholder-white"
                         value={age || ""}
@@ -576,6 +581,7 @@ export default function MacroCounter() {
                             Height (ft)
                           </div>
                           <Input
+                            data-wt="mc-height-feet-input"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={heightFt || ""}
@@ -593,6 +599,7 @@ export default function MacroCounter() {
                             Height (in)
                           </div>
                           <Input
+                            data-wt="mc-height-inches-input"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={heightIn || ""}
@@ -610,6 +617,7 @@ export default function MacroCounter() {
                             Weight (lbs)
                           </div>
                           <Input
+                            data-wt="mc-weight-input"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={weightLbs || ""}
@@ -669,6 +677,7 @@ export default function MacroCounter() {
                     Activity
                   </div>
                   <RadioGroup
+                    data-wt="mc-activity-selector"
                     value={activity}
                     onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
                       setActivity(v);
@@ -733,6 +742,7 @@ export default function MacroCounter() {
                   {/* Sync Weight Button - appears after activity is selected */}
                   {activity && (
                     <Button
+                      data-wt="mc-sync-weight-button"
                       id="sync-weight-button"
                       onClick={() => {
                         const weight =
@@ -776,14 +786,14 @@ export default function MacroCounter() {
           {/* Results - Only show when activity is selected */}
           {results && (
             <>
-              <Card className="bg-zinc-900/80 border border-white/30 text-white">
+              <Card data-wt="mc-targets-card" className="bg-zinc-900/80 border border-white/30 text-white">
                 <CardContent className="p-5">
                   <h3 className="text-lg font-semibold flex items-center mb-4">
                     <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your
                     Daily Macro Targets
                   </h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 mb-2">
+                    <div data-wt="mc-targets-calories" className="flex justify-between items-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 mb-2">
                       <div className="text-base font-bold text-white">
                         Total Calories
                       </div>
@@ -792,6 +802,7 @@ export default function MacroCounter() {
                       </div>
                     </div>
                     <MacroRow
+                      data-wt="mc-targets-protein"
                       label="Protein"
                       grams={results.macros.protein.g}
                     />
@@ -813,6 +824,7 @@ export default function MacroCounter() {
               {/* Save Targets */}
               <div className="flex justify-center">
                 <Button
+                  data-wt="mc-set-targets-button"
                   id="calc-button"
                   disabled={isSaving}
                   onClick={async () => {

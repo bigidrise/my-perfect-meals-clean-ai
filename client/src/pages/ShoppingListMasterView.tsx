@@ -339,6 +339,7 @@ export default function ShoppingListMasterView() {
           {/* Add Item Actions */}
           <div className="mt-4 flex flex-wrap gap-2">
             <Button
+              data-wt="msl-barcode-button"
               onClick={() => setBarcodeModalOpen(true)}
               className="bg-black/60 border border-white/20 text-white hover:bg-black/70 text-sm"
               size="sm"
@@ -347,6 +348,7 @@ export default function ShoppingListMasterView() {
               Enter Barcode
             </Button>
             <Button
+              data-wt="msl-voice-add-button"
               onClick={() => setVoiceModalOpen(true)}
               className="bg-black/60 border border-white/20 text-white hover:bg-black/70 text-sm"
               size="sm"
@@ -356,6 +358,7 @@ export default function ShoppingListMasterView() {
               Voice Add
             </Button>
             <Button
+              data-wt="msl-bulk-add-button"
               onClick={() => setBulkModalOpen(true)}
               className="bg-black/60 border border-white/20 text-white hover:bg-black/70 text-sm"
               size="sm"
@@ -479,7 +482,7 @@ export default function ShoppingListMasterView() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div data-wt="msl-items-list" className="space-y-4">
             {Object.entries(groupedUnchecked).map(([cat, arr]) => (
               <div
                 key={cat}
@@ -528,12 +531,14 @@ export default function ShoppingListMasterView() {
                 <div className="space-y-2">
                   {arr.map((item) => (
                     <div
+                      data-wt="msl-item-card"
                       key={item.id}
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
                         item.isChecked ? "bg-white/5 opacity-50" : "bg-white/10"
                       }`}
                     >
                       <Checkbox
+                        data-wt="msl-item-checkoff"
                         checked={item.isChecked || false}
                         onCheckedChange={() => toggleItem(item.id)}
                         className="border-white/30"
@@ -619,6 +624,7 @@ export default function ShoppingListMasterView() {
                             <Edit2 className="h-4 w-4" />
                           </Button>
                           <TrashButton
+                            data-wt="msl-item-trash"
                             size="sm"
                             onClick={() => removeItem(item.id)}
                             confirm
