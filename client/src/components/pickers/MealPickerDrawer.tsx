@@ -156,6 +156,9 @@ export function MealPickerDrawer({
     setActiveCategory(category as any);
   };
 
+  // For snacks: items are already complete snacks, not ingredients to combine
+  const isSnackList = list === "snacks";
+
   return (
     <>
     <Drawer open={open} onOpenChange={(v)=>!v && onClose()}>
@@ -175,29 +178,31 @@ export function MealPickerDrawer({
 
           <div className="mt-1.5 sm:mt-3 flex flex-col sm:flex-row gap-1.5 sm:gap-2">
             <div className="flex gap-1.5 sm:gap-2 flex-wrap">
-              <Button
-                size="sm"
-                disabled={selectedIngredients.length === 0 || !!loading}
-                onClick={async ()=>{
-                  setLoading("generate");
-                  // Create meal from selected ingredients
-                  const meal: Meal = {
-                    id: `gen_${Date.now()}`,
-                    title: selectedIngredients.join(', '),
-                    servings: 1,
-                    ingredients: selectedIngredients.map(ing => ({ item: ing, amount: '1 serving' })),
-                    instructions: ['Prepare ingredients as desired'],
-                    nutrition: { calories: 300, protein: 25, carbs: 20, fat: 10 }
-                  };
-                  setLoading(null);
-                  onPick(meal);
-                  setSelectedIngredients([]);
-                }}
-                className="bg-purple-600/80 hover:bg-purple-600 rounded-2xl text-xs sm:text-sm px-2 sm:px-3"
-                data-testid="button-generate"
-              >
-                {loading==="generate" ? "Generating…" : `Generate${selectedIngredients.length > 0 ? ` (${selectedIngredients.length})` : ""}`}
-              </Button>
+              {!isSnackList && (
+                <Button
+                  size="sm"
+                  disabled={selectedIngredients.length === 0 || !!loading}
+                  onClick={async ()=>{
+                    setLoading("generate");
+                    // Create meal from selected ingredients
+                    const meal: Meal = {
+                      id: `gen_${Date.now()}`,
+                      title: selectedIngredients.join(', '),
+                      servings: 1,
+                      ingredients: selectedIngredients.map(ing => ({ item: ing, amount: '1 serving' })),
+                      instructions: ['Prepare ingredients as desired'],
+                      nutrition: { calories: 300, protein: 25, carbs: 20, fat: 10 }
+                    };
+                    setLoading(null);
+                    onPick(meal);
+                    setSelectedIngredients([]);
+                  }}
+                  className="bg-purple-600/80 hover:bg-purple-600 rounded-2xl text-xs sm:text-sm px-2 sm:px-3"
+                  data-testid="button-generate"
+                >
+                  {loading==="generate" ? "Generating…" : `Generate${selectedIngredients.length > 0 ? ` (${selectedIngredients.length})` : ""}`}
+                </Button>
+              )}
               <Button
                 size="sm"
                 disabled={!!loading}
@@ -246,18 +251,37 @@ export function MealPickerDrawer({
                 );
                 const fruitItem = typeof item === "object" && "gi" in item ? item : null;
 
+                // For snacks: clicking directly adds the snack (no selection needed)
+                const handleClick = () => {
+                  if (isSnackList) {
+                    // Create snack meal directly
+                    const snackMeal: Meal = {
+                      id: `snack_${Date.now()}`,
+                      title: itemName,
+                      servings: 1,
+                      ingredients: [{ item: itemName, amount: '1 serving' }],
+                      instructions: ['Enjoy as prepared'],
+                      nutrition: { calories: 150, protein: 10, carbs: 15, fat: 5 }
+                    };
+                    onPick(snackMeal);
+                  } else {
+                    // For meals: toggle selection for generation
+                    toggleIngredient(itemName);
+                  }
+                };
+
                 return (
                   <li
                     key={itemName}
-                    onClick={() => toggleIngredient(itemName)}
+                    onClick={handleClick}
                     className={cn(
                       "cursor-pointer rounded-xl border px-3 py-2 transition-all flex items-center justify-between",
-                      isSelected
+                      !isSnackList && isSelected
                         ? "border-purple-400/50 bg-purple-500/20 text-white shadow-md"
                         : "border-white/15 bg-white/5 text-white/80 hover:border-purple-300/30 hover:bg-white/10"
                     )}
                   >
-                    <span>{itemName}</span>
+                    <span className="text-sm">{itemName}</span>
                     {fruitItem && (
                       <span
                         className={cn(
