@@ -409,6 +409,7 @@ export default function RestaurantGuidePage() {
               Enter what you're craving and your location to find healthy restaurant options near you.
             </p>
             <Button
+              data-wt="rg-find-nearby-button"
               onClick={() => setLocation("/meal-finder")}
               className="w-full bg-orange-600 hover:bg-orange-700 text-xl text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
             >
@@ -457,6 +458,7 @@ export default function RestaurantGuidePage() {
                 </label>
                 <div className="relative">
                   <Input
+                    data-wt="rg-craving-input"
                     id="craving-input"
                     placeholder="e.g. chicken, salmon, pasta"
                     value={cravingInput}
@@ -481,6 +483,7 @@ export default function RestaurantGuidePage() {
                 </label>
                 <div className="relative">
                   <Input
+                    data-wt="rg-restaurant-input"
                     id="restaurant-input"
                     placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
                     value={restaurantInput}
@@ -500,6 +503,7 @@ export default function RestaurantGuidePage() {
                 </div>
               </div>
               <Button
+                data-wt="rg-search-button"
                 onClick={handleSearch}
                 disabled={generateMealsMutation.isPending}
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
@@ -526,13 +530,14 @@ export default function RestaurantGuidePage() {
 
             {/* Generated Meals Section */}
             {generatedMeals.length > 0 && (
-              <div className="space-y-6 mb-6">
+              <div data-wt="rg-results-list" className="space-y-6 mb-6">
                 <h2 className="text-xl font-bold text-white mb-4">
                   🍽️ Recommended Meals at {restaurantInput.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}:
                 </h2>
                 <div className="grid gap-4">
                   {generatedMeals.map((meal, index) => (
                     <Card
+                      data-wt="rg-restaurant-card"
                       key={meal.id || index}
                       className="overflow-hidden shadow-lg hover:shadow-orange-500/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-black/40 backdrop-blur-lg border border-white/20"
                     >

@@ -516,6 +516,7 @@ export default function CravingCreator() {
                     </div>
                     <div className="relative">
                       <textarea
+                        data-wt="cc-description-input"
                         value={cravingInput}
                         onChange={(e) => setCravingInput(e.target.value)}
                         placeholder="e.g., I want something creamy chocolate with peanut butter swirl and crunchy topping - BE SPECIFIC and describe what you crave!"
@@ -549,6 +550,7 @@ export default function CravingCreator() {
 
                     <div className="flex items-center gap-2">
                       <Select
+                        data-wt="cc-dietary-flags"
                         value={selectedDiet || "__none__"}
                         onValueChange={(v) =>
                           setSelectedDiet(v === "__none__" ? "" : v)
@@ -576,6 +578,7 @@ export default function CravingCreator() {
                       </Select>
 
                       <GlassButton
+                        data-wt="cc-clear-flags-button"
                         onClick={clearDiet}
                         disabled={!selectedDiet}
                         className="shrink-0 px-3 py-1 text-sm"
@@ -592,6 +595,7 @@ export default function CravingCreator() {
                       Number of Servings
                     </label>
                     <Select
+                      data-wt="cc-servings-selector"
                       value={servings.toString()}
                       onValueChange={(v) => setServings(parseInt(v))}
                     >
@@ -640,6 +644,7 @@ export default function CravingCreator() {
                         Custom Dietary Restrictions
                       </label>
                       <textarea
+                        data-wt="cc-custom-restrictions"
                         value={dietaryRestrictions}
                         onChange={(e) => setDietaryRestrictions(e.target.value)}
                         placeholder="e.g., no nuts, low sodium, diabetic-friendly..."
@@ -678,6 +683,7 @@ export default function CravingCreator() {
                     </div>
                   ) : (
                     <GlassButton
+                      data-wt="cc-generate-button"
                       onClick={handleGenerateMeal}
                       disabled={isGenerating}
                       className="w-full bg-orange-600 hover:bg-orange-700 overflow-hidden text-ellipsis whitespace-nowrap"
@@ -695,7 +701,7 @@ export default function CravingCreator() {
             <div className="mt-8 space-y-6">
               {generatedMeals.map((meal, index) => (
                 <div key={index}>
-                  <Card className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
+                  <Card data-wt="cc-meal-card" className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">

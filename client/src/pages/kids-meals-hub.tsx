@@ -173,6 +173,7 @@ export default function KidsMealsHub() {
               <div>
                 <Label className="text-white/80">Search meals</Label>
                 <Input
+                  data-wt="cp-search-input"
                   placeholder="Search by name or tag…"
                   value={filterText}
                   onChange={(e) => setFilterText(e.target.value)}
@@ -182,7 +183,7 @@ export default function KidsMealsHub() {
 
               <div>
                 <Label className="text-white/80">Servings</Label>
-                <div className="flex gap-2 flex-wrap">
+                <div data-wt="cp-servings-selector" className="flex gap-2 flex-wrap">
                   {SERVING_OPTIONS.map((n) => (
                     <Button
                       key={n}
@@ -202,7 +203,7 @@ export default function KidsMealsHub() {
 
               <div>
                 <Label className="text-white/80">Rounding</Label>
-                <div className="flex gap-2 flex-wrap">
+                <div data-wt="cp-rounding-selector" className="flex gap-2 flex-wrap">
                   {(["tenth", "half", "whole"] as RoundingMode[]).map((m) => (
                     <Button
                       key={m}
@@ -224,7 +225,7 @@ export default function KidsMealsHub() {
         </Card>
 
         {/* Meals Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+        <div data-wt="cp-meal-gallery" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
           {meals.map((meal) => (
             <Card
               key={meal.id}
@@ -257,6 +258,7 @@ export default function KidsMealsHub() {
             onClick={() => setSelectedMeal(null)}
           >
             <Card
+              data-wt="cp-meal-card"
               className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/50 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.2)]"
               onClick={(e) => e.stopPropagation()}
             >
