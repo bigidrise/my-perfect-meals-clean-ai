@@ -242,7 +242,38 @@ export function MealPickerDrawer({
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto">
           <div className="px-3 sm:px-4 py-2 sm:py-4">
-            {activeCategory && (
+            {activeCategory && isSnackList && (
+              // SNACKS: Single-column tappable list, immediate add
+              <ul className="space-y-2">
+              {currentIngredients.map((item) => {
+                const itemName = typeof item === "string" ? item : item.name;
+                return (
+                  <li
+                    key={itemName}
+                    onClick={() => {
+                      const snackMeal: Meal = {
+                        id: `snack_${Date.now()}`,
+                        name: itemName,
+                        title: itemName,
+                        servings: 1,
+                        ingredients: [itemName],
+                        instructions: [],
+                        nutrition: { calories: 150, protein: 10, carbs: 15, fat: 5 }
+                      };
+                      onPick(snackMeal);
+                      onClose();
+                    }}
+                    className="cursor-pointer rounded-xl border border-white/15 bg-white/5 px-4 py-3 transition-all hover:border-emerald-400/50 hover:bg-emerald-500/10 text-white/90 hover:text-white"
+                  >
+                    {itemName}
+                  </li>
+                );
+              })}
+              </ul>
+            )}
+
+            {activeCategory && !isSnackList && (
+              // MEALS: 2-column grid, select ingredients, then Generate
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {currentIngredients.map((item) => {
                 const itemName = typeof item === "string" ? item : item.name;
@@ -251,33 +282,13 @@ export function MealPickerDrawer({
                 );
                 const fruitItem = typeof item === "object" && "gi" in item ? item : null;
 
-                // For snacks: clicking directly adds the snack (no selection needed)
-                const handleClick = () => {
-                  if (isSnackList) {
-                    // Create snack meal directly with proper structure
-                    const snackMeal: Meal = {
-                      id: `snack_${Date.now()}`,
-                      name: itemName,
-                      title: itemName,
-                      servings: 1,
-                      ingredients: [itemName],  // Single string ingredient
-                      instructions: [],
-                      nutrition: { calories: 150, protein: 10, carbs: 15, fat: 5 }
-                    };
-                    onPick(snackMeal);
-                  } else {
-                    // For meals: toggle selection for generation
-                    toggleIngredient(itemName);
-                  }
-                };
-
                 return (
                   <li
                     key={itemName}
-                    onClick={handleClick}
+                    onClick={() => toggleIngredient(itemName)}
                     className={cn(
                       "cursor-pointer rounded-xl border px-3 py-2 transition-all flex items-center justify-between",
-                      !isSnackList && isSelected
+                      isSelected
                         ? "border-purple-400/50 bg-purple-500/20 text-white shadow-md"
                         : "border-white/15 bg-white/5 text-white/80 hover:border-purple-300/30 hover:bg-white/10"
                     )}
