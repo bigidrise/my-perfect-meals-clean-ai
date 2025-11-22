@@ -87,14 +87,14 @@ export default function BottomNav() {
           <div className="absolute left-1/2 -translate-x-1/2 -top-1 z-10">
             <motion.button
               onClick={toggle}
-              className="flex items-center justify-center w-12 h-12 rounded-full bg-black/70 border-2 border-white/15 backdrop-blur-xl shadow-lg shadow-orange-500/60 hover:shadow-orange-500/100 hover:border-orange-400/100 transition-all duration-300"
+              className="flex items-center justify-center w-14 h-14 rounded-full bg-black/70 border-2 border-white/15 backdrop-blur-xl shadow-lg shadow-orange-500/60 hover:shadow-orange-500/100 hover:border-orange-400/100 transition-all duration-300"
               whileTap={{ scale: 0.92 }}
               whileHover={{ y: -2, scale: 1.08 }}
               style={{
                 boxShadow: '0 0 15px rgba(251,146,60,0.3), 0 0 25px rgba(251,146,60,0.2)'
               }}
             >
-              <ChefCapIcon size={48} />
+              <ChefCapIcon size={54} />
             </motion.button>
           </div>
 
