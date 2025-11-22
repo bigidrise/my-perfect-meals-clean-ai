@@ -314,15 +314,7 @@ export default function ShoppingListMasterView() {
             Master Shopping List
           </h1>
 
-          {/* Info Button */}
-          <button
-            onClick={() => setInstructionsOpen(true)}
-            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-            aria-label="How to use shopping list"
-            data-testid="shopping-list-info-button"
-          >
-            ?
-          </button>
+          
         </div>
       </div>
 

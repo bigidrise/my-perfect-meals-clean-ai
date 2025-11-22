@@ -352,13 +352,7 @@ export default function MacroCounter() {
             </h1>
 
             {/* Info Button */}
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-              title="Macro Calculator info"
-            >
-              ?
-            </button>
+            
           </div>
         </div>
 

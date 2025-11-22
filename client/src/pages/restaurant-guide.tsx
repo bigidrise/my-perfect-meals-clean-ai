@@ -370,14 +370,7 @@ export default function RestaurantGuidePage() {
             {/* Title */}
             <h1 className="text-lg font-bold text-white">Restaurant Guide</h1>
 
-            {/* Info Button */}
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-              aria-label="How to use Restaurant Guide"
-            >
-              ?
-            </button>
+            
           </div>
         </div>
 
@@ -392,13 +385,7 @@ export default function RestaurantGuidePage() {
                 <MapPin className="h-5 w-5" />
                 Find Meals Near Me
               </div>
-              <button
-                onClick={() => setShowFindMealsInfo(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-                aria-label="How to use Find Meals Near Me"
-              >
-                ?
-              </button>
+              
             </CardTitle>
             <CardDescription className="text-sm text-white/80">
               Search for meals you're craving at nearby restaurants by ZIP code
@@ -426,13 +413,7 @@ export default function RestaurantGuidePage() {
                 <Sparkles className="h-5 w-5" />
                 Smart Restaurant Guide
               </div>
-              <button
-                onClick={() => setShowSmartGuideInfo(true)}
-                className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white font-bold flash-border"
-                aria-label="How to use Smart Restaurant Guide"
-              >
-                ?
-              </button>
+              
             </CardTitle>
             <CardDescription className="text-white/80">
               

@@ -209,14 +209,7 @@ export default function AlcoholLogPage() {
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Alcohol Log</h1>
 
-          {/* Info Button */}
-          <button
-            onClick={() => setShowInfoModal(true)}
-            className="ml-auto flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-            aria-label="How to use Alcohol Log"
-          >
-            ?
-          </button>
+          
         </div>
       </div>
 

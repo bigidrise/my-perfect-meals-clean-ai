@@ -946,14 +946,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             {/* Title */}
             <h1 className="text-base font-bold text-white flex-1 min-w-0 truncate">Performance & Competition Builder</h1>
 
-            {/* Info Button */}
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border flex-shrink-0"
-              aria-label="How to use Performance & Competition Builder"
-            >
-              ?
-            </button>
+            
           </div>
 
           {/* Row 2: Client Dashboard Button (only in ProCare mode) */}

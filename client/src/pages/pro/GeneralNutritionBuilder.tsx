@@ -967,14 +967,7 @@ export default function WeeklyMealBoard() {
 
           <div className="ml-auto" />
 
-          {/* Info Button */}
-          <button
-            onClick={() => setShowInfoModal(true)}
-            className="flex items-center justify-center h-10 w-10 rounded-2xl bg-lime-700 hover:bg-lime-800 border-2 border-white/40 text-white font-semibold text-xl flash-border"
-            aria-label="How to use Weekly Meal Board"
-          >
-            ?
-          </button>
+          
         </div>
       </div>
 

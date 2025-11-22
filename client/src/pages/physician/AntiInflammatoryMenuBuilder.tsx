@@ -961,23 +961,7 @@ export default function AntiInflammatoryMenuBuilder() {
           {/* Info Button + Optional Client Dashboard Button */}
           <div className="ml-auto flex items-center gap-2">
             {/* Info Button */}
-            <button
-              onClick={() => {
-                setShowInfoModal(true);
-                // Notify co-pilot system that help was requested
-                window.dispatchEvent(new CustomEvent('copilot:help-requested', {
-                  detail: {
-                    page: 'anti-inflammatory-meal-board',
-                    context: 'How to use Anti-Inflammatory Menu Builder',
-                    timestamp: new Date().toISOString()
-                  }
-                }));
-              }}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-lime-700 hover:bg-lime-800 transition-all duration-200 text-white text-xl font-bold flash-border"
-              aria-label="How to use Anti-Inflammatory Menu Builder"
-            >
-              ?
-            </button>
+            
 
             {/* Optional: Client Dashboard Button */}
             {(() => {
