@@ -31,12 +31,13 @@ import {
 import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
 import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
 import { DIABETIC_DINNER_MEALS } from '@/data/diabeticPremadeDinner';
+import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
 
 interface MealPremadePickerProps {
   open: boolean;
   onClose: () => void;
   onMealSelect?: (meal: any) => void;
-  mealType?: 'breakfast' | 'lunch' | 'dinner';
+  mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
   dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory';
   showMacroTargeting?: boolean;
 }
@@ -97,6 +98,40 @@ const diabeticLunchPremades = {
   'Smart Plate Dinners': DIABETIC_LUNCH_MEALS['smart-plate-dinners'].map((meal, idx) => ({
     id: `diabetic-l6-${idx}`,
     name: meal.title,
+    ingredients: []
+  }))
+};
+
+// Build diabetic snack premades (simple title-only format)
+const diabeticSnackPremades = {
+  'Sweet Treats': DIABETIC_SNACK_CATEGORIES[0].items.map((snack, idx) => ({
+    id: `diabetic-snack-sweet-${idx}`,
+    name: snack,
+    ingredients: []
+  })),
+  'Savory & Crunchy': DIABETIC_SNACK_CATEGORIES[1].items.map((snack, idx) => ({
+    id: `diabetic-snack-savory-${idx}`,
+    name: snack,
+    ingredients: []
+  })),
+  'Light & Gentle': DIABETIC_SNACK_CATEGORIES[2].items.map((snack, idx) => ({
+    id: `diabetic-snack-light-${idx}`,
+    name: snack,
+    ingredients: []
+  })),
+  'Protein & Energy': DIABETIC_SNACK_CATEGORIES[3].items.map((snack, idx) => ({
+    id: `diabetic-snack-protein-${idx}`,
+    name: snack,
+    ingredients: []
+  })),
+  'Drinkables': DIABETIC_SNACK_CATEGORIES[4].items.map((snack, idx) => ({
+    id: `diabetic-snack-drink-${idx}`,
+    name: snack,
+    ingredients: []
+  })),
+  'Dessert Bites': DIABETIC_SNACK_CATEGORIES[5].items.map((snack, idx) => ({
+    id: `diabetic-snack-dessert-${idx}`,
+    name: snack,
     ingredients: []
   }))
 };
@@ -325,6 +360,8 @@ export default function MealPremadePicker({
     ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
     ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)
+    : mealType === 'snack'
+    ? diabeticSnackPremades
     : (dietType === 'diabetic' ? diabeticDinnerPremades : dinnerPremades);
 
   const [activeCategory, setActiveCategory] = useState<string>('');
@@ -558,6 +595,8 @@ export default function MealPremadePicker({
         ? '/assets/meals/default-breakfast.jpg'
         : mealType === 'lunch'
         ? '/assets/meals/default-lunch.jpg'
+        : mealType === 'snack'
+        ? '/assets/meals/default-snack.jpg'
         : '/assets/meals/default-dinner.jpg';
         
       const premadeMeal = {
