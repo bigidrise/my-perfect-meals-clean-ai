@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, DrawerContent, DrawerHeader, DrawerHeaderProps, DrawerTitle } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import type { Meal } from "@/components/MealCard";
 import { TEMPLATE_SETS } from "@/data/templateSets";
@@ -52,7 +52,7 @@ export function MealPickerDrawer({
   onPick: (meal: Meal)=>void;
   useAntiInflammatory?: boolean;
 }){
-  const [loading, setLoading] = React.useState<"cafeteria"|null>(null);
+  const [loading, setLoading] = React.useState<"cafeteria"|"generate"|null>(null);
   const [templates, setTemplates] = React.useState<Meal[]>([]);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const profile = useOnboardingProfile();
@@ -174,7 +174,30 @@ export function MealPickerDrawer({
           </div>
 
           <div className="mt-1.5 sm:mt-3 flex flex-col sm:flex-row gap-1.5 sm:gap-2">
-            <div className="flex gap-1.5 sm:gap-2">
+            <div className="flex gap-1.5 sm:gap-2 flex-wrap">
+              <Button
+                size="sm"
+                disabled={selectedIngredients.length === 0 || !!loading}
+                onClick={async ()=>{
+                  setLoading("generate");
+                  // Create meal from selected ingredients
+                  const meal: Meal = {
+                    id: `gen_${Date.now()}`,
+                    title: selectedIngredients.join(', '),
+                    servings: 1,
+                    ingredients: selectedIngredients.map(ing => ({ item: ing, amount: '1 serving' })),
+                    instructions: ['Prepare ingredients as desired'],
+                    nutrition: { calories: 300, protein: 25, carbs: 20, fat: 10 }
+                  };
+                  setLoading(null);
+                  onPick(meal);
+                  setSelectedIngredients([]);
+                }}
+                className="bg-purple-600/80 hover:bg-purple-600 rounded-2xl text-xs sm:text-sm px-2 sm:px-3"
+                data-testid="button-generate"
+              >
+                {loading==="generate" ? "Generating…" : `Generate${selectedIngredients.length > 0 ? ` (${selectedIngredients.length})` : ""}`}
+              </Button>
               <Button
                 size="sm"
                 disabled={!!loading}
