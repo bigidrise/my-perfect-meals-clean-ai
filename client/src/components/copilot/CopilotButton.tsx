@@ -13,7 +13,7 @@ export const CopilotButton: React.FC = () => {
       whileTap={{ scale: 0.92 }}
       whileHover={{ y: -2, scale: 1.08 }}
       style={{
-        boxShadow: '0 0 30px rgba(251,146,60,0.6), 0 0 50px rgba(251,146,60,0.4)'
+        boxShadow: '0 0 15px rgba(251,146,60,0.3), 0 0 25px rgba(251,146,60,0.2)'
       }}
     >
       <ChefCapIcon size={48} />

@@ -47,15 +47,15 @@ export const ChefCapIcon: React.FC<ChefCapIconProps> = ({
         />
       </svg>
 
-      {/* MAX BRIGHTNESS GLOW EFFECT */}
+      {/* Subtle glow effect */}
       {glow && (
         <motion.div
           className="absolute inset-0 rounded-full"
           animate={{
             boxShadow: [
-              "0 0 20px rgba(251,146,60,0.8), 0 0 40px rgba(251,146,60,0.6)",
-              "0 0 35px rgba(251,146,60,1), 0 0 60px rgba(251,146,60,0.9), 0 0 80px rgba(251,146,60,0.7)",
-              "0 0 20px rgba(251,146,60,0.8), 0 0 40px rgba(251,146,60,0.6)",
+              "0 0 10px rgba(251,146,60,0.4), 0 0 20px rgba(251,146,60,0.3)",
+              "0 0 18px rgba(251,146,60,0.5), 0 0 30px rgba(251,146,60,0.4), 0 0 40px rgba(251,146,60,0.35)",
+              "0 0 10px rgba(251,146,60,0.4), 0 0 20px rgba(251,146,60,0.3)",
             ],
           }}
           transition={{
