@@ -37,7 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { SnackPickerDrawer } from "@/components/pickers/SnackPickerDrawer";
+import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {

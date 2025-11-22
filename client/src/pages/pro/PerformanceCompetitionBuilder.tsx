@@ -53,7 +53,7 @@ import { linkUserToClient } from "@/lib/macroResolver";
 import { saveLastPerformanceClientId } from "@/lib/macroSourcesConfig";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { SnackPickerDrawer } from "@/components/pickers/SnackPickerDrawer";
+import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -1271,14 +1271,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
                     <div className="flex gap-2">
+                      {/* Meal 5 uses Snack Picker instead of AI Meal Creator */}
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                        onClick={() => {
-                          setAiMealSlot("snacks");
-                          setAiMealModalOpen(true);
-                        }}
+                        onClick={() => setSnackPickerOpen(true)}
                       >
                         <Sparkles className="h-3 w-3" />
                         Create with AI
@@ -1350,14 +1348,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
                         <div className="flex gap-2">
+                          {/* Dynamic meals use Snack Picker instead of AI Meal Creator */}
                           <Button
                             size="sm"
                             variant="ghost"
                             className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                            onClick={() => {
-                              setAiMealSlot("snacks");
-                              setAiMealModalOpen(true);
-                            }}
+                            onClick={() => setSnackPickerOpen(true)}
                           >
                             <Sparkles className="h-3 w-3" />
                             Create with AI
@@ -1434,14 +1430,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-white/90 text-lg font-medium">Snacks</h2>
                     <div className="flex gap-2">
+                      {/* Snacks use Snack Picker instead of AI Meal Creator */}
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                        onClick={() => {
-                          setAiMealSlot("snacks");
-                          setAiMealModalOpen(true);
-                        }}
+                        onClick={() => setSnackPickerOpen(true)}
                       >
                         <Sparkles className="h-3 w-3" />
                         Create with AI
@@ -1569,14 +1563,20 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
-                {/* AI Meal Creator button for all meal sections */}
+                {/* AI Meal Creator button for breakfast/lunch/dinner, Snack Picker for snacks */}
                 <Button
                   size="sm"
                   variant="ghost"
                   className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                   onClick={() => {
-                    setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
-                    setAiMealModalOpen(true);
+                    if (key === "snacks") {
+                      // Open dedicated Snack Picker
+                      setSnackPickerOpen(true);
+                    } else {
+                      // Open AI Meal Creator for meals
+                      setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                      setAiMealModalOpen(true);
+                    }
                   }}
                 >
                   <Sparkles className="h-3 w-3" />
@@ -1665,14 +1665,12 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
                 <div className="flex gap-2">
+                  {/* Meal 5 uses Snack Picker instead of AI Meal Creator */}
                   <Button
                     size="sm"
                     variant="ghost"
                     className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                    onClick={() => {
-                      setAiMealSlot("snacks");
-                      setAiMealModalOpen(true);
-                    }}
+                    onClick={() => setSnackPickerOpen(true)}
                   >
                     <Sparkles className="h-3 w-3" />
                     Create with AI
