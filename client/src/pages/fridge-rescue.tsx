@@ -541,23 +541,6 @@ const FridgeRescuePage = () => {
 
             {/* Title */}
             <h1 data-wt="fridge-rescue-header" className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
-
-            {/* Info & Teach Me Buttons */}
-            <div className="ml-auto flex items-center gap-2">
-              
-              <button
-                onClick={() => {
-                  open();
-                  runAction({
-                    type: "run-command",
-                    id: "walkthrough.start.fridge-rescue",
-                  });
-                }}
-                className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 hover:bg-white/10"
-              >
-                Teach me
-              </button>
-            </div>
           </div>
         </div>
 

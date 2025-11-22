@@ -952,19 +952,7 @@ export default function WeeklyMealBoard() {
 
           <div className="flex-grow" />
 
-          {/* Teach Me Button */}
-          <button
-            onClick={() => {
-              open();
-              runAction({
-                type: "run-command",
-                id: "walkthrough.start.weekly-board",
-              });
-            }}
-            className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-white/80 hover:bg-white/10 flex-shrink-0 whitespace-nowrap"
-          >
-            Teach me
-          </button>
+          
         </div>
       </div>
 
