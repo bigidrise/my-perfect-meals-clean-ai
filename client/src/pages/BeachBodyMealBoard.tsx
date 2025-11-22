@@ -15,6 +15,7 @@ import {
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
 import { AddSnackModal } from "@/components/AddSnackModal";
+import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
