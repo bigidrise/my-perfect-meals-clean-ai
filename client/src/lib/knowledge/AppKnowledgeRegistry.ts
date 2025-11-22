@@ -31,24 +31,42 @@ export const AppKnowledge: Record<string, FeatureKnowledge> = {
   },
 
   // ============================
-  // 🔥 WEEKLY BOARD
+  // 🔥 WEEKLY MEAL BOARD
   // ============================
-  "weekly-board": {
-    id: "weekly-board",
+  "weekly-meal-board": {
+    id: "weekly-meal-board",
     title: "Weekly Meal Board",
     description:
-      "Plan your entire week visually by placing meals into each day. Perfect for saving time and staying on track.",
+      "Build your perfect day of meals using AI. Choose proteins, carbs, veggies, fats, and fruits, pick preparation styles, generate complete meals, and send your day to macros or your shopping list.",
     howTo: [
-      "Tap any empty slot to add a meal.",
-      "Use AI to fill your week automatically.",
-      "Drag and drop meals to rearrange your week.",
+      "Tap the Day button to begin building your meals.",
+      "Tap 'Create with AI' to open the meal builder.",
+      "Select foods from ingredient categories like Proteins, Starchy Carbs, Fibrous Carbs, Fats, and Fruits.",
+      "Use the search bar to jump directly to foods alphabetically.",
+      "Tap a food to open its preparation style card. Select a cooking style and tap 'Use This Style'.",
+      "Add optional custom ingredients like garlic or seasoning.",
+      "Tap 'Generate AI Meal' to create a full meal with ingredients, macros, badges, and instructions.",
+      "Repeat for breakfast, lunch, dinner, and snacks.",
+      "Tap 'Send Entire Day to Macros' to move your meals into the Biometrics/Macros tracker.",
+      "Send a single meal or your full day to the Shopping List for groceries.",
     ],
     tips: [
-      "Try combining Fridge Rescue meals with One-Pan dinners for quick weeks.",
-      "Tap Copilot for suggestions when you’re stuck.",
+      "Preparation styles (like mashed, baked, medium-well, etc.) change macros and flavor.",
+      "Search by typing the first letter or spelling part of a food.",
+      "Custom ingredients add flavor without drastically changing macros.",
+      "Use the AI generator for fast, balanced meals when you're short on time.",
     ],
-    relatedCommands: ["board.fillEmpty", "board.batchPlan"],
+    relatedCommands: [
+      "weekly-mealboard.start",
+      "meal.generate",
+      "meal.addIngredient",
+      "meal.swapPreparation",
+      "day.sendToMacros",
+      "day.sendToShopping",
+      "week.sendToShopping"
+    ],
   },
+
 
   // ============================
   // 🔥 SUBSCRIPTIONS
