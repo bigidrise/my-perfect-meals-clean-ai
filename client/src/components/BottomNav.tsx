@@ -52,7 +52,7 @@ export default function BottomNav() {
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="relative h-16 flex items-center justify-between">
           {/* LEFT ITEMS */}
-          <div className="flex items-center flex-1">
+          <div className="flex items-center justify-start flex-1">
             {leftItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
@@ -84,7 +84,7 @@ export default function BottomNav() {
           </div>
 
           {/* CENTER COPILOT BUTTON */}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-1 z-10">
+          <div className="absolute left-1/2 -translate-x-1/2 top-2 z-10">
             <motion.button
               onClick={toggle}
               className="flex items-center justify-center w-14 h-14 rounded-full bg-black/70 border-2 border-white/15 backdrop-blur-xl shadow-lg shadow-orange-500/60 hover:shadow-orange-500/100 hover:border-orange-400/100 transition-all duration-300"
@@ -99,7 +99,7 @@ export default function BottomNav() {
           </div>
 
           {/* RIGHT ITEMS */}
-          <div className="flex items-center flex-1">
+          <div className="flex items-center justify-end flex-1">
             {rightItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
