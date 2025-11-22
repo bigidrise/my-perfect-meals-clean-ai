@@ -1,4 +1,3 @@
-
 import { useLocation } from "wouter";
 import { Home, CalendarDays, Sparkles, Crown } from "lucide-react";
 import { useCopilot } from "@/components/copilot/CopilotContext";
@@ -62,7 +61,7 @@ export default function BottomNav() {
                   key={item.id}
                   onClick={() => setLocation(item.path)}
                   style={{ flexDirection: 'column' }}
-                  className={`flex items-center justify-center flex-1 h-full transition-all duration-300 ${
+                  className={`flex items-center justify-center px-4 h-full transition-all duration-300 ${
                     active
                       ? "text-orange-500"
                       : "text-gray-400 hover:text-white"
@@ -109,7 +108,7 @@ export default function BottomNav() {
                   key={item.id}
                   onClick={() => setLocation(item.path)}
                   style={{ flexDirection: 'column' }}
-                  className={`flex items-center justify-center flex-1 h-full transition-all duration-300 ${
+                  className={`flex items-center justify-center px-4 h-full transition-all duration-300 ${
                     active
                       ? "text-orange-500"
                       : "text-gray-400 hover:text-white"
