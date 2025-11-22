@@ -17,18 +17,33 @@ export const AppKnowledge: Record<string, FeatureKnowledge> = {
     id: "fridge-rescue",
     title: "Fridge Rescue",
     description:
-      "Turn the items you already have at home into complete meals using Emotion AI. Great for saving money and avoiding waste.",
+      "Turn whatever ingredients you have at home into real meals. Speak or type what’s in your fridge and get three AI-generated meal options.",
     howTo: [
-      "Tap the + button to add items from your fridge or pantry.",
-      "Select how many servings you want.",
-      "Tap 'Create Meal' and Copilot will generate meal ideas you can cook now.",
+      "Tap 'Enter Your Ingredients' to begin.",
+      "Speak or type the foods in your fridge or pantry.",
+      "List proteins, carbs, veggies, sauces, or anything usable.",
+      "Tap 'Generate' to build three AI meal options using your ingredients.",
+      "Review each meal card, macros, ingredients, instructions, and badges.",
+      "Save or send meals to your Weekly Meal Board, Shopping List, or Macros.",
     ],
     tips: [
-      "Add 3–5 ingredients for the best results.",
-      "You can tap the Copilot anytime to get more meal ideas.",
+      "Use voice input for fast ingredient entry.",
+      "You can list your ingredients in any order. The AI understands categories.",
+      "You don’t need to itemize everything — major foods are enough.",
+      "Fridge Rescue works best when you list at least one protein, carb, and veggie.",
     ],
-    relatedCommands: ["fridge.onePanDinner", "fridge.suggestAdds"],
+    relatedCommands: [
+      "fridge.start",
+      "fridge.generate",
+      "fridge.addVoiceIngredient",
+      "fridge.addTypedIngredient",
+      "fridge.clear",
+      "fridge.saveMeal",
+      "fridge.sendToBoard",
+      "fridge.sendToShopping",
+    ],
   },
+
 
   // ============================
   // 🔥 WEEKLY MEAL BOARD
