@@ -1852,51 +1852,32 @@ export default function DiabeticMenuBuilder() {
           )}
       </div>
 
-      {/* Snacks use MealPremadePicker with diabetic snack data */}
-      {pickerList === 'snacks' ? (
-        <MealPremadePicker
-          open={pickerOpen}
-          onClose={() => {
-            setPickerOpen(false);
-            setPickerList(null);
-          }}
-          onMealSelect={(meal) => {
-            if (pickerList) {
-              quickAdd(pickerList, meal);
-            }
-            setPickerOpen(false);
-            setPickerList(null);
-          }}
-          mealType="snack"
-          dietType="diabetic"
-        />
-      ) : (
-        <MealPickerDrawer
-          open={pickerOpen}
-          list={pickerList}
-          onClose={() => {
-            setPickerOpen(false);
-            setPickerList(null);
-            // Clear pending meal if user cancels
+      {/* MealPickerDrawer handles all meal slots including snacks (uses snackIngredients for 120+ options) */}
+      <MealPickerDrawer
+        open={pickerOpen}
+        list={pickerList}
+        onClose={() => {
+          setPickerOpen(false);
+          setPickerList(null);
+          // Clear pending meal if user cancels
+          if ((window as any).pendingMeal) {
+            delete (window as any).pendingMeal;
+          }
+        }}
+        onPick={(meal) => {
+          if (pickerList) {
+            // Use pending meal from localStorage if available, otherwise use picked meal
+            const mealToAdd = (window as any).pendingMeal || meal;
+            quickAdd(pickerList, mealToAdd);
+            // Clear pending meal after adding
             if ((window as any).pendingMeal) {
               delete (window as any).pendingMeal;
             }
-          }}
-          onPick={(meal) => {
-            if (pickerList) {
-              // Use pending meal from localStorage if available, otherwise use picked meal
-              const mealToAdd = (window as any).pendingMeal || meal;
-              quickAdd(pickerList, mealToAdd);
-              // Clear pending meal after adding
-              if ((window as any).pendingMeal) {
-                delete (window as any).pendingMeal;
-              }
-            }
-            setPickerOpen(false);
-            setPickerList(null);
-          }}
-        />
-      )}
+          }
+          setPickerOpen(false);
+          setPickerList(null);
+        }}
+      />
 
       <ManualMealModal
         open={manualModalOpen}
