@@ -199,6 +199,7 @@ export default function MealFinder() {
 
   return (
     <>
+      {/* Universal Back Button - Must be at top level for iOS safe-area */}
       <Button
         onClick={handleGoBack}
         variant="ghost"
@@ -210,7 +211,7 @@ export default function MealFinder() {
         style={{
           top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)',
           position: "fixed",
-          zIndex: 999999999,
+          zIndex: 2147483647,
           isolation: "isolate",
           transform: "translateZ(0)"
         }}
@@ -218,7 +219,13 @@ export default function MealFinder() {
         <ArrowLeft className="h-4 w-4 text-white" />
       </Button>
 
-      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-safe pb-safe px-4 sm:px-6 overflow-x-hidden">
+      <div 
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 px-4 sm:px-6 overflow-x-hidden"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)"
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-0">
           <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
             <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
