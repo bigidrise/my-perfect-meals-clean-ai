@@ -254,13 +254,14 @@ export function MealPickerDrawer({
                 // For snacks: clicking directly adds the snack (no selection needed)
                 const handleClick = () => {
                   if (isSnackList) {
-                    // Create snack meal directly
+                    // Create snack meal directly with proper structure
                     const snackMeal: Meal = {
                       id: `snack_${Date.now()}`,
+                      name: itemName,
                       title: itemName,
                       servings: 1,
-                      ingredients: [{ item: itemName, amount: '1 serving' }],
-                      instructions: ['Enjoy as prepared'],
+                      ingredients: [itemName],  // Single string ingredient
+                      instructions: [],
                       nutrition: { calories: 150, protein: 10, carbs: 15, fat: 5 }
                     };
                     onPick(snackMeal);
