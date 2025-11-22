@@ -113,6 +113,7 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
               onClick={onAddToList}
               className="flex-1 sm:flex-none min-h-[44px] bg-orange-600 hover:bg-orange-700 text-white border border-white/30"
               data-testid="button-go-to-shopping-list"
+              data-wt="wmb-send-day-to-shopping"
             >
               <ShoppingCart className="h-5 w-5 sm:mr-2" />
               <span>Add & View List</span>

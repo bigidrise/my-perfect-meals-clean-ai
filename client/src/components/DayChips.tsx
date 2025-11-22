@@ -26,6 +26,7 @@ export function DayChips({ weekDates, activeDayISO, onDayChange }: DayChipsProps
                 ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white shadow-lg border border-blue-400/50'
                 : 'bg-black/40 text-white/70 hover:text-white hover:bg-black/60 border border-white/10'
             }`}
+            data-wt="wmb-day-button"
           >
             <span className="text-xs font-medium leading-tight">{dayName}</span>
             <span className="text-xs font-medium text-white mt-0.5 leading-tight">{dateShort}</span>

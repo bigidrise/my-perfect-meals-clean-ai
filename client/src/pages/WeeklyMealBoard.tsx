@@ -1131,6 +1131,7 @@ export default function WeeklyMealBoard() {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
                         setAiMealModalOpen(true);
                       }}
+                      data-wt="wmb-create-ai-button"
                     >
                       <Sparkles className="h-3 w-3" />
                       Create with AI
@@ -1185,6 +1186,7 @@ export default function WeeklyMealBoard() {
                       date={activeDayISO}
                       slot={key}
                       meal={meal}
+                      data-wt="wmb-meal-card"
                       onUpdated={(m) => {
                         if (m === null) {
                           // REMOVE MEAL in Day mode - use the new system

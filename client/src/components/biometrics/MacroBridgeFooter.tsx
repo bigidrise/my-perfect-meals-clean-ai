@@ -78,6 +78,7 @@ export function MacroBridgeFooter({
           onClick={click}
           className="w-full sm:w-auto px-3 py-2 rounded-2xl bg-black hover:bg-zinc-900 text-white text-center text-sm border border-white/30 shadow-sm active:scale-[0.98]"
           data-testid={`button-send-${variant}`}
+          data-wt="wmb-send-to-macros"
         >
           {variant === "week"
             ? "Send Entire Week to Macros"

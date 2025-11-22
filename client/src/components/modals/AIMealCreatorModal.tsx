@@ -333,6 +333,12 @@ export default function AIMealCreatorModal({
                 : category === 'fats' ? 'Fats'
                 : category === 'fruits' ? 'Fruits'
                 : category;
+              const dataWtAttr = category === 'proteins' ? 'wmb-protein-category-tab'
+                : category === 'starchyCarbs' ? 'wmb-starchy-carbs-category-tab'
+                : category === 'fibrousCarbs' ? 'wmb-fibrous-carbs-category-tab'
+                : category === 'fats' ? 'wmb-fats-category-tab'
+                : category === 'fruits' ? 'wmb-fruits-category-tab'
+                : undefined;
               return (
                 <button
                   key={category}
@@ -342,6 +348,7 @@ export default function AIMealCreatorModal({
                       ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
                       : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
                   }`}
+                  data-wt={dataWtAttr}
                 >
                   {displayName}
                 </button>
@@ -376,6 +383,7 @@ export default function AIMealCreatorModal({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-black/40 text-white border-white/20 placeholder:text-white/50"
+            data-wt="wmb-ingredient-search"
           />
         </div>
 
@@ -385,11 +393,16 @@ export default function AIMealCreatorModal({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
               {filteredIngredients.map((item: any) => {
                 const itemName = typeof item === 'string' ? item : item.name;
+                const dataWtAttr = activeCategory === 'proteins' ? 'wmb-protein-item'
+                  : activeCategory === 'starchyCarbs' ? 'wmb-starchy-item'
+                  : activeCategory === 'fibrousCarbs' ? 'wmb-fibrous-item'
+                  : undefined;
                 return (
                   <div
                     key={itemName}
                     onClick={() => toggleIngredient(itemName)}
                     className="flex flex-col items-center gap-0.5 text-white/90 hover:text-white group p-1 min-h-[44px] cursor-pointer"
+                    data-wt={dataWtAttr}
                   >
                     <Checkbox
                       checked={selectedIngredients.includes(itemName)}
@@ -439,6 +452,7 @@ export default function AIMealCreatorModal({
               value={customIngredients}
               onChange={(e) => setCustomIngredients(e.target.value)}
               className="bg-black/40 text-white border-white/20 placeholder:text-white/50"
+              data-wt="wmb-custom-ingredients-input"
             />
           </div>
         )}
@@ -449,6 +463,7 @@ export default function AIMealCreatorModal({
             onClick={handleGenerateMeal}
             disabled={generating || (selectedIngredients.length === 0 && !customIngredients.trim())}
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+            data-wt="wmb-generate-meal-button"
           >
             Generate AI Meal
           </Button>
