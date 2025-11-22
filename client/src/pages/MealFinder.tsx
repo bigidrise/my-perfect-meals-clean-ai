@@ -200,17 +200,19 @@ export default function MealFinder() {
   return (
     <>
       <Button
+        onClick={handleGoBack}
         variant="ghost"
         size="sm"
-        onClick={handleGoBack}
-        className="fixed left-2 sm:left-4 z-50 bg-black/10 backdrop-blur-none border border-white/20 hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg flex items-center gap-2 font-semibold text-sm sm:text-base transition-all"
+        className="fixed left-2 sm:left-4 bg-black/10 border border-white/20 
+                   hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 
+                   rounded-xl shadow-lg flex items-center gap-2 font-semibold 
+                   text-sm sm:text-base transition-all"
         style={{
           top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)',
-          zIndex: 2147483647,
-          position: 'fixed',
-          isolation: 'isolate',
-          transform: 'translateZ(0)',
-          willChange: 'transform'
+          position: "fixed",
+          zIndex: 999999999,
+          isolation: "isolate",
+          transform: "translateZ(0)"
         }}
       >
         <ArrowLeft className="h-4 w-4 text-white" />
