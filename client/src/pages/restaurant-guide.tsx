@@ -347,7 +347,11 @@ export default function RestaurantGuidePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
+        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)"
+        }}
       >
         {/* Universal Safe-Area Header */}
         <div
@@ -378,7 +382,7 @@ export default function RestaurantGuidePage() {
         </div>
 
         {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden" style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden pb-8" style={{ paddingTop: "6rem" }}>
 
         {/* Find Meals Near Me Card - MOVED TO TOP */}
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
