@@ -1101,6 +1101,7 @@ export default function WeeklyMealBoard() {
                   ? "bg-emerald-500 hover:bg-emerald-600 text-white"
                   : "bg-emerald-600/80 hover:bg-emerald-600 text-white"
               } text-xs px-3 py-1 rounded-xl transition-all duration-200`}
+              data-wt="wmb-save-week-button"
             >
               {justSaved ? (
                 <><Check className="h-3 w-3 mr-1" />Saved ✓</>
@@ -1136,6 +1137,7 @@ export default function WeeklyMealBoard() {
                         setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
                         setAiMealModalOpen(true);
                       }}
+                      data-wt="wmb-create-ai-button"
                     >
                       <Sparkles className="h-3 w-3" />
                       Create with AI
@@ -1152,6 +1154,7 @@ export default function WeeklyMealBoard() {
                           setPremadePickerSlot(key as "breakfast" | "lunch" | "dinner");
                           setPremadePickerOpen(true);
                         }}
+                        data-wt="wmb-premades-button"
                       >
                         <Sparkles className="h-3 w-3" />
                         AI Premades
@@ -1164,6 +1167,7 @@ export default function WeeklyMealBoard() {
                       variant="ghost"
                       className="text-white/80 hover:bg-white/10"
                       onClick={() => openManualModal(key)}
+                      data-wt="wmb-add-custom-button"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -1189,6 +1193,7 @@ export default function WeeklyMealBoard() {
                       date={activeDayISO}
                       slot={key}
                       meal={meal}
+                      data-wt="wmb-meal-card"
                       onUpdated={(m) => {
                         if (m === null) {
                           // REMOVE MEAL in Day mode - use the new system
