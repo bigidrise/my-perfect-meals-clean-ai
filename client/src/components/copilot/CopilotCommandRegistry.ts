@@ -1,5 +1,8 @@
 import { CopilotAction, KnowledgeResponse } from "./CopilotContext";
-import { boostProteinNextMeal, generateOnePanFridgeRescue } from "@/lib/copilotActions";
+import {
+  boostProteinNextMeal,
+  generateOnePanFridgeRescue,
+} from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
@@ -13,6 +16,10 @@ let navigationCallback: NavigationHandler | null = null;
 let modalCallback: ModalHandler | null = null;
 let responseCallback: ResponseHandler | null = null;
 
+// Track which feature the user is actively interacting with
+type ActiveFeature = "weekly-board" | "fridge-rescue" | null;
+let lastActiveFeature: ActiveFeature = null;
+
 export function setNavigationHandler(fn: NavigationHandler) {
   navigationCallback = fn;
 }
@@ -23,6 +30,11 @@ export function setModalHandler(fn: ModalHandler) {
 
 export function setResponseHandler(fn: ResponseHandler) {
   responseCallback = fn;
+}
+
+// Optional: allow UI pages to explicitly set the active feature context
+export function setActiveFeature(feature: ActiveFeature) {
+  lastActiveFeature = feature;
 }
 
 const Commands: Record<string, CommandHandler> = {
@@ -91,10 +103,10 @@ const Commands: Record<string, CommandHandler> = {
       console.warn("⚠️ Navigation not available");
       return;
     }
-    
+
     const userId = localStorage.getItem("userId") || "1";
     const fridgeItems: string[] = [];
-    
+
     await generateOnePanFridgeRescue(userId, fridgeItems, navigationCallback);
   },
 
@@ -119,6 +131,7 @@ const Commands: Record<string, CommandHandler> = {
       console.warn("⚠️ Response handler not available");
       return;
     }
+    lastActiveFeature = "fridge-rescue";
     const response = await explainFeature("fridge-rescue");
     responseCallback(response);
   },
@@ -128,6 +141,7 @@ const Commands: Record<string, CommandHandler> = {
       console.warn("⚠️ Response handler not available");
       return;
     }
+    lastActiveFeature = "weekly-board";
     const response = await explainFeature("weekly-board");
     responseCallback(response);
   },
@@ -164,6 +178,7 @@ const Commands: Record<string, CommandHandler> = {
       console.warn("⚠️ Response handler not available");
       return;
     }
+    lastActiveFeature = "fridge-rescue";
     const response = startWalkthrough("fridge-rescue");
     responseCallback(response);
   },
@@ -173,12 +188,13 @@ const Commands: Record<string, CommandHandler> = {
       console.warn("⚠️ Response handler not available");
       return;
     }
+    lastActiveFeature = "weekly-board";
     const response = startWalkthrough("weekly-board");
     responseCallback(response);
   },
 
   // =========================================
-  // FOOD COMMAND HANDLERS (NLEngine)
+  // FOOD COMMAND HANDLERS (NLEngine + voice)
   // =========================================
 
   "meal.addIngredient": async (payload?: { ingredient: string }) => {
@@ -231,6 +247,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "fridge.generate": async (payload?: { text: string }) => {
     if (!responseCallback) return;
+    lastActiveFeature = "fridge-rescue";
     responseCallback({
       title: "Fridge Rescue",
       description: "Generating a Fridge Rescue recipe with what you have...",
@@ -240,68 +257,308 @@ const Commands: Record<string, CommandHandler> = {
 
   "weekly.autofill": async () => {
     if (!responseCallback) return;
+    lastActiveFeature = "weekly-board";
     responseCallback({
       title: "Weekly Board Autofill",
       description: "Planning your week with smart meal choices...",
       spokenText: "Planning your week now.",
     });
   },
+
+  // =========================================
+  // Fridge Rescue helpers for voice
+  // =========================================
+
+  "fridge.addTypedIngredient": async (payload?: { text: string }) => {
+    if (!responseCallback) return;
+    const text = payload?.text || "an ingredient";
+    lastActiveFeature = "fridge-rescue";
+    responseCallback({
+      title: "Ingredient Added",
+      description: `${text} added to your Fridge Rescue list.`,
+      spokenText: `${text} added to your Fridge Rescue ingredients.`,
+    });
+  },
+
+  "fridge.clear": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "fridge-rescue";
+    responseCallback({
+      title: "Ingredients Cleared",
+      description: "Your Fridge Rescue ingredient list has been cleared.",
+      spokenText: "Clearing your Fridge Rescue ingredients.",
+    });
+  },
+
+  "fridge.saveMeal": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "fridge-rescue";
+    responseCallback({
+      title: "Meal Saved",
+      description: "This Fridge Rescue meal has been saved to your board.",
+      spokenText: "Saving this Fridge Rescue meal to your board.",
+    });
+  },
+
+  "fridge.sendToShopping": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "fridge-rescue";
+    responseCallback({
+      title: "Sent to Shopping List",
+      description: "This meal's ingredients were added to your shopping list.",
+      spokenText: "Sending this meal to your shopping list.",
+    });
+  },
+
+  // =========================================
+  // Weekly board helpers for voice
+  // =========================================
+
+  "day.sendToMacros": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "weekly-board";
+    responseCallback({
+      title: "Day Sent to Macros",
+      description: "Your current day's meals were sent to the Macro tracker.",
+      spokenText: "Sending your day to macros.",
+    });
+  },
+
+  "day.sendToShopping": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "weekly-board";
+    responseCallback({
+      title: "Day Sent to Shopping",
+      description: "Your current day's ingredients were added to the shopping list.",
+      spokenText: "Sending your day to the shopping list.",
+    });
+  },
+
+  "week.sendToShopping": async () => {
+    if (!responseCallback) return;
+    lastActiveFeature = "weekly-board";
+    responseCallback({
+      title: "Week Sent to Shopping",
+      description: "Your full week's ingredients were added to the shopping list.",
+      spokenText: "Sending your week to the shopping list.",
+    });
+  },
 };
 
-// Voice query handler - processes voice transcripts using NLEngine
+// Voice query handler - processes voice transcripts using NLEngine + explicit intents
 async function handleVoiceQuery(transcript: string) {
   console.log(`🎤 Processing voice query: "${transcript}"`);
 
   const lower = transcript.toLowerCase();
 
   // ===================================
-  // WALKTHROUGHS (keyword-based)
+  // WEEKLY MEAL BOARD INTENTS
   // ===================================
-  if (lower.includes("how do i use fridge rescue") || 
-      lower.includes("teach me fridge rescue") ||
-      lower.includes("show me fridge rescue")) {
+  if (
+    lower.includes("weekly meal board") ||
+    lower.includes("plan my week") ||
+    lower.includes("teach me the weekly board") ||
+    lower.includes("teach me weekly board") ||
+    lower.includes("show me weekly board") ||
+    lower.includes("how do i use the weekly meal board")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["walkthrough.start.weekly-board"]();
+    return;
+  }
+
+  if (
+    lower.includes("what is weekly board") ||
+    lower.includes("explain weekly board") ||
+    lower.includes("what is the weekly meal board")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["explain.weekly-board"]();
+    return;
+  }
+
+  if (
+    lower.includes("send day to macros") ||
+    lower.includes("add day to macros") ||
+    lower.includes("move day to macros")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["day.sendToMacros"]();
+    return;
+  }
+
+  if (
+    lower.includes("send day to shopping") ||
+    lower.includes("day shopping list")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["day.sendToShopping"]();
+    return;
+  }
+
+  if (
+    lower.includes("send week to shopping") ||
+    lower.includes("week shopping list")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["week.sendToShopping"]();
+    return;
+  }
+
+  if (
+    lower.includes("generate my day") ||
+    lower.includes("ai create my day") ||
+    lower.includes("make my meals for today")
+  ) {
+    lastActiveFeature = "weekly-board";
+    await Commands["weekly.autofill"]();
+    return;
+  }
+
+  // ===================================
+  // FRIDGE RESCUE INTENTS
+  // ===================================
+  if (
+    lower.includes("fridge rescue") ||
+    lower.includes("use what's in my fridge") ||
+    lower.includes("cook with what i have") ||
+    lower.includes("help me cook") ||
+    lower.includes("use my ingredients")
+  ) {
+    lastActiveFeature = "fridge-rescue";
     await Commands["walkthrough.start.fridge-rescue"]();
     return;
   }
 
-  if (lower.includes("how do i use weekly") || 
-      lower.includes("teach me weekly") ||
-      lower.includes("show me weekly board")) {
+  if (
+    lower.includes("what is fridge rescue") ||
+    lower.includes("explain fridge rescue")
+  ) {
+    lastActiveFeature = "fridge-rescue";
+    await Commands["explain.fridge-rescue"]();
+    return;
+  }
+
+  if (
+    lower.includes("clear ingredients") ||
+    lower.includes("clear fridge") ||
+    lower.includes("start over")
+  ) {
+    lastActiveFeature = "fridge-rescue";
+    await Commands["fridge.clear"]();
+    return;
+  }
+
+  if (
+    lower.includes("save this meal") ||
+    lower.includes("save meal")
+  ) {
+    lastActiveFeature = "fridge-rescue";
+    await Commands["fridge.saveMeal"]();
+    return;
+  }
+
+  if (
+    lower.includes("send to shopping") ||
+    lower.includes("shopping list")
+  ) {
+    // If user has been in fridge recently, prefer that context
+    if (lastActiveFeature === "fridge-rescue") {
+      await Commands["fridge.sendToShopping"]();
+    } else {
+      await Commands["day.sendToShopping"]();
+    }
+    return;
+  }
+
+  // ===================================
+  // CONTEXT-AWARE "ADD ..." INTENT
+  // ===================================
+  if (lower.startsWith("add ")) {
+    const ingredient = transcript.substring(4).trim();
+
+    if (!ingredient) {
+      if (responseCallback) {
+        const spokenText = "What would you like me to add?";
+        responseCallback({
+          title: "Add what?",
+          description: spokenText,
+          spokenText,
+        });
+      }
+      return;
+    }
+
+    // Use context to decide where to add it
+    if (lastActiveFeature === "fridge-rescue") {
+      await Commands["fridge.addTypedIngredient"]({ text: ingredient });
+      return;
+    }
+
+    if (lastActiveFeature === "weekly-board") {
+      await Commands["meal.addIngredient"]({ ingredient });
+      return;
+    }
+
+    // No clear context – ask the user
+    if (responseCallback) {
+      const spokenText = `Do you want ${ingredient} added to Fridge Rescue or your Weekly Meal Board?`;
+      responseCallback({
+        title: "Where should I add this?",
+        description: spokenText,
+        spokenText,
+      });
+    }
+    return;
+  }
+
+  // ===================================
+  // EXISTING WALKTHROUGHS (fallback keywords)
+  // ===================================
+  if (
+    lower.includes("how do i use fridge rescue") ||
+    lower.includes("teach me fridge rescue") ||
+    lower.includes("show me fridge rescue")
+  ) {
+    lastActiveFeature = "fridge-rescue";
+    await Commands["walkthrough.start.fridge-rescue"]();
+    return;
+  }
+
+  if (
+    lower.includes("how do i use weekly") ||
+    lower.includes("teach me weekly") ||
+    lower.includes("show me weekly board")
+  ) {
+    lastActiveFeature = "weekly-board";
     await Commands["walkthrough.start.weekly-board"]();
     return;
   }
 
   // ===================================
-  // FEATURE EXPLANATIONS (keyword-based)
+  // FEATURE EXPLANATIONS (fallback keywords)
   // ===================================
-  if (lower.includes("what is fridge rescue") || 
-      lower.includes("explain fridge rescue")) {
-    await Commands["explain.fridge-rescue"]();
-    return;
-  }
-
-  if (lower.includes("what is weekly board") || 
-      lower.includes("what is the weekly board") ||
-      lower.includes("explain weekly board")) {
-    await Commands["explain.weekly-board"]();
-    return;
-  }
-
-  if (lower.includes("what is the meal builder") ||
-      lower.includes("what is meal builder") ||
-      lower.includes("explain meal builder")) {
+  if (
+    lower.includes("what is the meal builder") ||
+    lower.includes("what is meal builder") ||
+    lower.includes("explain meal builder")
+  ) {
     await Commands["explain.ai-meal-builder"]();
     return;
   }
 
-  if (lower.includes("what is shopping list") ||
-      lower.includes("explain shopping list")) {
+  if (
+    lower.includes("what is shopping list") ||
+    lower.includes("explain shopping list")
+  ) {
     await Commands["explain.shopping-list"]();
     return;
   }
 
-  if (lower.includes("what are subscriptions") ||
-      lower.includes("explain subscriptions")) {
+  if (
+    lower.includes("what are subscriptions") ||
+    lower.includes("explain subscriptions")
+  ) {
     await Commands["explain.subscriptions"]();
     return;
   }
@@ -349,7 +606,9 @@ export async function executeCommand(action: CopilotAction) {
           console.log(`🧭 Navigating to: ${action.to}`);
           navigationCallback(action.to);
         } else {
-          console.warn("⚠️ Navigation handler not set. Call setNavigationHandler()");
+          console.warn(
+            "⚠️ Navigation handler not set. Call setNavigationHandler()",
+          );
         }
         break;
       }
@@ -362,7 +621,9 @@ export async function executeCommand(action: CopilotAction) {
           console.log(`🪟 Opening modal: ${action.id}`);
           modalCallback(action.id);
         } else {
-          console.warn("⚠️ Modal handler not set. Call setModalHandler()");
+          console.warn(
+            "⚠️ Modal handler not set. Call setModalHandler()",
+          );
         }
         break;
       }
@@ -379,7 +640,9 @@ export async function executeCommand(action: CopilotAction) {
 
       default: {
         const _exhaustive: never = action;
-        throw new Error(`Unhandled action type: ${JSON.stringify(_exhaustive)}`);
+        throw new Error(
+          `Unhandled action type: ${JSON.stringify(_exhaustive)}`,
+        );
       }
     }
   } catch (error) {
