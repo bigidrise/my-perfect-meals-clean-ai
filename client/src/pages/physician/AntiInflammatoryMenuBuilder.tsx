@@ -1465,7 +1465,7 @@ export default function AntiInflammatoryMenuBuilder() {
 
       </div>
 
-      {/* MealPickerDrawer handles all meal slots including snacks (uses snackIngredients for 120+ options) */}
+      {/* MealPickerDrawer handles ALL meal slots (breakfast, lunch, dinner, snacks) */}
       <MealPickerDrawer
         open={pickerOpen}
         list={pickerList}
