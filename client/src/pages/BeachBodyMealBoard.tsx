@@ -14,7 +14,6 @@ import {
 } from "@/lib/boardApi";
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
-import { AddSnackModal } from "@/components/AddSnackModal";
 import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
@@ -166,7 +165,6 @@ export default function BeachBodyMealBoard() {
   const [pickerList, setPickerList] = React.useState<"breakfast" | "lunch" | "dinner" | "snacks" | null>(null);
   const [manualModalOpen, setManualModalOpen] = React.useState(false);
   const [manualModalList, setManualModalList] = React.useState<"breakfast" | "lunch" | "dinner" | "snacks" | null>(null);
-  const [showSnackModal, setShowSnackModal] = React.useState(false);
   const [showOverview, setShowOverview] = React.useState(false);
 
   // AI Meal Creator modal state
@@ -617,95 +615,6 @@ export default function BeachBodyMealBoard() {
     }
   }, [board, planningMode, activeDayISO, weekStartISO, saveBoard, toast]);
 
-  const onAddSnack = useCallback(() => setShowSnackModal(true), []);
-
-  const onSaveSnack = useCallback(
-    async (p: {
-      title: string;
-      brand?: string;
-      servingDesc?: string;
-      servings: number;
-      calories: number;
-      protein?: number;
-      carbs?: number;
-      fat?: number;
-      includeInShoppingList: boolean;
-    }) => {
-      if (!board) return;
-
-      const currentSnacks =
-        FEATURES.dayPlanning === "alpha" &&
-        planningMode === "day" &&
-        activeDayISO
-          ? (getDayLists(board, activeDayISO).snacks ?? [])
-          : (board.lists.snacks ?? []);
-
-      const nextIndex =
-        currentSnacks.length > 0
-          ? Math.max(...currentSnacks.map((s: any) => s?.orderIndex ?? 0)) + 1
-          : 0;
-
-      const newSnack: Meal = {
-        id: `snk-${Date.now()}`,
-        title: p.title,
-        name: `Snack ${nextIndex + 1}`,
-        servings: p.servings,
-        ingredients: [],
-        instructions: [],
-        nutrition: {
-          calories: p.calories,
-          protein: p.protein ?? 0,
-          carbs: p.carbs ?? 0,
-          fat: p.fat ?? 0,
-        },
-        orderIndex: nextIndex,
-        entryType: "quick" as const,
-        brand: p.brand,
-        servingDesc: p.servingDesc,
-        includeInShoppingList: p.includeInShoppingList === true,
-      } as any;
-
-      try {
-        if (
-          FEATURES.dayPlanning === "alpha" &&
-          planningMode === "day" &&
-          activeDayISO
-        ) {
-          const dayLists = getDayLists(board, activeDayISO);
-          const updatedDay = {
-            ...dayLists,
-            snacks: [...(dayLists.snacks ?? []), newSnack],
-          };
-          const updatedBoard = setDayLists(board, activeDayISO, updatedDay);
-          const { week } = await putWeekBoard(weekStartISO, updatedBoard);
-          setBoard(week);
-        } else {
-          const snacks = board.lists.snacks ?? [];
-          const updated: WeekBoard = {
-            ...board,
-            lists: { ...board.lists, snacks: [...snacks, newSnack] },
-          };
-          setBoard(updated);
-          await putWeekBoard(weekStartISO, updated);
-        }
-
-        try {
-          window.dispatchEvent(
-            new CustomEvent("board:updated", { detail: { weekStartISO } }),
-          );
-          window.dispatchEvent(new Event("macros:updated"));
-        } catch {}
-      } catch (e) {
-        console.error("Failed to save snack:", e);
-        try {
-          const { week } = await getWeekBoardByDate(weekStartISO);
-          setBoard(week);
-        } catch {}
-      }
-    },
-    [board, weekStartISO, planningMode, activeDayISO],
-  );
-
   const gotoWeek = useCallback(
     async (targetISO: string) => {
       setLoading(true);
@@ -1080,17 +989,6 @@ export default function BeachBodyMealBoard() {
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
-
-                    {key === "snacks" && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-white/70 hover:bg-white/10 text-xs font-medium"
-                        onClick={onAddSnack}
-                      >
-                        Add Snack
-                      </Button>
-                    )}
                   </div>
                 </div>
 
@@ -1181,17 +1079,6 @@ export default function BeachBodyMealBoard() {
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
-
-                {key === "snacks" && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="text-white/70 hover:bg-white/10 text-xs font-medium"
-                    onClick={onAddSnack}
-                  >
-                    Add Snack
-                  </Button>
-                )}
               </div>
             </div>
 
@@ -1267,10 +1154,7 @@ export default function BeachBodyMealBoard() {
                   size="sm"
                   variant="ghost"
                   className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                  onClick={() => {
-                    setAiMealSlot("snacks");
-                    setAiMealModalOpen(true);
-                  }}
+                  onClick={() => setSnackPickerOpen(true)}
                   data-wt="wmb-create-ai-button"
                 >
                   <Sparkles className="h-3 w-3" />
@@ -1285,15 +1169,6 @@ export default function BeachBodyMealBoard() {
                   data-wt="wmb-add-custom-button"
                 >
                   <Plus className="h-4 w-4" />
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-white/70 hover:bg-white/10 text-xs font-medium"
-                  onClick={onAddSnack}
-                >
-                  Add Snack
                 </Button>
               </div>
             </div>
@@ -1621,12 +1496,6 @@ export default function BeachBodyMealBoard() {
           setManualModalOpen(false);
           setManualModalList(null);
         }}
-      />
-
-      <AddSnackModal
-        open={showSnackModal}
-        onClose={() => setShowSnackModal(false)}
-        onSave={onSaveSnack}
       />
 
       {/* Snack Picker Drawer - Anti-inflammatory snacks for performance/fitness */}
