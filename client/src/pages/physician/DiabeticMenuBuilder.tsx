@@ -56,6 +56,7 @@ import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
+import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 import DailyMealProgressBar from "@/components/guided/DailyMealProgressBar";
 import {
   Dialog,
@@ -190,6 +191,55 @@ export default function DiabeticMenuBuilder() {
   // AI Premades modal state
   const [premadePickerOpen, setPremadePickerOpen] = useState(false);
   const [premadePickerSlot, setPremadePickerSlot] = useState<"breakfast" | "lunch" | "dinner">("breakfast");
+
+  // Snack Picker modal state (completely separate from meal pickers)
+  const [snackPickerOpen, setSnackPickerOpen] = useState(false);
+
+  // Handler for snack selection
+  const handleSnackSelect = useCallback(async (snack: any) => {
+    if (!board) return;
+
+    try {
+      // Add to the snacks slot
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // Add to specific day
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          snacks: [...dayLists.snacks, snack]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // Week mode: update local board and save
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            snacks: [...board.lists.snacks, snack]
+          },
+          version: board.version + 1,
+          meta: {
+            ...board.meta,
+            lastUpdatedAt: new Date().toISOString()
+          }
+        };
+        setBoard(updatedBoard);
+        await saveBoard(updatedBoard);
+      }
+
+      // Dispatch board update event
+      window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
+      window.dispatchEvent(new Event("macros:updated"));
+    } catch (error) {
+      console.error("Failed to add snack:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add snack. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [board, planningMode, activeDayISO, saveBoard, weekStartISO, toast]);
 
   // Handler for premade meal selection
   const handlePremadeSelect = useCallback(async (meal: any) => {
@@ -1361,16 +1411,22 @@ export default function DiabeticMenuBuilder() {
                       {label}
                     </h2>
                     <div className="flex gap-2">
-                      {/* AI Meal Creator button for all meal sections */}
+                      {/* AI Meal Creator button for breakfast/lunch/dinner, Snack Picker for snacks */}
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                         onClick={() => {
-                          setAiMealSlot(
-                            key as "breakfast" | "lunch" | "dinner" | "snacks",
-                          );
-                          setAiMealModalOpen(true);
+                          if (key === "snacks") {
+                            // Open dedicated Snack Picker
+                            setSnackPickerOpen(true);
+                          } else {
+                            // Open AI Meal Creator for meals
+                            setAiMealSlot(
+                              key as "breakfast" | "lunch" | "dinner" | "snacks",
+                            );
+                            setAiMealModalOpen(true);
+                          }
                         }}
                         data-wt="wmb-create-ai-button"
                       >
@@ -1963,6 +2019,14 @@ export default function DiabeticMenuBuilder() {
         mealType={premadePickerSlot}
         dietType="diabetic"
         onMealSelect={handlePremadeSelect}
+      />
+
+      {/* Snack Picker Modal - Completely independent system for snacks */}
+      <SnackPickerDrawer
+        open={snackPickerOpen}
+        onClose={() => setSnackPickerOpen(false)}
+        dietType="diabetic"
+        onSnackSelect={handleSnackSelect}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
