@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { normalizeBadges } from "./healthBadges";
-import InfoIconButton from "@/components/ui/InfoIconButton";
 import { ShieldPlus } from "lucide-react";
 
 const CRITICAL_BADGE_KEYS = [
@@ -37,27 +36,25 @@ export default function HealthBadgesPopover({
   return (
     <div className={className}>
       <Popover>
-        <div className="flex items-center gap-2">
-          <PopoverTrigger asChild>
-            <InfoIconButton 
-              data-testid="button-medical-info"
-              title={label}
-              size={32}
+        <PopoverTrigger asChild>
+          <button 
+            data-testid="button-medical-info"
+            title={label}
+            className="flex items-center gap-2"
+          >
+            <ShieldPlus 
+              className={`text-red-500 ${
+                hasCritical 
+                  ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]' 
+                  : ''
+              }`}
+              size={28}
+              strokeWidth={2}
+              aria-hidden="true"
+              data-testid="icon-medical-badge"
             />
-          </PopoverTrigger>
-          
-          <ShieldPlus 
-            className={`text-red-500 ${
-              hasCritical 
-                ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]' 
-                : ''
-            }`}
-            size={28}
-            strokeWidth={2}
-            aria-hidden="true"
-            data-testid="icon-medical-badge"
-          />
-        </div>
+          </button>
+        </PopoverTrigger>
         
         <PopoverContent
           align={align}

@@ -36,7 +36,6 @@ import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { InfoButton } from "@/components/common/InfoButton";
 import { useCopilot } from "@/components/copilot/CopilotContext";
 
 // Helper function to create new snacks
