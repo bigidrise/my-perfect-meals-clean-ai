@@ -37,23 +37,36 @@ export const ChefCapIcon: React.FC<ChefCapIconProps> = ({
       >
         <defs>
           <linearGradient id="chefCapGradient" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="rgba(251,191,36,1)" />
-            <stop offset="50%" stopColor="rgba(251,146,60,1)" />
-            <stop offset="100%" stopColor="rgba(249,115,22,1)" />
+            <stop offset="0%" stopColor="rgba(254,215,170,1)" />
+            <stop offset="50%" stopColor="rgba(253,186,116,1)" />
+            <stop offset="100%" stopColor="rgba(251,146,60,1)" />
           </linearGradient>
         </defs>
+        {/* Hat bottom (brim) with bright outline */}
         <path
           d="M20 48h24c1.7 0 3-1.3 3-3v-4H17v4c0 1.7 1.3 3 3 3z"
           fill="url(#chefCapGradient)"
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth="1.5"
         />
+        {/* Hat top (puffy part) with bright outline */}
         <path
           d="M16 28c-1.1-1.5-2-3.6-2-6 0-5.5 4.5-10 10-10 2 0 3.9.6 5.5 1.6C31 11.4 33.4 10 36 10c5.5 0 10 4.5 10 10 0 2.4-.9 4.5-2 6H16z"
           fill="url(#chefCapGradient)"
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth="1.5"
         />
-        <path d="M18 32h28v5H18z" fill="rgba(0,0,0,0.9)" />
+        {/* White band (traditional chef hat look) with outline */}
+        <path 
+          d="M18 32h28v5H18z" 
+          fill="rgba(255,255,255,0.95)" 
+          stroke="rgba(255,255,255,1)"
+          strokeWidth="1"
+        />
+        {/* Pleats on the brim */}
         <path
           d="M22 48v3m8-3v3m8-3v3"
-          stroke="rgba(251,146,60,0.5)"
+          stroke="rgba(255,255,255,0.8)"
           strokeWidth="2"
           strokeLinecap="round"
         />
