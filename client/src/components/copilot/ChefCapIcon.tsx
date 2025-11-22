@@ -12,68 +12,73 @@ export const ChefCapIcon: React.FC<ChefCapIconProps> = ({
 }) => {
   return (
     <motion.div
-      className="relative flex items-center justify-center rounded-full bg-black/90 border border-orange-500/20 backdrop-blur-md"
+      className="relative flex items-center justify-center"
       style={{ width: size, height: size }}
-      animate={{
-        boxShadow: glow
-          ? [
-              "0 0 0px rgba(251,146,60,0.0)",
-              "0 0 18px rgba(251,146,60,0.65)",
-              "0 0 0px rgba(251,146,60,0.0)",
-            ]
-          : "none",
-      }}
-      transition={{
-        duration: 2.4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
     >
-      {/* Chef cap SVG */}
+      {/* Bright white circular badge background with amber rim */}
+      <div 
+        className="absolute inset-0 rounded-full bg-white border-2 border-orange-400/80 shadow-lg"
+        style={{
+          boxShadow: glow 
+            ? '0 0 12px rgba(251,146,60,0.4), inset 0 1px 2px rgba(251,146,60,0.2)'
+            : '0 2px 8px rgba(0,0,0,0.2)'
+        }}
+      />
+      
+      {/* Bold, simplified chef hat silhouette - dark charcoal for max contrast */}
       <svg
-        viewBox="0 0 64 64"
-        className="text-orange-400"
-        style={{ width: size * 0.7, height: size * 0.7 }}
+        viewBox="0 0 48 48"
+        style={{ width: size * 0.85, height: size * 0.85 }}
+        className="relative z-10"
       >
-        <defs>
-          <linearGradient id="chefCapGradient" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="rgba(254,215,170,1)" />
-            <stop offset="50%" stopColor="rgba(253,186,116,1)" />
-            <stop offset="100%" stopColor="rgba(251,146,60,1)" />
-          </linearGradient>
-        </defs>
-        {/* Hat bottom (brim) with bright outline */}
+        {/* Simplified puffy top - bold and clear */}
         <path
-          d="M20 48h24c1.7 0 3-1.3 3-3v-4H17v4c0 1.7 1.3 3 3 3z"
-          fill="url(#chefCapGradient)"
-          stroke="rgba(255,255,255,0.9)"
-          strokeWidth="1.5"
-        />
-        {/* Hat top (puffy part) with bright outline */}
-        <path
-          d="M16 28c-1.1-1.5-2-3.6-2-6 0-5.5 4.5-10 10-10 2 0 3.9.6 5.5 1.6C31 11.4 33.4 10 36 10c5.5 0 10 4.5 10 10 0 2.4-.9 4.5-2 6H16z"
-          fill="url(#chefCapGradient)"
-          stroke="rgba(255,255,255,0.9)"
-          strokeWidth="1.5"
-        />
-        {/* White band (traditional chef hat look) with outline */}
-        <path 
-          d="M18 32h28v5H18z" 
-          fill="rgba(255,255,255,0.95)" 
-          stroke="rgba(255,255,255,1)"
-          strokeWidth="1"
-        />
-        {/* Pleats on the brim */}
-        <path
-          d="M22 48v3m8-3v3m8-3v3"
-          stroke="rgba(255,255,255,0.8)"
+          d="M12 22c-1-2-1.5-4-1.5-6 0-4.5 3.5-8 8-8 1.5 0 3 .5 4.2 1.3C24 7.5 26 6.5 28.5 6.5c4.5 0 8 3.5 8 8 0 2-0.5 4-1.5 6H12z"
+          fill="#2d3748"
+          stroke="#1a202c"
           strokeWidth="2"
-          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        
+        {/* White band - thick and prominent */}
+        <rect 
+          x="13" 
+          y="24" 
+          width="22" 
+          height="5" 
+          fill="white"
+          stroke="#1a202c"
+          strokeWidth="2"
+        />
+        
+        {/* Hat brim - bold bottom */}
+        <path
+          d="M14 35h20c1.5 0 2.5-1 2.5-2.5v-3.5H11.5v3.5c0 1.5 1 2.5 2.5 2.5z"
+          fill="#2d3748"
+          stroke="#1a202c"
+          strokeWidth="2"
+          strokeLinejoin="round"
         />
       </svg>
 
-      {/* tiny highlight */}
-      <div className="absolute -top-0.5 -left-0.5 w-2 h-2 rounded-full bg-orange-300/60 opacity-70" />
+      {/* Subtle glow effect */}
+      {glow && (
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          animate={{
+            boxShadow: [
+              "0 0 0px rgba(251,146,60,0.0)",
+              "0 0 16px rgba(251,146,60,0.5)",
+              "0 0 0px rgba(251,146,60,0.0)",
+            ],
+          }}
+          transition={{
+            duration: 2.4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      )}
     </motion.div>
   );
 };
