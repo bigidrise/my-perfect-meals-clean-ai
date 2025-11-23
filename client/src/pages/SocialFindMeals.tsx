@@ -199,38 +199,39 @@ export default function MealFinder() {
 
   return (
     <>
-      {/* Universal Back Button - Must be at top level for iOS safe-area */}
-      <Button
-        onClick={handleGoBack}
-        variant="ghost"
-        size="sm"
-        className="fixed left-2 sm:left-4 bg-black/10 border border-white/20 
-                   hover:bg-black/30 text-white px-3 sm:px-6 py-2 sm:py-3 
-                   rounded-xl shadow-lg flex items-center gap-2 font-semibold 
-                   text-sm sm:text-base transition-all"
-        style={{
-          top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)',
-          position: "fixed",
-          zIndex: 2147483647,
-          isolation: "isolate",
-          transform: "translateZ(0)"
-        }}
-      >
-        <ArrowLeft className="h-4 w-4 text-white" />
-      </Button>
+      <div className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav">
+        {/* Universal Safe-Area Header */}
+        <div
+          className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+          style={{ top: "env(safe-area-inset-top, 0px)" }}
+        >
+          <div className="px-8 py-3 flex items-center gap-3">
+            {/* Back Button */}
+            <Button
+              variant="ghost"
+              onClick={handleGoBack}
+              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2"
+              data-testid="button-back-to-social-hub"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
 
-      <div 
-        className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 px-4 sm:px-6 overflow-x-hidden"
-        style={{
-          paddingTop: "env(safe-area-inset-top, 0px)",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)"
-        }}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-0">
-          <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
-            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+            {/* Title */}
+            <h1 className="text-lg font-bold text-white">
               Meal Finder
             </h1>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div 
+          className="max-w-4xl mx-auto px-4"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+        >
+          <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6">
+            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+              Find Meals Near You
+            </h2>
             <p className="text-sm sm:text-lg text-white/80">
               Find meals you're craving at nearby restaurants
             </p>
