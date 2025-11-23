@@ -120,14 +120,14 @@ export default function MealFinder() {
     mutationFn: async (data: { mealQuery: string; zipCode: string }) => {
       setProgress(60);
       const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + Math.random() * 10, 90));
+        setProgress((prev) => Math.min(prev + Math.random() * 10, 90));
       }, 800);
 
       try {
-        const response = await apiRequest('/api/meal-finder', {
-          method: 'POST',
+        const response = await apiRequest("/api/meal-finder", {
+          method: "POST",
           body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         });
 
         clearInterval(progressInterval);
@@ -146,10 +146,12 @@ export default function MealFinder() {
         results: newResults,
         mealQuery,
         zipCode,
-        generatedAtISO: new Date().toISOString()
+        generatedAtISO: new Date().toISOString(),
       });
 
-      const uniqueRestaurants = new Set(newResults.map((r: MealResult) => r.restaurantName)).size;
+      const uniqueRestaurants = new Set(
+        newResults.map((r: MealResult) => r.restaurantName),
+      ).size;
 
       toast({
         title: "Meals Found!",
@@ -159,14 +161,16 @@ export default function MealFinder() {
       setTimeout(() => setProgress(0), 500);
     },
     onError: (error: any) => {
-      console.error('Meal finder error:', error);
+      console.error("Meal finder error:", error);
       toast({
         title: "Search Failed",
-        description: error.message || "Could not find meals. Please try a different search or ZIP code.",
-        variant: "destructive"
+        description:
+          error.message ||
+          "Could not find meals. Please try a different search or ZIP code.",
+        variant: "destructive",
       });
       setProgress(0);
-    }
+    },
   });
 
   const handleSearch = () => {
@@ -174,7 +178,7 @@ export default function MealFinder() {
       toast({
         title: "Missing Meal",
         description: "Please enter what you're craving",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -183,7 +187,7 @@ export default function MealFinder() {
       toast({
         title: "Invalid ZIP Code",
         description: "Please enter a valid 5-digit ZIP code",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -207,24 +211,21 @@ export default function MealFinder() {
         >
           <div className="px-8 py-3 flex items-center gap-3">
             {/* Back Button */}
-            <Button
-              variant="ghost"
-              onClick={handleGoBack}
-              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2"
-              data-testid="button-back-to-social-hub"
+            <button
+              onClick={() => setLocation("/lifestyle")}
+              className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
             >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
+              <ArrowLeft className="h-5 w-5" />
+              <span className="text-sm font-medium">Back</span>
+            </button>
 
             {/* Title */}
-            <h1 className="text-lg font-bold text-white">
-              Meal Finder
-            </h1>
+            <h1 className="text-lg font-bold text-white">Meal Finder</h1>
           </div>
         </div>
 
         {/* Main Content */}
-        <div 
+        <div
           className="max-w-4xl mx-auto px-4"
           style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
         >
@@ -244,7 +245,8 @@ export default function MealFinder() {
                 Search by Location
               </CardTitle>
               <CardDescription className="text-white/80">
-                Enter what you're craving and your ZIP code to find nearby restaurant recommendations
+                Enter what you're craving and your ZIP code to find nearby
+                restaurant recommendations
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
@@ -270,7 +272,9 @@ export default function MealFinder() {
                   <Input
                     placeholder="e.g., 30303, 90210, 10001"
                     value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                    onChange={(e) =>
+                      setZipCode(e.target.value.replace(/\D/g, "").slice(0, 5))
+                    }
                     className="w-full bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
                     maxLength={5}
                     onKeyPress={(e) => e.key === "Enter" && handleSearch()}
@@ -284,15 +288,21 @@ export default function MealFinder() {
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                   data-testid="button-find-meals"
                 >
-                  {findMealsMutation.isPending ? "Finding Meals..." : "Find Meals"}
+                  {findMealsMutation.isPending
+                    ? "Finding Meals..."
+                    : "Find Meals"}
                 </Button>
               </div>
 
               {findMealsMutation.isPending && (
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/80">AI Analysis Progress</span>
-                    <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+                    <span className="text-sm text-white/80">
+                      AI Analysis Progress
+                    </span>
+                    <span className="text-sm text-white/80">
+                      {Math.round(progress)}%
+                    </span>
                   </div>
                   <Progress
                     value={progress}
@@ -309,7 +319,9 @@ export default function MealFinder() {
           {results.length > 0 && (
             <div className="space-y-6 mb-6">
               <h2 className="text-xl font-bold text-white">
-                🍽️ Found {new Set(results.map((r: MealResult) => r.restaurantName)).size} Restaurants with {results.length} Meals:
+                🍽️ Found{" "}
+                {new Set(results.map((r: MealResult) => r.restaurantName)).size}{" "}
+                Restaurants with {results.length} Meals:
               </h2>
               <div className="grid gap-4">
                 {results.map((result, index) => (
@@ -347,7 +359,9 @@ export default function MealFinder() {
                             {result.rating && (
                               <div className="flex items-center gap-1 bg-orange-600 px-2 py-1 rounded">
                                 <Star className="h-3 w-3 text-white fill-white" />
-                                <span className="text-sm text-white font-medium">{result.rating}</span>
+                                <span className="text-sm text-white font-medium">
+                                  {result.rating}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -362,13 +376,16 @@ export default function MealFinder() {
                           </p>
                         </div>
 
-                        {result.medicalBadges && result.medicalBadges.length > 0 && (
-                          <div className="mb-3">
-                            <HealthBadgesPopover
-                              badges={result.medicalBadges.map(b => b.condition)}
-                            />
-                          </div>
-                        )}
+                        {result.medicalBadges &&
+                          result.medicalBadges.length > 0 && (
+                            <div className="mb-3">
+                              <HealthBadgesPopover
+                                badges={result.medicalBadges.map(
+                                  (b) => b.condition,
+                                )}
+                              />
+                            </div>
+                          )}
 
                         <div className="grid grid-cols-4 gap-2 mb-3">
                           <div className="text-center bg-white/10 rounded p-2">
@@ -440,12 +457,24 @@ export default function MealFinder() {
       {showInstructions && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Meal Finder</h3>
+            <h3 className="text-xl font-bold text-white mb-4">
+              How to Use Meal Finder
+            </h3>
             <div className="space-y-3 text-white/90 text-sm">
-              <p><strong>1. Set location:</strong> Enter your ZIP code</p>
-              <p><strong>2. Choose meal type:</strong> Breakfast, lunch, or dinner</p>
-              <p><strong>3. Describe craving:</strong> Tell us what sounds good</p>
-              <p><strong>4. Get recommendations:</strong> Find healthy options nearby</p>
+              <p>
+                <strong>1. Set location:</strong> Enter your ZIP code
+              </p>
+              <p>
+                <strong>2. Choose meal type:</strong> Breakfast, lunch, or
+                dinner
+              </p>
+              <p>
+                <strong>3. Describe craving:</strong> Tell us what sounds good
+              </p>
+              <p>
+                <strong>4. Get recommendations:</strong> Find healthy options
+                nearby
+              </p>
             </div>
             <button
               onClick={() => {
@@ -461,11 +490,7 @@ export default function MealFinder() {
       )}
 
       {/* Info Modal */}
-      {showInfoModal && (
-        <div>
-          {/* Info modal content would go here */}
-        </div>
-      )}
+      {showInfoModal && <div>{/* Info modal content would go here */}</div>}
     </>
   );
 }
