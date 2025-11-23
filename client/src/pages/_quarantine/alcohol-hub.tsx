@@ -1,3 +1,7 @@
+// 🔒 LOCKED: QUARANTINED PAGE
+// This file is an obsolete/duplicate page and is intentionally removed from routing.
+// DO NOT edit, modify, refactor, or auto-route this file without explicit user approval.
+
 // client/src/pages/AlcoholHub.tsx
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";

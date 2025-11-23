@@ -1,3 +1,8 @@
+// 🔒 LOCKED: FUTURE FEATURE
+// This page is intentionally not imported in the router yet.
+// It is reserved for launch or future upgrades.
+// DO NOT delete, refactor, or auto-route this file without explicit user approval.
+
 import React from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";

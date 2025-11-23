@@ -1,3 +1,8 @@
+// 🔒 LOCKED: FUTURE FEATURE
+// This page is intentionally not imported in the router yet.
+// It is reserved for launch or future upgrades.
+// DO NOT delete, refactor, or auto-route this file without explicit user approval.
+
 // client/src/pages/kids-drinks-hub.tsx
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";

@@ -1,3 +1,8 @@
+// 🔒 LOCKED: FUTURE FEATURE
+// This page is intentionally not imported in the router yet.
+// It is reserved for launch or future upgrades.
+// DO NOT delete, refactor, or auto-route this file without explicit user approval.
+
 // 🔒🔒🔒 POTLUCK PARTY PLANNER - FINAL LOCKDOWN (AUGUST 31, 2025) 🔒🔒🔒
 // ⚠️  CRITICAL SECURITY WARNING: DO NOT MODIFY ⚠️
 // This component is PERMANENTLY LOCKED for production deployment

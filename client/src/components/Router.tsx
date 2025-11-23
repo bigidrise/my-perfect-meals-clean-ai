@@ -46,7 +46,7 @@ import AdminModerationPage from "@/pages/admin-moderation";
 // DELETED: MealPlanningHubRevised (comprehensive-meal-planning-revised)
 import CravingCreator from "@/pages/craving-creator";
 import FridgeRescuePage from "@/pages/fridge-rescue";
-import RestaurantGuidePage from "@/pages/restaurant-guide";
+// DELETED: RestaurantGuidePage (moved to _quarantine - replaced by SocialRestaurantGuide)
 // DELETED: PotluckPlanner, ToddlersMealsHub, CampingMealsHubPage, TailgatingHub, SmartWeekBuilder, MealsForKidsHubPage, KidsDrinksHubPage, KidsLunchboxPlanner, KidsIMadeItMyself
 import {
   BreakfastMealsHub,
@@ -93,7 +93,7 @@ import MedicalDietsHub from "@/pages/physician/MedicalDietsHub";
 import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
 
 // Craving pages
-import CravingHub from "@/pages/CravingHub";
+// DELETED: CravingHub (moved to _quarantine - replaced by CravingCreatorLanding)
 import CravingCreatorLanding from "@/pages/CravingCreatorLanding";
 import CravingPresets from "@/pages/CravingPresets";
 
@@ -109,8 +109,7 @@ import MealPairingAI from "@/pages/meal-pairing-ai";
 import WeaningOffTool from "@/pages/weaning-off-tool";
 import WinePairing from "@/pages/wine-pairing";
 
-// Meal Finder
-import MealFinder from "@/pages/MealFinder";
+// DELETED: MealFinder (moved to _quarantine - replaced by SocialFindMeals)
 
 // Socializing Hub pages
 import SocializingHub from "@/pages/SocializingHub";
@@ -227,8 +226,7 @@ export default function Router() {
         <Route path="/craving-creator" component={CravingCreator} />
         <Route path="/fridge-rescue" component={FridgeRescuePage} />
         <Route path="/ab-testing-demo" component={ABTestingDemo} />
-        {/* DELETED: HolidayFeastPlannerPage, MealFinderPage, BreakfastMealsHub, LunchMealsHub, DinnerMealsHub, SnacksMealsHub, CulturalCuisinesPage, VegetableFiberInfo, PotluckPlanner routes */}
-        <Route path="/restaurant-guide" component={RestaurantGuidePage} />
+        {/* DELETED: HolidayFeastPlannerPage, MealFinderPage, BreakfastMealsHub, LunchMealsHub, DinnerMealsHub, SnacksMealsHub, CulturalCuisinesPage, VegetableFiberInfo, PotluckPlanner, RestaurantGuide (old) routes */}
         {/* Socializing Hub Routes */}
         <Route path="/social-hub" component={SocializingHub} />
         <Route path="/social-hub/find" component={SocialFindMeals} />
@@ -438,7 +436,7 @@ export default function Router() {
           path="/craving-creator-landing"
           component={CravingCreatorLanding}
         />
-        <Route path="/craving-hub" component={CravingHub} />
+        {/* DELETED: /craving-hub route (old CravingHub moved to _quarantine - use /craving-creator-landing instead) */}
         <Route path="/craving-presets" component={CravingPresets} />
         {/* Alcohol Hub Routes */}
         <Route path="/alcohol-hub" component={AlcoholHubLanding} />
@@ -460,8 +458,7 @@ export default function Router() {
         {/* Lifestyle Hub (formerly Emotion AI) */}
         <Route path="/lifestyle" component={LifestyleLandingPage} />
         <Route path="/emotion-ai" component={LifestyleLandingPage} />
-        {/* Meal Finder Route */}
-        <Route path="/meal-finder" component={MealFinder} />
+        {/* DELETED: /meal-finder route (old MealFinder moved to _quarantine - use /social-hub/find instead) */}
         {/* Founders Route */}
         <Route path="/founders" component={FoundersPage} />
         {/* Supplement Hub Routes */}

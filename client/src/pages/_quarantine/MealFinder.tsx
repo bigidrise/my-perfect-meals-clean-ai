@@ -1,3 +1,7 @@
+// 🔒 LOCKED: QUARANTINED PAGE
+// This file is an obsolete/duplicate page and is intentionally removed from routing.
+// DO NOT edit, modify, refactor, or auto-route this file without explicit user approval.
+
 import { useState, useEffect, useRef } from "react";
 import {
   Card,
