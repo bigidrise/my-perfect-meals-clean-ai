@@ -533,7 +533,7 @@ const FridgeRescuePage = () => {
             </button>
 
             {/* Title */}
-            <h1 data-wt="fridge-rescue-header" className="text-lg font-bold text-white">🧊 Fridge Rescue</h1>
+            <h1 data-wt="fridge-rescue-header" className="text-lg font-bold text-white">Fridge Rescue</h1>
           </div>
         </div>
 
