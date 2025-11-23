@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, ArrowLeft, ChevronDown, ChevronUp, Home } from "lucide-react";
+import { Check, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import AffiliateOnPricing from "@/components/AffiliateOnPricing";
 import { PLAN_SKUS, getPlansByGroup } from "@/data/planSkus";
 import { startCheckout } from "@/lib/checkout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import SafePageContainer from "@/components/SafePageContainer";
 
 export default function PricingPage() {
   const [, setLocation] = useLocation();
@@ -125,17 +126,19 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="relative min-h-screen py-6 md:py-12 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white">
-      {/* Back Arrow - Top Left */}
-      <button
-        onClick={handleBackNavigation}
-        className="fixed top-4 left-4 z-50 flex items-center justify-center 
-                   bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-2 
-                   shadow-lg hover:bg-black/70 transition-all duration-200"
-        data-testid="button-back-navigation"
-      >
-        <Home className="h-4 w-4 text-white" />
-      </button>
+    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-8">
+      {/* Back Button */}
+      <header className="space-y-6">
+        <Button
+          variant="ghost"
+          onClick={handleBackNavigation}
+          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
+          data-testid="button-back"
+        >
+          <ArrowLeft className="h-5 w-5 mr-3" />
+          Back
+        </Button>
+      </header>
 
       <div className="container max-w-6xl mx-auto px-4">
         {/* Collapsible Header (Black Glass) */}
@@ -336,6 +339,6 @@ export default function PricingPage() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </SafePageContainer>
   );
 }

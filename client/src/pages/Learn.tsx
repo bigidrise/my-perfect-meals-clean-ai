@@ -13,6 +13,7 @@ import {
   X,
   Calculator,
   Info,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Dialog,
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import SafePageContainer from "@/components/SafePageContainer";
 
 interface LearningTopic {
   id: string;
@@ -407,27 +409,32 @@ export default function Learn() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20"
-    >
-      {/* Header */}
-      <div className="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-orange-400" />
-            <Input
-              type="text"
-              placeholder="Search topics or guides..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-black/30 backdrop-blur-lg border border-white/10 text-white placeholder:text-gray-400 focus:border-orange-400"
-              data-testid="input-search-topics"
-            />
-          </div>
+    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white space-y-8">
+      {/* Back Button */}
+      <header className="space-y-6">
+        <Button
+          variant="ghost"
+          onClick={() => setLocation("/dashboard")}
+          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
+          data-testid="button-back"
+        >
+          <ArrowLeft className="h-5 w-5 mr-3" />
+          Back
+        </Button>
+      </header>
+
+      {/* Search Bar */}
+      <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-orange-400" />
+          <Input
+            type="text"
+            placeholder="Search topics or guides..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-black/30 backdrop-blur-lg border border-white/10 text-white placeholder:text-gray-400 focus:border-orange-400"
+            data-testid="input-search-topics"
+          />
         </div>
       </div>
 
@@ -532,6 +539,6 @@ export default function Learn() {
           )}
         </DialogContent>
       </Dialog>
-    </motion.div>
+    </SafePageContainer>
   );
 }

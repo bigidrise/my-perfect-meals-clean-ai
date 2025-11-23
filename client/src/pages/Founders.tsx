@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
-import { motion } from "framer-motion";
-import { ArrowLeft, Award, Home } from "lucide-react";
+import { ArrowLeft, Award } from "lucide-react";
+import SafePageContainer from "@/components/SafePageContainer";
+import { Button } from "@/components/ui/button";
 
 type Founder = {
   id: string;
@@ -30,21 +31,19 @@ export default function FoundersPage() {
   const [, setLocation] = useLocation();
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pt-20 pb-12"
-    >
-      <button
-        aria-label="Go back to dashboard"
-        onClick={() => setLocation("/dashboard")}
-        className="fixed top-4 left-4 z-50 inline-flex items-center gap-2 px-4 h-10 rounded-2xl bg-black/10 hover:bg-black/20 ring-1 ring-white/10 backdrop-blur-none transition"
-        data-testid="button-back"
-      >
-        <Home className="h-5 w-5 stroke-[2.5] text-white" />
-        <span className="text-white font-medium"></span>
-      </button>
+    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white space-y-8">
+      {/* Back Button */}
+      <header className="space-y-6">
+        <Button
+          variant="ghost"
+          onClick={() => setLocation("/dashboard")}
+          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
+          data-testid="button-back"
+        >
+          <ArrowLeft className="h-5 w-5 mr-3" />
+          Back
+        </Button>
+      </header>
 
       <section className="container mx-auto max-w-6xl px-4 md:px-6">
         <div className="mb-8 p-6 rounded-2xl bg-black/50 ring-1 ring-white/10 backdrop-blur-md shadow-2xl text-center">
@@ -88,6 +87,6 @@ export default function FoundersPage() {
 
         <div className="h-6" />
       </section>
-    </motion.div>
+    </SafePageContainer>
   );
 }
