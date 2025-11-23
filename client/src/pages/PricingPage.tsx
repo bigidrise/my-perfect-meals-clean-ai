@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ArrowLeft, ChevronDown, ChevronUp, CreditCard } from "lucide-react";
 import AffiliateOnPricing from "@/components/AffiliateOnPricing";
 import { PLAN_SKUS, getPlansByGroup } from "@/data/planSkus";
 import { startCheckout } from "@/lib/checkout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import SafePageContainer from "@/components/SafePageContainer";
 
 export default function PricingPage() {
   const [, setLocation] = useLocation();
@@ -126,20 +125,38 @@ export default function PricingPage() {
   };
 
   return (
-    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-8">
-      {/* Back Button */}
-      <header className="space-y-6">
-        <Button
-          variant="ghost"
-          onClick={handleBackNavigation}
-          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
-          data-testid="button-back"
-        >
-          <ArrowLeft className="h-5 w-5 mr-3" />
-          Back
-        </Button>
-      </header>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-900 to-black/80 pb-safe-nav"
+    >
+      {/* Fixed Black Glass Navigation Banner */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-4 py-3 flex items-center gap-3">
+          <Button
+            onClick={handleBackNavigation}
+            className="bg-black/10 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-1.5 px-2.5 h-9 flex-shrink-0"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="text-xs font-medium">Back</span>
+          </Button>
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            Subscription
+          </h1>
+        </div>
+      </div>
 
+      {/* Main Content */}
+      <div
+        className="max-w-6xl mx-auto px-4 text-white"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
       <div className="container max-w-6xl mx-auto px-4">
         {/* Collapsible Header (Black Glass) */}
         <div className="text-center mb-12 mt-8">
@@ -339,6 +356,7 @@ export default function PricingPage() {
           )}
         </AnimatePresence>
       </div>
-    </SafePageContainer>
+      </div>
+    </motion.div>
   );
 }

@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { ArrowLeft, Award } from "lucide-react";
-import SafePageContainer from "@/components/SafePageContainer";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 type Founder = {
   id: string;
@@ -31,20 +31,38 @@ export default function FoundersPage() {
   const [, setLocation] = useLocation();
 
   return (
-    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-600 to-black/80 text-white space-y-8">
-      {/* Back Button */}
-      <header className="space-y-6">
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/dashboard")}
-          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
-          data-testid="button-back"
-        >
-          <ArrowLeft className="h-5 w-5 mr-3" />
-          Back
-        </Button>
-      </header>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-safe-nav"
+    >
+      {/* Fixed Black Glass Navigation Banner */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
+        style={{ top: "env(safe-area-inset-top, 0px)" }}
+      >
+        <div className="px-4 py-3 flex items-center gap-3">
+          <Button
+            onClick={() => setLocation("/dashboard")}
+            className="bg-black/10 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-1.5 px-2.5 h-9 flex-shrink-0"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="text-xs font-medium">Back</span>
+          </Button>
+          <h1 className="text-lg font-bold text-white flex items-center gap-2">
+            <Award className="h-5 w-5" />
+            About My Perfect Meals
+          </h1>
+        </div>
+      </div>
 
+      {/* Main Content */}
+      <div
+        className="max-w-6xl mx-auto px-4 text-white"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
       <section className="container mx-auto max-w-6xl px-4 md:px-6">
         <div className="mb-8 p-6 rounded-2xl bg-black/50 ring-1 ring-white/10 backdrop-blur-md shadow-2xl text-center">
           <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]">
@@ -87,6 +105,7 @@ export default function FoundersPage() {
 
         <div className="h-6" />
       </section>
-    </SafePageContainer>
+      </div>
+    </motion.div>
   );
 }
