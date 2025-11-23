@@ -121,15 +121,16 @@ export const CopilotSheet: React.FC = () => {
         stop();
         
         try {
-          const blob = await audioPromise;
+          const result = await audioPromise;
 
           // Guard against null/undefined blob
-          if (!blob || blob.size === 0) {
+          if (!result || !result.blob || result.blob.size === 0) {
             throw new Error("No audio recorded");
           }
 
           const fd = new FormData();
-          fd.append("audio", blob, "audio.webm");
+          // Use detected extension from the recorder
+          fd.append("audio", result.blob, `audio.${result.extension}`);
 
           const res = await fetch("/api/voice/transcribe", {
             method: "POST",
@@ -173,19 +174,18 @@ export const CopilotSheet: React.FC = () => {
     } catch (err: any) {
       console.error("Microphone error:", err);
       
-      let errorMessage = "Please try again.";
-      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-        errorMessage = "Microphone permission denied. Please enable it in your browser settings.";
-      } else if (err.name === "NotFoundError") {
-        errorMessage = "No microphone found. Please connect a microphone.";
-      }
-
-      toast({
-        title: "Microphone error",
+      // Show helpful error message for unsupported browsers
+      const errorMessage = err.message?.includes("not supported") 
+        ? err.message 
+        : "Could not access microphone. Please check permissions.";
+      
+      setNeedsRetry(true);
+      setLastResponse({
+        title: "Voice unavailable",
         description: errorMessage,
-        variant: "destructive",
+        spokenText: "Voice commands are not available. Please use the text input below.",
       });
-
+      
       setListening(false);
       setMode("idle");
     }
