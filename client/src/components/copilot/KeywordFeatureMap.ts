@@ -29,7 +29,7 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["craving", "creator", "crave"],
   },
   {
-    path: "/social-hub/alcohol",
+    path: "/alcohol-hub",
     walkthroughId: "alcohol-hub",
     keywords: ["alcohol", "drinks", "drinking", "smart sips"],
   },
@@ -44,22 +44,22 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["restaurant", "dining", "eating out"],
   },
   {
-    path: "/clinical/diabetes",
+    path: "/diabetic-hub",
     walkthroughId: "diabetic-hub",
     keywords: ["diabetic", "diabetes", "blood sugar", "glucose"],
   },
   {
-    path: "/clinical/glp1",
+    path: "/glp1-hub",
     walkthroughId: "glp1-hub",
     keywords: ["glp", "glp1", "glp-1", "ozempic", "wegovy", "injection"],
   },
   {
-    path: "/clinical/anti-inflammatory",
+    path: "/anti-inflammatory-menu-builder",
     walkthroughId: "anti-inflammatory",
     keywords: ["anti", "anti-inflammatory", "inflammation"],
   },
   {
-    path: "/kids",
+    path: "/kids-meals",
     walkthroughId: "kids-meals",
     keywords: ["kids", "children", "toddler", "toddlers"],
   },
@@ -74,14 +74,9 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["calculator", "macros", "calculate", "counter"],
   },
   {
-    path: "/daily-health-journal",
-    walkthroughId: "daily-journal",
-    keywords: ["journal", "journaling", "diary"],
-  },
-  {
     path: "/biometrics",
     walkthroughId: "biometrics",
-    keywords: ["biometrics", "tracking", "macros", "weight"],
+    keywords: ["biometrics", "tracking", "weight"],
   },
 ];
 
