@@ -63,11 +63,11 @@ function gramsFor100kcal(food: FoodMacroPer100g) {
 function macroAt100kcal(food: FoodMacroPer100g) {
   const g100 = gramsFor100kcal(food);
   return {
-    p: Math.round((food.p * g100 / 100) * 10) / 10,
-    c: Math.round((food.c * g100 / 100) * 10) / 10,
-    f: Math.round((food.f * g100 / 100) * 10) / 10,
+    p: Math.round(((food.p * g100) / 100) * 10) / 10,
+    c: Math.round(((food.c * g100) / 100) * 10) / 10,
+    f: Math.round(((food.f * g100) / 100) * 10) / 10,
     grams: g100,
-    ounces: Math.round((g100 * 0.0352739619) * 10) / 10,
+    ounces: Math.round(g100 * 0.0352739619 * 10) / 10,
   };
 }
 
@@ -88,15 +88,18 @@ function PocketMathCard() {
 
         <div className="mb-4 p-4 rounded-xl border border-white/20 bg-black/20">
           <p className="text-sm text-white/90 leading-relaxed">
-            <strong>Why fat changes "how much food" you get:</strong> Fat has 9 calories per gram vs 4 for protein/carbs. 
-            In a 100-calorie portion, higher-fat foods give you less weight/volume and usually less protein. 
-            Compare foods below to see the difference!
+            <strong>Why fat changes "how much food" you get:</strong> Fat has 9
+            calories per gram vs 4 for protein/carbs. In a 100-calorie portion,
+            higher-fat foods give you less weight/volume and usually less
+            protein. Compare foods below to see the difference!
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="text-xs font-semibold text-white/80 mb-2 block">Food A</label>
+            <label className="text-xs font-semibold text-white/80 mb-2 block">
+              Food A
+            </label>
             <select
               value={leftFood}
               onChange={(e) => setLeftFood(e.target.value as FoodPresetKey)}
@@ -111,7 +114,9 @@ function PocketMathCard() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-white/80 mb-2 block">Food B</label>
+            <label className="text-xs font-semibold text-white/80 mb-2 block">
+              Food B
+            </label>
             <select
               value={rightFood}
               onChange={(e) => setRightFood(e.target.value as FoodPresetKey)}
@@ -128,36 +133,63 @@ function PocketMathCard() {
 
         <div className="grid md:grid-cols-2 gap-4">
           <div className="rounded-xl border border-white/25 bg-black/40 backdrop-blur-lg p-4">
-            <div className="text-sm font-semibold text-white mb-3">{FOOD_PRESETS[leftFood].label}</div>
+            <div className="text-sm font-semibold text-white mb-3">
+              {FOOD_PRESETS[leftFood].label}
+            </div>
             <div className="space-y-2">
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
-                <div className="text-[11px] uppercase text-white/70 mb-1">100 calorie portion</div>
-                <div className="text-white font-bold text-lg">{L.grams}g <span className="text-sm text-white/70">({L.ounces} oz)</span></div>
+                <div className="text-[11px] uppercase text-white/70 mb-1">
+                  100 calorie portion
+                </div>
+                <div className="text-white font-bold text-lg">
+                  {L.grams}g{" "}
+                  <span className="text-sm text-white/70">({L.ounces} oz)</span>
+                </div>
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
-                <div className="text-[11px] uppercase text-white/70 mb-1">Macros</div>
-                <div className="text-white font-semibold text-sm">{L.p}g P • {L.c}g C • {L.f}g F</div>
+                <div className="text-[11px] uppercase text-white/70 mb-1">
+                  Macros
+                </div>
+                <div className="text-white font-semibold text-sm">
+                  {L.p}g P • {L.c}g C • {L.f}g F
+                </div>
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border border-white/25 bg-black/40 backdrop-blur-lg p-4">
-            <div className="text-sm font-semibold text-white mb-3">{FOOD_PRESETS[rightFood].label}</div>
+            <div className="text-sm font-semibold text-white mb-3">
+              {FOOD_PRESETS[rightFood].label}
+            </div>
             <div className="space-y-2">
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
-                <div className="text-[11px] uppercase text-white/70 mb-1">100 calorie portion</div>
-                <div className="text-white font-bold text-lg">{R.grams}g <span className="text-sm text-white/70">({R.ounces} oz)</span></div>
+                <div className="text-[11px] uppercase text-white/70 mb-1">
+                  100 calorie portion
+                </div>
+                <div className="text-white font-bold text-lg">
+                  {R.grams}g{" "}
+                  <span className="text-sm text-white/70">({R.ounces} oz)</span>
+                </div>
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
-                <div className="text-[11px] uppercase text-white/70 mb-1">Macros</div>
-                <div className="text-white font-semibold text-sm">{R.p}g P • {R.c}g C • {R.f}g F</div>
+                <div className="text-[11px] uppercase text-white/70 mb-1">
+                  Macros
+                </div>
+                <div className="text-white font-semibold text-sm">
+                  {R.p}g P • {R.c}g C • {R.f}g F
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-4 rounded-xl border border-orange-400/30 bg-orange-600/15 p-3 text-sm">
-          <strong className="text-white">Takeaway:</strong> <span className="text-white/90">For the same calories, lean foods (lower fat) give you more food volume and more protein. Use this to keep protein high without blowing through fat calories.</span>
+          <strong className="text-white">Takeaway:</strong>{" "}
+          <span className="text-white/90">
+            For the same calories, lean foods (lower fat) give you more food
+            volume and more protein. Use this to keep protein high without
+            blowing through fat calories.
+          </span>
         </div>
       </CardContent>
     </Card>
@@ -167,7 +199,9 @@ function PocketMathCard() {
 export default function Learn() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState<LearningTopic | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<LearningTopic | null>(
+    null,
+  );
 
   useEffect(() => {
     document.title = "Learn | My Perfect Meals";
@@ -241,14 +275,14 @@ export default function Learn() {
     {
       id: "how-to-videos",
       title: "Copilot Walkthroughs",
-      description: "Guided, step-by-step help using Copilot instead of videos",
+      description: "Guided, step-by-step help using Copilot",
       icon: Video,
       gradient: "from-orange-600/20 to-orange-500/20",
       content: {
         sections: [
-            {
-              heading: "Copilot Has Replaced Video Tutorials",
-              text: "Instead of watching long videos, your Copilot now teaches you in real time. It opens the right page, dims the screen, and walks you through each step while you actually use the feature.",
+          {
+            heading: "Copilot Has Replaced Video Tutorials",
+            text: "Instead of watching long videos, your Copilot now teaches you in real time. It opens the right page, dims the screen, and walks you through each step while you actually use the feature.",
           },
           {
             heading: "Available Tutorials",
@@ -261,7 +295,6 @@ export default function Learn() {
               "Shopping List: How to send meals and organize your groceries",
             ],
           },
-          
         ],
       },
     },
@@ -297,7 +330,8 @@ export default function Learn() {
     {
       id: "calories-vs-macros",
       title: "Calories vs Macros",
-      description: "Why macro tracking beats calorie counting + practical tools",
+      description:
+        "Why macro tracking beats calorie counting + practical tools",
       icon: Calculator,
       gradient: "from-blue-500/20 to-cyan-500/20",
       content: {
@@ -361,7 +395,7 @@ export default function Learn() {
   const filteredTopics = learningTopics.filter(
     (topic) =>
       topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      topic.description.toLowerCase().includes(searchQuery.toLowerCase())
+      topic.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleTopicClick = (topic: LearningTopic) => {
@@ -373,14 +407,14 @@ export default function Learn() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20 pb-safe"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20"
     >
       {/* Header */}
-      <div className="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 pt-safe">
+      <div className="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Search Bar */}
           <div className="relative">
@@ -493,9 +527,7 @@ export default function Learn() {
               ))}
 
               {/* Pocket Math Food Comparison Tool for Calories vs Macros */}
-              {selectedTopic.id === "calories-vs-macros" && (
-                <PocketMathCard />
-              )}
+              {selectedTopic.id === "calories-vs-macros" && <PocketMathCard />}
             </div>
           )}
         </DialogContent>

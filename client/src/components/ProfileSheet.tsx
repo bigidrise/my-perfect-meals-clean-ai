@@ -39,11 +39,11 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
 
   const userName = fullUserData?.name || "User";
   const userEmail = fullUserData?.email || "user@example.com";
-  
+
   // Get user initials for avatar
   const userInitials = userName
     .split(" ")
-    .map(word => word[0])
+    .map((word) => word[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
@@ -70,8 +70,8 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
       testId: "menu-subscription",
     },
     {
-      title: "Tutorial Hub",
-      description: "Nutrition guides & how-to videos",
+      title: "Copilot Walkthroughs",
+      description: "Guided, step-by-step help using copilot",
       icon: Video,
       route: "/learn",
       testId: "menu-tutorials",
@@ -123,7 +123,9 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
                 <Icon className="h-4 w-4 text-orange-400" />
                 <div className="flex-1 text-left">
                   <p className="text-white font-medium text-xs">{item.title}</p>
-                  <p className="text-white/60 text-[10px]">{item.description}</p>
+                  <p className="text-white/60 text-[10px]">
+                    {item.description}
+                  </p>
                 </div>
                 <ChevronRight className="h-3 w-3 text-white/40 group-hover:text-white/70 transition-colors" />
               </button>
