@@ -27,7 +27,6 @@ interface CheckIn {
 
 const WeaningOffTool = () => {
   const [, setLocation] = useLocation();
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [step, setStep] = useState<"setup" | "plan" | "tracking">("setup");
   const [drinksPerDay, setDrinksPerDay] = useState(3);
   const [daysPerWeek, setDaysPerWeek] = useState(5);
@@ -59,21 +58,11 @@ const WeaningOffTool = () => {
       setCheckIns(JSON.parse(savedCheckIns));
     }
 
-    // Auto-open instructions on first visit in coach mode
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenWeaningInfo = localStorage.getItem("hasSeenWeaningInfo");
-
-    if (coachMode === "guided" && !hasSeenWeaningInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
+    // Auto-mark info as seen since Copilot provides guidance now
+    if (!localStorage.getItem("hasSeenWeaningInfo")) {
+      localStorage.setItem("hasSeenWeaningInfo", "true");
     }
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenWeaningInfo", "true");
-  };
 
   const generatePlan = () => {
     const weeklyAverage = drinksPerDay * daysPerWeek;
@@ -497,37 +486,6 @@ const WeaningOffTool = () => {
             >
               Start Over With New Plan
             </Button>
-          </div>
-        )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Weaning Off Tool</h3>
-              
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>Gradually reduce your alcohol intake at your own pace with a personalized, judgment-free tapering plan.</p>
-                <div>
-                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Enter your current drinking baseline (drinks per day and days per week)</li>
-                    <li>Choose your reduction pace: gentle (10%), standard (20%), or custom</li>
-                    <li>Generate your personalized weekly reduction plan</li>
-                    <li>Check in each week to track progress or pause if needed</li>
-                    <li>View your full schedule and celebrate milestones</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-lime-300">⚠️ Medical Note: If you drink heavily, consult a healthcare provider before tapering to avoid withdrawal risks.</p>
-              </div>
-
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
           </div>
         )}
       </div>

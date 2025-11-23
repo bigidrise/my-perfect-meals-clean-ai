@@ -182,30 +182,21 @@ const cuisineKeywords: Record<string, string> = {
 };
 
 export default function RestaurantGuidePage() {
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
   const [, setLocation] = useLocation();
   const [cravingInput, setCravingInput] = useState("");
   const [restaurantInput, setRestaurantInput] = useState("");
   const [matchedCuisine, setMatchedCuisine] = useState<string | null>(null);
   const [generatedMeals, setGeneratedMeals] = useState<any[]>([]);
-  const [showFindMealsInfo, setShowFindMealsInfo] = useState(false);
-  const [showSmartGuideInfo, setShowSmartGuideInfo] = useState(false);
   const { toast } = useToast();
 
   // 🔋 Progress bar state (real-time ticker like HolidayFeast)
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
 
-  // Auto-open instructions on first visit in coach mode
+  // Auto-mark info as seen since Copilot provides guidance now
   useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenRestaurantInfo = localStorage.getItem("hasSeenRestaurantInfo");
-
-    if (coachMode === "guided" && !hasSeenRestaurantInfo) {
-      setTimeout(() => {
-        setShowInstructions(true);
-      }, 300);
+    if (!localStorage.getItem("hasSeenRestaurantInfo")) {
+      localStorage.setItem("hasSeenRestaurantInfo", "true");
     }
   }, []);
 
@@ -382,12 +373,11 @@ export default function RestaurantGuidePage() {
         {/* Find Meals Near Me Card - MOVED TO TOP */}
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between text-lg text-white">
+            <CardTitle className="text-lg text-white">
               <div className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
                 Find Meals Near Me
               </div>
-              
             </CardTitle>
             <CardDescription className="text-sm text-white/80">
               Search for meals you're craving at nearby restaurants by ZIP code
@@ -410,12 +400,11 @@ export default function RestaurantGuidePage() {
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between text-xl text-white">
+            <CardTitle className="text-xl text-white">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
                 Smart Restaurant Guide
               </div>
-              
             </CardTitle>
             <CardDescription className="text-white/80">
               
@@ -703,121 +692,6 @@ export default function RestaurantGuidePage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Instructions Modal - Auto-opens on first visit (shows Find Meals Near Me instructions) */}
-      {showInstructions && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h3>
-            <div className="space-y-3 text-white/90 text-sm">
-              <p><strong>1. Enter what you're craving:</strong> Type the food you want (e.g., "chicken," "salad," "burger")</p>
-              <p><strong>2. Enter your ZIP code:</strong> Add your location to find nearby restaurants</p>
-              <p><strong>3. Find restaurants:</strong> Get real restaurant names and locations near you</p>
-              <p><strong>4. See healthy options:</strong> View nutrition info and smart ordering tips for each restaurant</p>
-            </div>
-            <button
-              onClick={() => {
-                setShowInstructions(false);
-                localStorage.setItem("hasSeenRestaurantInfo", "true");
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Find Meals Near Me Info Modal */}
-      {showFindMealsInfo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Find Meals Near Me</h3>
-            <div className="space-y-3 text-white/90 text-sm mb-6">
-              <div>
-                <strong className="text-lime-400">What it does:</strong>
-                <p className="mt-1">
-                  Search for restaurants near you by ZIP code that serve the meal you're craving. We'll show you healthy options with nutrition info and ordering tips.
-                </p>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">How to use:</strong>
-                <ol className="list-decimal list-inside mt-1 space-y-1">
-                  <li>Enter what you're craving (e.g., "chicken," "salmon," "tacos")</li>
-                  <li>Enter your ZIP code to find nearby restaurants</li>
-                  <li>Tap <em>Find Meals Near Me</em> to search</li>
-                  <li>Browse results with real restaurant names, locations, and healthy meal recommendations</li>
-                </ol>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">Examples:</strong>
-                <ul className="list-disc list-inside mt-1 space-y-1">
-                  <li><em>Craving:</em> chicken · <em>ZIP:</em> 90210 → Find chicken dishes at restaurants near you</li>
-                  <li><em>Craving:</em> salad · <em>ZIP:</em> 10001 → Discover healthy salad options nearby</li>
-                </ul>
-              </div>
-
-              <p className="text-lime-400 font-medium mt-4">
-                📍 Uses your location to find real restaurants with healthy options that match your goals.
-              </p>
-            </div>
-            <button
-              onClick={() => setShowFindMealsInfo(false)}
-              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Smart Restaurant Guide Info Modal */}
-      {showSmartGuideInfo && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Smart Restaurant Guide</h2>
-            <div className="space-y-3 text-white/90 text-sm mb-6">
-              <div>
-                <strong className="text-lime-400">What it does:</strong>
-                <p className="mt-1">
-                  Tell us what you're craving and where you're going. We'll suggest real menu picks and
-                  healthy ways to order them (lighter sauce, swaps, sides) to fit your goals.
-                </p>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">How to use:</strong>
-                <ol className="list-decimal list-inside mt-1 space-y-1">
-                  <li>In <em>Craving</em>, type a food (e.g., "chicken," "salmon," "pasta").</li>
-                  <li>In <em>Restaurant</em>, type where you're going (e.g., "P.F. Chang's").</li>
-                  <li>Tap <em>Find Dishes</em> to get 2–3 smart picks with healthier order tips.</li>
-                  <li>Review nutrition estimates, medical badges, and "Ask For" modifications.</li>
-                </ol>
-              </div>
-
-              <div>
-                <strong className="text-lime-400">Examples:</strong>
-                <ul className="list-disc list-inside mt-1 space-y-1">
-                  <li><em>Craving:</em> chicken · <em>Restaurant:</em> P.F. Chang's → "Chang's Spicy Chicken (light sauce)"</li>
-                  <li><em>Craving:</em> salmon · <em>Restaurant:</em> Cheesecake Factory → "SkinnyLicious® Grilled Salmon"</li>
-                </ul>
-              </div>
-
-              <p className="text-lime-400 font-medium mt-4">
-                ⏱️ Generation takes 60–90 seconds. Your results auto-save on this page.
-              </p>
-            </div>
-            <button
-              onClick={() => setShowSmartGuideInfo(false)}
-              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
     </motion.div>
     </PhaseGate>
   );
