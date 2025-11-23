@@ -254,7 +254,6 @@ export default function WeeklyMealBoard() {
   }, [board, planningMode, activeDayISO, weekStartISO, saveBoard, toast]);
 
   // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
 
@@ -267,6 +266,10 @@ export default function WeeklyMealBoard() {
     const infoSeen = localStorage.getItem("weekly-meal-board-info-seen");
     if (infoSeen === "true") {
       setHasSeenInfo(true);
+    } else {
+      // Auto-mark as seen since Copilot provides guidance now
+      setHasSeenInfo(true);
+      localStorage.setItem("weekly-meal-board-info-seen", "true");
     }
 
     const saved = localStorage.getItem("weekly-meal-board-tour-step");
@@ -279,15 +282,6 @@ export default function WeeklyMealBoard() {
       setHasSeenDailyTotalsInfo(true);
     }
   }, []);
-
-  // Handle info modal close - start the tour
-  const handleInfoModalClose = useCallback(() => {
-    setShowInfoModal(false);
-    if (!hasSeenInfo) {
-      setHasSeenInfo(true);
-      localStorage.setItem("weekly-meal-board-info-seen", "true");
-    }
-  }, [hasSeenInfo]);
 
   const advanceTourStep = useCallback(() => {
     const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
@@ -1732,36 +1726,6 @@ export default function WeeklyMealBoard() {
                 />
               );
             })()}
-
-      {/* Info Modal - How to Use */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Weekly Meal Board</h3>
-
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>Create your day or week by starting with breakfast.</p>
-              <p className="text-white/80">
-                Click the "Create with AI" button on each meal section to build your plan.
-                You can create one day and duplicate it across the week, or create each day individually.
-              </p>
-              <p className="text-white/80">
-                If you change your mind about a meal, just hit the <span className="font-semibold text-white">trash can</span> to delete it and create a new one.
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowInfoModal(false);
-                handleInfoModalClose();
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Daily Totals Info Modal - Next Steps After First Meal */}
       <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {

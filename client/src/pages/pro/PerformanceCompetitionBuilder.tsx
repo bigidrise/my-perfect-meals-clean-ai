@@ -226,7 +226,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   const [snackPickerOpen, setSnackPickerOpen] = useState(false);
 
   // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
 
@@ -343,6 +342,10 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     const infoSeen = localStorage.getItem("performance-competition-builder-info-seen");
     if (infoSeen === "true") {
       setHasSeenInfo(true);
+    } else {
+      // Auto-mark as seen since Copilot provides guidance now
+      setHasSeenInfo(true);
+      localStorage.setItem("performance-competition-builder-info-seen", "true");
     }
 
     const dailyTotalsInfoSeen = localStorage.getItem("performance-competition-builder-daily-totals-info-seen");
@@ -355,13 +358,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       setTourStep(savedStep);
     }
   }, []);
-
-  // Handle info modal close - start the guided tour
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    setHasSeenInfo(true);
-    localStorage.setItem("performance-competition-builder-info-seen", "true");
-  };
 
   // Update tour step when meals are created
   useEffect(() => {
@@ -2149,49 +2145,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             />
           );
         })()}
-
-      {/* Info Modal - How to Use */}
-      <Dialog open={showInfoModal} onOpenChange={(open) => {
-        if (!open) {
-          handleInfoModalClose();
-        } else {
-          setShowInfoModal(true);
-        }
-      }}>
-        <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-              <Target className="h-6 w-6 text-emerald-400" />
-              How to Use Professional Care Meals
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 text-white/90">
-            <p>
-              The Performance & Competition Builder helps you build competition-ready meal plans with precise macro tracking for peak performance.
-            </p>
-            <div>
-              <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
-              <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-                <li>Start with Meal 1 (breakfast) and work through each meal section</li>
-                <li>Click "Create with AI" to generate meals based on your coach's macro targets</li>
-                <li>Choose Day or Week mode to plan one day at a time or your entire week</li>
-                <li>Use the duplicate feature to copy successful days across your week</li>
-                <li>Delete any meal with the trash icon if you want to try something different</li>
-                <li>Send your plan to Biometrics to track your daily macro progress</li>
-              </ul>
-            </div>
-            <p className="text-emerald-400 font-medium">
-              💡 Tip: Your coach has set specific macro targets for you. Use "Set Macros to Biometrics" to sync them and track your daily progress!
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowInfoModal(false)}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
-          >
-            Got It!
-          </Button>
-        </DialogContent>
-      </Dialog>
 
       {/* Daily Totals Info Modal - Next Steps After First Meal */}
       <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {
