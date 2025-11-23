@@ -61,7 +61,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/alcohol-hub",
     isHub: true,
     hubSize: "large",
-    keywords: ["alcohol", "spirits", "drinks", "cocktails", "lean cocktails", "smart sips", "mixed drinks"],
+    keywords: ["alcohol", "spirits", "drinks", "cocktails", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas"],
     subOptions: [
       {
         id: "LEAN_SOCIAL",
@@ -171,8 +171,8 @@ export const HUBS: Record<string, FeatureDefinition> = {
       {
         id: "DIABETES_SUPPORT",
         label: "Diabetes Support",
-        route: "/diabetes-support",
-        aliases: ["support", "diabetes support", "diabetic support"]
+        route: "/diabetic-hub",
+        aliases: ["support", "diabetes support", "diabetic support", "hub"]
       },
       {
         id: "DIABETIC_BUILDER",
@@ -194,8 +194,8 @@ export const HUBS: Record<string, FeatureDefinition> = {
       {
         id: "GLP1_BUILDER",
         label: "GLP-1 Meal Builder",
-        route: "/glp1-meal-builder",
-        aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder"]
+        route: "/glp1-menu-builder",
+        aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder"]
       }
     ]
   },
@@ -212,13 +212,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "SUPPLEMENT_BROWSE",
         label: "Supplement Hub",
         route: "/supplement-hub",
-        aliases: ["browse", "hub", "products", "supplement hub"]
-      },
-      {
-        id: "SUPPLEMENT_EDUCATION",
-        label: "Supplement Education",
-        route: "/supplement-education",
-        aliases: ["education", "learn", "supplement education", "learn about supplements"]
+        aliases: ["browse", "hub", "products", "supplement hub", "supplements"]
       }
     ]
   }
@@ -248,9 +242,9 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
   MY_BIOMETRICS: {
     id: "MY_BIOMETRICS",
     legacyId: "biometrics",
-    primaryRoute: "/biometrics",
+    primaryRoute: "/my-biometrics",
     isHub: false,
-    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight"]
+    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight", "my biometrics"]
   },
 
   SHOPPING_LIST: {
@@ -258,7 +252,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "shopping-list",
     primaryRoute: "/shopping-list-v2",
     isHub: false,
-    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping"]
+    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping", "master shopping", "master shopping list"]
   },
 
   WEEKLY_MEAL_BUILDER: {
@@ -266,7 +260,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "weekly-meal-board",
     primaryRoute: "/weekly-meal-board",
     isHub: false,
-    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly"]
+    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board"]
   },
 
   GET_INSPIRATION: {
@@ -298,7 +292,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "planner",
     primaryRoute: "/planner",
     isHub: false,
-    keywords: ["planner", "meal planner", "planning board"]
+    keywords: ["planner", "meal planner", "planning board", "planner page", "main planner"]
   },
 
   LIFESTYLE: {
@@ -332,27 +326,41 @@ function normalizeQuery(query: string): string {
 /**
  * Find feature by keyword in canonical registry (fuzzy match)
  * Checks hubs first (hub-first routing), then direct pages
+ * Uses bidirectional matching + token-level fallback for partial utterances
  */
 export function findFeatureFromRegistry(query: string): FeatureDefinition | null {
   const normalized = normalizeQuery(query);
+  const queryTokens = normalized.split(' ').filter(t => t.length > 2); // Tokens with 3+ chars
+
+  // Helper: check if query matches keyword
+  const matches = (keyword: string): boolean => {
+    const normalizedKeyword = normalizeQuery(keyword);
+    
+    // Exact/substring match (bidirectional)
+    if (normalized.includes(normalizedKeyword) || normalizedKeyword.includes(normalized)) {
+      return true;
+    }
+    
+    // Token-level matching for partial utterances
+    const keywordTokens = normalizedKeyword.split(' ').filter(t => t.length > 2);
+    return queryTokens.some(qToken => 
+      keywordTokens.some(kToken => 
+        qToken.includes(kToken) || kToken.includes(qToken)
+      )
+    );
+  };
 
   // Check hubs first (hub-first routing)
   for (const hub of Object.values(HUBS)) {
-    for (const keyword of hub.keywords) {
-      const normalizedKeyword = normalizeQuery(keyword);
-      if (normalized.includes(normalizedKeyword) || normalizedKeyword.includes(normalized)) {
-        return hub;
-      }
+    if (hub.keywords.some(matches)) {
+      return hub;
     }
   }
 
   // Then check direct pages
   for (const page of Object.values(DIRECT_PAGES)) {
-    for (const keyword of page.keywords) {
-      const normalizedKeyword = normalizeQuery(keyword);
-      if (normalized.includes(normalizedKeyword) || normalizedKeyword.includes(normalized)) {
-        return page;
-      }
+    if (page.keywords.some(matches)) {
+      return page;
     }
   }
 
