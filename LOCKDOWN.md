@@ -82,6 +82,16 @@ If a locked feature breaks unexpectedly, the agent has violated lockdown protoco
 - ✅ Tutorial Hub (video tutorials)
 - ✅ PWA Configuration (home screen installation)
 
+### **COPILOT SYSTEM (Phase B Complete)**
+- ✅ Hub-First Routing (7 hubs, 17 sub-options)
+- ✅ Canonical Alias Registry (35 verified routes)
+- ✅ Keyword Matching System (token-level fallback)
+- ✅ Spotlight Walkthrough Integration
+- ✅ Voice Navigation (direct pages + hub prompts)
+- ✅ Sub-Option Selection Logic
+- ✅ Async Walkthrough Handling
+- 🔒 **LOCKED:** See PHASE_B_COPILOT_LOCK.md for complete lockdown details
+
 ---
 
 ## 🧊 QUARANTINED FEATURES (OBSOLETE - DO NOT ACTIVATE)
@@ -109,9 +119,17 @@ Located in `/client/src/pages/_future/`:
 ## 🎯 ACTIVE DEVELOPMENT ZONE
 
 ### **CURRENTLY UNLOCKED FOR WORK:**
-- Co-Pilot System (walkthrough flow improvements)
+- ❌ NONE - All systems locked after Phase B completion
 
-**RULE:** Only the Co-Pilot system is currently approved for modifications. All other features remain locked.
+### **RECENTLY COMPLETED & LOCKED:**
+- ✅ **Phase B Copilot System** (November 23, 2025)
+  - Hub-first routing system
+  - Canonical alias registry (35 routes)
+  - Spotlight walkthrough integration
+  - Voice navigation improvements
+  - See PHASE_B_COPILOT_LOCK.md for full details
+
+**RULE:** ALL Copilot subsystem files are now LOCKED. No modifications permitted until explicit Phase C unlock.
 
 ---
 
@@ -175,8 +193,9 @@ If a locked feature has a critical bug:
 
 ## 🔥 LAST UPDATED
 **Date:** November 23, 2025  
-**Status:** Complete codebase lockdown active  
-**Active Work:** Co-Pilot system improvements only
+**Status:** Complete codebase lockdown active + Phase B Copilot locked  
+**Active Work:** NONE - awaiting Phase C unlock approval  
+**Recent Completion:** Phase B Copilot System (see PHASE_B_COPILOT_LOCK.md)
 
 ---
 
