@@ -7,10 +7,14 @@ import { useToast } from "@/hooks/use-toast";
 import { FEATURES } from "@/featureFlags";
 import { SpotlightOverlay, SpotlightStep } from "./SpotlightOverlay";
 import { convertToSpotlightStep } from "./WalkthroughEngine";
+import { CopilotInputBar } from "./CopilotInputBar";
+import { processUserQuery, isLikelyMisheard } from "./query/QueryProcessor";
+import { useLocation } from "wouter";
 
 export const CopilotSheet: React.FC = () => {
-  const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse } = useCopilot();
+  const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse, needsRetry, setNeedsRetry } = useCopilot();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
   // =========================================
   // AUDIO (ElevenLabs) - with lifecycle management
@@ -138,19 +142,34 @@ export const CopilotSheet: React.FC = () => {
 
           const json = await res.json();
           const transcript = json.transcript?.trim();
+          const confidence = json.confidence;
 
-          // Guard against empty transcripts
-          if (!transcript) {
-            toast({
-              title: "No speech detected",
-              description: "Please try again and speak clearly.",
-              variant: "destructive",
+          // Guard against empty or mis-heard transcripts
+          if (!transcript || isLikelyMisheard(transcript, confidence)) {
+            setNeedsRetry(true);
+            setLastResponse({
+              title: "Didn't catch that",
+              description: "I may have misheard you. Try saying it again or type it below.",
+              spokenText: "I didn't catch that. Try saying it again or type your command below.",
             });
             return;
           }
 
-          // Execute voice command with valid transcript
-          runAction({ type: "custom", payload: { voiceQuery: transcript } });
+          // Process voice command using unified QueryProcessor
+          setMode("thinking");
+          const result = await processUserQuery(transcript);
+          
+          if (result.success && result.route) {
+            navigate(result.route);
+          }
+          
+          if (result.response) {
+            setLastResponse(result.response);
+          }
+          
+          if (result.needsRetry) {
+            setNeedsRetry(true);
+          }
         } catch (err: any) {
           console.error("Voice processing error:", err);
           toast({
@@ -193,6 +212,40 @@ export const CopilotSheet: React.FC = () => {
       }
     };
   }, []);
+
+  // =========================================
+  // TEXT COMMAND HANDLER - Dual Input System
+  // =========================================
+  const handleTextCommand = async (query: string) => {
+    try {
+      setMode("thinking");
+      setNeedsRetry(false); // Clear voice fallback banner
+      
+      const result = await processUserQuery(query);
+      
+      if (result.success && result.route) {
+        // Navigate to the route
+        navigate(result.route);
+      }
+      
+      if (result.response) {
+        setLastResponse(result.response);
+      }
+      
+      if (result.needsRetry) {
+        setNeedsRetry(true);
+      }
+    } catch (err: any) {
+      console.error("Text command error:", err);
+      toast({
+        title: "Command failed",
+        description: err.message || "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setMode("idle");
+    }
+  };
 
   // =========================================
   // WALKTHROUGH STATE
@@ -436,6 +489,30 @@ export const CopilotSheet: React.FC = () => {
                     )}
                   </div>
                 )}
+
+                {/* ============================
+                    VOICE FALLBACK BANNER
+                ============================= */}
+                {needsRetry && (
+                  <div className="mt-2 px-4">
+                    <div className="rounded-xl bg-orange-500/10 border border-orange-400/30 px-3 py-2">
+                      <p className="text-xs text-orange-300/90">
+                        💡 Didn't catch that? Type your command below or try speaking again.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* ============================
+                    TEXT COMMAND INPUT
+                ============================= */}
+                <div className="mt-3 px-4 pb-4">
+                  <CopilotInputBar
+                    onSubmit={handleTextCommand}
+                    placeholder="Type a command…"
+                    autoFocus={needsRetry}
+                  />
+                </div>
               </div>
             </div>
           </motion.div>

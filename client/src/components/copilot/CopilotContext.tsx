@@ -62,6 +62,7 @@ interface CopilotState {
   lastQuery: string;
   lastResponse: KnowledgeResponse | null;
   targetRegistry: Set<string>;
+  needsRetry: boolean; // Voice fallback flag - shows text input when voice fails
 }
 
 interface CopilotContextValue extends CopilotState {
@@ -76,6 +77,7 @@ interface CopilotContextValue extends CopilotState {
   setLastResponse: (response: KnowledgeResponse | null) => void;
   registerTarget: (id: string) => void;
   unregisterTarget: (id: string) => void;
+  setNeedsRetry: (needs: boolean) => void; // Set voice fallback flag
 }
 
 const CopilotContext = createContext<CopilotContextValue | null>(null);
@@ -107,6 +109,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
   const [lastQuery, setLastQuery] = useState("");
   const [lastResponse, setLastResponse] = useState<KnowledgeResponse | null>(null);
   const [targetRegistry, setTargetRegistry] = useState<Set<string>>(new Set());
+  const [needsRetry, setNeedsRetry] = useState(false);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -170,6 +173,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       lastQuery,
       lastResponse,
       targetRegistry,
+      needsRetry,
       open,
       close,
       toggle,
@@ -181,6 +185,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       setLastResponse,
       registerTarget,
       unregisterTarget,
+      setNeedsRetry,
     }),
     [
       isOpen,
@@ -190,6 +195,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       lastQuery,
       lastResponse,
       targetRegistry,
+      needsRetry,
       open,
       close,
       toggle,
