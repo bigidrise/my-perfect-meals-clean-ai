@@ -112,6 +112,11 @@ import WinePairing from "@/pages/wine-pairing";
 // Meal Finder
 import MealFinder from "@/pages/MealFinder";
 
+// Socializing Hub pages
+import SocializingHub from "@/pages/SocializingHub";
+import SocialFindMeals from "@/pages/SocialFindMeals";
+import SocialRestaurantGuide from "@/pages/SocialRestaurantGuide";
+
 // Founders page
 import FoundersPage from "@/pages/Founders";
 
@@ -224,6 +229,10 @@ export default function Router() {
         <Route path="/ab-testing-demo" component={ABTestingDemo} />
         {/* DELETED: HolidayFeastPlannerPage, MealFinderPage, BreakfastMealsHub, LunchMealsHub, DinnerMealsHub, SnacksMealsHub, CulturalCuisinesPage, VegetableFiberInfo, PotluckPlanner routes */}
         <Route path="/restaurant-guide" component={RestaurantGuidePage} />
+        {/* Socializing Hub Routes */}
+        <Route path="/social-hub" component={SocializingHub} />
+        <Route path="/social-hub/find" component={SocialFindMeals} />
+        <Route path="/social-hub/restaurant-guide" component={SocialRestaurantGuide} />
         {/* DELETED: SmartWeekBuilder, AdultBeverageHubPage routes */}
         <Route
           path="/macro-counter"

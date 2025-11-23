@@ -75,7 +75,7 @@ interface MealResult {
   }>;
 }
 
-export default function SocialFindMeals() {
+export default function MealFinder() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [, setLocation] = useLocation();
@@ -229,7 +229,7 @@ export default function SocialFindMeals() {
         <div className="max-w-4xl mx-auto px-4 sm:px-0">
           <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6 mb-2 mt-12">
             <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
-              Find Meals Near Me
+              Meal Finder
             </h1>
             <p className="text-sm sm:text-lg text-white/80">
               Find meals you're craving at nearby restaurants
