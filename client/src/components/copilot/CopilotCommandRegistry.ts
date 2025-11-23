@@ -50,6 +50,35 @@ export function setActiveFeature(feature: ActiveFeature) {
   lastActiveFeature = feature;
 }
 
+// Copilot Introduction - plays once when user chooses "My Perfect Copilot"
+export function startCopilotIntro(force = false) {
+  const INTRO_FLAG = "copilot-intro-seen";
+  
+  // Check if intro has already been played (unless forced)
+  if (!force && localStorage.getItem(INTRO_FLAG) === "true") {
+    console.log("ℹ️ Copilot intro already seen, skipping");
+    return;
+  }
+
+  // Intro script (voice + text)
+  const introScript = "Hey Coach, welcome! I'm your Perfect Copilot. Anytime you need help, tap my button and tell me what you want to do. Try saying things like 'Fridge Rescue,' 'Plan my week,' or 'Show me macros.' I'll take you straight there and walk you through every step. Ready when you are.";
+
+  // Send intro response through existing pipeline
+  if (responseCallback) {
+    responseCallback({
+      title: "Welcome to Your Perfect Copilot! 🎤",
+      description: "I'm here to help you navigate the app and get things done fast.",
+      spokenText: introScript,
+    });
+  }
+
+  // Mark intro as seen (save flag after dispatching so TTS can play)
+  setTimeout(() => {
+    localStorage.setItem(INTRO_FLAG, "true");
+    console.log("✅ Copilot intro flag saved");
+  }, 500);
+}
+
 const Commands: Record<string, CommandHandler> = {
   "macros.boostProteinNextMeal": async () => {
     if (!navigationCallback) {

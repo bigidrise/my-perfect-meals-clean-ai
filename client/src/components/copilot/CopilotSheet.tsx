@@ -9,6 +9,7 @@ import { SpotlightOverlay, SpotlightStep } from "./SpotlightOverlay";
 import { convertToSpotlightStep } from "./WalkthroughEngine";
 import { CopilotInputBar } from "./CopilotInputBar";
 import { isLikelyMisheard } from "./query/QueryProcessor";
+import { startCopilotIntro } from "./CopilotCommandRegistry";
 
 export const CopilotSheet: React.FC = () => {
   const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse, needsRetry, setNeedsRetry } = useCopilot();
@@ -96,6 +97,25 @@ export const CopilotSheet: React.FC = () => {
       setNeedsRetry(false);
     }
   }, [isOpen, audioUrl, setNeedsRetry]);
+
+  // =========================================
+  // COPILOT INTRO - Trigger when user chooses "My Perfect Copilot"
+  // =========================================
+  useEffect(() => {
+    if (isOpen) {
+      const triggerFlag = localStorage.getItem("trigger-copilot-intro");
+      
+      if (triggerFlag === "true") {
+        // Remove trigger flag
+        localStorage.removeItem("trigger-copilot-intro");
+        
+        // Play intro (force=true to ignore "already seen" flag)
+        setTimeout(() => {
+          startCopilotIntro(true);
+        }, 500); // Small delay to ensure sheet is fully open
+      }
+    }
+  }, [isOpen]);
 
   // =========================================
   // VOICE INPUT (Whisper) - with error handling

@@ -6,6 +6,12 @@ export default function WelcomeGate({ onComplete }: { onComplete: () => void }) 
 
   const chooseMode = (mode: "guided" | "self") => {
     localStorage.setItem("coachMode", mode);
+    
+    // If user chose "My Perfect Copilot", flag for intro
+    if (mode === "guided") {
+      localStorage.setItem("trigger-copilot-intro", "true");
+    }
+    
     setFade(true);
     setTimeout(onComplete, 1000);
   };

@@ -24,6 +24,7 @@ import { HubControlIcon } from "@/components/icons/HubControlIcon";
 import OpenAI from "openai"; // Import OpenAI
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 interface FeatureCard {
   title: string;
@@ -47,6 +48,7 @@ export default function DashboardNew() {
   const { toast } = useToast();
   const [showScanner, setShowScanner] = useState(false);
   const [isGuidedMode, setIsGuidedMode] = useState(false);
+  const { open: openCopilot } = useCopilot();
 
   // Initialize OpenAI client
   const openai = new OpenAI({
@@ -66,6 +68,21 @@ export default function DashboardNew() {
     const coachMode = localStorage.getItem("coachMode");
     setIsGuidedMode(coachMode === "guided");
   }, []);
+
+  // =========================================
+  // AUTO-OPEN COPILOT INTRO - Guided Mode Only
+  // =========================================
+  useEffect(() => {
+    const triggerFlag = localStorage.getItem("trigger-copilot-intro");
+    
+    if (triggerFlag === "true") {
+      // Open Copilot sheet - DO NOT remove flag here
+      // CopilotSheet will handle flag removal and intro playback
+      setTimeout(() => {
+        openCopilot(); // Open the Copilot sheet
+      }, 1000); // 1 second delay to ensure dashboard is fully rendered
+    }
+  }, [openCopilot]);
 
   // Get user profile for greeting
   const { data: fullUserData } = useQuery<{ name?: string; email?: string }>({
