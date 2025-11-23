@@ -402,4 +402,95 @@ export const AppKnowledge: Record<string, FeatureKnowledge> = {
       "glp1.goToMenuBuilder",
     ],
   },
+
+  // ============================
+  // 🔥 BEACH BODY BUILDER
+  // ============================
+  "beach-body": {
+    id: "beach-body",
+    title: "Beach Body Builder",
+    description:
+      "Build competition-ready meals with precise macro control. Every meal follows strict guardrails: 35g protein minimum, 25g starchy carbs max, 150g fibrous carbs, optimized for lean muscle and fat loss.",
+    howTo: [
+      "Navigate to Beach Body Meal Board from the Dashboard.",
+      "Each meal automatically enforces Beach Body guardrails.",
+      "Protein minimum: 35g per meal for muscle preservation.",
+      "Starchy carbs capped at 25g per meal to minimize water retention.",
+      "Fibrous carbs target 150g per meal for fullness and digestive health.",
+      "Use AI to generate meals that meet all three guardrails automatically.",
+    ],
+    tips: [
+      "This mode is designed for physique competitions and summer shreds.",
+      "High fibrous carbs keep you full despite lower starchy carbs.",
+      "Stick to the guardrails for best results — the AI handles compliance.",
+    ],
+    relatedCommands: ["beach.generateMeal", "beach.sendToMacros"],
+  },
+
+  // ============================
+  // 🔥 ALCOHOL HUB
+  // ============================
+  "alcohol-hub": {
+    id: "alcohol-hub",
+    title: "Alcohol Hub",
+    description:
+      "Navigate social drinking while maintaining your nutrition goals. Get macro-friendly drink recommendations, food pairings, and harm reduction strategies.",
+    howTo: [
+      "Browse Smart Sips for low-calorie cocktail alternatives.",
+      "Use Beer Pairing or Wine Pairing for meal compatibility.",
+      "Log drinks in the Alcohol Log to track consumption.",
+      "Use the Weaning Off Tool if you want to reduce drinking gradually.",
+    ],
+    tips: [
+      "Smart Sips minimize empty calories while keeping social experiences intact.",
+      "Track your drinks to understand their macro impact.",
+      "Pair drinks with high-protein meals to reduce hunger.",
+    ],
+    relatedCommands: ["alcohol.logDrink", "alcohol.getPairing"],
+  },
+
+  // ============================
+  // 🔥 RESTAURANT GUIDE
+  // ============================
+  "restaurant-guide": {
+    id: "restaurant-guide",
+    title: "Restaurant Guide",
+    description:
+      "Learn how to order macro-friendly meals at popular restaurant chains. Get specific menu recommendations and macro-safe modifications.",
+    howTo: [
+      "Browse restaurant chains from the Social Hub.",
+      "View recommended menu items with estimated macros.",
+      "Learn modification strategies like 'no sauce' or 'grilled instead of fried'.",
+      "Use the guide before dining out to plan your order.",
+    ],
+    tips: [
+      "Ask for dressings and sauces on the side.",
+      "Substitute fries for steamed vegetables when possible.",
+      "Most chains offer grilled protein options.",
+    ],
+    relatedCommands: [],
+  },
+
+  // ============================
+  // 🔥 FIND MEALS NEAR ME
+  // ============================
+  "find-meals": {
+    id: "find-meals",
+    title: "Find Meals Near Me",
+    description:
+      "Discover macro-friendly restaurant options in your area using location-based search. Filter by cuisine type and dietary needs.",
+    howTo: [
+      "Open Find Meals from the Social Hub.",
+      "Allow location access when prompted.",
+      "Browse nearby restaurants with macro-friendly options.",
+      "Filter by cuisine type or dietary restrictions.",
+      "Tap a restaurant to see menu recommendations.",
+    ],
+    tips: [
+      "Use this feature when traveling to find safe dining options.",
+      "Save favorite locations for quick access.",
+      "Combine with Restaurant Guide for ordering strategies.",
+    ],
+    relatedCommands: [],
+  },
 };
