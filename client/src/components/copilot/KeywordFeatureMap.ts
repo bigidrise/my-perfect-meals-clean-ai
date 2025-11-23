@@ -69,9 +69,9 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["shopping", "grocery", "groceries", "list"],
   },
   {
-    path: "/macro-calculator",
+    path: "/macro-counter",
     walkthroughId: "macro-calculator",
-    keywords: ["calculator", "macros", "calculate"],
+    keywords: ["calculator", "macros", "calculate", "counter"],
   },
   {
     path: "/daily-health-journal",
