@@ -1,9 +1,8 @@
 import { useLocation } from "wouter";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Baby, Users } from "lucide-react";
+import { Baby, Users } from "lucide-react";
 
 interface KidsFeature {
   title: string;
@@ -16,7 +15,6 @@ interface KidsFeature {
 
 export default function HealthyKidsMeals() {
   const [, setLocation] = useLocation();
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     document.title = "Healthy Kids Meals | My Perfect Meals";
@@ -122,38 +120,6 @@ export default function HealthyKidsMeals() {
           </div>
         </div>
       </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">How to Use Healthy Kids Meals</h2>
-            <div className="space-y-3 text-white/90 text-sm mb-6">
-              <p>
-                <strong>1. Choose Your Category:</strong> Select between Kids Meals (ages 4-12) or Toddler Meals (ages 1-3).
-              </p>
-              <p>
-                <strong>2. Browse Recipes:</strong> Each category has nutritious, kid-friendly meals designed for different age groups.
-              </p>
-              <p>
-                <strong>3. Scale Servings:</strong> Adjust recipes to feed the right number of kids.
-              </p>
-              <p>
-                <strong>4. Add to Shopping:</strong> Ingredients automatically scale and can be added to your shopping list.
-              </p>
-              <p className="text-lime-400 font-medium mt-4">
-                💡 Tip: All meals are designed with balanced nutrition and fun presentations kids will love!
-              </p>
-            </div>
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-            >
-              Got It!
-            </button>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 }

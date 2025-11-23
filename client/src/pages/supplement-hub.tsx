@@ -95,7 +95,6 @@ const HeroImage: React.FC<{ url: string; alt?: string }> = ({
 export default function SupplementHub() {
   const [, setLocation] = useLocation();
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -297,59 +296,6 @@ export default function SupplementHub() {
             </p>
           </CardShell>
         </section>
-
-        {/* Info Modal */}
-        <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
-          <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-                <Info className="h-6 w-6 text-emerald-400" />
-                How to Use Supplement Hub
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 text-white/90">
-              <p>
-                Browse our curated supplement partners offering clinician-grade
-                nutraceuticals and sports nutrition products.
-              </p>
-              <div>
-                <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
-                <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-                  <li>
-                    Review our official partner (Nutritional Frontiers) for
-                    clinician-grade supplements
-                  </li>
-                  <li>
-                    Use the member access code (31878) to register as a patient
-                  </li>
-                  <li>
-                    Browse products with therapeutic dosing and transparent
-                    labels
-                  </li>
-                  <li>
-                    Check out the "Coming Soon" section for upcoming sports
-                    nutrition partners
-                  </li>
-                  <li>
-                    All products are 3rd-party tested with cGMP/NSF
-                    manufacturing
-                  </li>
-                </ul>
-              </div>
-              <p className="text-emerald-400 font-medium">
-                💡 Tip: We feature two distinct lanes - Clinician-grade
-                Nutraceuticals for functional wellness and Sports Nutrition for
-                performance goals.
-              </p>
-            </div>
-            <Button
-              onClick={() => setShowInfoModal(false)}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
-            >
-              Got It!
-            </Button>
-          </DialogContent>
-        </Dialog>
       </main>
     </div>
   );

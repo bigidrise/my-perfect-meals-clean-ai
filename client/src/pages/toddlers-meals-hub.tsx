@@ -83,24 +83,13 @@ export default function ToddlersMealsHub() {
   const [rounding, setRounding] = useState<RoundingMode>("tenth");
   const [filterText, setFilterText] = useState("");
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
-  // Auto-open instructions on first visit in coach mode
+  // Auto-mark info as seen since Copilot provides guidance now
   useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenToddlersMealsInfo = localStorage.getItem("hasSeenToddlersMealsInfo");
-
-    if (coachMode === "guided" && !hasSeenToddlersMealsInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
+    if (!localStorage.getItem("hasSeenToddlersMealsInfo")) {
+      localStorage.setItem("hasSeenToddlersMealsInfo", "true");
     }
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenToddlersMealsInfo", "true");
-  };
 
   const meals = useMemo(() => {
     const q = filterText.trim().toLowerCase();
@@ -370,35 +359,6 @@ export default function ToddlersMealsHub() {
             sourceSlug="toddler-meals"
             hideCopyButton={true}
           />
-        )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-              <h2 className="text-xl font-bold text-white mb-4">How to Use Toddlers Meals Hub</h2>
-              <div className="space-y-3 text-white/90 text-sm mb-6">
-                <p>Soft textures, low-salt, veggie-smart ideas for toddlers ages 1-3.</p>
-                <p><strong>Steps:</strong></p>
-                <ul className="list-disc list-inside space-y-1 text-white/80">
-                  <li>Click any meal card to view details</li>
-                  <li>Choose servings (1-4 toddlers)</li>
-                  <li>Ingredients scale automatically</li>
-                  <li>Add to shopping list at bottom</li>
-                  <li>All meals designed for developing palates</li>
-                </ul>
-                <p className="text-lime-400 font-medium mt-4">
-                  💡 Tip: Toddler meals focus on soft textures and low-sodium options perfect for growing kids!
-                </p>
-              </div>
-              <button
-                onClick={handleInfoModalClose}
-                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-              >
-                Got It!
-              </button>
-            </div>
-          </div>
         )}
       </div>
     </div>

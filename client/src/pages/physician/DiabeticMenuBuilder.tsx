@@ -288,7 +288,6 @@ export default function DiabeticMenuBuilder() {
   }, [board, premadePickerSlot, planningMode, activeDayISO, saveBoard, weekStartISO, toast]);
 
   // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<
     "breakfast" | "lunch" | "dinner" | "snacks" | "complete"
@@ -391,6 +390,10 @@ export default function DiabeticMenuBuilder() {
     const infoSeen = localStorage.getItem("diabetic-menu-builder-info-seen");
     if (infoSeen === "true") {
       setHasSeenInfo(true);
+    } else {
+      // Auto-mark info as seen since Copilot provides guidance now
+      setHasSeenInfo(true);
+      localStorage.setItem("diabetic-menu-builder-info-seen", "true");
     }
 
     const dailyTotalsInfoSeen = localStorage.getItem(
@@ -411,13 +414,6 @@ export default function DiabeticMenuBuilder() {
       setTourStep(savedStep);
     }
   }, []);
-
-  // Handle info modal close - start the guided tour
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    setHasSeenInfo(true);
-    localStorage.setItem("diabetic-menu-builder-info-seen", "true");
-  };
 
   // Update tour step when meals are created
   useEffect(() => {
@@ -2125,41 +2121,6 @@ export default function DiabeticMenuBuilder() {
             />
           );
         })()}
-
-      {/* Info Modal - How to Use */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">
-              How to Use Diabetic Menu Builder
-            </h3>
-
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>Create your day or week by starting with breakfast.</p>
-              <p className="text-white/80">
-                Click the "Create with AI" button on each meal section to build
-                your plan. You can create one day and duplicate it across the
-                week, or create each day individually.
-              </p>
-              <p className="text-white/80">
-                If you change your mind about a meal, just hit the{" "}
-                <span className="font-semibold text-white">trash can</span> to
-                delete it and create a new one.
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowInfoModal(false);
-                handleInfoModalClose();
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Daily Totals Info Modal - Next Steps After First Meal */}
       <Dialog
