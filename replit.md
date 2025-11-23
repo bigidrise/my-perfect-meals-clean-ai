@@ -83,6 +83,7 @@ Following professional software company best practices (Facebook/Twitter model):
 - **AI Meal Generation**: AI-powered personalized meal creation via a Unified Meal Engine Service.
 - **Medical Personalization System**: Ensures safety with a Profile Resolution Service and Medical Badge Computation.
 - **Concierge Systems**: Intelligent notification (Concierge Reminder Engine) and full voice command (Voice Concierge System).
+- **Dual Input Copilot System**: Voice AND text command inputs both route through Phase B pipeline (CopilotCommandRegistry) with voice fallback banner ("Try typing instead") when Whisper mishears, auto-focus text input for accessibility, and unified black glass styling. Preserves all Phase B logic: Spotlight walkthroughs, hub-first routing, NL engine, suggestion telemetry.
 - **Production-Ready ChatGPT System**: Advanced deterministic meal generation with Zod validation, allergen detection, and macro estimation.
 - **Universal Dietary Override System**: Centralized component prioritizing Medical > Preference > Profile.
 - **Access Control**: Feature access based on subscription tiers.
