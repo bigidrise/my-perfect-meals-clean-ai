@@ -24,6 +24,7 @@ interface AIMealCreatorModalProps {
   mealSlot: "breakfast" | "lunch" | "dinner" | "snacks";
   showMacroTargeting?: boolean;
   dietType?: "weekly" | "diabetic";
+  beachBodyMode?: boolean;
 }
 
 export default function AIMealCreatorModal({
@@ -33,6 +34,7 @@ export default function AIMealCreatorModal({
   mealSlot,
   showMacroTargeting = false,
   dietType = "weekly",
+  beachBodyMode = false,
 }: AIMealCreatorModalProps) {
   const ACTIVE_SNACK_CATEGORIES = (dietType === "diabetic" && mealSlot === "snacks") 
     ? DIABETIC_SNACK_CATEGORIES 
@@ -199,8 +201,16 @@ export default function AIMealCreatorModal({
         return style ? `${style} ${ing}` : ing;
       });
 
-      // Get custom macro targets if enabled
-      const customMacroTargets = macroTargetingState.serializeForRequest();
+      // Beach Body Mode: Fixed guardrails for lean-out meals
+      // 35g protein (macronutrient) | 25g starchy carbs (macronutrient) | 150g fibrous carbs (macronutrient)
+      const beachBodyGuardrails = beachBodyMode ? {
+        protein_g: 35,
+        starchy_carbs_g: 25,
+        fibrous_carbs_g: 150
+      } : null;
+
+      // Get custom macro targets if enabled (ignored if Beach Body mode)
+      const customMacroTargets = beachBodyMode ? beachBodyGuardrails : macroTargetingState.serializeForRequest();
 
       const response = await fetch("/api/meals/fridge-rescue", {
         method: "POST",
@@ -318,9 +328,22 @@ export default function AIMealCreatorModal({
           </p>
         </div>
 
-        {/* Macro Targeting Controls - Trainer Features Only */}
-        {showMacroTargeting && (
+        {/* Macro Targeting Controls - Trainer Features Only (hidden in Beach Body mode) */}
+        {showMacroTargeting && !beachBodyMode && (
           <MacroTargetingControls state={macroTargetingState} />
+        )}
+        
+        {/* Beach Body Mode - Fixed Guardrails Message */}
+        {beachBodyMode && (
+          <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 border border-pink-500/30 rounded-xl p-3 mb-4">
+            <p className="text-white/90 text-sm font-medium mb-1">🏖️ Beach Body Lean-Out Mode</p>
+            <p className="text-white/70 text-xs">
+              Every meal automatically targets: <span className="text-pink-300 font-semibold">35g protein</span>, <span className="text-purple-300 font-semibold">25g starchy carbs</span>, <span className="text-emerald-300 font-semibold">150g fibrous carbs</span>
+            </p>
+            <p className="text-white/60 text-xs mt-1">
+              Perfect for event prep: weddings, summer, photoshoots - high protein, low sugar, high fiber.
+            </p>
+          </div>
         )}
 
         {/* Category Tabs - Purple Style (Matching MealPremadePicker) */}

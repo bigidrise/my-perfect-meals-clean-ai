@@ -1453,7 +1453,8 @@ export default function BeachBodyMealBoard() {
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
-        showMacroTargeting={true}
+        showMacroTargeting={false}
+        beachBodyMode={true}
       />
 
       <QuickAddMacrosModal
