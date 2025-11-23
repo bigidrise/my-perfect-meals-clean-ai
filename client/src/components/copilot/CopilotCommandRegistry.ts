@@ -6,6 +6,9 @@ import {
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
+import { FEATURES } from "@/featureFlags";
+import { findFeatureFromKeywords } from "./KeywordFeatureMap";
+import { waitForNavigationReady } from "./WalkthroughEngine";
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -1523,24 +1526,60 @@ async function handleVoiceQuery(transcript: string) {
   }
 
   // ===================================
-  // FUZZY KEYWORD FALLBACK
+  // FUZZY KEYWORD FALLBACK (with Spotlight Walkthrough support)
   // ===================================
-  const featureMatch = findFeatureByKeyword(transcript);
+  const legacyFeatureMatch = findFeatureByKeyword(transcript);
+  const spotlightFeatureMatch = FEATURES.copilotSpotlight ? findFeatureFromKeywords(transcript) : null;
+
+  // Prioritize Spotlight system if enabled
+  const featureMatch = spotlightFeatureMatch || legacyFeatureMatch;
 
   if (featureMatch) {
-    // Explain the feature
-    const knowledge = await explainFeature(featureMatch.featureId);
-    if (responseCallback) {
-      responseCallback(knowledge);
+    // If Spotlight is enabled and we have a walkthrough, start full spotlight experience
+    if (FEATURES.copilotSpotlight && spotlightFeatureMatch) {
+      console.log(`✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`);
+      
+      // Navigate to feature page
+      if (navigationCallback) {
+        navigationCallback(spotlightFeatureMatch.path);
+        
+        // Wait for navigation to complete, then start walkthrough
+        try {
+          await waitForNavigationReady(spotlightFeatureMatch.path);
+          
+          // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
+          const walkthroughResponse = startWalkthrough(spotlightFeatureMatch.walkthroughId);
+          if (responseCallback) {
+            responseCallback(walkthroughResponse);
+          }
+          
+        } catch (err) {
+          console.warn("Navigation timeout, showing knowledge instead");
+          // Fallback to knowledge explanation
+          const knowledge = await explainFeature(spotlightFeatureMatch.walkthroughId);
+          if (responseCallback) {
+            responseCallback(knowledge);
+          }
+        }
+      }
+      
+      return;
     }
-    
-    // Navigate to the feature
-    if (navigationCallback) {
-      console.log(`🧭 Auto-navigating to: ${featureMatch.route}`);
-      navigationCallback(featureMatch.route);
+
+    // Legacy behavior: Explain + Navigate (no walkthrough)
+    if (legacyFeatureMatch) {
+      const knowledge = await explainFeature(legacyFeatureMatch.featureId);
+      if (responseCallback) {
+        responseCallback(knowledge);
+      }
+      
+      if (navigationCallback) {
+        console.log(`🧭 Auto-navigating to: ${legacyFeatureMatch.route}`);
+        navigationCallback(legacyFeatureMatch.route);
+      }
+      
+      return;
     }
-    
-    return;
   }
 
   // ===================================

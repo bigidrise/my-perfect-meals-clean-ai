@@ -3,6 +3,11 @@
 //  Phase Control System (v1 Core Build)
 // ===========================================================
 
+// Runtime feature flags
+export const FEATURES = {
+  copilotSpotlight: import.meta.env.MODE === 'development', // Spotlight walkthrough system
+};
+
 export const LAUNCH_PHASES = {
   PHASE_1_CORE: [
     "dashboard",
