@@ -153,30 +153,31 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
         )}
 
         {/* Instruction card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
-          style={{ maxWidth: "90%", width: "400px" }}
-        >
-          <div className="bg-black/90 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-2xl">
-            <p className="text-white text-sm leading-relaxed mb-3">
-              {currentStep.instruction}
-            </p>
+        <div className="fixed inset-0 z-[10000] pointer-events-none flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="pointer-events-auto w-full max-w-md"
+          >
+            <div className="bg-black/90 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-2xl">
+              <p className="text-white text-sm leading-relaxed mb-3">
+                {currentStep.instruction}
+              </p>
 
-            {showManualAdvance && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onClick={onAdvance}
-                className="w-full py-2 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium"
-              >
-                Next →
-              </motion.button>
-            )}
-          </div>
-        </motion.div>
+              {showManualAdvance && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={onAdvance}
+                  className="w-full py-2 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium"
+                >
+                  Next →
+                </motion.button>
+              )}
+            </div>
+          </motion.div>
+        </div>
 
         <style>{`
           @keyframes pulse {
