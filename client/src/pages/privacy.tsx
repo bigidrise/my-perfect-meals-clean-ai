@@ -28,7 +28,7 @@ export default function PrivacySecurity() {
             <span className="text-xs font-medium">Back</span>
           </Button>
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
-            <Shield className="h-5 w-5 text-lime-400" />
+            <Shield className="h-5 w-5" />
             Privacy & Security
           </h1>
         </div>

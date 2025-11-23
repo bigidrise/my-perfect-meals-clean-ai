@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { useLocation } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, ArrowLeft, ChevronDown, ChevronUp, CreditCard } from "lucide-react";
+import { Check, ArrowLeft, CreditCard } from "lucide-react";
 import AffiliateOnPricing from "@/components/AffiliateOnPricing";
 import { PLAN_SKUS, getPlansByGroup } from "@/data/planSkus";
 import { startCheckout } from "@/lib/checkout";
@@ -16,7 +15,6 @@ export default function PricingPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
-  const [headerOpen, setHeaderOpen] = useState(true);
 
   const consumerPlans = getPlansByGroup("consumer");
   const familyPlans = getPlansByGroup("family");
@@ -154,53 +152,11 @@ export default function PricingPage() {
 
       {/* Main Content */}
       <div
-        className="max-w-6xl mx-auto px-4 text-white"
+        className="max-w-6xl mx-auto px-4 text-white space-y-8"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-      <div className="container max-w-6xl mx-auto px-4">
-        {/* Collapsible Header (Black Glass) */}
-        <div className="text-center mb-12 mt-8">
-          <div
-            onClick={() => setHeaderOpen(!headerOpen)}
-            className="inline-block rounded-2xl px-6 py-4 bg-black/30 backdrop-blur-lg border border-white/15 shadow-xl cursor-pointer hover:bg-black/40 transition-all duration-200 mt-8"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
-                <h1 className="text-2xl md:text-2xl font-bold mb-2">
-                  Subscriptions
-                </h1>
-                <p className="text-sm md:text-sm text-white/90">
-                  Pick your plan
-                </p>
-              </div>
-              <div className="flex-shrink-0">
-                {headerOpen ? (
-                  <ChevronUp className="h-6 w-6 text-white" />
-                ) : (
-                  <ChevronDown className="h-6 w-6 text-white" />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Collapsible Content */}
-        <AnimatePresence initial={false}>
-          {headerOpen && (
-            <motion.div
-              key="pricing-content"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div>
                 {/* Consumer Plans Grid */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-6 text-center">
-                    Individual Plans
-                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {consumerPlans.map((plan) => {
                       const features =
@@ -351,11 +307,6 @@ export default function PricingPage() {
                 <div className="mb-12">
                   <AffiliateOnPricing />
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
       </div>
     </motion.div>
   );
