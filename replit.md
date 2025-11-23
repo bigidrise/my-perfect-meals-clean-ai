@@ -1,78 +1,5 @@
 # Overview
-My Perfect Meals is an AI-powered nutrition application designed to provide personalized meal plans, comprehensive nutrition tracking, and advanced food preference management. Its core purpose is to simplify healthy eating through intelligent automation, focusing on a 4-step AI meal creator and automatic weekly meal plan generation. The project's vision is to make healthy eating accessible, enjoyable, and sustainable through personalized nutrition.
-
-# Target Audience: The Foodie Mindset
-
-**THIS APP IS BUILT FOR FOODIES - NEVER FORGET THIS.**
-
-## Who Are Foodies?
-- They think about food ALL DAY LONG: thinking about lunch while eating breakfast, thinking about snacks while eating lunch, thinking about dinner while eating snacks
-- They wake up thinking about food, go to bed thinking about food, dream about food while sleeping
-- They think about FLAVORS constantly - food is their entertainment, their joy, their fun
-- They get GIDDY when food arrives at their table - they literally light up with excitement
-- They order 3-4 different dishes at restaurants just to experience different flavors
-- They view eating as FUN, as an experience, not just fuel
-
-## The Critical Misconception
-**Foodies believe healthy eating is boring, nasty, and means giving up flavor.**
-- They don't know you can have teriyaki chicken and still be healthy
-- They don't know you can have amazing flavors without eating garbage
-- When shown they can eat flavorful food AND lose weight, they're SHOCKED
-- They eat shitty food NOT because they want to be unhealthy, but because they think it's the only way to get flavor
-- They think "eating healthy = no fun"
-
-## Design Philosophy Impact
-**This is WHY we build features the way we do:**
-- 50+ cooking preparation options (teriyaki, BBQ, lemon pepper, etc.) - foodies want FLAVOR VARIETY
-- Apple-style browsing modals for cooking methods - foodies want to EXPLORE and get INSPIRED
-- High-quality food presentation over speed/efficiency - foodies want to SEE their options
-- No optimization for "quick meal planning" - foodies don't get fatigued, they get EXCITED
-- Focus on showing them they CAN have amazing flavors while being healthy
-- Never assume they want simple/boring - they want OPTIONS and VARIETY
-
-**The mission: Show foodies they can have their cake (teriyaki chicken, BBQ salmon, Greek salads) and eat it too (while losing weight).**
-
-# Core Product Philosophy
-
-**⭐ PERMANENT DOCTRINE - ALL FUTURE WORK MUST FOLLOW THIS ⭐**
-
-## 1. Built for FOODIES, not dieters
-Our users LOVE food. They think about food constantly. They get emotional about food. They're excited by flavor combinations, textures, and cooking styles. **We design for passion, not efficiency.**
-
-## 2. Healthy eating must feel exciting, indulgent, and flavorful
-Most people believe healthy food is boring. This app exists to destroy that belief. Every interaction must say: **"You can eat healthy AND it can taste amazing."** This is not a diet app. This is a pleasure app that happens to produce healthy outcomes.
-
-## 3. Flavor exploration is NOT friction — it IS the product
-We do NOT minimize cooking-style choices. We highlight them. Every popup, modal, and tile is an opportunity to spark excitement and dopamine. **Users do not get "modal fatigue." Users get bored when they don't see enough options.**
-
-## 4. The app must inspire, not instruct
-Users don't want to be told "what they can't have." They want to be shown "how delicious healthy food can be." All UI elements must feel like:
-- A chef's tasting menu
-- A concierge suggestion
-- A flavor guide
-- A personal food stylist
-- **Not a form.**
-
-## 5. The modal cooking-style selector is a centerpiece of the experience
-This is not a minor detail. It is the emotional moment where healthy food transforms into something craveable. Therefore:
-- The modal pops immediately
-- Tappable flavor tiles
-- No dropdowns
-- No buried UI
-- No delays
-- No batching
-**The moment they tap an ingredient is the moment the flavor imagination begins.**
-
-## 6. We optimize for emotional reward, not speed
-Speed is not the priority. Emotional engagement is. If it takes a user an extra 20–40 seconds to enjoy this process, that is GOOD UX — not bad UX. **Foodies savor the experience.**
-
-## 7. Apple App Store standards align with this philosophy
-Apple rewards: beautiful modals, rich micro-interactions, tactile choices, immediate clarity, elegance, delight. **The cooking-style modal is EXACTLY this.**
-
-## 8. Every future feature must ask one question:
-**"Does this make food more exciting, more flavorful, or more emotionally rewarding?"**
-- If the answer is no, we do not build it.
-- If the answer is yes, we enhance it.
+My Perfect Meals is an AI-powered nutrition application designed to provide personalized meal plans, comprehensive nutrition tracking, and advanced food preference management. Its core purpose is to simplify healthy eating through intelligent automation, focusing on a 4-step AI meal creator and automatic weekly meal plan generation. The project's vision is to make healthy eating accessible, enjoyable, and sustainable through personalized nutrition, specifically targeting "foodies" who prioritize flavor and experience over restrictive dieting. The application aims to demonstrate that healthy eating can be exciting, indulgent, and flavorful, inspiring users rather than instructing them.
 
 # User Preferences
 Preferred communication style: Simple, everyday language.
@@ -87,13 +14,42 @@ Feature protection priority: User explicitly demands locked features stay protec
 **MEAL GENERATION COMPLETE LOCKDOWN:** All meal generation features permanently locked per user command "lock this mother down... don't open it for nothing unless I open it".
 **FINAL APPLICATION LOCKDOWN:** Complete application lockdown implemented. All unnecessary files removed, debug code cleaned, production optimization complete. All systems locked down permanently with zero-tolerance reversion policy.
 **COMPREHENSIVE SECURITY LOCKDOWN:** Full system security implementation with comprehensive protection for all critical systems.
-**APPROVAL REQUIREMENT - MANDATORY:** Agent must ALWAYS ask for explicit approval before making ANY code changes, deletions, or additions. Present what will be changed and wait for "approved" or "yes" before proceeding. NO EXCEPTIONS. This includes:
+
+### **MANDATORY APPROVAL WORKFLOW:**
+Agent must ALWAYS ask for explicit approval before making ANY code changes, deletions, or additions. Present what will be changed and wait for "approved" or "yes" before proceeding. NO EXCEPTIONS. This includes:
 - Code edits
-- File creation/deletion
+- File creation/deletion  
 - Configuration changes
 - Database schema changes
 - Package installations
 **NEVER make changes first and explain later. ALWAYS explain first and wait for approval.**
+
+### **PROTECTED ZONES:**
+- **Production Features** - All current features locked (see LOCKDOWN.md for complete list)
+- **Quarantined Features** - `/client/src/pages/_quarantine/` (obsolete, do not activate)
+- **Future Features** - `/client/src/pages/_future/` (locked until launch)
+- **Active Development** - Co-Pilot system only (currently approved for work)
+
+### **CHANGE REQUEST PROCESS:**
+1. User identifies feature needing changes
+2. User explicitly states: "Unlock [FEATURE NAME] for changes"
+3. Agent confirms unlock and proceeds with modifications
+4. Agent completes work and requests re-lock
+5. User approves re-lock
+
+### **EMERGENCY FIXES:**
+If a locked feature has a critical bug:
+1. Agent identifies issue and reports to user
+2. Agent requests emergency unlock for that specific feature only
+3. User approves emergency unlock
+4. Agent fixes ONLY the reported issue
+5. Agent requests re-lock immediately
+
+### **DEPLOYMENT STRATEGY:**
+Following professional software company best practices (Facebook/Twitter model):
+- **Development (Current):** This Replit workspace - all changes happen here first
+- **Staging (Beta Testing):** Separate deployment for trainers/doctors/clients to test
+- **Production (January 2025):** Public App Store release
 
 # System Architecture
 
@@ -117,42 +73,29 @@ Feature protection priority: User explicitly demands locked features stay protec
 - **Provider**: Neon Database (serverless PostgreSQL).
 
 ## UI/UX Decisions
-- Adaptable dashboards (extended, compact, mobile-optimized).
-- "Black Glass Treatment Package" for unified aesthetic (semi-transparent black cards, gradient backgrounds, white text, rounded borders).
-- Professional avatar system with animated chef avatars and voice customization.
-- Consistent scroll-to-top behavior on dashboard button clicks.
-- Tailwind-based theme with branded color palette, custom fonts, rounded corners, and card shadows.
-- **CRITICAL UI PATTERN**: All detail pages MUST include "← All Menus" back navigation button in card header.
-- **DASHBOARD BUTTON CONSISTENCY**: All dashboard buttons follow centered alignment pattern (icon → title → subtitle).
-- **Hover Bridge Design**: Universal design pattern where dashboard card hover states preview interior page colors, creating seamless visual transition.
-- **App Animations**: Framer Motion fade-in animations across main user-facing pages for a smooth, polished "future app" aesthetic.
-- **Planner Hub**: Dedicated `/planner` hub page for meal planning features (Weekly Meal Board, Diabetic Hub, GLP-1 Hub) with consistent navigation hierarchy.
-- **Welcome Page**: Simple welcome page with logo, business name, value proposition, Sign In/Create Account buttons, and Forgot Password link.
+- "Black Glass Treatment Package" for a unified aesthetic.
+- Professional avatar system, consistent scroll-to-top, and Tailwind-based theming.
+- Critical UI patterns: "← All Menus" back navigation, centered dashboard buttons, and Hover Bridge design for seamless transitions.
+- Framer Motion animations for a polished user experience.
+- Dedicated `/planner` hub and a simple welcome page.
 
 ## Technical Implementations
-- **AI Meal Generation**: Utilizes AI (GPT-4, DALL-E 3) for personalized meal creation via a Unified Meal Engine Service.
-- **Medical Personalization System**: Enforces medical safety via a Profile Resolution Service and Medical Badge Computation, displaying color-coded medical badges.
-- **Universal Unit Conversion System**: Applies cooking-friendly measurements.
-- **Concierge Reminder Engine**: Intelligent notification system.
-- **Voice Concierge System**: Full voice command system with transcription, parsing, and speech synthesis.
-- **Emergency Onboarding Protection System**: Circuit breaker pattern, rate limiting, and manual save.
-- **Production-Ready ChatGPT System**: Advanced deterministic meal generation with Zod validation, allergen detection, macro estimation, and variety banking.
-- **Universal Dietary Override System**: Centralized component ensuring consistent Medical > Preference > Profile priority.
-- **Feature Access Control**: Implemented based on subscription tiers.
-- **Authentication System**: LocalStorage-based user accounts with email/password authentication and route protection.
-- **Medical Diets Hub Architecture**: Hospital-grade "Clinical Recovery & Protocols Hub" for short-term surgical/recovery protocols.
-- **Clinical Lifestyle Hub**: Dedicated hub for long-term therapeutic diets, integrated with shopping list, macro bridge, and builder plan systems.
-- **Stripe Checkout & Subscription System**: Comprehensive Stripe integration for subscription management.
-- **Game Audio System**: Browser-based audio system with background music and sound effects, persisted settings.
-- **Ingredients Tetris Game**: Skill-based game for macro target practice.
-- **Macro Match Game**: Match-3 puzzle game for macro type matching.
-- **PWA Home Screen Configuration**: Progressive Web App setup with manifest, icons, and shortcuts for native app experience.
-- **Railway Deployment Ready**: Configured for Railway Autoscale deployment with Docker, environment variables, and health checks.
-- **Tutorial Hub**: Video tutorial system with search functionality, modal video player, and categorized content.
-- **Wellness Hub**: Unified health navigation hub consolidating Men's Health and Women's Health sections.
-- **Permanent Meal Image Storage**: DALL-E images downloaded and stored permanently in Replit Object Storage, with smart caching and public serving.
-- **Meal Logging Restoration + Compound Cursor Pagination**: Meal logging APIs restored with production-ready compound cursor pagination (`timestamp,id`) for macroLogs, mealLogs, and foodLogs.
-- **Dual-Write Weight Tracking**: Implemented server-as-truth weight tracking system allowing both Macro Calculator and Biometrics Body Stats to save/fetch weight from the `biometric_sample` table with upsert-by-day.
+- **AI Meal Generation**: AI-powered personalized meal creation via a Unified Meal Engine Service.
+- **Medical Personalization System**: Ensures safety with a Profile Resolution Service and Medical Badge Computation.
+- **Concierge Systems**: Intelligent notification (Concierge Reminder Engine) and full voice command (Voice Concierge System).
+- **Production-Ready ChatGPT System**: Advanced deterministic meal generation with Zod validation, allergen detection, and macro estimation.
+- **Universal Dietary Override System**: Centralized component prioritizing Medical > Preference > Profile.
+- **Access Control**: Feature access based on subscription tiers.
+- **Authentication System**: LocalStorage-based email/password authentication with route protection.
+- **Specialized Hubs**: "Clinical Recovery & Protocols Hub" for short-term diets and "Clinical Lifestyle Hub" for long-term therapeutic diets.
+- **Stripe Integration**: Comprehensive checkout and subscription management.
+- **Engagement Features**: Game Audio System, Ingredients Tetris, Macro Match Game.
+- **PWA Configuration**: Progressive Web App setup for native app experience.
+- **Railway Deployment Ready**: Configured for autoscale deployment with Docker.
+- **Tutorial Hub**: Video tutorial system.
+- **Wellness Hub**: Unified health navigation.
+- **Permanent Meal Image Storage**: DALL-E images stored in Replit Object Storage with caching.
+- **Meal Logging and Weight Tracking**: Restored meal logging APIs with compound cursor pagination and dual-write server-as-truth weight tracking.
 
 # External Dependencies
 - **Core Framework**: React 18, Vite, TypeScript
