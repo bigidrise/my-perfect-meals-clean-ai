@@ -9,11 +9,6 @@ import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
 import { findFeatureFromKeywords } from "./KeywordFeatureMap";
 import { waitForNavigationReady } from "./WalkthroughEngine";
-import {
-  findHubById,
-  findSubOptionByAlias,
-  getHubOptionsMessage,
-} from "./HubRegistry";
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -87,13 +82,6 @@ export function setResponseHandler(fn: ResponseHandler) {
 // Optional: allow UI pages to explicitly set the active feature context
 export function setActiveFeature(feature: ActiveFeature) {
   lastActiveFeature = feature;
-}
-
-// Detect current hub via data-feature attribute
-function detectCurrentHub(): string | null {
-  const hubElement = document.querySelector("[data-feature]");
-  if (!hubElement) return null;
-  return hubElement.getAttribute("data-feature");
 }
 
 const Commands: Record<string, CommandHandler> = {
@@ -1535,39 +1523,6 @@ async function handleVoiceQuery(transcript: string) {
     lastActiveFeature = "glp1-hub";
     await Commands["glp1.goToMenuBuilder"]();
     return;
-  }
-
-  // ===================================
-  // HUB SUB-OPTION ROUTING (Phase B)
-  // ===================================
-  const currentHubId = detectCurrentHub();
-  if (currentHubId) {
-    const hubDef = findHubById(currentHubId);
-    if (hubDef) {
-      const subOption = findSubOptionByAlias(hubDef, transcript);
-      if (subOption) {
-        console.log(`🎯 Hub sub-option matched: ${subOption.label} → ${subOption.route}`);
-        
-        if (navigationCallback) {
-          navigationCallback(subOption.route);
-          
-          // If Spotlight is enabled, try to start walkthrough for sub-option
-          if (FEATURES.copilotSpotlight) {
-            try {
-              await waitForNavigationReady(subOption.route);
-              const walkthroughResponse = await startWalkthrough(subOption.id);
-              if (responseCallback) {
-                responseCallback(walkthroughResponse);
-              }
-            } catch (err) {
-              console.warn("Sub-option navigation timeout or no walkthrough available");
-            }
-          }
-        }
-        
-        return;
-      }
-    }
   }
 
   // ===================================
