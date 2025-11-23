@@ -9,6 +9,13 @@ import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
 import { findFeatureFromKeywords } from "./KeywordFeatureMap";
 import { waitForNavigationReady } from "./WalkthroughEngine";
+import {
+  findFeatureFromRegistry,
+  findSubOptionByAlias,
+  getHubPromptMessage,
+  type FeatureDefinition,
+  type SubOption
+} from "./CanonicalAliasRegistry";
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -23,49 +30,8 @@ let responseCallback: ResponseHandler | null = null;
 type ActiveFeature = "weekly-board" | "fridge-rescue" | "proaccess-careteam" | "diabetic-hub" | "glp1-hub" | null;
 let lastActiveFeature: ActiveFeature = null;
 
-// Keyword-to-route mapping for fuzzy feature matching
-const KEYWORD_ROUTES = {
-  "weekly-meal-board": {
-    keywords: ["weekly", "planner", "meal board", "weekly board", "plan meals"],
-    route: "/weekly-meal-board",
-  },
-  "diabetic-hub": {
-    keywords: ["diabetic", "diabetes", "blood sugar"],
-    route: "/diabetic-hub",
-  },
-  "glp1-hub": {
-    keywords: ["glp", "glp1", "glp-1"],
-    route: "/glp1-meals-tracking",
-  },
-  "beach-body": {
-    keywords: ["beach", "beach body", "lean mode", "summer shred"],
-    route: "/beach-body-meal-board",
-  },
-  "alcohol-hub": {
-    keywords: ["alcohol", "drink", "drinks", "social"],
-    route: "/alcohol-hub",
-  },
-  "fridge-rescue": {
-    keywords: ["fridge", "rescue", "fridge rescue"],
-    route: "/fridge-rescue",
-  },
-  "macro-calculator": {
-    keywords: ["macro", "macros", "macro calculator", "track macros"],
-    route: "/macro-counter",
-  },
-  "biometrics": {
-    keywords: ["biometric", "tracker", "progress", "track body"],
-    route: "/my-biometrics",
-  },
-  "restaurant-guide": {
-    keywords: ["restaurant", "restaurants", "eat out", "going out"],
-    route: "/social-hub/restaurant-guide",
-  },
-  "find-meals": {
-    keywords: ["find meals", "meals near me", "nearby food", "meal finder"],
-    route: "/social-hub/find",
-  },
-};
+// Track active hub for sub-option navigation
+let currentHub: FeatureDefinition | null = null;
 
 export function setNavigationHandler(fn: NavigationHandler) {
   navigationCallback = fn;
@@ -833,16 +799,16 @@ const Commands: Record<string, CommandHandler> = {
   },
 };
 
-// Fuzzy keyword matching - finds feature by any keyword match
+// Legacy fuzzy keyword matching - now delegates to CanonicalAliasRegistry
+// Kept for backward compatibility with existing voice intents
 function findFeatureByKeyword(query: string): { featureId: string; route: string } | null {
-  const normalized = query.toLowerCase().replace(/[^\w\s]/g, "");
+  const feature = findFeatureFromRegistry(query);
   
-  for (const [featureId, config] of Object.entries(KEYWORD_ROUTES)) {
-    for (const keyword of config.keywords) {
-      if (normalized.includes(keyword)) {
-        return { featureId, route: config.route };
-      }
-    }
+  if (feature) {
+    return {
+      featureId: feature.legacyId || feature.id, // Use legacyId for Spotlight compatibility
+      route: feature.primaryRoute
+    };
   }
   
   return null;
@@ -853,6 +819,78 @@ async function handleVoiceQuery(transcript: string) {
   console.log(`🎤 Processing voice query: "${transcript}"`);
 
   const lower = transcript.toLowerCase();
+
+  // ===================================
+  // PHASE B: HUB-FIRST ROUTING SYSTEM (PRIORITY)
+  // ===================================
+  
+  // Check if user is selecting a sub-option within current hub
+  if (currentHub && currentHub.isHub && currentHub.subOptions) {
+    const subOption = findSubOptionByAlias(currentHub, transcript);
+    
+    if (subOption) {
+      console.log(`🎯 Sub-option selected: ${subOption.label} → ${subOption.route}`);
+      
+      if (navigationCallback) {
+        navigationCallback(subOption.route);
+      }
+      
+      // Clear hub context after navigation
+      currentHub = null;
+      
+      if (responseCallback) {
+        responseCallback({
+          title: `Opening ${subOption.label}`,
+          description: `Navigating to ${subOption.label}`,
+          spokenText: `Opening ${subOption.label}`
+        });
+      }
+      
+      return;
+    }
+  }
+
+  // Check for feature match in canonical registry
+  const registryFeature = findFeatureFromRegistry(transcript);
+  
+  if (registryFeature) {
+    console.log(`🔍 Registry match: ${registryFeature.id} → ${registryFeature.primaryRoute}`);
+    
+    // Navigate to primary route (hub or direct page)
+    if (navigationCallback) {
+      navigationCallback(registryFeature.primaryRoute);
+    }
+    
+    // If it's a hub, store context and prompt for sub-option
+    if (registryFeature.isHub) {
+      currentHub = registryFeature;
+      
+      const promptMessage = getHubPromptMessage(registryFeature);
+      
+      if (responseCallback) {
+        responseCallback({
+          title: `${registryFeature.id.replace(/_/g, ' ')}`,
+          description: promptMessage,
+          spokenText: promptMessage
+        });
+      }
+      
+      return;
+    }
+    
+    // Direct page - clear hub context and provide confirmation
+    currentHub = null;
+    
+    if (responseCallback) {
+      responseCallback({
+        title: `Opening ${registryFeature.id.replace(/_/g, ' ')}`,
+        description: `Navigating to ${registryFeature.primaryRoute}`,
+        spokenText: `Opening ${registryFeature.id.replace(/_/g, ' ').toLowerCase()}`
+      });
+    }
+    
+    return;
+  }
 
   // ===================================
   // WEEKLY MEAL BOARD INTENTS
@@ -1526,60 +1564,38 @@ async function handleVoiceQuery(transcript: string) {
   }
 
   // ===================================
-  // FUZZY KEYWORD FALLBACK (with Spotlight Walkthrough support)
+  // SPOTLIGHT WALKTHROUGH FALLBACK (Phase C+)
   // ===================================
-  const legacyFeatureMatch = findFeatureByKeyword(transcript);
   const spotlightFeatureMatch = FEATURES.copilotSpotlight ? findFeatureFromKeywords(transcript) : null;
 
-  // Prioritize Spotlight system if enabled
-  const featureMatch = spotlightFeatureMatch || legacyFeatureMatch;
-
-  if (featureMatch) {
-    // If Spotlight is enabled and we have a walkthrough, start full spotlight experience
-    if (FEATURES.copilotSpotlight && spotlightFeatureMatch) {
-      console.log(`✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`);
+  if (spotlightFeatureMatch && FEATURES.copilotSpotlight) {
+    console.log(`✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`);
+    
+    // Navigate to feature page
+    if (navigationCallback) {
+      navigationCallback(spotlightFeatureMatch.path);
       
-      // Navigate to feature page
-      if (navigationCallback) {
-        navigationCallback(spotlightFeatureMatch.path);
+      // Wait for navigation to complete, then start walkthrough
+      try {
+        await waitForNavigationReady(spotlightFeatureMatch.path);
         
-        // Wait for navigation to complete, then start walkthrough
-        try {
-          await waitForNavigationReady(spotlightFeatureMatch.path);
-          
-          // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
-          const walkthroughResponse = await startWalkthrough(spotlightFeatureMatch.walkthroughId);
-          if (responseCallback) {
-            responseCallback(walkthroughResponse);
-          }
-          
-        } catch (err) {
-          console.warn("Navigation timeout, showing knowledge instead");
-          // Fallback to knowledge explanation
-          const knowledge = await explainFeature(spotlightFeatureMatch.walkthroughId);
-          if (responseCallback) {
-            responseCallback(knowledge);
-          }
+        // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
+        const walkthroughResponse = await startWalkthrough(spotlightFeatureMatch.walkthroughId);
+        if (responseCallback) {
+          responseCallback(walkthroughResponse);
+        }
+        
+      } catch (err) {
+        console.warn("Navigation timeout, showing knowledge instead");
+        // Fallback to knowledge explanation
+        const knowledge = await explainFeature(spotlightFeatureMatch.walkthroughId);
+        if (responseCallback) {
+          responseCallback(knowledge);
         }
       }
-      
-      return;
     }
-
-    // Legacy behavior: Explain + Navigate (no walkthrough)
-    if (legacyFeatureMatch) {
-      const knowledge = await explainFeature(legacyFeatureMatch.featureId);
-      if (responseCallback) {
-        responseCallback(knowledge);
-      }
-      
-      if (navigationCallback) {
-        console.log(`🧭 Auto-navigating to: ${legacyFeatureMatch.route}`);
-        navigationCallback(legacyFeatureMatch.route);
-      }
-      
-      return;
-    }
+    
+    return;
   }
 
   // ===================================
