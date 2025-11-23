@@ -8,13 +8,11 @@ import { FEATURES } from "@/featureFlags";
 import { SpotlightOverlay, SpotlightStep } from "./SpotlightOverlay";
 import { convertToSpotlightStep } from "./WalkthroughEngine";
 import { CopilotInputBar } from "./CopilotInputBar";
-import { processUserQuery, isLikelyMisheard } from "./query/QueryProcessor";
-import { useLocation } from "wouter";
+import { isLikelyMisheard } from "./query/QueryProcessor";
 
 export const CopilotSheet: React.FC = () => {
   const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse, needsRetry, setNeedsRetry } = useCopilot();
   const { toast } = useToast();
-  const [, navigate] = useLocation();
 
   // =========================================
   // AUDIO (ElevenLabs) - with lifecycle management
@@ -83,7 +81,7 @@ export const CopilotSheet: React.FC = () => {
     };
   }, [lastResponse]);
 
-  // Cleanup audio when sheet closes
+  // Cleanup audio and state when sheet closes
   useEffect(() => {
     if (!isOpen) {
       if (audioRef.current) {
@@ -94,8 +92,10 @@ export const CopilotSheet: React.FC = () => {
         URL.revokeObjectURL(audioUrl);
         setAudioUrl(null);
       }
+      // Clear voice fallback state on close
+      setNeedsRetry(false);
     }
-  }, [isOpen]);
+  }, [isOpen, audioUrl, setNeedsRetry]);
 
   // =========================================
   // VOICE INPUT (Whisper) - with error handling
@@ -155,21 +155,8 @@ export const CopilotSheet: React.FC = () => {
             return;
           }
 
-          // Process voice command using unified QueryProcessor
-          setMode("thinking");
-          const result = await processUserQuery(transcript);
-          
-          if (result.success && result.route) {
-            navigate(result.route);
-          }
-          
-          if (result.response) {
-            setLastResponse(result.response);
-          }
-          
-          if (result.needsRetry) {
-            setNeedsRetry(true);
-          }
+          // Process voice command via existing Phase B pipeline
+          runAction({ type: "custom", payload: { voiceQuery: transcript } });
         } catch (err: any) {
           console.error("Voice processing error:", err);
           toast({
@@ -215,26 +202,30 @@ export const CopilotSheet: React.FC = () => {
 
   // =========================================
   // TEXT COMMAND HANDLER - Dual Input System
+  // Routes through existing Phase B pipeline (runAction)
   // =========================================
   const handleTextCommand = async (query: string) => {
     try {
       setMode("thinking");
       setNeedsRetry(false); // Clear voice fallback banner
       
-      const result = await processUserQuery(query);
-      
-      if (result.success && result.route) {
-        // Navigate to the route
-        navigate(result.route);
-      }
-      
-      if (result.response) {
-        setLastResponse(result.response);
-      }
-      
-      if (result.needsRetry) {
+      // Validate query (empty check, etc)
+      const trimmed = query.trim();
+      if (!trimmed) {
         setNeedsRetry(true);
+        setLastResponse({
+          title: "Empty Command",
+          description: "Please type a command.",
+          spokenText: "Please type a command.",
+        });
+        setMode("idle");
+        return;
       }
+      
+      // Route through existing Phase B pipeline (same as voice)
+      // This preserves all locked logic: Spotlight, NL engine, hub routing, etc.
+      runAction({ type: "custom", payload: { voiceQuery: trimmed } });
+      
     } catch (err: any) {
       console.error("Text command error:", err);
       toast({
@@ -243,6 +234,7 @@ export const CopilotSheet: React.FC = () => {
         variant: "destructive",
       });
     } finally {
+      // Always reset mode to idle after processing (success or error)
       setMode("idle");
     }
   };
