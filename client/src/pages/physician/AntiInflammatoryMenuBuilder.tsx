@@ -998,7 +998,7 @@ export default function AntiInflammatoryMenuBuilder() {
           {/* Back Button */}
           <Button
             onClick={() => setLocation("/planner")}
-            className="bg-black/30 hover:bg-black/50 text-white rounded-xl border border-white/10 backdrop-blur-sm flex items-center gap-2 px-3 h-10"
+            className="bg-black/10 hover:bg-black/10 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-2 px-3 h-10"
           >
             <ArrowLeft className="h-5 w-5" />
             <span className="text-sm font-medium">Back</span>
