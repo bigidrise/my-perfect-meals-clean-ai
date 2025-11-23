@@ -40,12 +40,12 @@ export default function LifestyleLandingPage() {
       testId: "card-fridge-rescue",
     },
     {
-      title: "Restaurant Guide",
+      title: "Socializing Hub",
       description: "Make smart choices when eating out with AI guidance",
       icon: Utensils,
-      route: "/restaurant-guide",
+      route: "/social-hub",
       gradient: "from-pink-500/20 to-purple-500/20",
-      testId: "card-restaurant-guide",
+      testId: "card-socializing-hub",
     },
     {
       title: "Kids Meals Hub",
