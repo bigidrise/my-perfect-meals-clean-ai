@@ -24,11 +24,11 @@ const Lifestyle = ({ user }: { user?: any }) => {
       testId: "lifestyle-fridge-rescue"
     },
     {
-      title: "Restaurant Guide",
+      title: "Socializing Hub",
       description: "Eat smart anywhere — by restaurant or food category",
       icon: UtensilsCrossed,
-      route: "/restaurant-guide",
-      testId: "lifestyle-restaurant-guide"
+      route: "/social-hub",
+      testId: "lifestyle-socializing-hub"
     },
     {
       title: "Kids & Toddler Meals",
