@@ -142,18 +142,18 @@ export default function PricingPage() {
 
       <div className="container max-w-6xl mx-auto px-4">
         {/* Collapsible Header (Black Glass) */}
-        <div className="text-center mb-12 mt-12">
+        <div className="text-center mb-12 mt-8">
           <div
             onClick={() => setHeaderOpen(!headerOpen)}
-            className="inline-block rounded-2xl px-6 py-4 bg-black/30 backdrop-blur-lg border border-white/15 shadow-xl cursor-pointer hover:bg-black/40 transition-all duration-200"
+            className="inline-block rounded-2xl px-6 py-4 bg-black/30 backdrop-blur-lg border border-white/15 shadow-xl cursor-pointer hover:bg-black/40 transition-all duration-200 mt-8"
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1">
-                <h1 className="text-xl md:text-2xl font-bold mb-2">
-                  Simple plans. Powerful results.
+                <h1 className="text-2xl md:text-2xl font-bold mb-2">
+                  Subscriptions
                 </h1>
                 <p className="text-sm md:text-sm text-white/90">
-                  Pick the plan that fits today. Prem anytime.
+                  Pick your plan
                 </p>
               </div>
               <div className="flex-shrink-0">

@@ -24,8 +24,8 @@ export default function PrivacySecurity() {
         <div className="flex items-center gap-4">
           <Shield className="h-7 w-7 text-lime-400" />
           <div>
-            <h1 className="text-3xl font-semibold">Privacy & Security</h1>
-            <p className="text-white/80 text-base">Manage your privacy and security settings</p>
+            <h1 className="text-2xl font-semibold">Privacy & Security</h1>
+            <p className="text-white/80 text-sm">Manage your privacy and security settings</p>
           </div>
         </div>
       </header>
