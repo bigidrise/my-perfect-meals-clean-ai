@@ -238,6 +238,17 @@ export default function SnackPickerDrawer({
     }
   };
 
+  // Map simple snacks to static images (no AI generation needed)
+  const STATIC_SNACK_IMAGES: Record<string, string> = {
+    'Air-Popped Popcorn': '/images/templates/air-popped-popcorn.jpg',
+    'Apple slices with almond butter': '/images/templates/apple-pb-slices.jpg',
+    'Apple + PB Slices': '/images/templates/apple-pb-slices.jpg',
+    'Hummus + Veg Sticks': '/images/templates/hummus-veg-sticks.jpg',
+    'Greek Yogurt Ranch Dip + Veg': '/images/templates/yogurt-ranch-dip.jpg',
+    'Protein Energy Balls': '/images/templates/energy-balls.jpg',
+    'Zucchini Fries (Air-Fryer)': '/images/templates/zucchini-fries.jpg',
+  };
+
   const generateSnackMeal = async (snack: any, category: string, styles: Record<string, string>) => {
     setGenerating(true);
     startProgressTicker();
@@ -279,6 +290,10 @@ export default function SnackPickerDrawer({
         throw new Error('No snack found in response');
       }
       
+      // Use static image if available, otherwise use AI-generated or fallback
+      const staticImage = STATIC_SNACK_IMAGES[snack.name];
+      const finalImageUrl = staticImage || generatedSnack.imageUrl || '/assets/meals/default-snack.jpg';
+      
       // Transform to match board format
       const snackMeal = {
         id: `snack-${snack.id}-${Date.now()}`,
@@ -288,7 +303,7 @@ export default function SnackPickerDrawer({
         servings: 1,
         ingredients: generatedSnack.ingredients || [],
         instructions: generatedSnack.instructions || [],
-        imageUrl: generatedSnack.imageUrl || '/assets/meals/default-snack.jpg',
+        imageUrl: finalImageUrl,
         nutrition: generatedSnack.nutrition || {
           calories: generatedSnack.calories || 150,
           protein: generatedSnack.protein || 10,
@@ -300,7 +315,7 @@ export default function SnackPickerDrawer({
         category: category
       };
       
-      console.log(`✅ Generated snack with image:`, snackMeal.imageUrl);
+      console.log(`✅ Generated snack with image (${staticImage ? 'static' : 'AI'}):`, snackMeal.imageUrl);
       
       // Call the parent's onSnackSelect handler
       if (onSnackSelect) {

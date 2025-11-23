@@ -49,9 +49,47 @@ function createImagePrompt(request: MealImageRequest): string {
   return `${mealName} featuring ${ingredientList}, ${baseStyle}, food photography, realistic, appetizing, no text, no logos, high quality, detailed`;
 }
 
+// Static images for simple, unchanging snacks (no AI generation needed)
+const STATIC_SNACK_MAPPINGS: Record<string, string> = {
+  'air-popped popcorn': '/images/templates/air-popped-popcorn.jpg',
+  'popcorn': '/images/templates/air-popped-popcorn.jpg',
+  'apple slices': '/images/templates/apple-pb-slices.jpg',
+  'apple pb': '/images/templates/apple-pb-slices.jpg',
+  'hummus': '/images/templates/hummus-veg-sticks.jpg',
+  'greek yogurt': '/images/templates/yogurt-ranch-dip.jpg',
+  'energy balls': '/images/templates/energy-balls.jpg',
+  'zucchini fries': '/images/templates/zucchini-fries.jpg',
+};
+
+// Check if meal matches a static image (case-insensitive partial match)
+function getStaticImageIfApplicable(mealName: string): string | null {
+  const normalized = mealName.toLowerCase();
+  for (const [key, imagePath] of Object.entries(STATIC_SNACK_MAPPINGS)) {
+    if (normalized.includes(key)) {
+      return imagePath;
+    }
+  }
+  return null;
+}
+
 // Generate meal image using DALL-E 3 and store permanently
 export async function generateMealImage(request: MealImageRequest): Promise<GeneratedImage> {
   const hash = generateImageHash(request);
+  
+  // Check if this is a simple snack that should use static image
+  const staticImage = getStaticImageIfApplicable(request.mealName);
+  if (staticImage) {
+    console.log(`🎨 Using static image for simple snack: ${request.mealName}`);
+    const result: GeneratedImage = {
+      url: staticImage,
+      prompt: `Static image for: ${request.mealName}`,
+      templateRef: request.templateRef,
+      hash,
+      createdAt: new Date().toISOString()
+    };
+    imageCache.set(hash, result);
+    return result;
+  }
   
   // Check cache first
   const cached = imageCache.get(hash);
@@ -76,7 +114,7 @@ export async function generateMealImage(request: MealImageRequest): Promise<Gene
   }
   
   const prompt = createImagePrompt(request);
-  console.log(`🎨 Generating image for: ${request.mealName}`);
+  console.log(`🎨 Generating AI image for: ${request.mealName}`);
   console.log(`📝 Prompt: ${prompt}`);
   
   try {
