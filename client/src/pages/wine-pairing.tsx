@@ -41,7 +41,6 @@ export default function WinePairingPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<WinePairingResult | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Form state
   const [mealType, setMealType] = useState("");
@@ -65,16 +64,6 @@ export default function WinePairingPage() {
     document.title = "Wine Pairing | My Perfect Meals";
     saveNavigationHistory("/wine-pairing", "/alcohol-hub");
 
-    // Auto-open instructions on first visit in coach mode
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenWinePairingInfo = localStorage.getItem("hasSeenWinePairingInfo");
-
-    if (coachMode === "guided" && !hasSeenWinePairingInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
-    }
-
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
     };
@@ -82,11 +71,6 @@ export default function WinePairingPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenWinePairingInfo", "true");
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -367,37 +351,6 @@ export default function WinePairingPage() {
           </div>
         )}
       </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Wine Pairing</h3>
-            
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>Get expert sommelier recommendations for the perfect wine to complement your meal.</p>
-              <div>
-                <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                <ol className="list-decimal list-inside space-y-2 ml-2">
-                  <li>Select your meal type (appetizer, main course, dessert, etc.)</li>
-                  <li>Optionally add cuisine style and main ingredient</li>
-                  <li>Choose your occasion and price range</li>
-                  <li>Click "Get Wine Pairing" for personalized recommendations</li>
-                  <li>View detailed wine info including serving temperature and alternatives</li>
-                </ol>
-              </div>
-              <p className="text-sm text-lime-300">💡 Tip: Include your preferences in the additional notes for more tailored suggestions!</p>
-            </div>
-
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Back to Top Button */}
       {showBackToTop && (

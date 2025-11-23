@@ -64,7 +64,6 @@ const priceRanges = ["$", "$$", "$$$"] as const;
 export default function BeerPairingMode() {
   const [, setLocation] = useLocation();
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const [mealType, setMealType] = useState<string>("Burger");
   const [cuisine, setCuisine] = useState<string>("American");
@@ -89,25 +88,10 @@ export default function BeerPairingMode() {
     "text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white data-[state=checked]:bg-white/10";
 
   useEffect(() => {
-    // Auto-open instructions on first visit in coach mode
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenBeerPairingInfo = localStorage.getItem("hasSeenBeerPairingInfo");
-
-    if (coachMode === "guided" && !hasSeenBeerPairingInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
-    }
-
     const onScroll = () => setShowBackToTop(window.scrollY > 320);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenBeerPairingInfo", "true");
-  };
 
   const canSubmit = useMemo(() => abvMin <= abvMax, [abvMin, abvMax]);
 
@@ -445,37 +429,6 @@ export default function BeerPairingMode() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Beer Pairing</h3>
-              
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>Find the perfect beer styles and specific recommendations to match your meal, taste preferences, and ABV range.</p>
-                <div>
-                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Tell us about your meal (type, cuisine, main ingredient)</li>
-                    <li>Set your occasion and price range</li>
-                    <li>Choose your flavor bias (balanced, hoppy, malty, or sour)</li>
-                    <li>Set your preferred ABV range using the sliders</li>
-                    <li>Click "Get Beer Pairings" for expert recommendations</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-lime-300">💡 Tip: Check the "calorie conscious" option for lower-calorie beer styles!</p>
-              </div>
-
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
           </div>
         )}
 

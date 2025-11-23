@@ -9,20 +9,6 @@ import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 export default function MocktailsLowCalMixersPage() {
   const [, setLocation] = useLocation();
   const [selectedMocktail, setSelectedMocktail] = useState<string | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
-
-  // Auto-open instructions on first visit in coach mode
-  useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenMocktailsInfo = localStorage.getItem("hasSeenMocktailsInfo");
-
-    if (coachMode === "guided" && !hasSeenMocktailsInfo) {
-      const timer = setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -35,11 +21,6 @@ export default function MocktailsLowCalMixersPage() {
       document.body.style.overflow = '';
     };
   }, [selectedMocktail]);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenMocktailsInfo", "true");
-  };
 
   const selected = mocktailsData.find((m) => m.id === selectedMocktail);
 
@@ -225,36 +206,6 @@ export default function MocktailsLowCalMixersPage() {
             sourceSlug="mocktails"
             hideCopyButton={true}
           />
-        )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Mocktails</h3>
-              
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>Discover delicious alcohol-free drinks that are perfect for any occasion while keeping your nutrition on track.</p>
-                <div>
-                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Browse mocktails with full nutritional information</li>
-                    <li>Tap any card to view complete recipe and instructions</li>
-                    <li>Check the benefits section for health highlights</li>
-                    <li>Add ingredients to shopping list for easy preparation</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-lime-300">💡 Tip: These mocktails use natural ingredients and minimal added sugars for guilt-free enjoyment!</p>
-              </div>
-
-              <button
-                onClick={handleInfoModalClose}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
         )}
       </div>
     </div>

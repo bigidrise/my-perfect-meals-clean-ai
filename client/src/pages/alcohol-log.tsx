@@ -68,24 +68,6 @@ const save = (rows: AlcoholEntry[]) => {
 // ---- PAGE ---------------------------------------------------------------
 export default function AlcoholLogPage() {
   const [, setLocation] = useLocation();
-  const [showInfoModal, setShowInfoModal] = useState(false);
-
-  // Auto-open instructions on first visit in coach mode
-  useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenAlcoholLogInfo = localStorage.getItem("hasSeenAlcoholLogInfo");
-
-    if (coachMode === "guided" && !hasSeenAlcoholLogInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
-    }
-  }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenAlcoholLogInfo", "true");
-  };
 
   // form
   const [type, setType] = useState<DrinkType>("Wine");
@@ -414,37 +396,6 @@ export default function AlcoholLogPage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Alcohol Log</h3>
-              
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>Track your alcohol intake with simple, judgment-free logging. All data stays on your device.</p>
-                <div>
-                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Select drink type and enter the ounces consumed</li>
-                    <li>Choose the date and optionally add context notes</li>
-                    <li>Click "Save Entry" to log the drink</li>
-                    <li>View your intake trends over 7, 30, or 90 days</li>
-                    <li>Review calories and carbs to stay informed</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-lime-300">💡 Important: Alcohol calories are informational only and do NOT reduce your food macro targets.</p>
-              </div>
-
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
