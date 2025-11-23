@@ -314,11 +314,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(response.status).json({ error: "ElevenLabs TTS generation failed" });
       }
 
-      // Stream audio directly to client
-      res.setHeader('Content-Type', 'audio/mpeg');
-      response.body.pipe(res)s}`);
-      }
-
       // Stream the audio response back to client
       res.setHeader('Content-Type', 'audio/mpeg');
       if (response.body) {
