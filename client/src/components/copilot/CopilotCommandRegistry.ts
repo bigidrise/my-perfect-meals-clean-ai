@@ -226,7 +226,7 @@ const Commands: Record<string, CommandHandler> = {
       return;
     }
     lastActiveFeature = "fridge-rescue";
-    const response = startWalkthrough("fridge-rescue");
+    const response = await startWalkthrough("fridge-rescue");
     responseCallback(response);
   },
 
@@ -236,7 +236,7 @@ const Commands: Record<string, CommandHandler> = {
       return;
     }
     lastActiveFeature = "weekly-board";
-    const response = startWalkthrough("weekly-board");
+    const response = await startWalkthrough("weekly-board");
     responseCallback(response);
   },
 
@@ -402,7 +402,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.shopping-master": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("shopping-master");
+    const response = await startWalkthrough("shopping-master");
     responseCallback(response);
   },
 
@@ -472,7 +472,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.biometrics": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("biometrics");
+    const response = await startWalkthrough("biometrics");
     responseCallback(response);
   },
 
@@ -542,7 +542,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.macro-calculator": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("macro-calculator");
+    const response = await startWalkthrough("macro-calculator");
     responseCallback(response);
   },
 
@@ -604,7 +604,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.get-inspiration": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("get-inspiration");
+    const response = await startWalkthrough("get-inspiration");
     responseCallback(response);
   },
 
@@ -628,7 +628,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.daily-journal": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("daily-journal");
+    const response = await startWalkthrough("daily-journal");
     responseCallback(response);
   },
 
@@ -661,7 +661,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.proaccess-careteam": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("proaccess-careteam");
+    const response = await startWalkthrough("proaccess-careteam");
     responseCallback(response);
   },
 
@@ -749,7 +749,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.diabetic-hub": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("diabetic-hub");
+    const response = await startWalkthrough("diabetic-hub");
     responseCallback(response);
   },
 
@@ -801,7 +801,7 @@ const Commands: Record<string, CommandHandler> = {
 
   "walkthrough.start.glp1-hub": async () => {
     if (!responseCallback) return;
-    const response = startWalkthrough("glp1-hub");
+    const response = await startWalkthrough("glp1-hub");
     responseCallback(response);
   },
 
@@ -1548,7 +1548,7 @@ async function handleVoiceQuery(transcript: string) {
           await waitForNavigationReady(spotlightFeatureMatch.path);
           
           // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
-          const walkthroughResponse = startWalkthrough(spotlightFeatureMatch.walkthroughId);
+          const walkthroughResponse = await startWalkthrough(spotlightFeatureMatch.walkthroughId);
           if (responseCallback) {
             responseCallback(walkthroughResponse);
           }
