@@ -1,14 +1,9 @@
 import { useLocation } from "wouter";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Brain, Sparkles, Info } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ArrowLeft, Brain, Sparkles } from "lucide-react";
 
 interface CravingFeature {
   title: string;
@@ -21,7 +16,6 @@ interface CravingFeature {
 
 export default function CravingCreatorLanding() {
   const [, setLocation] = useLocation();
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     document.title = "Craving Creator Hub | My Perfect Meals";
@@ -137,38 +131,6 @@ export default function CravingCreatorLanding() {
           </div>
         </div>
       </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-white mb-4">
-              How to Use Craving Creator Hub
-            </h2>
-            <div className="space-y-3 text-white/90 text-sm mb-6">
-              <p>
-                <strong>Create Your Own:</strong> Use the original AI Craving
-                Creator to generate custom meals based on what you're craving.
-              </p>
-              <p>
-                <strong>Premade Cravings:</strong> Choose from 20 smarter
-                recipes designed to satisfy cravings while supporting your
-                goals. Select servings from 1-10.
-              </p>
-              <p className="text-lime-400 font-medium mt-4">
-                💡 Tip: Both options scale ingredients automatically and can be
-                added to your weekly meal plan!
-              </p>
-            </div>
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-            >
-              Got It!
-            </button>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 }

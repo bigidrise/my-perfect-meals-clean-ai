@@ -6,7 +6,6 @@ import {
   ChevronUp,
   Edit2,
   Home,
-  Info,
   ShoppingCart,
   Mic,
   ListPlus,
@@ -60,7 +59,6 @@ export default function ShoppingListMasterView() {
     scopeByWeek: false,
     rounding: "friendly" as "friendly" | "none",
   });
-  const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [purchasedOpen, setPurchasedOpen] = useState(true);
   const [voiceModalOpen, setVoiceModalOpen] = useState(false);
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
@@ -882,63 +880,6 @@ export default function ShoppingListMasterView() {
                   Add Items
                 </Button>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Info Modal */}
-        {instructionsOpen && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full">
-              <h2 className="text-xl font-bold text-white mb-4">How to Use Your Shopping List</h2>
-              <div className="space-y-3 text-white/90 text-sm mb-6">
-                <div>
-                  <p className="font-semibold text-white mb-2">4 Ways to Add Items:</p>
-                  <ul className="space-y-2 text-white/80">
-                    <li>
-                      <strong className="text-white">Enter Barcode</strong> — Type barcode numbers manually (no camera needed). Great for products with barcodes.
-                    </li>
-                    <li>
-                      <strong className="text-white">Voice Add</strong> — Speak multiple items naturally: "milk, eggs, chicken breast." Hands-free and fast!
-                    </li>
-                    <li>
-                      <strong className="text-white">Bulk Add</strong> — Paste entire grocery lists from notes or emails. Supports newlines and commas.
-                    </li>
-                    <li>
-                      <strong className="text-white">Add Other Items</strong> — Detailed form for specific brands, quantities, and notes. Perfect for "Charmin toilet paper" or "Heinz ketchup."
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="border-t border-white/10 pt-2">
-                  <p className="font-semibold text-white mb-1">Meal Ingredients:</p>
-                  <p className="text-white/80">
-                    Items from your meal plans automatically appear here. Add household items using the methods above for one complete list.
-                  </p>
-                </div>
-
-                <div className="border-t border-white/10 pt-2">
-                  <p className="font-semibold text-white mb-1">Shop at Walmart:</p>
-                  <p className="text-white/80">
-                    Click "Shop at Walmart" to open Walmart's website with all your unchecked items pre-searched. Perfect for online ordering or price checking!
-                  </p>
-                </div>
-
-                <div className="border-t border-white/10 pt-2">
-                  <p className="font-semibold text-white mb-1">Tips:</p>
-                  <ul className="list-disc list-inside space-y-1 text-white/80">
-                    <li>Delete items you already have at home</li>
-                    <li>Check items off as you shop—they move to the bottom</li>
-                    <li>Use "Clear Purchased" to remove checked items</li>
-                  </ul>
-                </div>
-              </div>
-              <button
-                onClick={() => setInstructionsOpen(false)}
-                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got It!
-              </button>
             </div>
           </div>
         )}

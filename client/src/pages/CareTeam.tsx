@@ -32,16 +32,8 @@ import {
   CheckCircle2,
   XCircle,
   ArrowLeft,
-  Info,
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 
 // Types
 type Role = "trainer" | "doctor" | "nutritionist" | "other";
@@ -78,7 +70,6 @@ export default function CareTeamPage() {
   const [perms, setPerms] = useState<Permissions>(DEFAULT_PERMS["trainer"]);
   const [accessCode, setAccessCode] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Load existing connections AND check for invite code in URL
   useEffect(() => {
@@ -306,9 +297,8 @@ export default function CareTeamPage() {
                     onChange={() => togglePerm("canEditPlan")}
                   />
                 </div>
-                <div className="flex items-center gap-2 text-xs text-white/60">
-                  <Info className="h-3.5 w-3.5" /> You can change these anytime
-                  per person.
+                <div className="text-xs text-white/60">
+                  💡 You can change these anytime per person.
                 </div>
               </div>
 
@@ -411,45 +401,6 @@ export default function CareTeamPage() {
         {/* Bottom spacer */}
         <div className="h-8" />
       </div>
-
-      
-
-      {/* Info Modal */}
-      <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
-        <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-              <Users className="h-6 w-6 text-emerald-400" />
-              How to Use Care Team
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 text-white/90">
-            <p>
-              The Care Team feature allows you to safely share your nutrition plan with trusted professionals like trainers, doctors, or nutritionists.
-            </p>
-            <div>
-              <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
-              <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-                <li>Choose to invite by email or connect with an access code</li>
-                <li>Select the professional's role (Trainer, Doctor, Nutritionist, Other)</li>
-                <li>Set specific permissions for what they can view or edit</li>
-                <li>Send the invitation - they'll receive an email or can use the code</li>
-                <li>Approve pending connections when they accept</li>
-                <li>Manage or revoke access anytime from this page</li>
-              </ul>
-            </div>
-            <p className="text-emerald-400 font-medium">
-              💡 Tip: You're always in control! You can revoke access at any time, and you decide what each professional can see or change.
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowInfoModal(false)}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
-          >
-            Got It!
-          </Button>
-        </DialogContent>
-      </Dialog>
     </motion.div>
   );
 }
