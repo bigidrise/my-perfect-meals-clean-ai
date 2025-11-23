@@ -377,10 +377,10 @@ export default function Learn() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20"
+      className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80 pb-20 pb-safe"
     >
       {/* Header */}
-      <div className="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+      <div className="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 pt-safe">
         <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Search Bar */}
           <div className="relative">
