@@ -20,6 +20,50 @@ let responseCallback: ResponseHandler | null = null;
 type ActiveFeature = "weekly-board" | "fridge-rescue" | "proaccess-careteam" | "diabetic-hub" | "glp1-hub" | null;
 let lastActiveFeature: ActiveFeature = null;
 
+// Keyword-to-route mapping for fuzzy feature matching
+const KEYWORD_ROUTES = {
+  "weekly-meal-board": {
+    keywords: ["weekly", "planner", "meal board", "weekly board", "plan meals"],
+    route: "/weekly-meal-board",
+  },
+  "diabetic-hub": {
+    keywords: ["diabetic", "diabetes", "blood sugar"],
+    route: "/diabetic-hub",
+  },
+  "glp1-hub": {
+    keywords: ["glp", "glp1", "glp-1"],
+    route: "/glp1-meals-tracking",
+  },
+  "beach-body": {
+    keywords: ["beach", "beach body", "lean mode", "summer shred"],
+    route: "/beach-body-meal-board",
+  },
+  "alcohol-hub": {
+    keywords: ["alcohol", "drink", "drinks", "social"],
+    route: "/alcohol-hub",
+  },
+  "fridge-rescue": {
+    keywords: ["fridge", "rescue", "fridge rescue"],
+    route: "/fridge-rescue",
+  },
+  "macro-calculator": {
+    keywords: ["macro", "macros", "macro calculator", "track macros"],
+    route: "/macro-counter",
+  },
+  "biometrics": {
+    keywords: ["biometric", "tracker", "progress", "track body"],
+    route: "/my-biometrics",
+  },
+  "restaurant-guide": {
+    keywords: ["restaurant", "restaurants", "eat out", "going out"],
+    route: "/social-hub/restaurant-guide",
+  },
+  "find-meals": {
+    keywords: ["find meals", "meals near me", "nearby food", "meal finder"],
+    route: "/social-hub/find",
+  },
+};
+
 export function setNavigationHandler(fn: NavigationHandler) {
   navigationCallback = fn;
 }
@@ -786,6 +830,21 @@ const Commands: Record<string, CommandHandler> = {
   },
 };
 
+// Fuzzy keyword matching - finds feature by any keyword match
+function findFeatureByKeyword(query: string): { featureId: string; route: string } | null {
+  const normalized = query.toLowerCase().replace(/[^\w\s]/g, "");
+  
+  for (const [featureId, config] of Object.entries(KEYWORD_ROUTES)) {
+    for (const keyword of config.keywords) {
+      if (normalized.includes(keyword)) {
+        return { featureId, route: config.route };
+      }
+    }
+  }
+  
+  return null;
+}
+
 // Voice query handler - processes voice transcripts using NLEngine + explicit intents
 async function handleVoiceQuery(transcript: string) {
   console.log(`🎤 Processing voice query: "${transcript}"`);
@@ -1464,6 +1523,27 @@ async function handleVoiceQuery(transcript: string) {
   }
 
   // ===================================
+  // FUZZY KEYWORD FALLBACK
+  // ===================================
+  const featureMatch = findFeatureByKeyword(transcript);
+
+  if (featureMatch) {
+    // Explain the feature
+    const knowledge = await explainFeature(featureMatch.featureId);
+    if (responseCallback) {
+      responseCallback(knowledge);
+    }
+    
+    // Navigate to the feature
+    if (navigationCallback) {
+      console.log(`🧭 Auto-navigating to: ${featureMatch.route}`);
+      navigationCallback(featureMatch.route);
+    }
+    
+    return;
+  }
+
+  // ===================================
   // FOOD COMMANDS (NLEngine-based)
   // ===================================
   const nlResult = interpretFoodCommand(transcript);
@@ -1472,7 +1552,7 @@ async function handleVoiceQuery(transcript: string) {
     console.log(`🎯 NLEngine mapped to: ${nlResult.action}`);
     await Commands[nlResult.action](nlResult.payload);
   } else {
-    // Fallback response for unrecognized commands
+    // Final fallback: "still learning"
     if (responseCallback) {
       responseCallback({
         title: "I heard you",
