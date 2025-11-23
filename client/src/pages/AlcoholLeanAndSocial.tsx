@@ -294,22 +294,8 @@ const DRINKS: Drink[] = [
 export default function AlcoholLeanAndSocial() {
   const [, setLocation] = useLocation();
   const [selectedDrink, setSelectedDrink] = useState<string | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const selected = DRINKS.find(d => d.id === selectedDrink);
-
-  // Auto-open instructions on first visit in coach mode
-  useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenAlcoholLeanInfo = localStorage.getItem("hasSeenAlcoholLeanInfo");
-
-    if (coachMode === "guided" && !hasSeenAlcoholLeanInfo) {
-      const timer = setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -322,11 +308,6 @@ export default function AlcoholLeanAndSocial() {
       document.body.style.overflow = '';
     };
   }, [selectedDrink]);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenAlcoholLeanInfo", "true");
-  };
 
 
   return (
