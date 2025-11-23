@@ -175,13 +175,8 @@ export default function BeachBodyMealBoard() {
   const [snackPickerOpen, setSnackPickerOpen] = useState(false);
 
   // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
-
-  // Daily Totals Info state
-  const [showDailyTotalsInfo, setShowDailyTotalsInfo] = useState(false);
-  const [hasSeenDailyTotalsInfo, setHasSeenDailyTotalsInfo] = useState(false);
 
   // Day/Week planning state
   const [planningMode, setPlanningMode] = React.useState<"day" | "week">("day");
@@ -286,22 +281,11 @@ export default function BeachBodyMealBoard() {
       setHasSeenInfo(true);
     }
 
-    const dailyTotalsInfoSeen = localStorage.getItem("beach-body-board-daily-totals-info-seen");
-    if (dailyTotalsInfoSeen === "true") {
-      setHasSeenDailyTotalsInfo(true);
-    }
-
     const savedStep = localStorage.getItem("beach-body-board-tour-step");
     if (savedStep === "breakfast" || savedStep === "lunch" || savedStep === "dinner" || savedStep === "snacks" || savedStep === "complete") {
       setTourStep(savedStep);
     }
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    setHasSeenInfo(true);
-    localStorage.setItem("beach-body-board-info-seen", "true");
-  };
 
   useEffect(() => {
     if (!board) return;
@@ -313,10 +297,6 @@ export default function BeachBodyMealBoard() {
     if (tourStep === "breakfast" && lists.breakfast.length > 0) {
       setTourStep("lunch");
       localStorage.setItem("beach-body-board-tour-step", "lunch");
-
-      if (!hasSeenDailyTotalsInfo) {
-        setShowDailyTotalsInfo(true);
-      }
     } else if (tourStep === "lunch" && lists.lunch.length > 0) {
       setTourStep("dinner");
       localStorage.setItem("beach-body-board-tour-step", "dinner");
@@ -327,7 +307,7 @@ export default function BeachBodyMealBoard() {
       setTourStep("complete");
       localStorage.setItem("beach-body-board-tour-step", "complete");
     }
-  }, [board, tourStep, planningMode, activeDayISO, hasSeenDailyTotalsInfo]);
+  }, [board, tourStep, planningMode, activeDayISO]);
 
   const handleDuplicateDay = useCallback(
     async (targetDates: string[]) => {
@@ -1267,71 +1247,46 @@ export default function BeachBodyMealBoard() {
             </div>
           </section>
 
+          {/* Daily Totals Summary — Updated to Black Glass 2-Column Card */}
           <div className="col-span-full">
-            <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/95 backdrop-blur-lg p-6">
+            <div className="rounded-2xl border border-white/20 bg-black/30 backdrop-blur-xl p-6">
               <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
                 {planningMode === "day" && activeDayISO
                   ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Totals`
                   : "Daily Totals"}
-                {(() => {
-                  const hasMeals = board && (
-                    (planningMode === 'day' && activeDayISO
-                      ? (() => {
-                          const dayLists = getDayLists(board, activeDayISO);
-                          return dayLists.breakfast.length > 0 || dayLists.lunch.length > 0 || dayLists.dinner.length > 0 || dayLists.snacks.length > 0;
-                        })()
-                      : board.lists.breakfast.length > 0 || board.lists.lunch.length > 0 || board.lists.dinner.length > 0 || board.lists.snacks.length > 0)
-                  );
-
-                  if (hasMeals) {
-                    return (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setShowDailyTotalsInfo(true)}
-                        className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
-                          !hasSeenDailyTotalsInfo ? 'flash-border' : ''
-                        }`}
-                        aria-label="Next Steps Info"
-                      >
-                        <Info className="h-4 w-4" />
-                      </Button>
-                    );
-                  }
-                  return null;
-                })()}
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
+
+              {/* 2-Column Black Glass Layout */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Calories */}
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Calories</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
                     {totals.calories}
                   </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Calories
+                </div>
+
+                {/* Protein */}
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Protein (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
+                    {totals.protein}
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
-                    {totals.protein}g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Protein
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
-                    {totals.carbs}g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Carbs
+
+                {/* Carbs */}
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Carbs (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
+                    {totals.carbs}
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-semi-bold text-white">
-                    {totals.fat}g
-                  </div>
-                  <div className="text-xs uppercase tracking-wide text-white-200/70 mt-1">
-                    Fat
+
+                {/* Fat */}
+                <div className="flex flex-col">
+                  <label className="text-sm text-white/70 mb-1">Fat (g)</label>
+                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
+                    {totals.fat}
                   </div>
                 </div>
               </div>
@@ -1649,118 +1604,6 @@ export default function BeachBodyMealBoard() {
             />
           );
         })()}
-
-      <Dialog open={showInfoModal} onOpenChange={(open) => {
-        if (!open) {
-          handleInfoModalClose();
-        } else {
-          setShowInfoModal(true);
-        }
-      }}>
-        <DialogContent className="bg-black/90 border border-white/20 text-white max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-              How to Use Beach Body / Hard Body Board
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 text-white/90">
-            <p>
-              The Beach Body / Hard Body Board helps you build lifestyle-focused meal plans with simplified macro tracking.
-            </p>
-            <div>
-              <h3 className="font-semibold text-emerald-400 mb-2">Steps:</h3>
-              <ul className="list-disc list-inside space-y-2 ml-2 text-sm">
-                <li>Start with Meal 1 (breakfast) and work through each meal section</li>
-                <li>Click "Create with AI" to generate meals based on your preferences</li>
-                <li>Choose Day or Week mode to plan one day at a time or your entire week</li>
-                <li>Use the duplicate feature to copy successful days across your week</li>
-                <li>Delete any meal with the trash icon if you want to try something different</li>
-                <li>Use the Macro Fix Coach at the bottom to fill any protein or carb gaps</li>
-              </ul>
-            </div>
-            <p className="text-emerald-400 font-medium">
-              💡 Tip: Focus on hitting your protein and carb targets. The Macro Fix Coach will help you add quick items to meet your goals!
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowInfoModal(false)}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
-          >
-            Got It!
-          </Button>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {
-        if (!open) {
-          setShowDailyTotalsInfo(false);
-          setHasSeenDailyTotalsInfo(true);
-          localStorage.setItem("beach-body-board-daily-totals-info-seen", "true");
-        }
-      }}>
-        <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-white text-xl flex items-center gap-2">
-              <Sparkles className="h-6 w-6 text-orange-400" />
-              Next Steps - Track Your Progress!
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-white/90 text-sm space-y-4">
-            <p className="text-base font-semibold text-orange-300">
-              Great job creating your meals! Here's what to do next:
-            </p>
-
-            <div className="space-y-3">
-              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
-                <p className="font-semibold text-white mb-1 flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-orange-400" />
-                  Option 1: Track Your Macros
-                </p>
-                <p className="text-white/70 text-xs">
-                  Send your day to the Macro Calculator to ensure you're hitting your nutrition targets.
-                  Look for the "Send to Macros" button below.
-                </p>
-              </div>
-
-              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
-                <p className="font-semibold text-white mb-1">
-                  Option 2: Plan Your Week
-                </p>
-                <p className="text-white/70 text-xs">
-                  Use the Day/Week toggle at the top to switch between planning a single day or your entire week.
-                  You can duplicate days or create each day individually.
-                </p>
-              </div>
-
-              <div className="bg-orange-900/30 p-3 rounded-lg border border-orange-400/30">
-                <p className="font-semibold text-orange-200 mb-1">
-                  💡 Pro Tip: Macro Tracking
-                </p>
-                <p className="text-orange-100/80 text-xs">
-                  Send just ONE day to macros at a time (not the whole week).
-                  This way, if you change meals on other days, you won't have outdated data.
-                </p>
-              </div>
-
-              <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
-                <p className="font-semibold text-white mb-1 flex items-center gap-2">
-                  <ShoppingCart className="h-4 w-4 text-emerald-400" />
-                  Shopping List Ready
-                </p>
-                <p className="text-white/70 text-xs">
-                  You CAN send your entire week to the shopping list!
-                  This consolidates all ingredients for easy grocery shopping.
-                  Click "Send Entire Week" at the bottom.
-                </p>
-              </div>
-            </div>
-
-            <p className="text-xs text-white/60 text-center pt-2 border-t border-white/10">
-              Next: Check out the Shopping List to learn how to use it effectively!
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
       </div>
     </motion.div>
   );
