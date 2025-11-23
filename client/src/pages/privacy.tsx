@@ -7,17 +7,19 @@ export default function PrivacySecurity() {
   const [, setLocation] = useLocation();
 
   return (
-    <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-8">
-      <header className="space-y-6">
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/dashboard")}
-          className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
-          data-testid="button-back"
-        >
-          <Home className="h-5 w-5 mr-3" />
-        
-        </Button>
+        <SafePageContainer className="px-6 pt-8 pb-32 bg-gradient-to-br from-black/60 via-orange-900 to-black/80 text-white space-y-8">
+
+        {/* Back Button */}
+        <header className="space-y-6">
+          <Button
+            variant="ghost"
+            onClick={() => setLocation("/profile-sheet")}
+            className="text-white bg-white/10 active:bg-white/20 -ml-2 py-3 px-4"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-5 w-5 mr-3" />
+            Back
+          </Button>
 
         <div className="flex items-center gap-4">
           <Shield className="h-7 w-7 text-lime-400" />
