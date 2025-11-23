@@ -257,7 +257,6 @@ export default function MacroCounter() {
   const [sugarCapMode, setSugarCapMode] = useState<"AHA" | "DGA">(
     savedSettings?.sugarCapMode ?? "AHA",
   );
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change
@@ -859,36 +858,6 @@ export default function MacroCounter() {
             </>
           )}
         </div>
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
-              <h3 className="text-xl font-bold text-white mb-4">
-                About Macro Calculator
-              </h3>
-
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>
-                  The Macro Calculator helps you determine your personalized
-                  calorie and macro targets based on your goal (cut, maintain,
-                  or gain), body type, activity level, and biometric data.
-                </p>
-                <p className="text-white/80">
-                  Use the "Set Macro Targets" button to save your calculated
-                  targets to My Biometrics for daily tracking.
-                </p>
-              </div>
-
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        )}
       </motion.div>
     </>
   );

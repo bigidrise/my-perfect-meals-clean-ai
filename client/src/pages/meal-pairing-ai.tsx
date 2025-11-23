@@ -27,7 +27,6 @@ export default function MealPairingAIPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<MealPairing | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Form state
   const [drinkType, setDrinkType] = useState("");
@@ -44,18 +43,13 @@ export default function MealPairingAIPage() {
   const itemCls =
     "text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white data-[state=checked]:bg-white/10";
 
+  // Auto-mark info as seen since Copilot provides guidance now
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Meal Pairing AI | My Perfect Meals";
 
-    // Auto-open instructions on first visit in coach mode
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenMealPairingInfo = localStorage.getItem("hasSeenMealPairingInfo");
-
-    if (coachMode === "guided" && !hasSeenMealPairingInfo) {
-      setTimeout(() => {
-        setShowInfoModal(true);
-      }, 300);
+    if (!localStorage.getItem("hasSeenMealPairingInfo")) {
+      localStorage.setItem("hasSeenMealPairingInfo", "true");
     }
 
     const handleScroll = () => {
@@ -65,11 +59,6 @@ export default function MealPairingAIPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleInfoModalClose = () => {
-    setShowInfoModal(false);
-    localStorage.setItem("hasSeenMealPairingInfo", "true");
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -344,37 +333,6 @@ export default function MealPairingAIPage() {
           </Card>
         )}
       </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Meal Pairing AI</h3>
-            
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>Design the perfect meal to complement the drink you're enjoying. Our AI creates custom recipes tailored to your preferences.</p>
-              <div>
-                <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                <ol className="list-decimal list-inside space-y-2 ml-2">
-                  <li>Select your drink category (wine, spirits, beer, etc.)</li>
-                  <li>Enter the specific drink you're having</li>
-                  <li>Optionally specify meal style, cooking time, or servings</li>
-                  <li>Click "Design My Meal" to get a custom recipe</li>
-                  <li>View complete cooking instructions and pairing details</li>
-                </ol>
-              </div>
-              <p className="text-sm text-lime-300">💡 Tip: The AI considers flavor profiles and complementary ingredients to create the perfect pairing!</p>
-            </div>
-
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Back to Top Button */}
       {showBackToTop && (

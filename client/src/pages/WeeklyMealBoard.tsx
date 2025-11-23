@@ -20,7 +20,7 @@ import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useMidnightReset } from "@/hooks/useMidnightReset";
 import { todayISOInTZ } from "@/utils/midnight";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Info, Calendar } from "lucide-react";
+import { Plus, Check, Sparkles, BarChart3, ShoppingCart, X, Home, ArrowLeft, Calendar } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
 import { DayChips } from "@/components/DayChips";
@@ -36,7 +36,6 @@ import { getMondayISO } from "@/../../shared/schema/weeklyBoard";
 import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCopilot } from "@/components/copilot/CopilotContext";
 
 // Helper function to create new snacks
@@ -239,41 +238,22 @@ export default function WeeklyMealBoard() {
     }
   }, [board, planningMode, activeDayISO, weekStartISO, saveBoard, toast]);
 
-  // Guided Tour state
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
 
-  // Daily Totals Info state (appears after first meal is created)
-  const [showDailyTotalsInfo, setShowDailyTotalsInfo] = useState(false);
-  const [hasSeenDailyTotalsInfo, setHasSeenDailyTotalsInfo] = useState(false);
-
-  // Load/save tour progress from localStorage
+  // Auto-mark tour info as seen since Copilot provides guidance now
   useEffect(() => {
-    const infoSeen = localStorage.getItem("weekly-meal-board-info-seen");
-    if (infoSeen === "true") {
-      setHasSeenInfo(true);
+    if (!localStorage.getItem("weekly-meal-board-info-seen")) {
+      localStorage.setItem("weekly-meal-board-info-seen", "true");
+    }
+    if (!localStorage.getItem("weekly-meal-board-daily-totals-info-seen")) {
+      localStorage.setItem("weekly-meal-board-daily-totals-info-seen", "true");
     }
 
     const saved = localStorage.getItem("weekly-meal-board-tour-step");
     if (saved && saved !== "complete") {
       setTourStep(saved as "breakfast" | "lunch" | "dinner" | "snacks" | "complete");
     }
-
-    const dailyTotalsInfoSeen = localStorage.getItem("weekly-meal-board-daily-totals-info-seen");
-    if (dailyTotalsInfoSeen === "true") {
-      setHasSeenDailyTotalsInfo(true);
-    }
   }, []);
-
-  // Handle info modal close - start the tour
-  const handleInfoModalClose = useCallback(() => {
-    setShowInfoModal(false);
-    if (!hasSeenInfo) {
-      setHasSeenInfo(true);
-      localStorage.setItem("weekly-meal-board-info-seen", "true");
-    }
-  }, [hasSeenInfo]);
 
   const advanceTourStep = useCallback(() => {
     const sequence: Array<"breakfast" | "lunch" | "dinner" | "snacks" | "complete"> = ["breakfast", "lunch", "dinner", "snacks", "complete"];
@@ -1359,37 +1339,8 @@ export default function WeeklyMealBoard() {
         {/* Daily Totals Summary */}
         <div className="col-span-full">
           <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-lg p-6">
-            <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
+            <h3 className="text-white font-semibold text-lg mb-4 text-center">
               Daily Totals
-              {(() => {
-                // Check if there are any meals
-                const hasMeals = board && (
-                  (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO
-                    ? (() => {
-                        const dayLists = getDayLists(board, activeDayISO);
-                        return dayLists.breakfast.length > 0 || dayLists.lunch.length > 0 || dayLists.dinner.length > 0 || dayLists.snacks.length > 0;
-                      })()
-                    : board.lists.breakfast.length > 0 || board.lists.lunch.length > 0 || board.lists.dinner.length > 0 || board.lists.snacks.length > 0)
-                );
-
-                // Show button if there are meals, flash only if user hasn't seen the info
-                if (hasMeals) {
-                  return (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setShowDailyTotalsInfo(true)}
-                      className={`h-8 w-8 p-0 text-white/90 hover:text-white hover:bg-white/10 rounded-full ${
-                        !hasSeenDailyTotalsInfo ? 'flash-border' : ''
-                      }`}
-                      aria-label="Next Steps Info"
-                    >
-                      <Info className="h-4 w-4" />
-                    </Button>
-                  );
-                }
-                return null;
-              })()}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
@@ -1670,108 +1621,6 @@ export default function WeeklyMealBoard() {
                 />
               );
             })()}
-
-      {/* Info Modal - How to Use */}
-      {showInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-4">How to Use Weekly Meal Board</h3>
-
-            <div className="space-y-4 text-white/90 text-sm">
-              <p>Create your day or week by starting with breakfast.</p>
-              <p className="text-white/80">
-                Click the "Create with AI" button on each meal section to build your plan.
-                You can create one day and duplicate it across the week, or create each day individually.
-              </p>
-              <p className="text-white/80">
-                If you change your mind about a meal, just hit the <span className="font-semibold text-white">trash can</span> to delete it and create a new one.
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowInfoModal(false);
-                handleInfoModalClose();
-              }}
-              className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Daily Totals Info Modal - Next Steps After First Meal */}
-      <Dialog open={showDailyTotalsInfo} onOpenChange={(open) => {
-        if (!open) {
-          setShowDailyTotalsInfo(false);
-          setHasSeenDailyTotalsInfo(true);
-          localStorage.setItem("weekly-meal-board-daily-totals-info-seen", "true");
-        }
-      }}>
-        <DialogContent className="bg-gradient-to-b from-orange-900/95 via-zinc-900/95 to-black/95 border-orange-500/30 text-white max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-white text-xl flex items-center gap-2">
-              <Sparkles className="h-6 w-6 text-orange-400" />
-              Next Steps - Track Your Progress!
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-white/90 text-sm space-y-4">
-            <p className="text-base font-semibold text-orange-300">
-              Great job creating your meals! Here's what to do next:
-            </p>
-
-            <div className="space-y-3">
-              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
-                <p className="font-semibold text-white mb-1 flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-orange-400" />
-                  Option 1: Track Your Macros
-                </p>
-                <p className="text-white/70 text-xs">
-                  Send your day to the Macro Calculator to ensure you're hitting your nutrition targets.
-                  Look for the "Send to Macros" button below.
-                </p>
-              </div>
-
-              <div className="bg-black/30 p-3 rounded-lg border border-orange-500/20">
-                <p className="font-semibold text-white mb-1">
-                  Option 2: Plan Your Week
-                </p>
-                <p className="text-white/70 text-xs">
-                  Use the Day/Week toggle at the top to switch between planning a single day or your entire week.
-                  You can duplicate days or create each day individually.
-                </p>
-              </div>
-
-              <div className="bg-orange-900/30 p-3 rounded-lg border border-orange-400/30">
-                <p className="font-semibold text-orange-200 mb-1">
-                  💡 Pro Tip: Macro Tracking
-                </p>
-                <p className="text-orange-100/80 text-xs">
-                  Send just ONE day to macros at a time (not the whole week).
-                  This way, if you change meals on other days, you won't have outdated data.
-                </p>
-              </div>
-
-              <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
-                <p className="font-semibold text-white mb-1 flex items-center gap-2">
-                  <ShoppingCart className="h-4 w-4 text-emerald-400" />
-                  Shopping List Ready
-                </p>
-                <p className="text-white/70 text-xs">
-                  You CAN send your entire week to the shopping list!
-                  This consolidates all ingredients for easy grocery shopping.
-                  Click "Send Entire Week" at the bottom.
-                </p>
-              </div>
-            </div>
-
-            <p className="text-xs text-white/60 text-center pt-2 border-t border-white/10">
-              Next: Check out the Shopping List to learn how to use it effectively!
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Meal Premade Picker Modal */}
       <MealPremadePicker

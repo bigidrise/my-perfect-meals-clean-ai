@@ -162,18 +162,11 @@ const FridgeRescuePage = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { runAction, open } = useCopilot();
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
 
-  // Auto-open instructions on first visit in coach mode
+  // Auto-mark info as seen since Copilot provides guidance now
   useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenFridgeInfo = localStorage.getItem("hasSeenFridgeInfo");
-
-    if (coachMode === "guided" && !hasSeenFridgeInfo) {
-      setTimeout(() => {
-        setShowInstructions(true);
-      }, 300);
+    if (!localStorage.getItem("hasSeenFridgeInfo")) {
+      localStorage.setItem("hasSeenFridgeInfo", "true");
     }
   }, []);
 
@@ -858,83 +851,6 @@ const FridgeRescuePage = () => {
             </div>
           )}
         </div>
-
-        {/* Instructions Modal - Auto-opens on first visit */}
-        {showInstructions && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">
-                How to Use Fridge Rescue
-              </h3>
-              <div className="space-y-3 text-white/90 text-sm">
-                <p>
-                  <strong>1. Add ingredients:</strong> List what's in your
-                  fridge
-                </p>
-                <p>
-                  <strong>2. Set servings:</strong> Choose how many people to
-                  feed (1-10)
-                </p>
-                <p>
-                  <strong>3. Generate meal:</strong> AI creates a recipe from
-                  your ingredients
-                </p>
-                <p>
-                  <strong>4. Review & cook:</strong> Get full instructions and
-                  nutrition info
-                </p>
-              </div>
-              <button
-                onClick={() => {
-                  setShowInstructions(false);
-                  localStorage.setItem("hasSeenFridgeInfo", "true");
-                }}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-2xl shadow-lime-500/10">
-              <h3 className="text-xl font-bold text-white mb-4">
-                How to Use Fridge Rescue
-              </h3>
-              <div className="space-y-3 text-white/90 text-sm mb-6">
-                <p>
-                  <strong>1. Enter Your Ingredients:</strong> List what you have
-                  in your fridge, separated by commas.
-                </p>
-                <p>
-                  <strong>2. Generate Meals:</strong> Click the button to create
-                  3 delicious, healthy meals using your ingredients.
-                </p>
-                <p>
-                  <strong>3. Choose Your Meal:</strong> Browse the generated
-                  recipes with full nutrition info and cooking instructions.
-                </p>
-                <p>
-                  <strong>4. Log to Macros:</strong> Track your meal directly to
-                  your daily macro counter.
-                </p>
-                <p className="text-lime-400 font-medium mt-4">
-                  💡 Tip: The more specific you are with ingredients, the better
-                  your meal suggestions will be!
-                </p>
-              </div>
-              <button
-                onClick={() => setShowInfoModal(false)}
-                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
-              >
-                Got It!
-              </button>
-            </div>
-          </div>
-        )}
       </motion.div>
     </PhaseGate>
   );
