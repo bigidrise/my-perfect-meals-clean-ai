@@ -1247,52 +1247,6 @@ export default function BeachBodyMealBoard() {
             </div>
           </section>
 
-          {/* Daily Totals Summary — Updated to Black Glass 2-Column Card */}
-          <div className="col-span-full">
-            <div className="rounded-2xl border border-white/20 bg-black/30 backdrop-blur-xl p-6">
-              <h3 className="text-white font-semibold text-lg mb-4 text-center flex items-center justify-center gap-2">
-                {planningMode === "day" && activeDayISO
-                  ? `${new Date(activeDayISO + "T00:00:00Z").toLocaleDateString(undefined, { weekday: "long" })} Totals`
-                  : "Daily Totals"}
-              </h3>
-
-              {/* 2-Column Black Glass Layout */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Calories */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-white/70 mb-1">Calories</label>
-                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
-                    {totals.calories}
-                  </div>
-                </div>
-
-                {/* Protein */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-white/70 mb-1">Protein (g)</label>
-                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
-                    {totals.protein}
-                  </div>
-                </div>
-
-                {/* Carbs */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-white/70 mb-1">Carbs (g)</label>
-                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
-                    {totals.carbs}
-                  </div>
-                </div>
-
-                {/* Fat */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-white/70 mb-1">Fat (g)</label>
-                  <div className="bg-black/40 border border-white/20 text-white rounded-xl px-3 py-2 text-lg font-semibold">
-                    {totals.fat}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {board &&
             FEATURES.dayPlanning === "alpha" &&
             planningMode === "day" &&
