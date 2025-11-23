@@ -278,17 +278,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const apiKey = process.env.ELEVENLABS_API_KEY;
       if (!apiKey) {
+        console.warn("⚠️ ElevenLabs API key not configured");
         return res.status(500).json({ error: "ElevenLabs API key not configured" });
       }
 
-      const { text, voice_id = "21m00Tcm4TlvDq8ikWAM" } = req.body;
+      const { text, voice_id = "ErXwobaYiN019PkySvjV" } = req.body;
       if (!text) {
         return res.status(400).json({ error: "Text is required" });
       }
 
       console.log(`🎤 Generating TTS for text: "${text.substring(0, 50)}..."`);
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}/stream`, {
         method: 'POST',
         headers: {
           'Accept': 'audio/mpeg',
@@ -297,16 +298,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         body: JSON.stringify({
           text,
-          model_id: "eleven_monolingual_v1",
+          model_id: "eleven_turbo_v2",
           voice_settings: {
             stability: 0.5,
-            similarity_boost: 0.5
+            similarity_boost: 0.8,
+            style: 0.0,
+            use_speaker_boost: true
           }
         })
       });
 
       if (!response.ok) {
-        throw new Error(`ElevenLabs API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error(`❌ ElevenLabs API error: ${response.status} - ${errorText}`);
+        return res.status(response.status).json({ error: "ElevenLabs TTS generation failed" });
+      }
+
+      // Stream audio directly to client
+      res.setHeader('Content-Type', 'audio/mpeg');
+      response.body.pipe(res)s}`);
       }
 
       // Stream the audio response back to client
