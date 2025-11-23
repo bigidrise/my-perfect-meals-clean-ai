@@ -449,36 +449,6 @@ export default function AlcoholLeanAndSocial() {
             hideCopyButton={true}
           />
         )}
-
-        {/* Info Modal */}
-        {showInfoModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">How to Use Lean & Social</h3>
-
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>Browse our curated collection of diet-friendly drinks that let you stay social without compromising your health goals.</p>
-                <div>
-                  <h4 className="font-semibold text-lime-400 mb-2">How It Works:</h4>
-                  <ol className="list-decimal list-inside space-y-2 ml-2">
-                    <li>Browse the drink cards showing calories and carbs</li>
-                    <li>Tap any drink to see full details and ingredients</li>
-                    <li>Note the "How to Mix" section for ordering tips</li>
-                    <li>Add ingredients to your shopping list if making at home</li>
-                  </ol>
-                </div>
-                <p className="text-sm text-lime-300">💡 Tip: Most of these drinks use simple swaps like soda water instead of juice or tonic to keep calories low.</p>
-              </div>
-
-              <Button
-                onClick={handleInfoModalClose}
-                className="w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got It!
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
