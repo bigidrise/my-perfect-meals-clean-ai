@@ -559,6 +559,11 @@ export default function MealPremadePicker({
   };
 
   const generateMealImage = async (meal: any, category: string, styles: Record<string, string>) => {
+    console.log('🎨 Starting meal generation for:', meal.name);
+    console.log('📋 Meal data:', meal);
+    console.log('🎯 Category:', category);
+    console.log('👨‍🍳 Cooking styles:', styles);
+    
     setGenerating(true);
     startProgressTicker();
     
@@ -580,38 +585,53 @@ export default function MealPremadePicker({
       }
       
       console.log(`🎨 Generating ${mealType} meal with ingredients:`, ingredientsList);
+      console.log('📡 Calling API endpoint: /api/meals/fridge-rescue');
       
       // Get custom macro targets if enabled
       const customMacroTargets = macroTargetingState.serializeForRequest();
       
       // Use the SAME endpoint as the working AI Meal Creator
+      const requestBody = {
+        fridgeItems: ingredientsList,
+        userId: 1,
+        mealType: mealType,
+        ...(customMacroTargets && { macroTargets: customMacroTargets })
+      };
+      
+      console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
+      
       const response = await fetch('/api/meals/fridge-rescue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fridgeItems: ingredientsList,
-          userId: 1,
-          mealType: mealType, // Pass meal type to help with image generation
-          ...(customMacroTargets && { macroTargets: customMacroTargets })
-        }),
+        body: JSON.stringify(requestBody),
         signal: abortControllerRef.current.signal
       });
       
+      console.log('📥 Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to generate premade meal');
+        const errorText = await response.text();
+        console.error('❌ API Error Response:', errorText);
+        throw new Error(`Failed to generate premade meal: ${response.status} - ${errorText}`);
       }
       
       const data = await response.json();
+      console.log('📦 API Response data:', data);
       
       // Handle both response formats
       let generatedMeal;
       if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
         generatedMeal = data.meals[0];
+        console.log('✅ Found meal in data.meals[0]');
       } else if (data.meal) {
         generatedMeal = data.meal;
+        console.log('✅ Found meal in data.meal');
       } else {
+        console.error('❌ No meal found in response. Data structure:', Object.keys(data));
         throw new Error('No meal found in response');
       }
+      
+      console.log('🍽️ Generated meal:', generatedMeal);
       
       // Transform to match board format
       const defaultImage = mealType === 'breakfast' 
