@@ -182,6 +182,14 @@ export default function CravingCreator() {
           "Your generated meal will remain saved on this page until you create a new one.",
       });
     }
+    
+    // Emit ready event after page loads
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "cravingcreator-ready", event: "ready" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []); // Only run once on mount
 
   // Auto-save whenever relevant state changes (so it's always fresh)
@@ -327,6 +335,14 @@ export default function CravingCreator() {
         title: "✨ Meal Created!",
         description: `${meal.name} is ready for you.`,
       });
+      
+      // Emit generated event after successful meal creation
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "cravingcreator-generated", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
     } catch (error: any) {
       stopProgressTicker();
       toast({
@@ -394,6 +410,14 @@ export default function CravingCreator() {
       title: "✅ Meal Added to Plan!",
       description: `${meal.name} has been added to your weekly meal plan.`,
     });
+    
+    // Emit added event after successful add to plan
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "cravingcreator-added", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
 
     // Navigate back to Weekly Meal Board
     setLocation("/weekly-meal-board");

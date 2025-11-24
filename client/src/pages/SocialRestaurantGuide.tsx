@@ -284,6 +284,14 @@ export default function RestaurantGuidePage() {
         title: "🍽️ Restaurant Meals Generated!",
         description: `Found ${data.recommendations?.length || 0} healthy options for you.`,
       });
+      
+      // Emit search-complete event after successful generation
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "restaurantguide-search-complete", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
     },
     onError: (error: Error) => {
       stopProgressTicker();

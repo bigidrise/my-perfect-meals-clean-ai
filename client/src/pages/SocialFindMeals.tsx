@@ -150,6 +150,14 @@ export default function MealFinder() {
         title: "Meals Found!",
         description: `Found ${uniqueRestaurants} restaurants with ${newResults.length} meals`,
       });
+      
+      // Emit search-complete event after successful search
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "findmeals-search-complete", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
 
       setTimeout(() => setProgress(0), 500);
     },

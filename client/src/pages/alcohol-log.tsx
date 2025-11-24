@@ -154,6 +154,14 @@ export default function AlcoholLogPage() {
     setOunces("");
     setNotes("");
     setDate(today());
+    
+    // Emit added event after successful log entry
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "alcohollog-added", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
   };
 
   const remove = (id: string) => {
