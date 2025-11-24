@@ -370,33 +370,7 @@ export default function RestaurantGuidePage() {
         {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden pb-8" style={{ paddingTop: "6rem" }}>
 
-        {/* Find Meals Near Me Card - MOVED TO TOP */}
-        <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg text-white">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                Find Meals Near Me
-              </div>
-            </CardTitle>
-            <CardDescription className="text-sm text-white/80">
-              Search for meals you're craving at nearby restaurants by ZIP code
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <p className="mb-4 text-sm text-white/90">
-              Enter what you're craving and your location to find healthy restaurant options near you.
-            </p>
-            <Button
-              data-wt="rg-find-nearby-button"
-              onClick={() => setLocation("/meal-finder")}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-xl text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
-            >
-              <MapPin className="h-4 w-4 mr-2" />
-              Find Meals Near Me
-            </Button>
-          </CardContent>
-        </Card>
+        
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
