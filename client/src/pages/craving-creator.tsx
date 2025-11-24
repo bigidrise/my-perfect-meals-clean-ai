@@ -149,7 +149,6 @@ export default function CravingCreator() {
   // 🔋 Progress bar state (real-time ticker like Restaurant Guide)
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
-  const [showCravingInfoModal, setShowCravingInfoModal] = useState(false); // ENHANCEMENT: Modal to explain input
   // Development user ID - consistent across app
   const userId = DEV_USER_ID;
 
@@ -159,19 +158,6 @@ export default function CravingCreator() {
 
   // Import replacement context functions
   const [replaceCtx, setReplaceCtx] = useState<any>(null);
-
-  // Auto-open info modal on first visit in coach mode
-  useEffect(() => {
-    const coachMode = localStorage.getItem("coachMode");
-    const hasSeenCravingInfo = localStorage.getItem("hasSeenCravingInfo");
-
-    if (coachMode === "guided" && !hasSeenCravingInfo) {
-      // Small delay to let page render first
-      setTimeout(() => {
-        setShowCravingInfoModal(true);
-      }, 300);
-    }
-  }, []);
 
   // Check for replacement context on mount
   useEffect(() => {
@@ -996,69 +982,6 @@ export default function CravingCreator() {
             source="Craving Creator"
             hideCopyButton={true}
           />
-        )}
-
-        {/* Craving Info Modal */}
-        {showCravingInfoModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-4">
-                How to Describe Your Craving
-              </h3>
-
-              <div className="space-y-4 text-white/90 text-sm">
-                <p>
-                  To get the best results, be as specific as possible! Think
-                  about:
-                </p>
-
-                <ul className="space-y-2 text-white/80 text-sm">
-                  <li>
-                    <strong className="text-white">Flavor Profile:</strong>{" "}
-                    Sweet, savory, spicy, sour, bitter, umami
-                  </li>
-                  <li>
-                    <strong className="text-white">Texture:</strong> Creamy,
-                    crunchy, chewy, smooth, fluffy, crispy
-                  </li>
-                  <li>
-                    <strong className="text-white">Key Ingredients:</strong>{" "}
-                    e.g., "strawberry," "chocolate," "chicken," "broccoli"
-                  </li>
-                  <li>
-                    <strong className="text-white">Dietary Needs:</strong> e.g.,
-                    "low-fat," "vegan," "gluten-free," "no nuts"
-                  </li>
-                  <li>
-                    <strong className="text-white">Meal Type:</strong> Snack,
-                    breakfast, lunch, dinner, dessert
-                  </li>
-                  <li>
-                    <strong className="text-white">Cooking Style:</strong>{" "}
-                    Baked, fried, grilled, raw, stir-fried
-                  </li>
-                </ul>
-
-                <div className="bg-black/20 border border-white/10 rounded-lg p-3">
-                  <p className="font-semibold text-white mb-1">Example:</p>
-                  <p className="text-white/70 italic">
-                    "I want something lowfat, strawberry, with graham cracker
-                    crust, my equal sweetener, and non-dairy"
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  setShowCravingInfoModal(false);
-                  localStorage.setItem("hasSeenCravingInfo", "true");
-                }}
-                className="mt-6 w-full bg-lime-700 hover:bg-lime-800 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
         )}
       </motion.div>
     </PhaseGate>
