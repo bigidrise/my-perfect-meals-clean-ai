@@ -88,6 +88,14 @@ export default function GetInspiration() {
     }
 
     setQuote(finalQuote);
+
+    // Dispatch "opened" event (500ms setTimeout)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "get-inspiration-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   // Load journal entries and setup voice recognition
@@ -179,11 +187,25 @@ export default function GetInspiration() {
   }, []);
 
   const getNewQuote = () => {
+    // Dispatch "interacted" event
+    const interactedEvent = new CustomEvent("walkthrough:event", {
+      detail: { testId: "get-inspiration-interacted", event: "interacted" },
+    });
+    window.dispatchEvent(interactedEvent);
+
     const newQuote =
       MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
     setQuote(newQuote);
     localStorage.setItem("dailyQuote", newQuote);
     localStorage.setItem("quoteDate", new Date().toDateString());
+
+    // Dispatch "completed" event after quote changes
+    setTimeout(() => {
+      const completedEvent = new CustomEvent("walkthrough:event", {
+        detail: { testId: "get-inspiration-completed", event: "completed" },
+      });
+      window.dispatchEvent(completedEvent);
+    }, 300);
   };
 
   const toggleListening = () => {
@@ -254,6 +276,14 @@ export default function GetInspiration() {
       title: "Entry saved!",
       description: "Your journal entry has been saved successfully.",
     });
+
+    // Dispatch "completed" event after journal entry saved
+    setTimeout(() => {
+      const completedEvent = new CustomEvent("walkthrough:event", {
+        detail: { testId: "get-inspiration-completed", event: "completed" },
+      });
+      window.dispatchEvent(completedEvent);
+    }, 300);
   };
 
   const deleteEntry = (id: string) => {
@@ -339,7 +369,7 @@ export default function GetInspiration() {
 
           {/* Quote Display */}
           <div
-            data-wt="insp-quote-display"
+            data-testid="inspire-quote-display"
             className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300"
           >
             <p className="italic text-md text-white font-medium leading-relaxed text-center">
@@ -349,10 +379,9 @@ export default function GetInspiration() {
 
           {/* Get New Inspiration Button */}
           <button
-            data-wt="insp-get-button"
+            data-testid="inspire-new-quote-button"
             onClick={getNewQuote}
             className="bg-gradient-to-br from-black/90 via-orange-600 to-black/90 text-white p-4 rounded-xl shadow-2xl hover:shadow-2xl transform transition-all duration-200 w-full border-2 border-orange-300/0 hover:border-orange-300/90"
-            data-testid="button-new-quote"
           >
             <div className="flex items-center justify-center gap-2 mb-1">
               <span className="text-2xl">🔄</span>
@@ -383,12 +412,11 @@ export default function GetInspiration() {
 
           {/* Text Area */}
           <textarea
-            data-wt="journal-textarea"
+            data-testid="inspire-journal-input"
             value={currentEntry}
             onChange={(e) => setCurrentEntry(e.target.value)}
             placeholder="Speak or type your thoughts..."
             className="w-full h-48 bg-black/40 text-white rounded-xl border border-white/20 p-4 resize-none focus:outline-none focus:border-orange-400/50 focus:ring-2 focus:ring-orange-400/20 transition-all mb-4"
-            data-testid="textarea-journal-entry"
           />
 
           {/* Action Buttons */}
@@ -412,10 +440,9 @@ export default function GetInspiration() {
             </Button>
 
             <Button
-              data-wt="journal-save-button"
+              data-testid="inspire-save-entry"
               onClick={saveEntry}
               className="flex-1 bg-gradient-to-br from-black/90 via-orange-600 to-black/90 text-white border-2 border-orange-300/40 hover:border-orange-300/90 transition-all"
-              data-testid="button-save-entry"
             >
               <Save className="w-5 h-5 mr-2" />
               Save Entry
@@ -446,7 +473,7 @@ export default function GetInspiration() {
             <h2 className="text-xl font-semibold text-white mb-4">
               Past Entries
             </h2>
-            <div data-wt="journal-entry-list" className="space-y-4">
+            <div data-testid="inspire-entries-list" className="space-y-4">
               {entries.map((entry) => (
                 <div
                   key={entry.id}

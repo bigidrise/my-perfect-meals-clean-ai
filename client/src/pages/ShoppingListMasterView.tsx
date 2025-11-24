@@ -36,6 +36,16 @@ export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
+  // Dispatch "opened" event on page mount
+  useEffect(() => {
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "shopping-list-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
+  }, []);
+
   // Extract "from" query parameter once on mount
   const [fromSlug, setFromSlug] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
@@ -247,6 +257,22 @@ export default function ShoppingListMasterView() {
         title: "Items added",
         description: `${names.length} items added to your shopping list.`,
       });
+
+      // Dispatch "interacted" event
+      setTimeout(() => {
+        const interactedEvent = new CustomEvent("walkthrough:event", {
+          detail: { testId: "shopping-list-interacted", event: "interacted" },
+        });
+        window.dispatchEvent(interactedEvent);
+      }, 300);
+
+      // Dispatch "completed" event
+      setTimeout(() => {
+        const completedEvent = new CustomEvent("walkthrough:event", {
+          detail: { testId: "shopping-list-completed", event: "completed" },
+        });
+        window.dispatchEvent(completedEvent);
+      }, 500);
     },
     [addItem, parseItemsFromText, toast],
   );
@@ -456,7 +482,7 @@ export default function ShoppingListMasterView() {
             </div>
 
             <Button
-              data-testid="shopping-walmart-button"
+              data-testid="shopping-send-to-store"
               onClick={handleShopAtWalmart}
               className="rounded-xl px-4 py-2 border border-white/40 bg-blue-600/30 hover:bg-blue-600/40 text-white text-sm whitespace-nowrap"
             >
@@ -482,7 +508,7 @@ export default function ShoppingListMasterView() {
                 onClick={onClearAll}
                 variant="destructive"
                 size="sm"
-                data-testid="button-clear-all"
+                data-testid="shopping-clear-button"
               >
                 Clear All
               </Button>
@@ -499,7 +525,7 @@ export default function ShoppingListMasterView() {
             </p>
           </div>
         ) : (
-          <div data-testid="shopping-items-list" data-wt="msl-items-list" className="space-y-4">
+          <div data-testid="shopping-list" className="space-y-4">
             {Object.entries(groupedUnchecked).map(([cat, arr]) => (
               <div
                 key={cat}
@@ -832,6 +858,14 @@ export default function ShoppingListMasterView() {
                 <Button
                   onClick={() => {
                     if (barcodeText.trim()) {
+                      // Dispatch "interacted" event
+                      setTimeout(() => {
+                        const interactedEvent = new CustomEvent("walkthrough:event", {
+                          detail: { testId: "shopping-list-interacted", event: "interacted" },
+                        });
+                        window.dispatchEvent(interactedEvent);
+                      }, 300);
+
                       addItem({
                         name: "Unknown Item",
                         quantity: 1,
@@ -844,6 +878,14 @@ export default function ShoppingListMasterView() {
                         title: "Item added",
                         description: `Barcode ${barcodeText.trim()} added`,
                       });
+
+                      // Dispatch "completed" event
+                      setTimeout(() => {
+                        const completedEvent = new CustomEvent("walkthrough:event", {
+                          detail: { testId: "shopping-list-completed", event: "completed" },
+                        });
+                        window.dispatchEvent(completedEvent);
+                      }, 500);
                     }
                   }}
                   className="bg-blue-600/40 border border-blue-300/40 text-blue-100 hover:bg-blue-600/50"

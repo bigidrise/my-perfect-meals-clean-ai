@@ -268,6 +268,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "FRIDGE_RESCUE",
     legacyId: "fridge-rescue",
     primaryRoute: "/fridge-rescue",
+    walkthroughId: "fridge-rescue-walkthrough", // Phase C.8
     isHub: false,
     keywords: ["fridge rescue", "rescue", "use my fridge", "ingredients", "what can i make", "fridge", "pantry rescue", "pantry", "leftover helper", "use ingredients", "rescue mode"]
   },
@@ -312,6 +313,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "GET_INSPIRATION",
     legacyId: "get-inspiration",
     primaryRoute: "/get-inspiration",
+    walkthroughId: "inspiration-walkthrough", // Phase C.8
     isHub: false,
     keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse meals"]
   },

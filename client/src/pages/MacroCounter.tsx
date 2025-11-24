@@ -261,6 +261,16 @@ export default function MacroCounter() {
     savedSettings?.sugarCapMode ?? "AHA",
   );
 
+  // Dispatch "opened" event on page mount
+  useEffect(() => {
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "macro-calculator-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
+  }, []);
+
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change
   useEffect(() => {
@@ -330,13 +340,13 @@ export default function MacroCounter() {
     return { bmr, tdee, target, macros };
   }, [sex, kg, cm, age, activity, goal, proteinPerKg, fatPct, bodyType]);
 
-  // Dispatch "ready" event when results are calculated (500ms debounce)
+  // Dispatch "completed" event when results are calculated (500ms debounce)
   useEffect(() => {
     if (!results) return;
 
     const timeout = setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
-        detail: { testId: "macro-results-ready", event: "ready" },
+        detail: { testId: "macro-calculator-completed", event: "completed" },
       });
       window.dispatchEvent(event);
     }, 500);
@@ -385,7 +395,7 @@ export default function MacroCounter() {
                   Choose Your Goal
                 </h3>
                 <RadioGroup
-                  data-testid="macro-goal-selector"
+                  data-testid="macro-goal"
                   value={goal}
                   onValueChange={(v: Goal) => {
                     setGoal(v);
@@ -560,7 +570,7 @@ export default function MacroCounter() {
                         Age
                       </div>
                       <Input
-                        data-wt="mc-age-input"
+                        data-testid="macro-age"
                         type="number"
                         className="bg-black/60 border-white/50 text-white placeholder-white"
                         value={age || ""}
@@ -579,7 +589,7 @@ export default function MacroCounter() {
                             Height (ft)
                           </div>
                           <Input
-                            data-wt="mc-height-ft"
+                            data-testid="macro-height"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={heightFt || ""}
@@ -597,7 +607,7 @@ export default function MacroCounter() {
                             Height (in)
                           </div>
                           <Input
-                            data-wt="mc-height-in"
+                            data-testid="macro-height"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={heightIn || ""}
@@ -615,7 +625,7 @@ export default function MacroCounter() {
                             Weight (lbs)
                           </div>
                           <Input
-                            data-wt="mc-weight-input"
+                            data-testid="macro-weight"
                             type="number"
                             className="bg-black/60 border-white/50 text-white placeholder-white"
                             value={weightLbs || ""}
@@ -770,7 +780,6 @@ export default function MacroCounter() {
                         advance("sync-weight");
                       }}
                       className="w-full bg-lime-700 border-2 border-lime-600 text-white hover:bg-lime-800 hover:border-lime-700 font-semibold mt-4"
-                      data-testid="button-sync-weight"
                     >
                       <Scale className="h-4 w-4 mr-2" />
                       Sync Weight
@@ -785,7 +794,7 @@ export default function MacroCounter() {
           {results && (
             <>
               <Card
-                data-testid="macro-targets-card"
+                data-testid="macro-results"
                 className="bg-zinc-900/80 border border-white/30 text-white"
               >
                 <CardContent className="p-5">
@@ -824,10 +833,16 @@ export default function MacroCounter() {
               {/* Save Targets */}
               <div className="flex justify-center">
                 <Button
-                  data-testid="macro-save-button"
+                  data-testid="macro-calc-button"
                   id="calc-button"
                   disabled={isSaving}
                   onClick={async () => {
+                    // Dispatch "interacted" event
+                    const interactedEvent = new CustomEvent("walkthrough:event", {
+                      detail: { testId: "macro-calculator-interacted", event: "interacted" },
+                    });
+                    window.dispatchEvent(interactedEvent);
+
                     advance("calc");
                     setIsSaving(true);
 

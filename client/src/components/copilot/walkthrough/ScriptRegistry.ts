@@ -25,6 +25,10 @@ import CravingHubWalkthroughScript from "./scripts/CravingHubWalkthroughScript";
 import KidsHubWalkthroughScript from "./scripts/KidsHubWalkthroughScript";
 import AlcoholHubWalkthroughScript from "./scripts/AlcoholHubWalkthroughScript";
 import SocialHubWalkthroughScript from "./scripts/SocialHubWalkthroughScript";
+import FridgeRescueWalkthroughScript from "./scripts/FridgeRescueWalkthroughScript";
+import MacroCalculatorWalkthroughScript from "./scripts/MacroCalculatorWalkthroughScript";
+import ShoppingListWalkthroughScript from "./scripts/ShoppingListWalkthroughScript";
+import InspirationWalkthroughScript from "./scripts/InspirationWalkthroughScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -53,19 +57,10 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "beach-body-board": BeachBodyMealBuilderScript,
   "hard-body-board": BeachBodyMealBuilderScript,
   
-  // Macro Calculator
-  "macro-calculator-walkthrough": MacroCalculatorScript,
-  "macro-calculator": MacroCalculatorScript,
-  
-  // My Biometrics
+  // My Biometrics (QUARANTINED - NOT IN USE)
   "biometrics-walkthrough": BiometricsWalkthroughScript,
   "my-biometrics": BiometricsWalkthroughScript,
   "biometrics": BiometricsWalkthroughScript,
-  
-  // Master Shopping List
-  "shopping-list-walkthrough": MasterShoppingListScript,
-  "shopping-list": MasterShoppingListScript,
-  "master-shopping-list": MasterShoppingListScript,
   
   // Craving Premades
   "craving-premades-walkthrough": CravingPremadesScript,
@@ -151,6 +146,24 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "social-hub": SocialHubWalkthroughScript,
   "socializing-hub": SocialHubWalkthroughScript,
   "socializing": SocialHubWalkthroughScript,
+  
+  // Phase C.8: Single-Page Feature Walkthroughs
+  "fridge-rescue-walkthrough": FridgeRescueWalkthroughScript,
+  "fridge-rescue": FridgeRescueWalkthroughScript,
+  "fridge": FridgeRescueWalkthroughScript,
+  
+  "macro-calculator-walkthrough": MacroCalculatorWalkthroughScript, // REPLACES old MacroCalculatorScript
+  "macro-calculator": MacroCalculatorWalkthroughScript,
+  "macros": MacroCalculatorWalkthroughScript,
+  
+  "shopping-list-walkthrough": ShoppingListWalkthroughScript, // REPLACES old MasterShoppingListScript
+  "shopping-list": ShoppingListWalkthroughScript,
+  "master-shopping-list": ShoppingListWalkthroughScript,
+  "shopping": ShoppingListWalkthroughScript,
+  
+  "inspiration-walkthrough": InspirationWalkthroughScript,
+  "inspiration": InspirationWalkthroughScript,
+  "get-inspiration": InspirationWalkthroughScript,
 };
 
 /**

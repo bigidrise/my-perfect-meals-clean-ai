@@ -270,6 +270,14 @@ const FridgeRescuePage = () => {
       setIngredients(cached.ingredients || "");
       setShowResults(true);
     }
+
+    // Dispatch "opened" event (500ms setTimeout)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "fridge-rescue-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []); // Only run once on mount
 
   // Auto-save whenever meals or ingredients change (so it's always fresh)
@@ -307,6 +315,12 @@ const FridgeRescuePage = () => {
   };
 
   const handleGenerateMeals = async () => {
+    // Dispatch "interacted" event
+    const interactedEvent = new CustomEvent("walkthrough:event", {
+      detail: { testId: "fridge-rescue-interacted", event: "interacted" },
+    });
+    window.dispatchEvent(interactedEvent);
+
     if (!ingredients.trim()) {
       alert("Please enter some ingredients first!");
       return;
@@ -352,6 +366,12 @@ const FridgeRescuePage = () => {
       stopProgressTicker();
       setMeals(mealsArray);
       setShowResults(true);
+
+      // Dispatch "completed" event after successful meal generation
+      const completedEvent = new CustomEvent("walkthrough:event", {
+        detail: { testId: "fridge-rescue-completed", event: "completed" },
+      });
+      window.dispatchEvent(completedEvent);
 
       setTimeout(() => {
         if (resultsRef.current) {
@@ -563,7 +583,7 @@ const FridgeRescuePage = () => {
                   <div className="relative">
                     <textarea
                       id="ingredients"
-                      data-wt="fridge-text-input"
+                      data-testid="fridge-input"
                       value={ingredients}
                       onChange={(e) => setIngredients(e.target.value)}
                       placeholder="e.g., chicken breast, broccoli, rice, onions, eggs"
@@ -604,7 +624,7 @@ const FridgeRescuePage = () => {
                 <button
                   onClick={handleGenerateMeals}
                   disabled={isLoading}
-                  data-wt="fridge-generate-button"
+                  data-testid="fridge-generate"
                   className="w-full bg-black/30 backdrop-blur-lg hover:bg-black/40 border border-white/20 disabled:bg-black/10 disabled:opacity-50 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-lg flex items-center justify-center gap-3"
                 >
                   <div className="flex items-center gap-2">
@@ -619,6 +639,7 @@ const FridgeRescuePage = () => {
           {showResults && meals.length > 0 && (
             <div
               ref={resultsRef}
+              data-testid="fridge-results"
               className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-6xl mx-auto mt-8"
             >
               <div className="text-center mb-8">
@@ -631,7 +652,7 @@ const FridgeRescuePage = () => {
                 {meals.map((meal, index) => (
                   <Card
                     key={meal.id}
-                    data-wt="fridge-meal-card"
+                    data-testid="fridge-result-card"
                     className="overflow-hidden bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl flex flex-col h-full"
                   >
                     <div className="relative">
@@ -808,7 +829,7 @@ const FridgeRescuePage = () => {
                       {/* Action Buttons */}
                       <div className="mt-auto pt-4 space-y-2">
                         <MacroBridgeButton
-                          data-wt="fridge-send-to-shopping-button"
+                          data-testid="fridge-add-to-shopping"
                           meal={{
                             protein: meal.protein || 0,
                             carbs: meal.carbs || 0,
