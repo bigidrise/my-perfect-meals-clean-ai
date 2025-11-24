@@ -5,7 +5,7 @@ const RestaurantGuideScript: WalkthroughScript = {
   id: "restaurant-guide-walkthrough",
   featureId: "RESTAURANT_GUIDE",
   title: "Restaurant Guide",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",

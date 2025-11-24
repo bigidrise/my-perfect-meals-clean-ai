@@ -5,7 +5,7 @@ const ToddlerMealsScript: WalkthroughScript = {
   id: "toddler-meals-walkthrough",
   featureId: "TODDLER_MEALS",
   title: "Toddler Meals Hub",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",

@@ -5,7 +5,7 @@ const CravingPremadesScript: WalkthroughScript = {
   id: "craving-premades-walkthrough",
   featureId: "CRAVING_PREMADES",
   title: "Premade Cravings",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",
