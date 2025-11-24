@@ -5,7 +5,7 @@ const CravingHubWalkthroughScript: WalkthroughScript = {
   id: "craving-hub-walkthrough",
   featureId: "CRAVING_HUB",
   title: "Craving Hub",
-  uiReady: false, // Will flip to true after runtime validation
+  uiReady: true, // ✅ ACTIVATED: Phase C.7 complete - all hub events wired (Nov 24 2025)
   steps: [
     {
       id: "welcome",

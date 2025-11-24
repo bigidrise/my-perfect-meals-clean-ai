@@ -5,7 +5,7 @@ const KidsHubWalkthroughScript: WalkthroughScript = {
   id: "kids-hub-walkthrough",
   featureId: "KIDS_HUB",
   title: "Kids Meals Hub",
-  uiReady: false, // Will flip to true after runtime validation
+  uiReady: true, // ✅ ACTIVATED: Phase C.7 complete - all hub events wired (Nov 24 2025)
   steps: [
     {
       id: "welcome",
