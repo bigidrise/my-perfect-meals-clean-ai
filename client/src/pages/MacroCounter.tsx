@@ -330,6 +330,20 @@ export default function MacroCounter() {
     return { bmr, tdee, target, macros };
   }, [sex, kg, cm, age, activity, goal, proteinPerKg, fatPct, bodyType]);
 
+  // Dispatch "ready" event when results are calculated (500ms debounce)
+  useEffect(() => {
+    if (!results) return;
+
+    const timeout = setTimeout(() => {
+      const event = new CustomEvent("ready", {
+        detail: { testId: "macro-results-ready" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [results]);
+
   return (
     <>
       <motion.div
@@ -371,7 +385,7 @@ export default function MacroCounter() {
                   Choose Your Goal
                 </h3>
                 <RadioGroup
-                  data-wt="mc-goal-selector"
+                  data-testid="macro-goal-selector"
                   value={goal}
                   onValueChange={(v: Goal) => {
                     setGoal(v);
@@ -427,7 +441,7 @@ export default function MacroCounter() {
                 </h3>
                 <BodyTypeGuide />
                 <RadioGroup
-                  data-wt="mc-body-type-cards"
+                  data-testid="macro-body-type-selector"
                   value={bodyType}
                   onValueChange={(v: BodyType) => {
                     setBodyType(v);
@@ -477,6 +491,7 @@ export default function MacroCounter() {
           {/* Inputs - Always show */}
           <Card
             id="details-card"
+            data-testid="macro-details-card"
             className="bg-zinc-900/80 rounded-2xl border border-white/30 text-white mt-5"
           >
             <CardContent className="p-5">
@@ -660,7 +675,7 @@ export default function MacroCounter() {
                     Activity
                   </div>
                   <RadioGroup
-                    data-wt="mc-activity-selector"
+                    data-testid="macro-activity-selector"
                     value={activity}
                     onValueChange={(v: keyof typeof ACTIVITY_FACTORS) => {
                       setActivity(v);
@@ -725,7 +740,7 @@ export default function MacroCounter() {
                   {/* Sync Weight Button - appears after activity is selected */}
                   {activity && (
                     <Button
-                      data-wt="mc-sync-weight"
+                      data-testid="macro-sync-weight-button"
                       id="sync-weight-button"
                       onClick={() => {
                         const weight =
@@ -770,7 +785,7 @@ export default function MacroCounter() {
           {results && (
             <>
               <Card
-                data-wt="mc-targets-display"
+                data-testid="macro-targets-card"
                 className="bg-zinc-900/80 border border-white/30 text-white"
               >
                 <CardContent className="p-5">
@@ -809,7 +824,7 @@ export default function MacroCounter() {
               {/* Save Targets */}
               <div className="flex justify-center">
                 <Button
-                  data-wt="mc-set-targets-button"
+                  data-testid="macro-save-button"
                   id="calc-button"
                   disabled={isSaving}
                   onClick={async () => {
@@ -826,6 +841,12 @@ export default function MacroCounter() {
                         },
                         user?.id,
                       );
+
+                      // Dispatch "done" event after successful save
+                      const event = new CustomEvent("done", {
+                        detail: { testId: "macro-targets-saved" },
+                      });
+                      window.dispatchEvent(event);
 
                       toast({
                         title: "Macro Targets Set!",
