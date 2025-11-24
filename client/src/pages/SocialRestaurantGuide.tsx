@@ -29,7 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Home, Sparkles, Clock, Users, ArrowLeft } from "lucide-react";
+import { Home, Clock, Users, ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -371,22 +371,7 @@ export default function RestaurantGuidePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden pb-8" style={{ paddingTop: "6rem" }}>
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-xl text-white">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                Smart Restaurant Guide
-              </div>
-            </CardTitle>
-            <CardDescription className="text-white/80">
-              
-            </CardDescription>
-          </CardHeader>
           <CardContent className="p-6">
-            <p className="mb-4 text-sm text-white/90">
-              
-            </p>
-
             <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
               <p className="text-sm text-blue-200">
                 <Clock className="inline h-4 w-4 mr-1" />
