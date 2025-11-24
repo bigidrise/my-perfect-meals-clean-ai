@@ -1607,11 +1607,13 @@ async function handleVoiceQuery(transcript: string) {
         if (hasScript(spotlightFeatureMatch.walkthroughId)) {
           console.log(`🚀 Phase C.1: Launching script-based walkthrough for ${spotlightFeatureMatch.walkthroughId}`);
           
-          // Use new script-walkthrough helper
+          // Use new script-walkthrough helper with event streaming
           const { success, response } = await beginScriptWalkthrough(
-            spotlightFeatureMatch.walkthroughId
+            spotlightFeatureMatch.walkthroughId,
+            responseCallback || undefined // Pass responseCallback for event streaming
           );
 
+          // Send initial response
           if (responseCallback) {
             responseCallback(response);
           }

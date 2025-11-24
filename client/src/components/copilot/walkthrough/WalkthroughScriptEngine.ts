@@ -8,6 +8,7 @@ import type {
 } from "./WalkthroughTypes";
 
 type WalkthroughEventListener = (event: WalkthroughEvent) => void;
+type EngineStatus = "idle" | "starting" | "active" | "cancelling";
 
 export class WalkthroughScriptEngine {
   private script: WalkthroughScript | null = null;
@@ -15,20 +16,20 @@ export class WalkthroughScriptEngine {
   private listeners: WalkthroughEventListener[] = [];
   private actionListener: ((e: Event) => void) | null = null;
   private currentElement: Element | null = null;
-  private isActive: boolean = false;
+  private status: EngineStatus = "idle";
 
   /**
    * Start a walkthrough script
    */
   async start(script: WalkthroughScript): Promise<void> {
-    if (this.isActive) {
-      console.warn("[WalkthroughScriptEngine] Cannot start - walkthrough already active");
+    if (this.status !== "idle") {
+      console.warn(`[WalkthroughScriptEngine] Cannot start - engine status is ${this.status}`);
       return;
     }
 
+    this.status = "starting";
     this.script = script;
     this.currentStepIndex = 0;
-    this.isActive = true;
 
     this.emitEvent({
       type: "started",
@@ -36,6 +37,7 @@ export class WalkthroughScriptEngine {
       stepIndex: 0,
     });
 
+    this.status = "active";
     await this.executeCurrentStep();
   }
 
@@ -43,7 +45,7 @@ export class WalkthroughScriptEngine {
    * Move to the next step
    */
   async next(): Promise<void> {
-    if (!this.script || !this.isActive) {
+    if (!this.script || this.status !== "active") {
       console.warn("[WalkthroughScriptEngine] Cannot advance - no active walkthrough");
       return;
     }
@@ -67,7 +69,7 @@ export class WalkthroughScriptEngine {
    * Move to the previous step
    */
   async previous(): Promise<void> {
-    if (!this.script || !this.isActive) {
+    if (!this.script || this.status !== "active") {
       console.warn("[WalkthroughScriptEngine] Cannot go back - no active walkthrough");
       return;
     }
@@ -89,7 +91,7 @@ export class WalkthroughScriptEngine {
    * Skip the current step
    */
   async skip(): Promise<void> {
-    if (!this.script || !this.isActive) return;
+    if (!this.script || this.status !== "active") return;
     await this.next();
   }
 
@@ -97,7 +99,7 @@ export class WalkthroughScriptEngine {
    * Retry the current step
    */
   async retry(): Promise<void> {
-    if (!this.script || !this.isActive) return;
+    if (!this.script || this.status !== "active") return;
 
     this.cleanupCurrentStep();
     await this.executeCurrentStep();
@@ -106,9 +108,10 @@ export class WalkthroughScriptEngine {
   /**
    * Cancel the walkthrough
    */
-  cancel(): void {
-    if (!this.script || !this.isActive) return;
+  async cancel(): Promise<void> {
+    if (!this.script || this.status === "idle" || this.status === "cancelling") return;
 
+    this.status = "cancelling";
     const scriptId = this.script.id;
     this.cleanupCurrentStep();
     this.reset();
@@ -140,7 +143,7 @@ export class WalkthroughScriptEngine {
    */
   getState(): WalkthroughState {
     return {
-      isActive: this.isActive,
+      isActive: this.status === "active" || this.status === "starting",
       scriptId: this.script?.id || null,
       currentStepIndex: this.currentStepIndex,
       totalSteps: this.script?.steps.length || 0,
@@ -153,7 +156,7 @@ export class WalkthroughScriptEngine {
    * Get current step
    */
   getCurrentStep(): WalkthroughScriptStep | null {
-    if (!this.script || !this.isActive) return null;
+    if (!this.script || this.status === "idle") return null;
     return this.script.steps[this.currentStepIndex] || null;
   }
 
@@ -258,7 +261,7 @@ export class WalkthroughScriptEngine {
   private reset(): void {
     this.script = null;
     this.currentStepIndex = 0;
-    this.isActive = false;
+    this.status = "idle";
     this.currentElement = null;
     this.actionListener = null;
   }
@@ -287,3 +290,23 @@ export class WalkthroughScriptEngine {
 
 // Global singleton instance
 export const walkthroughEngine = new WalkthroughScriptEngine();
+
+/**
+ * Wait for the walkthrough engine to return to idle state
+ * @param maxAttempts Maximum number of polling attempts (default: 10)
+ * @param intervalMs Milliseconds between checks (default: 50)
+ */
+export async function waitForIdle(
+  maxAttempts: number = 10,
+  intervalMs: number = 50
+): Promise<boolean> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const state = walkthroughEngine.getState();
+    if (!state.isActive) {
+      return true;
+    }
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  }
+  console.warn("[WalkthroughScriptEngine] waitForIdle timeout - engine still active");
+  return false;
+}

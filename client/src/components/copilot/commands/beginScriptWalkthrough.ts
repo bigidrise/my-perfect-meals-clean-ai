@@ -1,39 +1,43 @@
-import { walkthroughEngine } from "../walkthrough/WalkthroughScriptEngine";
+import { walkthroughEngine, waitForIdle } from "../walkthrough/WalkthroughScriptEngine";
 import { getScript, hasScript } from "../walkthrough/ScriptRegistry";
 import type { KnowledgeResponse } from "../CopilotContext";
+import type { WalkthroughEvent } from "../walkthrough/WalkthroughTypes";
 
 /**
- * Phase C.1: Begin a script-based walkthrough
- * Returns both engine start status AND a KnowledgeResponse for CopilotContext
+ * Phase C.1: Begin a script-based walkthrough with event streaming
+ * Accepts a responseCallback to stream lifecycle events to CopilotContext
  */
 export async function beginScriptWalkthrough(
-  scriptId: string
+  scriptId: string,
+  responseCallback?: (response: KnowledgeResponse) => void
 ): Promise<{ success: boolean; response: KnowledgeResponse }> {
   console.log(`[beginScriptWalkthrough] Starting: ${scriptId}`);
 
   // Check if script exists
   if (!hasScript(scriptId)) {
     console.error(`[beginScriptWalkthrough] Script not found: ${scriptId}`);
+    const errorResponse: KnowledgeResponse = {
+      title: "Walkthrough Not Available",
+      description: "This feature doesn't have a guided walkthrough yet.",
+      type: "knowledge",
+    };
     return {
       success: false,
-      response: {
-        title: "Walkthrough Not Available",
-        description: "This feature doesn't have a guided walkthrough yet.",
-        type: "knowledge",
-      },
+      response: errorResponse,
     };
   }
 
   const script = getScript(scriptId);
   if (!script) {
     console.error(`[beginScriptWalkthrough] Failed to get script: ${scriptId}`);
+    const errorResponse: KnowledgeResponse = {
+      title: "Error",
+      description: "Could not load walkthrough script.",
+      type: "knowledge",
+    };
     return {
       success: false,
-      response: {
-        title: "Error",
-        description: "Could not load walkthrough script.",
-        type: "knowledge",
-      },
+      response: errorResponse,
     };
   }
 
@@ -43,36 +47,103 @@ export async function beginScriptWalkthrough(
     console.log(
       `[beginScriptWalkthrough] Canceling active walkthrough: ${currentState.scriptId}`
     );
-    walkthroughEngine.cancel();
+    await walkthroughEngine.cancel();
+    const isIdle = await waitForIdle();
 
-    // Wait for engine to reach idle state
-    let attempts = 0;
-    while (walkthroughEngine.getState().isActive && attempts < 10) {
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      attempts++;
-    }
-
-    if (walkthroughEngine.getState().isActive) {
+    if (!isIdle) {
       console.error(
         "[beginScriptWalkthrough] Engine failed to reach idle state"
       );
+      const errorResponse: KnowledgeResponse = {
+        title: "Error",
+        description: "Could not start walkthrough. Please try again.",
+        type: "knowledge",
+      };
       return {
         success: false,
-        response: {
-          title: "Error",
-          description: "Could not start walkthrough. Please try again.",
-          type: "knowledge",
-        },
+        response: errorResponse,
       };
     }
   }
+
+  // Subscribe to engine lifecycle events to stream updates
+  const eventListener = (event: WalkthroughEvent) => {
+    if (!responseCallback) return;
+
+    const currentStep = walkthroughEngine.getCurrentStep();
+    const state = walkthroughEngine.getState();
+
+    switch (event.type) {
+      case "started":
+      case "step_changed":
+        // Stream KnowledgeResponse update for current step
+        const updateResponse: KnowledgeResponse = {
+          title: script.title,
+          description: `Step ${state.currentStepIndex + 1} of ${state.totalSteps}`,
+          type: "walkthrough",
+          steps: script.steps.map((step) => ({
+            text: step.description,
+            targetId: step.target,
+          })),
+          spokenText: currentStep?.speak || currentStep?.description,
+        };
+        responseCallback(updateResponse);
+        break;
+
+      case "completed":
+        // Send completion response
+        const completionResponse: KnowledgeResponse = {
+          title: "Walkthrough Complete!",
+          description: `You've completed the ${script.title} walkthrough.`,
+          type: "knowledge",
+        };
+        responseCallback(completionResponse);
+        break;
+
+      case "cancelled":
+        // Send cancellation response
+        const cancelResponse: KnowledgeResponse = {
+          title: "Walkthrough Cancelled",
+          description: "The walkthrough has been stopped.",
+          type: "knowledge",
+        };
+        responseCallback(cancelResponse);
+        break;
+
+      case "error":
+        // Send error response
+        const errorResponse: KnowledgeResponse = {
+          title: "Walkthrough Error",
+          description: event.error || "An error occurred during the walkthrough.",
+          type: "knowledge",
+        };
+        responseCallback(errorResponse);
+        break;
+    }
+  };
+
+  // Add listener
+  const removeListener = walkthroughEngine.addEventListener(eventListener);
+
+  // Auto-remove listener after completion or cancellation
+  let removeAutoListener: (() => void) | null = null;
+  const autoRemoveListener = (event: WalkthroughEvent) => {
+    if (event.type === "completed" || event.type === "cancelled") {
+      removeListener();
+      if (removeAutoListener) {
+        removeAutoListener();
+        removeAutoListener = null;
+      }
+    }
+  };
+  removeAutoListener = walkthroughEngine.addEventListener(autoRemoveListener);
 
   // Start the walkthrough engine
   try {
     await walkthroughEngine.start(script);
 
-    // Build KnowledgeResponse from script metadata
-    const response: KnowledgeResponse = {
+    // Build initial KnowledgeResponse
+    const initialResponse: KnowledgeResponse = {
       title: script.title,
       description: "Follow these steps to learn this feature.",
       type: "walkthrough",
@@ -86,17 +157,22 @@ export async function beginScriptWalkthrough(
     console.log(`[beginScriptWalkthrough] Started successfully: ${script.title}`);
     return {
       success: true,
-      response,
+      response: initialResponse,
     };
   } catch (error) {
     console.error("[beginScriptWalkthrough] Failed to start engine:", error);
+    removeListener();
+    if (removeAutoListener) {
+      removeAutoListener();
+    }
+    const errorResponse: KnowledgeResponse = {
+      title: "Error",
+      description: "Failed to start walkthrough. Please try again.",
+      type: "knowledge",
+    };
     return {
       success: false,
-      response: {
-        title: "Error",
-        description: "Failed to start walkthrough. Please try again.",
-        type: "knowledge",
-      },
+      response: errorResponse,
     };
   }
 }
