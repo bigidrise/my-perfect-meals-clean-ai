@@ -64,7 +64,7 @@ export default function ProClients(){
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Pro Portal — Clients</h1>
+          <h1 className="text-lg font-bold text-white">Pro Portal</h1>
 
           {/* Archive Toggle Button */}
           <Button
