@@ -228,7 +228,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "fridge-rescue",
     primaryRoute: "/fridge-rescue",
     isHub: false,
-    keywords: ["fridge rescue", "rescue", "use my fridge", "ingredients", "what can i make"]
+    keywords: ["fridge rescue", "rescue", "use my fridge", "ingredients", "what can i make", "fridge", "pantry rescue", "pantry", "leftover helper", "use ingredients", "rescue mode"]
   },
 
   MACRO_CALCULATOR: {
@@ -236,7 +236,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "macro-calculator",
     primaryRoute: "/macro-counter",
     isHub: false,
-    keywords: ["macros", "macro calculator", "protein calculator", "calorie calculator", "macro counter", "calculator"]
+    keywords: ["macros", "macro calculator", "protein calculator", "calorie calculator", "macro counter", "calculator", "macro setup", "macro goals", "macro tool", "calculate macros", "macro math", "macro calc"]
   },
 
   MY_BIOMETRICS: {
@@ -244,7 +244,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "biometrics",
     primaryRoute: "/my-biometrics",
     isHub: false,
-    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight", "my biometrics"]
+    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight", "my biometrics", "bio metrics", "body metrics", "weight tracking", "body data", "my stats", "track weight"]
   },
 
   SHOPPING_LIST: {
@@ -252,7 +252,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "shopping-list",
     primaryRoute: "/shopping-list-v2",
     isHub: false,
-    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping", "master shopping", "master shopping list"]
+    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping", "master shopping", "master shopping list", "grocery list", "list master", "grocery planner", "shop list", "food list"]
   },
 
   WEEKLY_MEAL_BUILDER: {
@@ -260,7 +260,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "weekly-meal-board",
     primaryRoute: "/weekly-meal-board",
     isHub: false,
-    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board"]
+    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan"]
   },
 
   GET_INSPIRATION: {
@@ -268,7 +268,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "get-inspiration",
     primaryRoute: "/get-inspiration",
     isHub: false,
-    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas"]
+    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse meals"]
   },
 
   ANTI_INFLAMMATORY: {
@@ -276,7 +276,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "anti-inflammatory",
     primaryRoute: "/anti-inflammatory-menu-builder",
     isHub: false,
-    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti"]
+    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"]
   },
 
   BEACH_BODY: {
@@ -284,7 +284,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "beach-body",
     primaryRoute: "/beach-body-meal-board",
     isHub: false,
-    keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred"]
+    keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred", "get lean", "cut", "cutting", "beach prep", "physique", "stage prep"]
   },
 
   PLANNER: {
@@ -292,7 +292,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "planner",
     primaryRoute: "/planner",
     isHub: false,
-    keywords: ["planner", "meal planner", "planning board", "planner page", "main planner"]
+    keywords: ["planner", "meal planner", "planning board", "planner page", "main planner", "planner hub", "nutrition planner"]
   },
 
   LIFESTYLE: {
@@ -300,7 +300,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "lifestyle",
     primaryRoute: "/lifestyle",
     isHub: false,
-    keywords: ["lifestyle", "main lifestyle page", "nutrition lifestyle"]
+    keywords: ["lifestyle", "main lifestyle page", "nutrition lifestyle", "lifestyle hub", "lifestyle page"]
   },
 
   PRO_CARE: {
@@ -308,7 +308,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     legacyId: "pro-care",
     primaryRoute: "/procare-cover",
     isHub: false,
-    keywords: ["pro care", "professional care", "doctor care", "procare"]
+    keywords: ["pro care", "professional care", "doctor care", "procare", "medical care", "professional help", "doctor"]
   }
 };
 
