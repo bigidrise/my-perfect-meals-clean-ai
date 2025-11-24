@@ -84,28 +84,21 @@ export const CopilotSheet: React.FC = () => {
   }, [lastResponse]);
 
   // =========================================
-  // MOBILE AUTOPLAY HANDLING - Try to play and show tap-to-play if blocked
+  // MOBILE AUTOPLAY HANDLING - Detect if autoplay was blocked
   // =========================================
-  useEffect(() => {
-    if (!audioUrl || !audioRef.current) return;
+  const handleAudioError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+    const audio = e.currentTarget;
+    // Check if play was blocked
+    if (audio.paused) {
+      console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
+      setAudioBlocked(true);
+    }
+  };
 
-    const tryPlay = async () => {
-      try {
-        await audioRef.current?.play();
-        setAudioBlocked(false); // Successfully playing
-      } catch (err: any) {
-        // Mobile autoplay blocked (NotAllowedError)
-        if (err.name === "NotAllowedError") {
-          console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
-          setAudioBlocked(true);
-        } else {
-          console.error("Audio playback error:", err);
-        }
-      }
-    };
-
-    tryPlay();
-  }, [audioUrl]);
+  const handleAudioPlay = () => {
+    // Audio started playing successfully
+    setAudioBlocked(false);
+  };
 
   // Manual play handler for tap-to-play fallback
   const handleTapToPlay = async () => {
@@ -422,7 +415,10 @@ export const CopilotSheet: React.FC = () => {
                 {audioUrl && (
                   <audio 
                     ref={audioRef}
+                    autoPlay
                     src={audioUrl}
+                    onPlay={handleAudioPlay}
+                    onError={handleAudioError}
                     onEnded={() => {
                       URL.revokeObjectURL(audioUrl);
                       setAudioUrl(null);
