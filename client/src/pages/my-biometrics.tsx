@@ -283,6 +283,15 @@ export default function MyBiometrics() {
 
     // Clear inputs (keep profile sticky)
     setP(""); setC(""); setF(""); setK("");
+    
+    // Dispatch "done" event after successfully adding macros (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "biometrics-macros-added", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
+    
     // if (SYNC_ENDPOINT) fetch(SYNC_ENDPOINT+"/macros", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ day: today, P,C,F,K })}).catch(()=>{});
   };
   
@@ -663,6 +672,14 @@ export default function MyBiometrics() {
       } else {
         toast({ title: "✓ Weight saved", description: "Your weight has been saved successfully." });
       }
+      
+      // Dispatch "done" event after successfully saving weight (500ms debounce)
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "biometrics-weight-saved", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
     } catch (error) {
       console.error("Error saving weight:", error);
       toast({ 
@@ -882,7 +899,7 @@ export default function MyBiometrics() {
 
 
         {/* MACROS */}
-        <Card data-wt="bio-macro-total-display" className="bg-black/30 backdrop-blur-lg border border-white/10">
+        <Card data-testid="biometrics-macro-summary" className="bg-black/30 backdrop-blur-lg border border-white/10">
           <CardHeader>
             <CardTitle className="text-white text-lg flex items-center gap-2">
               <BarChart3 className="h-5 w-5"/> 
@@ -951,6 +968,7 @@ export default function MyBiometrics() {
                   </div>
 
                   {/* Progress bars - white/yellow/pink system */}
+                  <div data-testid="biometrics-progress-bars">
                   {summaryBadges.map(row => {
                     const near = row.pct >= 90;
                     const over = row.pct >= 100;
@@ -977,6 +995,7 @@ export default function MyBiometrics() {
                       </div>
                     );
                   })}
+                  </div>
                 </div>
               ) : (
                 <div className="rounded-2xl border border-orange-400/30 p-4 mb-3 bg-orange-900/10 backdrop-blur-sm">
@@ -1029,7 +1048,7 @@ export default function MyBiometrics() {
                 📸 Log from Photo
               </Button>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div data-testid="biometrics-macro-inputs" className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <label className="text-xs text-white/80 font-medium mb-1 block">Protein (g)</label>
                   <Input data-wt="bio-manual-protein" type="text" className="bg-black/20 border-white/20 text-white placeholder:text-white/50" value={p} onChange={e=>setP(e.target.value)} data-testid="input-protein" />
@@ -1053,7 +1072,7 @@ export default function MyBiometrics() {
                     - This allows users to top-off macros at the meal board level with food source profiles
                     - Profile system applies heuristic tails (e.g., chicken adds ~12% fat to protein logged)
                     - Implementation: Add dropdown + logic to MacroBridgeFooter or similar meal board components */}
-                <Button data-wt="bio-manual-add-button" onClick={addMacros} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-add-macros"><PlusCircle className="h-4 w-4 mr-1"/> Add</Button>
+                <Button data-testid="biometrics-add-button" onClick={addMacros} className="bg-white/10 border border-white/20 text-white hover:bg-white/20"><PlusCircle className="h-4 w-4 mr-1"/> Add</Button>
                 <Button onClick={resetToday} className="bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-reset-today"><RotateCcw className="h-4 w-4 mr-1"/> Reset Today</Button>
               </div>
 
@@ -1093,7 +1112,7 @@ export default function MyBiometrics() {
         </Card>
 
         {/* Calories chart - continuous 30 days (matches Steps) */}
-        <Card data-wt="bio-graph" className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl">
+        <Card data-testid="biometrics-charts-section" className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-white text-xl flex items-center gap-2"><BarChart3 className="h-5 w-5"/> Calories</CardTitle>
               <ViewToggle value={caloriesView} onChange={setCaloriesView} />
@@ -1120,17 +1139,17 @@ export default function MyBiometrics() {
               <MonthViewToggle value={weightView} onChange={setWeightView} />
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-3 mb-3">
+              <div data-testid="biometrics-weight-input" className="grid grid-cols-2 gap-3 mb-3">
                 <div>
                   <div className="text-xs text-white/70">Weight (lb)</div>
-                  <Input data-wt="bio-weight-input" inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} data-testid="input-weight" />
+                  <Input inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} data-testid="input-weight" />
                 </div>
                 <div>
                   <div className="text-xs text-white/70">Waist (in)</div>
                   <Input inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={waistIn} onChange={e=>setWaistIn(e.target.value)} data-testid="input-waist" />
                 </div>
               </div>
-              <Button data-wt="bio-weight-save-button" onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2" data-testid="button-save-weight">Save Weight</Button>
+              <Button data-testid="biometrics-save-weight-button" onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2">Save Weight</Button>
               <ReadOnlyNote>
                 Track your weight progress here over time. Your weight data automatically syncs with the <strong>Macro Calculator</strong>.
               </ReadOnlyNote>
