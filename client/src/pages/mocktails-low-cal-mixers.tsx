@@ -58,6 +58,7 @@ export default function MocktailsLowCalMixersPage() {
           {mocktailsData.map((mocktail) => (
             <Card
               key={mocktail.id}
+              data-testid="mocktails-card"
               className="cursor-pointer transform hover:scale-105 transition-all duration-200 bg-black/50 backdrop-blur-sm border border-emerald-400/70 shadow-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
               onClick={() => setSelectedMocktail(mocktail.id)}
             >

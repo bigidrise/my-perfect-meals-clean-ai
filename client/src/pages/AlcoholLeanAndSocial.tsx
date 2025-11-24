@@ -344,6 +344,7 @@ export default function AlcoholLeanAndSocial() {
           {DRINKS.map((drink) => (
             <Card
               key={drink.id}
+              data-testid="leansocial-card"
               className="cursor-pointer transform hover:scale-105 transition-all duration-200 bg-black/50 backdrop-blur-sm border border-rose-400/70 shadow-xl hover:shadow-[0_0_20px_rgba(244,63,94,0.3)]"
               onClick={() => setSelectedDrink(drink.id)}
             >
@@ -376,6 +377,7 @@ export default function AlcoholLeanAndSocial() {
             onClick={() => setSelectedDrink(null)}
           >
             <Card
+              data-testid="leansocial-detail"
               className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/50 border border-rose-400/70 shadow-[0_0_30px_rgba(244,63,94,0.2)]"
               onClick={(e) => e.stopPropagation()}
             >

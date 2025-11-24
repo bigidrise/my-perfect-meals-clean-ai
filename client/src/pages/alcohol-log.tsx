@@ -288,7 +288,7 @@ export default function AlcoholLogPage() {
                 </div>
 
                 <div className="md:col-span-4">
-                  <Button type="submit" className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="button-save-entry">
+                  <Button type="submit" className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20" data-testid="alcohollog-add">
                     Save Entry
                   </Button>
                 </div>

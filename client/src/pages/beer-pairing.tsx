@@ -341,6 +341,7 @@ export default function BeerPairingMode() {
             {recs.map((b, i) => (
               <Card
                 key={`${b.name}-${i}`}
+                data-testid="beerpairing-card"
                 className="bg-black/50 border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.12)]"
               >
                 <CardHeader>

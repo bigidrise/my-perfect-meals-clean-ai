@@ -496,6 +496,7 @@ export default function CravingCreator() {
                     </div>
                     <div className="relative">
                       <textarea
+                        data-testid="cravingcreator-input-box"
                         data-wt="cc-description-input"
                         value={cravingInput}
                         onChange={(e) => setCravingInput(e.target.value)}
@@ -663,6 +664,7 @@ export default function CravingCreator() {
                     </div>
                   ) : (
                     <GlassButton
+                      data-testid="cravingcreator-create-button"
                       data-wt="cc-generate-button"
                       onClick={handleGenerateMeal}
                       disabled={isGenerating}
@@ -681,7 +683,7 @@ export default function CravingCreator() {
             <div className="mt-8 space-y-6">
               {generatedMeals.map((meal, index) => (
                 <div key={index}>
-                  <Card data-wt="cc-meal-card" className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
+                  <Card data-testid="cravingcreator-results" data-wt="cc-meal-card" className="bg-black/30 backdrop-blur-lg border border-white/20 shadow-xl rounded 2xl">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">

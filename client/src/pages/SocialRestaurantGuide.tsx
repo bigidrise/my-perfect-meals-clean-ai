@@ -412,6 +412,7 @@ export default function RestaurantGuidePage() {
                 </label>
                 <div className="relative">
                   <Input
+                    data-testid="restaurantguide-search"
                     data-wt="rg-restaurant-input"
                     id="restaurant-input"
                     placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"

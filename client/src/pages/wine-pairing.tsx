@@ -283,7 +283,7 @@ export default function WinePairingPage() {
             </h2>
 
             {result.recommendations.map((wine, index) => (
-              <Card key={index} className="overflow-hidden bg-black/50 backdrop-blur-lg border border-purple-400/70 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
+              <Card key={index} data-testid="winepairing-card" className="overflow-hidden bg-black/50 backdrop-blur-lg border border-purple-400/70 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
                 <CardHeader className={`${getWineTypeColor(wine.wineType)} border-b`}>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-xl">{wine.wineName}</CardTitle>

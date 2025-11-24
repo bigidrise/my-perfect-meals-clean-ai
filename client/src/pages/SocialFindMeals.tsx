@@ -245,7 +245,7 @@ export default function MealFinder() {
                     onChange={(e) => setMealQuery(e.target.value)}
                     className="w-full bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
                     onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                    data-testid="input-meal-query"
+                    data-testid="findmeals-search"
                   />
                 </div>
 

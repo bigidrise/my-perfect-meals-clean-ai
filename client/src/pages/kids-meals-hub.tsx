@@ -218,7 +218,7 @@ export default function KidsMealsHub() {
           {meals.map((meal, idx) => (
             <Card
               key={meal.id}
-              data-testid={idx === 0 ? "kids-meals-first-card" : undefined}
+              data-testid="kidsmeals-card"
               className="cursor-pointer transform hover:scale-105 transition-all duration-200 bg-black/50 backdrop-blur-sm border border-orange-400/70 shadow-xl hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]"
               onClick={() => {
                 setSelectedMeal(meal.id);

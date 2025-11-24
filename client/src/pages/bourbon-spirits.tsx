@@ -303,7 +303,7 @@ export default function BourbonSpiritsPage() {
 
         {/* Results */}
         {result && (
-          <Card className="overflow-hidden bg-black/50 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
+          <Card data-testid="bourbonpairing-card" className="overflow-hidden bg-black/50 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
             <CardHeader
               className={`${getSpiritTypeColor(result.spiritType)} border-b`}
             >
