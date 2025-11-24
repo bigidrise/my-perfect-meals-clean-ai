@@ -76,33 +76,30 @@ export const CopilotSheet: React.FC = () => {
   }, [lastResponse]);
 
   // =========================================
-  // MOBILE AUTOPLAY HANDLING - Retry with manual play if autoPlay blocked
-  // Only needed in dev for React StrictMode; production relies on native autoPlay
+  // AUTOPLAY HANDLING - Retry with manual play if autoPlay blocked
+  // Browsers often block autoPlay, so we manually trigger play() as fallback
   // =========================================
   useEffect(() => {
     if (!audioUrl || !audioRef.current) return;
 
-    // DEV ONLY: Wait for element to be ready, then try manual play as fallback
-    // Production relies on native autoPlay + tap-to-play fallback
-    if (import.meta.env.DEV) {
-      requestAnimationFrame(async () => {
-        const audio = audioRef.current;
-        if (!audio) return;
+    // Wait for element to be ready, then try manual play as fallback for autoPlay blocking
+    requestAnimationFrame(async () => {
+      const audio = audioRef.current;
+      if (!audio) return;
 
-        try {
-          await audio.play();
-          setAudioBlocked(false); // Successfully playing
-        } catch (err: any) {
-          // autoPlay blocked - show tap-to-play prompt
-          if (err.name === "NotAllowedError") {
-            console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
-            setAudioBlocked(true);
-          } else {
-            console.error("Audio playback error:", err);
-          }
+      try {
+        await audio.play();
+        setAudioBlocked(false); // Successfully playing
+      } catch (err: any) {
+        // autoPlay blocked - show tap-to-play prompt
+        if (err.name === "NotAllowedError") {
+          console.log("🔇 Autoplay blocked, showing tap-to-play prompt");
+          setAudioBlocked(true);
+        } else {
+          console.error("Audio playback error:", err);
         }
-      });
-    }
+      }
+    });
   }, [audioUrl]);
 
   // Manual play handler for tap-to-play fallback
