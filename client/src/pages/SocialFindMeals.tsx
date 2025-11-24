@@ -222,15 +222,6 @@ export default function MealFinder() {
           className="max-w-4xl mx-auto px-4"
           style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
         >
-          <div className="bg-black/20 backdrop-blur-none border border-white/20 shadow-xl rounded-2xl text-center mb-6 sm:mb-8 p-6">
-            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
-              Find Meals Near You
-            </h2>
-            <p className="text-sm sm:text-lg text-white/80">
-              Find meals you're craving at nearby restaurants
-            </p>
-          </div>
-
           <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
