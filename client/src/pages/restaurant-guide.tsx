@@ -198,6 +198,14 @@ export default function RestaurantGuidePage() {
     if (!localStorage.getItem("hasSeenRestaurantInfo")) {
       localStorage.setItem("hasSeenRestaurantInfo", "true");
     }
+    
+    // Dispatch "ready" event after page loads (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "restaurant-guide-ready", event: "ready" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   // Restore cached restaurant meals on mount (so generated meals come back)
@@ -284,6 +292,14 @@ export default function RestaurantGuidePage() {
         title: "🍽️ Restaurant Meals Generated!",
         description: `Found ${data.recommendations?.length || 0} healthy options for you.`,
       });
+      
+      // Dispatch "done" event after successful generation (500ms debounce)
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "restaurant-guide-generated", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
     },
     onError: (error: Error) => {
       stopProgressTicker();
@@ -361,7 +377,7 @@ export default function RestaurantGuidePage() {
 
 
             {/* Title */}
-            <h1 className="text-lg font-bold text-white">Restaurant Guide</h1>
+            <h1 data-testid="restaurant-guide-hero" className="text-lg font-bold text-white">Restaurant Guide</h1>
 
             
           </div>
@@ -372,7 +388,7 @@ export default function RestaurantGuidePage() {
 
         
 
-        <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
+        <Card data-testid="restaurant-guide-form" className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
             <CardTitle className="text-xl text-white">
               <div className="flex items-center gap-2">
@@ -404,6 +420,7 @@ export default function RestaurantGuidePage() {
                 </label>
                 <div className="relative">
                   <Input
+                    data-testid="restaurant-guide-craving"
                     data-wt="rg-craving-input"
                     id="craving-input"
                     placeholder="e.g. chicken, salmon, pasta"
@@ -429,6 +446,7 @@ export default function RestaurantGuidePage() {
                 </label>
                 <div className="relative">
                   <Input
+                    data-testid="restaurant-guide-restaurant"
                     data-wt="rg-restaurant-input"
                     id="restaurant-input"
                     placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
@@ -449,6 +467,7 @@ export default function RestaurantGuidePage() {
                 </div>
               </div>
               <Button
+                data-testid="restaurant-guide-search"
                 data-wt="rg-search-button"
                 onClick={handleSearch}
                 disabled={generateMealsMutation.isPending}
@@ -476,7 +495,7 @@ export default function RestaurantGuidePage() {
 
             {/* Generated Meals Section */}
             {generatedMeals.length > 0 && (
-              <div data-wt="rg-results-list" className="space-y-6 mb-6">
+              <div data-testid="restaurant-guide-results" data-wt="rg-results-list" className="space-y-6 mb-6">
                 <h2 className="text-xl font-bold text-white mb-4">
                   🍽️ Recommended Meals at {restaurantInput.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}:
                 </h2>

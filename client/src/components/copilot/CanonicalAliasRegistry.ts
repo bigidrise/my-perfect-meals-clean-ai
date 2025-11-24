@@ -52,6 +52,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "CRAVING_PREMADES",
         label: "Craving Premades",
         route: "/craving-presets",
+        walkthroughId: "craving-premades-walkthrough",
         aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"]
       }
     ]
@@ -128,6 +129,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "RESTAURANT_GUIDE",
         label: "Restaurant Guide",
         route: "/social-hub/restaurant-guide",
+        walkthroughId: "restaurant-guide-walkthrough",
         aliases: ["restaurant guide", "guide", "restaurant", "eat out guide", "restaurant helper", "eat out", "ordering out", "restaurant menu help"]
       },
       {
@@ -151,12 +153,14 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "KIDS_MEALS",
         label: "Kids Meals",
         route: "/kids-meals",
+        walkthroughId: "kids-meals-walkthrough",
         aliases: ["kids meals", "children meals", "kids", "meal picker", "big kids meals", "older kids", "school lunch"]
       },
       {
         id: "TODDLER_MEALS",
         label: "Toddler Meals",
         route: "/toddler-meals",
+        walkthroughId: "toddler-meals-walkthrough",
         aliases: ["toddler", "toddler meals", "toddlers", "little kids", "baby meals"]
       }
     ]

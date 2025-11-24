@@ -17,6 +17,7 @@ type Props = {
   sourceSlug?: string;
   bottomPadding?: string;
   hideCopyButton?: boolean;
+  onAddComplete?: () => void; // Optional callback after adding items to shopping list
 };
 
 function formatQty(qty?: number | string): string {
@@ -29,7 +30,7 @@ function formatQty(qty?: number | string): string {
   return rounded.toString().replace(/\.?0+$/, '');
 }
 
-export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, bottomPadding = "pb-20", hideCopyButton = false }: Props) {
+export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, bottomPadding = "pb-20", hideCopyButton = false, onAddComplete }: Props) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [copying, setCopying] = useState(false);
@@ -81,6 +82,11 @@ export default function ShoppingAggregateBar({ ingredients, source, sourceSlug, 
       title: "Added to Shopping List",
       description: `${ingredients.length} items added to your master list`
     });
+    
+    // Call optional completion callback
+    if (onAddComplete) {
+      onAddComplete();
+    }
 
     // Navigate with source parameter for back navigation
     const url = sourceSlug ? `/shopping-list-v2?from=${sourceSlug}` : "/shopping-list-v2";

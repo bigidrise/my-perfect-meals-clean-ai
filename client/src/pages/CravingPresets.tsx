@@ -77,6 +77,14 @@ export default function CravingPresetsPage() {
     if (!localStorage.getItem("hasSeenPresetsInfo")) {
       localStorage.setItem("hasSeenPresetsInfo", "true");
     }
+    
+    // Dispatch "ready" event after page loads (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "craving-premades-ready", event: "ready" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
 
@@ -120,7 +128,7 @@ export default function CravingPresetsPage() {
           </Button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Premade Cravings</h1>
+          <h1 data-testid="craving-premades-hero" className="text-lg font-bold text-white">Premade Cravings</h1>
 
           
         </div>
@@ -133,7 +141,7 @@ export default function CravingPresetsPage() {
       >
 
         {/* Controls */}
-        <Card className="mb-6 bg-black/50 backdrop-blur-sm border border-orange-400/70">
+        <Card data-testid="craving-premades-controls" className="mb-6 bg-black/50 backdrop-blur-sm border border-orange-400/70">
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
@@ -190,12 +198,23 @@ export default function CravingPresetsPage() {
         </Card>
 
         {/* Meals Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {meals.map((meal) => (
+        <div data-testid="craving-premades-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+          {meals.map((meal, idx) => (
             <Card
               key={meal.id}
+              data-testid={idx === 0 ? "craving-premades-first-card" : undefined}
               className="cursor-pointer transform hover:scale-105 transition-all duration-200 bg-black/50 backdrop-blur-sm border border-orange-400/70 shadow-xl hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]"
-              onClick={() => setSelectedMeal(meal.id)}
+              onClick={() => {
+                setSelectedMeal(meal.id);
+                
+                // Dispatch "done" event after selecting a meal (500ms debounce)
+                setTimeout(() => {
+                  const event = new CustomEvent("walkthrough:event", {
+                    detail: { testId: "craving-premade-selected", event: "done" },
+                  });
+                  window.dispatchEvent(event);
+                }, 500);
+              }}
             >
               <div className="aspect-square overflow-hidden rounded-t-lg">
                 <img
@@ -223,6 +242,7 @@ export default function CravingPresetsPage() {
             onClick={() => setSelectedMeal(null)}
           >
             <Card
+              data-testid="craving-premades-modal"
               className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/50 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.2)]"
               onClick={(e) => e.stopPropagation()}
             >
@@ -329,16 +349,27 @@ export default function CravingPresetsPage() {
 
         {/* Shopping Bar - Fixed at bottom when modal is open */}
         {selected && (
-          <ShoppingAggregateBar
-            ingredients={scaledIngs.map(ing => ({
-              name: ing.name,
-              qty: ing.quantity,
-              unit: ing.unit || ''
-            }))}
-            source={`${selected.name} (${selectedServings} servings)`}
-            sourceSlug="craving-presets"
-            hideCopyButton={true}
-          />
+          <div data-testid="craving-premades-shopping-bar">
+            <ShoppingAggregateBar
+              ingredients={scaledIngs.map(ing => ({
+                name: ing.name,
+                qty: ing.quantity,
+                unit: ing.unit || ''
+              }))}
+              source={`${selected.name} (${selectedServings} servings)`}
+              sourceSlug="craving-presets"
+              hideCopyButton={true}
+              onAddComplete={() => {
+                // Dispatch "done" event after adding to shopping list (500ms debounce)
+                setTimeout(() => {
+                  const event = new CustomEvent("walkthrough:event", {
+                    detail: { testId: "craving-premade-added", event: "done" },
+                  });
+                  window.dispatchEvent(event);
+                }, 500);
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

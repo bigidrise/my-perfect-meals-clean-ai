@@ -89,6 +89,14 @@ export default function ToddlersMealsHub() {
     if (!localStorage.getItem("hasSeenToddlersMealsInfo")) {
       localStorage.setItem("hasSeenToddlersMealsInfo", "true");
     }
+    
+    // Dispatch "ready" event after page loads (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "toddler-meals-ready", event: "ready" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   const meals = useMemo(() => {
@@ -137,7 +145,7 @@ export default function ToddlersMealsHub() {
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Toddlers (1–3) Grazing</h1>
+          <h1 data-testid="toddler-meals-hero" className="text-lg font-bold text-white">Toddlers (1–3) Grazing</h1>
 
           
         </div>
@@ -149,7 +157,7 @@ export default function ToddlersMealsHub() {
       >
 
         {/* Controls */}
-        <Card className="mb-6 bg-black/50 backdrop-blur-sm border border-orange-400/70">
+        <Card data-testid="toddler-meals-controls" className="mb-6 bg-black/50 backdrop-blur-sm border border-orange-400/70">
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
@@ -207,12 +215,23 @@ export default function ToddlersMealsHub() {
         </Card>
 
         {/* Meals Grid */}
-        <div data-wt="cp-meal-gallery" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {meals.map((meal) => (
+        <div data-testid="toddler-meals-grid" data-wt="cp-meal-gallery" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+          {meals.map((meal, idx) => (
             <Card
               key={meal.id}
+              data-testid={idx === 0 ? "toddler-meals-first-card" : undefined}
               className="cursor-pointer transform hover:scale-105 transition-all duration-200 bg-black/50 backdrop-blur-sm border border-orange-400/70 shadow-xl hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]"
-              onClick={() => setSelectedMeal(meal.id)}
+              onClick={() => {
+                setSelectedMeal(meal.id);
+                
+                // Dispatch "done" event after opening a meal (500ms debounce)
+                setTimeout(() => {
+                  const event = new CustomEvent("walkthrough:event", {
+                    detail: { testId: "toddler-meal-opened", event: "done" },
+                  });
+                  window.dispatchEvent(event);
+                }, 500);
+              }}
             >
               <div className="aspect-square overflow-hidden rounded-t-lg">
                 <img
@@ -248,6 +267,7 @@ export default function ToddlersMealsHub() {
             onClick={() => setSelectedMeal(null)}
           >
             <Card
+              data-testid="toddler-meals-modal"
               data-wt="cp-meal-card"
               className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/50 border border-orange-400/70 shadow-[0_0_30px_rgba(249,115,22,0.2)]"
               onClick={(e) => e.stopPropagation()}
@@ -349,16 +369,27 @@ export default function ToddlersMealsHub() {
 
         {/* Shopping Bar - Fixed at bottom when modal is open */}
         {selected && (
-          <ShoppingAggregateBar
-            ingredients={scaledIngs.map((ing) => ({
-              name: ing.item,
-              qty: ing.quantity,
-              unit: ing.unit,
-            }))}
-            source={`${selected.name} (${selectedServings} servings)`}
-            sourceSlug="toddler-meals"
-            hideCopyButton={true}
-          />
+          <div data-testid="toddler-meals-shopping-bar">
+            <ShoppingAggregateBar
+              ingredients={scaledIngs.map((ing) => ({
+                name: ing.item,
+                qty: ing.quantity,
+                unit: ing.unit,
+              }))}
+              source={`${selected.name} (${selectedServings} servings)`}
+              sourceSlug="toddler-meals"
+              hideCopyButton={true}
+              onAddComplete={() => {
+                // Dispatch "done" event after adding to shopping list (500ms debounce)
+                setTimeout(() => {
+                  const event = new CustomEvent("walkthrough:event", {
+                    detail: { testId: "toddler-meal-added", event: "done" },
+                  });
+                  window.dispatchEvent(event);
+                }, 500);
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

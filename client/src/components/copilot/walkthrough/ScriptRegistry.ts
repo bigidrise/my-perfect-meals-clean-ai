@@ -7,6 +7,10 @@ import BeachBodyMealBuilderScript from "./scripts/BeachBodyMealBuilderScript";
 import MacroCalculatorScript from "./scripts/MacroCalculatorScript";
 import BiometricsWalkthroughScript from "./scripts/BiometricsWalkthroughScript";
 import MasterShoppingListScript from "./scripts/MasterShoppingListScript";
+import CravingPremadesScript from "./scripts/CravingPremadesScript";
+import KidsMealsScript from "./scripts/KidsMealsScript";
+import ToddlerMealsScript from "./scripts/ToddlerMealsScript";
+import RestaurantGuideScript from "./scripts/RestaurantGuideScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -48,6 +52,26 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "shopping-list-walkthrough": MasterShoppingListScript,
   "shopping-list": MasterShoppingListScript,
   "master-shopping-list": MasterShoppingListScript,
+  
+  // Craving Premades
+  "craving-premades-walkthrough": CravingPremadesScript,
+  "craving-premades": CravingPremadesScript,
+  "premade-cravings": CravingPremadesScript,
+  
+  // Kids Meals
+  "kids-meals-walkthrough": KidsMealsScript,
+  "kids-meals": KidsMealsScript,
+  "kids-meals-hub": KidsMealsScript,
+  
+  // Toddler Meals
+  "toddler-meals-walkthrough": ToddlerMealsScript,
+  "toddler-meals": ToddlerMealsScript,
+  "toddlers-meals": ToddlerMealsScript,
+  
+  // Restaurant Guide
+  "restaurant-guide-walkthrough": RestaurantGuideScript,
+  "restaurant-guide": RestaurantGuideScript,
+  "restaurant": RestaurantGuideScript,
 };
 
 /**
