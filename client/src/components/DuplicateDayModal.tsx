@@ -22,15 +22,35 @@ export function DuplicateDayModal({
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
 
   const handleToggleDate = (dateISO: string) => {
-    setSelectedDates(prev => 
-      prev.includes(dateISO)
+    setSelectedDates(prev => {
+      const updated = prev.includes(dateISO)
         ? prev.filter(d => d !== dateISO)
-        : [...prev, dateISO]
-    );
+        : [...prev, dateISO];
+      
+      // Dispatch walkthrough event when days are selected
+      if (updated.length > 0) {
+        setTimeout(() => {
+          const eventTarget = document.querySelector(`[data-testid="duplicate-days-selected"]`);
+          if (eventTarget) {
+            eventTarget.dispatchEvent(new CustomEvent('chosen'));
+          }
+        }, 100);
+      }
+      
+      return updated;
+    });
   };
 
   const handleSelectAll = () => {
     setSelectedDates(availableDates);
+    
+    // Dispatch walkthrough event
+    setTimeout(() => {
+      const eventTarget = document.querySelector(`[data-testid="duplicate-days-selected"]`);
+      if (eventTarget) {
+        eventTarget.dispatchEvent(new CustomEvent('chosen'));
+      }
+    }, 100);
   };
 
   const handleDeselectAll = () => {
@@ -54,7 +74,9 @@ export function DuplicateDayModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-gradient-to-br from-black/90 via-gray-800/90 to-black/90 border border-white/20 text-white max-w-md">
+      <DialogContent className="bg-gradient-to-br from-black/90 via-gray-800/90 to-black/90 border border-white/20 text-white max-w-md" data-testid="duplicate-days-panel">
+        {/* Hidden event emitter for walkthrough system */}
+        <div data-testid="duplicate-days-selected" style={{display: 'none'}} />
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-white">
             Duplicate {sourceDayName}
@@ -123,6 +145,7 @@ export function DuplicateDayModal({
             onClick={handleConfirm}
             disabled={selectedDates.length === 0}
             className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white disabled:opacity-50"
+            data-testid="duplicate-confirm-button"
           >
             Duplicate to {selectedDates.length} day{selectedDates.length !== 1 ? 's' : ''}
           </Button>

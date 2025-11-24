@@ -182,6 +182,12 @@ export default function WeeklyMealBoard() {
       // Dispatch board update event
       window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
       window.dispatchEvent(new Event("macros:updated"));
+
+      // Dispatch walkthrough event (premadePickerSlot is always breakfast/lunch/dinner, never snacks)
+      const eventTarget = document.querySelector(`[data-testid="meal-filled-${premadePickerSlot}"]`);
+      if (eventTarget) {
+        eventTarget.dispatchEvent(new CustomEvent('filled'));
+      }
     } catch (error) {
       console.error("Failed to add premade meal:", error);
       toast({
@@ -228,6 +234,12 @@ export default function WeeklyMealBoard() {
       // Dispatch board update event
       window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
       window.dispatchEvent(new Event("macros:updated"));
+
+      // Dispatch walkthrough event for snacks
+      const eventTarget = document.querySelector(`[data-testid="meal-filled-snack"]`);
+      if (eventTarget) {
+        eventTarget.dispatchEvent(new CustomEvent('filled'));
+      }
     } catch (error) {
       console.error("Failed to add snack:", error);
       toast({
@@ -339,6 +351,21 @@ export default function WeeklyMealBoard() {
       setBoard(updatedBoard);
     }
   }, [board, activeDayISO]); // Run when board loads OR day changes
+
+  // Dispatch "ready" event when daily totals are calculated (for walkthrough)
+  useEffect(() => {
+    if (!board) return;
+    
+    // Dispatch after a short delay to ensure totals are fully calculated and rendered
+    const timer = setTimeout(() => {
+      const eventTarget = document.querySelector(`[data-testid="daily-totals-ready"]`);
+      if (eventTarget) {
+        eventTarget.dispatchEvent(new CustomEvent('ready'));
+      }
+    }, 500); // Increased delay to ensure DOM is fully rendered
+
+    return () => clearTimeout(timer);
+  }, [board, planningMode, activeDayISO]); // Watch board, mode, and active day
 
   // Duplicate day handler
   const handleDuplicateDay = useCallback(async (targetDates: string[]) => {
@@ -497,6 +524,14 @@ export default function WeeklyMealBoard() {
       title: "Added to Shopping List",
       description: `${ingredients.length} items from entire week added to your master list`
     });
+
+    // Dispatch walkthrough event
+    setTimeout(() => {
+      const eventTarget = document.querySelector(`[data-testid="shopping-week-sent"]`);
+      if (eventTarget) {
+        eventTarget.dispatchEvent(new CustomEvent('done'));
+      }
+    }, 200);
   }, [board, weekStartISO, weekDatesList, toast]);
 
   // AI Meal Creator handler - Save to localStorage (Fridge Rescue pattern)
@@ -563,6 +598,13 @@ export default function WeeklyMealBoard() {
       title: "AI Meal Created!",
       description: `${generatedMeal.name} saved to your ${slotLabel.toLowerCase()}`,
     });
+
+    // Dispatch walkthrough event
+    const slotTestId = aiMealSlot === 'snacks' ? 'snack' : aiMealSlot;
+    const eventTarget = document.querySelector(`[data-testid="meal-filled-${slotTestId}"]`);
+    if (eventTarget) {
+      eventTarget.dispatchEvent(new CustomEvent('filled'));
+    }
 
     // Advance guided tour to next step
     advanceTourStep();
@@ -976,7 +1018,7 @@ export default function WeeklyMealBoard() {
           </Button>
 
           {/* Title */}
-          <h1 className="text-base font-bold text-white flex-shrink truncate">
+          <h1 className="text-base font-bold text-white flex-shrink truncate" data-testid="weekly-builder-header">
             Weekly Meal Builder
           </h1>
 
@@ -1035,6 +1077,7 @@ export default function WeeklyMealBoard() {
                   variant="outline"
                   onClick={() => setShowDuplicateDayModal(true)}
                   className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-3 py-1 rounded-xl"
+                  data-testid="duplicate-button"
                 >
                   Duplicate...
                 </Button>
@@ -1131,7 +1174,14 @@ export default function WeeklyMealBoard() {
             const dayLists = getDayLists(board, activeDayISO);
             // Map over the standard lists, but use dayLists for meal data
             return lists.map(([key, label]) => (
-              <section key={key} data-meal-id={key === "snacks" ? "snack1" : key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+              <section 
+                key={key} 
+                data-meal-id={key === "snacks" ? "snack1" : key}
+                data-testid={key === "snacks" ? "meal-slot-snack" : `meal-slot-${key}`}
+                className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4"
+              >
+                {/* Hidden event emitter for walkthrough system */}
+                <div data-testid={key === "snacks" ? "meal-filled-snack" : `meal-filled-${key}`} style={{display: 'none'}} />
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
                   <div className="flex gap-2">
@@ -1338,7 +1388,9 @@ export default function WeeklyMealBoard() {
 
         {/* Daily Totals Summary */}
         <div className="col-span-full">
-          <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-lg p-6">
+          <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-lg p-6" data-testid="daily-totals-card">
+            {/* Hidden event emitter for walkthrough system */}
+            <div data-testid="daily-totals-ready" style={{display: 'none'}} />
             <h3 className="text-white font-semibold text-lg mb-4 text-center">
               Daily Totals
             </h3>
@@ -1600,8 +1652,10 @@ export default function WeeklyMealBoard() {
                         setTimeout(() => setLocation('/shopping-list-v2?from=weekly-meal-board'), 100);
                       }}
                       className="flex-1 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white border border-white/30"
-                      data-testid="button-send-week-shopping"
+                      data-testid="send-week-to-shopping"
                     >
+                      {/* Hidden event emitter for walkthrough system */}
+                      <div data-testid="shopping-week-sent" style={{display: 'none'}} />
                       <ShoppingCart className="h-5 w-5 mr-2" />
                       Send Entire Week
                     </Button>
