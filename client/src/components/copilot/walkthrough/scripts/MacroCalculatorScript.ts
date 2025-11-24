@@ -4,7 +4,7 @@ const MacroCalculatorScript: WalkthroughScript = {
   id: "macro-calculator-walkthrough",
   featureId: "MACRO_CALCULATOR",
   title: "Macro Calculator",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",
