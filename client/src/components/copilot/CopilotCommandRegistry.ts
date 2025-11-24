@@ -14,7 +14,7 @@ import {
   findSubOptionByAlias,
   getHubPromptMessage,
   type FeatureDefinition,
-  type SubOption
+  type SubOption,
 } from "./CanonicalAliasRegistry";
 
 type CommandHandler = (payload?: any) => Promise<void>;
@@ -27,7 +27,13 @@ let modalCallback: ModalHandler | null = null;
 let responseCallback: ResponseHandler | null = null;
 
 // Track which feature the user is actively interacting with
-type ActiveFeature = "weekly-board" | "fridge-rescue" | "proaccess-careteam" | "diabetic-hub" | "glp1-hub" | null;
+type ActiveFeature =
+  | "weekly-board"
+  | "fridge-rescue"
+  | "proaccess-careteam"
+  | "diabetic-hub"
+  | "glp1-hub"
+  | null;
 let lastActiveFeature: ActiveFeature = null;
 
 // Track active hub for sub-option navigation
@@ -53,7 +59,7 @@ export function setActiveFeature(feature: ActiveFeature) {
 // Copilot Introduction - plays once when user chooses "My Perfect Copilot"
 export function startCopilotIntro(force = false) {
   const INTRO_FLAG = "copilot-intro-seen";
-  
+
   // Check if intro has already been played (unless forced)
   if (!force && localStorage.getItem(INTRO_FLAG) === "true") {
     console.log("ℹ️ Copilot intro already seen, skipping");
@@ -61,13 +67,15 @@ export function startCopilotIntro(force = false) {
   }
 
   // Intro script (voice + text)
-  const introScript = "Hey Coach, welcome! I'm your Perfect Copilot. Anytime you need help, tap my button and tell me what you want to do. Try saying things like 'Fridge Rescue,' 'Plan my week,' or 'Show me macros.' I'll take you straight there and walk you through every step. Ready when you are.";
+  const introScript =
+    "Hello, and welcome! I'm your Perfect Copilot. Anytime you need help, tap my button and tell me what you want to do. Try saying things like 'Fridge Rescue,' 'Plan my week,' or 'Show me macros.' I'll take you straight there and walk you through every step. Ready when you are.";
 
   // Send intro response through existing pipeline
   if (responseCallback) {
     responseCallback({
       title: "Welcome to Your Perfect Copilot! 🎤",
-      description: "I'm here to help you navigate the app and get things done fast.",
+      description:
+        "I'm here to help you navigate the app and get things done fast.",
       spokenText: introScript,
     });
   }
@@ -371,7 +379,8 @@ const Commands: Record<string, CommandHandler> = {
     lastActiveFeature = "weekly-board";
     responseCallback({
       title: "Day Sent to Shopping",
-      description: "Your current day's ingredients were added to the shopping list.",
+      description:
+        "Your current day's ingredients were added to the shopping list.",
       spokenText: "Sending your day to the shopping list.",
     });
   },
@@ -381,7 +390,8 @@ const Commands: Record<string, CommandHandler> = {
     lastActiveFeature = "weekly-board";
     responseCallback({
       title: "Week Sent to Shopping",
-      description: "Your full week's ingredients were added to the shopping list.",
+      description:
+        "Your full week's ingredients were added to the shopping list.",
       spokenText: "Sending your week to the shopping list.",
     });
   },
@@ -830,16 +840,18 @@ const Commands: Record<string, CommandHandler> = {
 
 // Legacy fuzzy keyword matching - now delegates to CanonicalAliasRegistry
 // Kept for backward compatibility with existing voice intents
-function findFeatureByKeyword(query: string): { featureId: string; route: string } | null {
+function findFeatureByKeyword(
+  query: string,
+): { featureId: string; route: string } | null {
   const feature = findFeatureFromRegistry(query);
-  
+
   if (feature) {
     return {
       featureId: feature.legacyId || feature.id, // Use legacyId for Spotlight compatibility
-      route: feature.primaryRoute
+      route: feature.primaryRoute,
     };
   }
-  
+
   return null;
 }
 
@@ -852,72 +864,76 @@ async function handleVoiceQuery(transcript: string) {
   // ===================================
   // PHASE B: HUB-FIRST ROUTING SYSTEM (PRIORITY)
   // ===================================
-  
+
   // Check if user is selecting a sub-option within current hub
   if (currentHub && currentHub.isHub && currentHub.subOptions) {
     const subOption = findSubOptionByAlias(currentHub, transcript);
-    
+
     if (subOption) {
-      console.log(`🎯 Sub-option selected: ${subOption.label} → ${subOption.route}`);
-      
+      console.log(
+        `🎯 Sub-option selected: ${subOption.label} → ${subOption.route}`,
+      );
+
       if (navigationCallback) {
         navigationCallback(subOption.route);
       }
-      
+
       // Clear hub context after navigation
       currentHub = null;
-      
+
       if (responseCallback) {
         responseCallback({
           title: `Opening ${subOption.label}`,
           description: `Navigating to ${subOption.label}`,
-          spokenText: `Opening ${subOption.label}`
+          spokenText: `Opening ${subOption.label}`,
         });
       }
-      
+
       return;
     }
   }
 
   // Check for feature match in canonical registry
   const registryFeature = findFeatureFromRegistry(transcript);
-  
+
   if (registryFeature) {
-    console.log(`🔍 Registry match: ${registryFeature.id} → ${registryFeature.primaryRoute}`);
-    
+    console.log(
+      `🔍 Registry match: ${registryFeature.id} → ${registryFeature.primaryRoute}`,
+    );
+
     // Navigate to primary route (hub or direct page)
     if (navigationCallback) {
       navigationCallback(registryFeature.primaryRoute);
     }
-    
+
     // If it's a hub, store context and prompt for sub-option
     if (registryFeature.isHub) {
       currentHub = registryFeature;
-      
+
       const promptMessage = getHubPromptMessage(registryFeature);
-      
+
       if (responseCallback) {
         responseCallback({
-          title: `${registryFeature.id.replace(/_/g, ' ')}`,
+          title: `${registryFeature.id.replace(/_/g, " ")}`,
           description: promptMessage,
-          spokenText: promptMessage
+          spokenText: promptMessage,
         });
       }
-      
+
       return;
     }
-    
+
     // Direct page - clear hub context and provide confirmation
     currentHub = null;
-    
+
     if (responseCallback) {
       responseCallback({
-        title: `Opening ${registryFeature.id.replace(/_/g, ' ')}`,
+        title: `Opening ${registryFeature.id.replace(/_/g, " ")}`,
         description: `Navigating to ${registryFeature.primaryRoute}`,
-        spokenText: `Opening ${registryFeature.id.replace(/_/g, ' ').toLowerCase()}`
+        spokenText: `Opening ${registryFeature.id.replace(/_/g, " ").toLowerCase()}`,
       });
     }
-    
+
     return;
   }
 
@@ -1019,19 +1035,13 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("save this meal") ||
-    lower.includes("save meal")
-  ) {
+  if (lower.includes("save this meal") || lower.includes("save meal")) {
     lastActiveFeature = "fridge-rescue";
     await Commands["fridge.saveMeal"]();
     return;
   }
 
-  if (
-    lower.includes("send to shopping") ||
-    lower.includes("shopping list")
-  ) {
+  if (lower.includes("send to shopping") || lower.includes("shopping list")) {
     // If user has been in fridge recently, prefer that context
     if (lastActiveFeature === "fridge-rescue") {
       await Commands["fridge.sendToShopping"]();
@@ -1237,34 +1247,22 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("add 8 ounces") ||
-    lower.includes("add eight ounces")
-  ) {
+  if (lower.includes("add 8 ounces") || lower.includes("add eight ounces")) {
     await Commands["biometrics.logWater"]({ amount: 8 });
     return;
   }
 
-  if (
-    lower.includes("add 16 ounces") ||
-    lower.includes("add sixteen ounces")
-  ) {
+  if (lower.includes("add 16 ounces") || lower.includes("add sixteen ounces")) {
     await Commands["biometrics.logWater"]({ amount: 16 });
     return;
   }
 
-  if (
-    lower.includes("reset water") ||
-    lower.includes("clear water")
-  ) {
+  if (lower.includes("reset water") || lower.includes("clear water")) {
     await Commands["biometrics.resetWater"]();
     return;
   }
 
-  if (
-    lower.includes("log my weight") ||
-    lower.includes("save my weight")
-  ) {
+  if (lower.includes("log my weight") || lower.includes("save my weight")) {
     await Commands["biometrics.updateWeight"]({ text: transcript });
     return;
   }
@@ -1300,18 +1298,12 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("maintain") ||
-    lower.includes("goal maintain")
-  ) {
+  if (lower.includes("maintain") || lower.includes("goal maintain")) {
     await Commands["macro.setGoal"]({ goal: "maintain" });
     return;
   }
 
-  if (
-    lower.includes("gain") ||
-    lower.includes("goal gain")
-  ) {
+  if (lower.includes("gain") || lower.includes("goal gain")) {
     await Commands["macro.setGoal"]({ goal: "gain" });
     return;
   }
@@ -1331,10 +1323,7 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("sync my weight") ||
-    lower.includes("update my weight")
-  ) {
+  if (lower.includes("sync my weight") || lower.includes("update my weight")) {
     await Commands["macro.syncWeight"]();
     return;
   }
@@ -1416,10 +1405,7 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("save my journal") ||
-    lower.includes("save this entry")
-  ) {
+  if (lower.includes("save my journal") || lower.includes("save this entry")) {
     await Commands["journal.save"]();
     return;
   }
@@ -1453,7 +1439,10 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (lower.includes("link with code") || lower.includes("connect with access code")) {
+  if (
+    lower.includes("link with code") ||
+    lower.includes("connect with access code")
+  ) {
     lastActiveFeature = "proaccess-careteam";
     await Commands["pro.linkCode"]();
     return;
@@ -1518,7 +1507,10 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (lower.includes("save guardrails") || lower.includes("update guardrails")) {
+  if (
+    lower.includes("save guardrails") ||
+    lower.includes("update guardrails")
+  ) {
     lastActiveFeature = "diabetic-hub";
     await Commands["diabetes.saveGuardrails"]();
     return;
@@ -1565,10 +1557,7 @@ async function handleVoiceQuery(transcript: string) {
     return;
   }
 
-  if (
-    lower.includes("log my dose") ||
-    lower.includes("add my glp 1 dose")
-  ) {
+  if (lower.includes("log my dose") || lower.includes("add my glp 1 dose")) {
     lastActiveFeature = "glp1-hub";
     await Commands["glp1.logDose"]({ text: transcript });
     return;
@@ -1595,35 +1584,42 @@ async function handleVoiceQuery(transcript: string) {
   // ===================================
   // SPOTLIGHT WALKTHROUGH FALLBACK (Phase C+)
   // ===================================
-  const spotlightFeatureMatch = FEATURES.copilotSpotlight ? findFeatureFromKeywords(transcript) : null;
+  const spotlightFeatureMatch = FEATURES.copilotSpotlight
+    ? findFeatureFromKeywords(transcript)
+    : null;
 
   if (spotlightFeatureMatch && FEATURES.copilotSpotlight) {
-    console.log(`✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`);
-    
+    console.log(
+      `✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`,
+    );
+
     // Navigate to feature page
     if (navigationCallback) {
       navigationCallback(spotlightFeatureMatch.path);
-      
+
       // Wait for navigation to complete, then start walkthrough
       try {
         await waitForNavigationReady(spotlightFeatureMatch.path);
-        
+
         // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
-        const walkthroughResponse = await startWalkthrough(spotlightFeatureMatch.walkthroughId);
+        const walkthroughResponse = await startWalkthrough(
+          spotlightFeatureMatch.walkthroughId,
+        );
         if (responseCallback) {
           responseCallback(walkthroughResponse);
         }
-        
       } catch (err) {
         console.warn("Navigation timeout, showing knowledge instead");
         // Fallback to knowledge explanation
-        const knowledge = await explainFeature(spotlightFeatureMatch.walkthroughId);
+        const knowledge = await explainFeature(
+          spotlightFeatureMatch.walkthroughId,
+        );
         if (responseCallback) {
           responseCallback(knowledge);
         }
       }
     }
-    
+
     return;
   }
 
@@ -1685,9 +1681,7 @@ export async function executeCommand(action: CopilotAction) {
           console.log(`🪟 Opening modal: ${action.id}`);
           modalCallback(action.id);
         } else {
-          console.warn(
-            "⚠️ Modal handler not set. Call setModalHandler()",
-          );
+          console.warn("⚠️ Modal handler not set. Call setModalHandler()");
         }
         break;
       }
