@@ -46,12 +46,12 @@ export default function HealthBadgesPopover({
             aria-label={label}
           >
             <ShieldPlus 
-              className={`text-red-500 ${
+              className={`text-blue-500 ${
                 hasCritical 
                   ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]' 
                   : ''
               }`}
-              size={28}
+              size={54}
               strokeWidth={2}
               data-testid="icon-medical-badge"
             />
