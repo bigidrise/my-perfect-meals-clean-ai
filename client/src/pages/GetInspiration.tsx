@@ -298,7 +298,7 @@ export default function GetInspiration() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -312,7 +312,6 @@ export default function GetInspiration() {
         <div className="px-8 py-3 flex items-center gap-3">
           {/* Title */}
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
-            <Lightbulb className="h-5 w-5 text-white" />
             <span>Get Inspiration</span>
           </h1>
 
@@ -339,7 +338,10 @@ export default function GetInspiration() {
           </div>
 
           {/* Quote Display */}
-          <div data-wt="insp-quote-display" className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300">
+          <div
+            data-wt="insp-quote-display"
+            className="bg-black/20 backdrop-blur-sm border border-white/30 rounded-xl p-6 mb-4 hover:bg-black/30 hover:border-orange-400/50 transition-all duration-300"
+          >
             <p className="italic text-md text-white font-medium leading-relaxed text-center">
               "{quote}"
             </p>

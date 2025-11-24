@@ -308,11 +308,8 @@ export default function ShoppingListMasterView() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />
             Master Shopping List
           </h1>
-
-          
         </div>
       </div>
 
@@ -400,12 +397,9 @@ export default function ShoppingListMasterView() {
             </select>
           </div>
         </div>
-
         {/* Add Other Items Section */}
-        <AddOtherItems />
-
-        I don't think I have any pricing anywhere on the app anymore just on the pricing page
-
+        <AddOtherItems />I don't think I have any pricing anywhere on the app
+        anymore just on the pricing page
         {/* Walmart Card - Single Integration */}
         <div className="rounded-2xl border border-white/20 bg-black/60 text-white p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
@@ -435,7 +429,6 @@ export default function ShoppingListMasterView() {
             </Button>
           </div>
         </div>
-
         {/* Actions */}
         {(counts.checked > 0 || counts.total > 0) && (
           <div className="flex flex-wrap gap-2">
@@ -461,7 +454,6 @@ export default function ShoppingListMasterView() {
             )}
           </div>
         )}
-
         {/* Shopping List - Unchecked Items */}
         {uncheckedItems.length === 0 && checkedItems.length === 0 ? (
           <div className="rounded-2xl bg-white/5 border border-white/20 p-12 text-center backdrop-blur">
@@ -695,7 +687,6 @@ export default function ShoppingListMasterView() {
             )}
           </div>
         )}
-
         {/* Voice Add Modal */}
         {voiceModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
@@ -776,7 +767,6 @@ export default function ShoppingListMasterView() {
             </div>
           </div>
         )}
-
         {/* Barcode Manual Entry Modal */}
         {barcodeModalOpen && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -829,7 +819,6 @@ export default function ShoppingListMasterView() {
             </div>
           </div>
         )}
-
         {/* Bulk Add Modal */}
         {bulkModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">

@@ -114,7 +114,10 @@ function applyBodyTypeTilt(base: any, bodyType: BodyType) {
 function BodyTypeGuide() {
   return (
     <div className="mb-3">
-      <details data-wt="mc-bodytype-info" className="rounded-xl border border-white/15 bg-white/5 p-3">
+      <details
+        data-wt="mc-bodytype-info"
+        className="rounded-xl border border-white/15 bg-white/5 p-3"
+      >
         <summary className="cursor-pointer select-none text-sm font-semibold text-white/90">
           Body Type Guide (tap to expand)
         </summary>
@@ -344,12 +347,10 @@ export default function MacroCounter() {
             {/* Title */}
             {/* Title */}
             <h1 className="text-lg font-bold text-white flex items-center gap-2">
-              <Calculator className="h-5 w-5" />
               <span>Macro Calculator</span>
             </h1>
 
             {/* Info Button */}
-            
           </div>
         </div>
 
@@ -358,15 +359,6 @@ export default function MacroCounter() {
           className="max-w-5xl mx-auto space-y-6 px-4"
           style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
         >
-          <Card className="bg-black/30 backdrop-blur-lg border border-white/10">
-            <CardHeader className="text-center">
-              <p className="text-white/90 text-sm">
-                Understand what macros you need for <b>cut</b>,{" "}
-                <b>maintenance</b>, or <b>gain</b>.
-              </p>
-            </CardHeader>
-          </Card>
-
           {/* ⚠️ RENDER GUARD: Goal & Body Type cards MUST ALWAYS render */}
           <div className="grid md:grid-cols-2 gap-4">
             <Card
@@ -777,7 +769,10 @@ export default function MacroCounter() {
           {/* Results - Only show when activity is selected */}
           {results && (
             <>
-              <Card data-wt="mc-targets-display" className="bg-zinc-900/80 border border-white/30 text-white">
+              <Card
+                data-wt="mc-targets-display"
+                className="bg-zinc-900/80 border border-white/30 text-white"
+              >
                 <CardContent className="p-5">
                   <h3 className="text-lg font-semibold flex items-center mb-4">
                     <Target className="h-5 w-5 mr-2 text-emerald-300" /> Your

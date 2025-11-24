@@ -865,7 +865,7 @@ export default function MyBiometrics() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
-            <Activity className="h-5 w-5" />
+            
             My Biometrics
           </h1>
 
