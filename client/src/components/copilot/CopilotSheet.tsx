@@ -24,17 +24,6 @@ export const CopilotSheet: React.FC = () => {
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    // Cleanup previous audio
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null);
-    }
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
     if (!lastResponse?.spokenText) return;
 
     const speak = async () => {
@@ -58,7 +47,14 @@ export const CopilotSheet: React.FC = () => {
         const buf = await res.arrayBuffer();
         const blob = new Blob([buf], { type: "audio/mpeg" });
         const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
+        
+        // Revoke previous URL when setting new one
+        setAudioUrl(prevUrl => {
+          if (prevUrl) {
+            URL.revokeObjectURL(prevUrl);
+          }
+          return url;
+        });
       } catch (err: any) {
         if (err.name !== 'AbortError') {
           console.error("TTS error:", err);
@@ -73,32 +69,37 @@ export const CopilotSheet: React.FC = () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-      }
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current = null;
       }
     };
   }, [lastResponse]);
 
   // =========================================
-  // MOBILE AUTOPLAY HANDLING - Detect if autoplay was blocked
+  // MOBILE AUTOPLAY HANDLING - Retry with manual play if autoPlay blocked
   // =========================================
-  const handleAudioError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    const audio = e.currentTarget;
-    // Check if play was blocked
-    if (audio.paused) {
-      console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
-      setAudioBlocked(true);
-    }
-  };
+  useEffect(() => {
+    if (!audioUrl || !audioRef.current) return;
 
-  const handleAudioPlay = () => {
-    // Audio started playing successfully
-    setAudioBlocked(false);
-  };
+    // Wait for element to be ready, then try manual play as fallback
+    requestAnimationFrame(async () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      try {
+        await audio.play();
+        setAudioBlocked(false); // Successfully playing
+      } catch (err: any) {
+        // autoPlay blocked - show tap-to-play prompt
+        if (err.name === "NotAllowedError") {
+          console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
+          setAudioBlocked(true);
+        } else {
+          console.error("Audio playback error:", err);
+        }
+      }
+    });
+  }, [audioUrl]);
 
   // Manual play handler for tap-to-play fallback
   const handleTapToPlay = async () => {
@@ -117,17 +118,18 @@ export const CopilotSheet: React.FC = () => {
     if (!isOpen) {
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current = null;
       }
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-        setAudioUrl(null);
-      }
+      setAudioUrl(prevUrl => {
+        if (prevUrl) {
+          URL.revokeObjectURL(prevUrl);
+        }
+        return null;
+      });
       // Clear voice fallback state on close
       setNeedsRetry(false);
       setAudioBlocked(false);
     }
-  }, [isOpen, audioUrl, setNeedsRetry]);
+  }, [isOpen, setNeedsRetry]);
 
   // =========================================
   // COPILOT INTRO - Trigger when user chooses "My Perfect Copilot"
@@ -417,11 +419,13 @@ export const CopilotSheet: React.FC = () => {
                     ref={audioRef}
                     autoPlay
                     src={audioUrl}
-                    onPlay={handleAudioPlay}
-                    onError={handleAudioError}
                     onEnded={() => {
-                      URL.revokeObjectURL(audioUrl);
-                      setAudioUrl(null);
+                      setAudioUrl(prevUrl => {
+                        if (prevUrl) {
+                          URL.revokeObjectURL(prevUrl);
+                        }
+                        return null;
+                      });
                     }}
                   />
                 )}
