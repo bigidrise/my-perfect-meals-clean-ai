@@ -1,3 +1,28 @@
+/**
+ * 🔒 LOCKED COMPONENT - DO NOT MODIFY UI STRUCTURE
+ * 
+ * This file is PROTECTED under the Meal Picker Lockdown Protocol (November 24, 2025)
+ * See LOCKDOWN.md for complete guidelines before making ANY changes.
+ * 
+ * ❌ PROHIBITED CHANGES:
+ * - Adding new UI sections (banners, displays, input fields)
+ * - Modifying modal layout or structure
+ * - Changing ingredient grid rendering
+ * - Adding extra state or complexity
+ * 
+ * ✅ ALLOWED (with approval):
+ * - Bug fixes that don't alter UI structure
+ * - Performance optimizations
+ * - Backend API updates
+ * 
+ * REASON FOR LOCK: Recent UI additions (Beach Body banner, selected ingredients
+ * display, custom ingredients input) caused modal crowding and broke the category
+ * tabs/ingredient grid. Structure must remain stable.
+ * 
+ * LAST LOCKED: November 24, 2025
+ * LOCKED BY: User explicit request
+ */
+
 import { useState, useRef, useEffect } from "react";
 import {
   Dialog,

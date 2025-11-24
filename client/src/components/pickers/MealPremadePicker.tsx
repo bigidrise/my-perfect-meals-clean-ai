@@ -1,3 +1,26 @@
+/**
+ * 🔒 LOCKED COMPONENT - DO NOT MODIFY UI STRUCTURE
+ * 
+ * This file is PROTECTED under the Meal Picker Lockdown Protocol (November 24, 2025)
+ * See LOCKDOWN.md for complete guidelines before making ANY changes.
+ * 
+ * ❌ PROHIBITED CHANGES:
+ * - Adding new UI sections (banners, displays, input fields)
+ * - Modifying modal layout or structure
+ * - Changing meal grid rendering
+ * - Adding extra state or complexity
+ * 
+ * ✅ ALLOWED (with approval):
+ * - Bug fixes that don't alter UI structure
+ * - Performance optimizations
+ * - Backend API updates
+ * 
+ * REASON FOR LOCK: This picker has the CORRECT clean structure that AI Meal Creator
+ * should match. Any changes here risk breaking the proven working layout.
+ * 
+ * LAST LOCKED: November 24, 2025
+ * LOCKED BY: User explicit request
+ */
 
 import React, { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';

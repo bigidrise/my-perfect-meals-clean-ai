@@ -30,12 +30,32 @@ If a locked feature breaks unexpectedly, the agent has violated lockdown protoco
 - ✅ Premade Meals (breakfast, lunch, dinner, snacks - all dietary types)
 - ✅ Builder Plan System (custom meal plan creation)
 
-### **AI MEAL GENERATION**
-- ✅ AI Meal Creator Modal (4-step creation process)
+### **AI MEAL GENERATION** 🔒
+- ✅ AI Meal Creator Modal (4-step creation process) - **LOCKED November 24, 2025**
+- ✅ AI Premade Picker (breakfast, lunch, dinner, snacks) - **LOCKED November 24, 2025**
+- ✅ Snack Systems (all ingredient catalogs and pickers) - **LOCKED November 24, 2025**
 - ✅ Craving Creator (locked per user explicit demand - "don't touch it ever again")
 - ✅ Macro Targeting System (custom macro controls)
 - ✅ Medical Badge System (safety validation)
 - ✅ Unified Meal Engine Service (backend AI orchestration)
+
+**CRITICAL MEAL PICKER FILES (ABSOLUTELY LOCKED):**
+- `client/src/components/modals/AIMealCreatorModal.tsx` - NO UI structure changes
+- `client/src/components/pickers/MealPremadePicker.tsx` - NO UI structure changes
+- `client/src/data/snackIngredients.ts` - Data additions allowed via registry pattern
+- `client/src/data/diabeticPremadeSnacks.ts` - Data additions allowed via registry pattern
+
+**APPROVED CHANGE TYPES:**
+- ✅ **DATA ADDITIONS ONLY:** Adding new snack items (GLP-1, etc.) to dedicated data modules
+- ❌ **LOGIC CHANGES:** Modifying picker UI structure, adding new sections, changing modal layout
+- ❌ **FEATURE ADDITIONS:** New banners, displays, input fields, or any extra UI sections
+
+**SAFE EXTENSION PATTERN:**
+For adding GLP-1 snacks or other new food items:
+1. Create dedicated data file: `client/src/data/glp1Snacks.ts`
+2. Export typed array following existing snack structure
+3. Import into existing registry/picker WITHOUT modifying picker logic
+4. Test that picker renders new items without UI changes
 
 ### **TRACKING & ANALYTICS**
 - ✅ Macro Calculator (daily macro tracking)
@@ -192,10 +212,10 @@ If a locked feature has a critical bug:
 ---
 
 ## 🔥 LAST UPDATED
-**Date:** November 23, 2025  
-**Status:** Complete codebase lockdown active + Phase B Copilot locked  
-**Active Work:** NONE - awaiting Phase C unlock approval  
-**Recent Completion:** Phase B Copilot System (see PHASE_B_COPILOT_LOCK.md)
+**Date:** November 24, 2025  
+**Status:** Complete codebase lockdown active + Meal Picker Three-Layer Lockdown Protocol implemented  
+**Active Work:** NONE - all systems locked  
+**Recent Completion:** Meal Picker Lockdown Protocol (AI Meal Creator Modal, AI Premade Picker, Snack Systems)
 
 ---
 
