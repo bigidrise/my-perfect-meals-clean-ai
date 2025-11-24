@@ -200,8 +200,7 @@ export default function AlcoholLogPage() {
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
         {/* Main Content Card */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-gray-400 to-black/80 transition mb-8">
-          <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+        <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur mb-8">
             <CardHeader className="text-center">
               <p className="text-sm text-white/90 mt-2">
                 Voluntary logging. Simple charts. Alcohol calories/carbs are informational and do <strong>not</strong> reduce your food targets.
@@ -227,12 +226,10 @@ export default function AlcoholLogPage() {
                 </Button>
               </div>
             </CardHeader>
-          </Card>
-        </div>
+        </Card>
 
         {/* Form */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition mb-8">
-          <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+        <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Plus className="h-5 w-5" />
@@ -297,8 +294,7 @@ export default function AlcoholLogPage() {
                 </div>
               </form>
             </CardContent>
-          </Card>
-        </div>
+        </Card>
 
         {/* Range + badges */}
         <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
@@ -322,8 +318,7 @@ export default function AlcoholLogPage() {
         </div>
 
         {/* Chart */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition mb-8">
-          <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+        <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur mb-8">
             <CardHeader>
               <CardTitle className="text-lg text-white flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
@@ -353,12 +348,10 @@ export default function AlcoholLogPage() {
                 </ResponsiveContainer>
               </div>
             </CardContent>
-          </Card>
-        </div>
+        </Card>
 
         {/* Recent entries */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-rose-500 to-black/80 transition">
-          <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+        <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
             <CardHeader><CardTitle className="text-lg text-white">Recent Entries</CardTitle></CardHeader>
             <CardContent>
               {rows.length === 0 ? (
@@ -394,8 +387,7 @@ export default function AlcoholLogPage() {
                 </div>
               )}
             </CardContent>
-          </Card>
-        </div>
+        </Card>
       </div>
     </div>
   );
