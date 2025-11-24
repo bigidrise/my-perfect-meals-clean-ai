@@ -76,11 +76,11 @@ export default function DashboardNew() {
     const triggerFlag = localStorage.getItem("trigger-copilot-intro");
     
     if (triggerFlag === "true") {
-      // Open Copilot sheet - DO NOT remove flag here
+      // Open Copilot sheet - use minimal delay to preserve user gesture context
       // CopilotSheet will handle flag removal and intro playback
       setTimeout(() => {
         openCopilot(); // Open the Copilot sheet
-      }, 1000); // 1 second delay to ensure dashboard is fully rendered
+      }, 100); // 100ms delay - short enough to preserve user gesture for audio autoplay
     }
   }, [openCopilot]);
 
