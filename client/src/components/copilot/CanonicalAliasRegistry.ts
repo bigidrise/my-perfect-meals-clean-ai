@@ -248,6 +248,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "MY_BIOMETRICS",
     legacyId: "biometrics",
     primaryRoute: "/my-biometrics",
+    walkthroughId: "biometrics-walkthrough",
     isHub: false,
     keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight", "my biometrics", "bio metrics", "body metrics", "weight tracking", "body data", "my stats", "track weight"]
   },

@@ -4,7 +4,7 @@ const BiometricsWalkthroughScript: WalkthroughScript = {
   id: "biometrics-walkthrough",
   featureId: "MY_BIOMETRICS",
   title: "My Biometrics",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",
