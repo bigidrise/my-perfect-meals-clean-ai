@@ -5,7 +5,7 @@ import {
 } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
-import launchWalkthrough from "./commands/launchWalkthrough";
+import beginScriptWalkthrough from "./commands/beginScriptWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
 import { findFeatureFromKeywords } from "./KeywordFeatureMap";
@@ -1606,11 +1606,24 @@ async function handleVoiceQuery(transcript: string) {
         // Phase C.1: Check if a Phase C script exists for this feature
         if (hasScript(spotlightFeatureMatch.walkthroughId)) {
           console.log(`🚀 Phase C.1: Launching script-based walkthrough for ${spotlightFeatureMatch.walkthroughId}`);
-          await launchWalkthrough(spotlightFeatureMatch.walkthroughId);
           
-          // Clear Copilot response (walkthrough takes over UI)
+          // Use new script-walkthrough helper
+          const { success, response } = await beginScriptWalkthrough(
+            spotlightFeatureMatch.walkthroughId
+          );
+
           if (responseCallback) {
-            responseCallback(null);
+            responseCallback(response);
+          }
+
+          if (!success) {
+            console.warn(`Phase C.1 failed, falling back to legacy system`);
+            const legacyResponse = await startWalkthrough(
+              spotlightFeatureMatch.walkthroughId,
+            );
+            if (responseCallback) {
+              responseCallback(legacyResponse);
+            }
           }
         } else {
           // Phase B fallback: Use legacy walkthrough system

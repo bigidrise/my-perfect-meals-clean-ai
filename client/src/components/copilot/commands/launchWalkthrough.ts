@@ -19,6 +19,16 @@ export async function launchWalkthrough(scriptId: string): Promise<void> {
     return;
   }
 
+  // Cancel any active walkthrough before starting a new one
+  const currentState = walkthroughEngine.getState();
+  if (currentState.isActive) {
+    console.log(`[launchWalkthrough] Canceling active walkthrough: ${currentState.scriptId}`);
+    walkthroughEngine.cancel();
+    
+    // Wait for engine to reach idle state
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
   await walkthroughEngine.start(script);
   console.log(`[launchWalkthrough] Started: ${script.title}`);
 }

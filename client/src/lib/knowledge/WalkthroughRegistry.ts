@@ -66,6 +66,27 @@ export const WalkthroughRegistry: Record<string, WalkthroughStep[]> = {
   ],
 
   // ==============================
+  // 🔥 WEEKLY MEAL BUILDER (Phase C.1)
+  // ==============================
+  "weekly-meal-builder": [
+    {
+      id: "step-1",
+      text: "Tap any empty slot to add a meal.",
+      targetId: "weekly-empty-slot",
+      waitForUser: true,
+    },
+    {
+      id: "step-2",
+      text: "Choose meals and drag them to organize your week.",
+      waitForUser: false,
+    },
+    {
+      id: "complete",
+      text: "Your weekly plan is ready! Ask me anytime for help.",
+    },
+  ],
+
+  // ==============================
   // 🔥 MASTER SHOPPING LIST WALKTHROUGH
   // ==============================
   "shopping-master": [
