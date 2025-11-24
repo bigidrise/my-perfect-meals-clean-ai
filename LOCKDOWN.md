@@ -56,6 +56,28 @@ For adding GLP-1 snacks or other new food items:
 2. Export typed array following existing snack structure
 3. Import into existing registry/picker WITHOUT modifying picker logic
 4. Test that picker renders new items without UI changes
+5. Run verification: `./scripts/verify-meal-pickers.sh` (should pass without hash updates)
+
+**THREE-LAYER PROTECTION SYSTEM:**
+1. **Documentation Layer**: This LOCKDOWN.md file with explicit rules
+2. **Code Banner Layer**: Lock warnings at top of protected files
+3. **Automated Verification Layer**: SHA256 checksum validation
+
+**AUTOMATED VERIFICATION:**
+- Lock file: `scripts/checksums/meal_pickers.lock` (canonical hashes)
+- Verify script: `./scripts/verify-meal-pickers.sh` (check for violations)
+- Regenerate script: `./scripts/generate-meal-picker-checksums.sh` (architect-approved changes only)
+
+**How to verify structure integrity:**
+```bash
+./scripts/verify-meal-pickers.sh
+```
+
+**When to regenerate checksums (requires architect approval):**
+```bash
+./scripts/generate-meal-picker-checksums.sh
+```
+Only run this after architect has reviewed and approved structural changes!
 
 ### **TRACKING & ANALYTICS**
 - ✅ Macro Calculator (daily macro tracking)
