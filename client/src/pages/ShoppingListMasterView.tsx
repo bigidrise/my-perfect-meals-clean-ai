@@ -73,6 +73,19 @@ export default function ShoppingListMasterView() {
     setOpts((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  // Wrapper for toggleItem with walkthrough event
+  const handleToggleItem = useCallback((id: string) => {
+    toggleItem(id);
+    
+    // Dispatch "done" event after checking an item (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "shopping-item-checked", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
+  }, [toggleItem]);
+
   const counts = useMemo(
     () => ({
       total: items.length,
@@ -100,11 +113,27 @@ export default function ShoppingListMasterView() {
   const onClearChecked = useCallback(() => {
     if (!confirm("Clear all checked items?")) return;
     clearChecked();
+    
+    // Dispatch "done" event after clearing checked items (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "shopping-list-cleared", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, [clearChecked]);
 
   const onClearAll = useCallback(() => {
     if (!confirm("Clear entire shopping list?")) return;
     clearAll();
+    
+    // Dispatch "done" event after clearing all items (500ms debounce)
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "shopping-list-cleared", event: "done" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, [clearAll]);
 
   const onCopyToClipboard = useCallback(async () => {
@@ -318,13 +347,13 @@ export default function ShoppingListMasterView() {
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
       >
         {/* Stats */}
-        <div className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
+        <div data-testid="shopping-summary-card" className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
           <div className="text-white/70 text-sm">
             {counts.total} items • {counts.checked} checked
           </div>
 
           {/* Add Item Actions */}
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div data-testid="shopping-add-buttons" className="mt-4 flex flex-wrap gap-2">
             <Button
               data-wt="msl-barcode-button"
               onClick={() => setBarcodeModalOpen(true)}
@@ -421,9 +450,9 @@ export default function ShoppingListMasterView() {
             </div>
 
             <Button
+              data-testid="shopping-walmart-button"
               onClick={handleShopAtWalmart}
               className="rounded-xl px-4 py-2 border border-white/40 bg-blue-600/30 hover:bg-blue-600/40 text-white text-sm whitespace-nowrap"
-              data-testid="button-walmart-search"
             >
               Shop this list on Walmart
             </Button>
@@ -431,7 +460,7 @@ export default function ShoppingListMasterView() {
         </div>
         {/* Actions */}
         {(counts.checked > 0 || counts.total > 0) && (
-          <div className="flex flex-wrap gap-2">
+          <div data-testid="shopping-clear-buttons" className="flex flex-wrap gap-2">
             {counts.checked > 0 && (
               <Button
                 onClick={onClearChecked}
@@ -464,7 +493,7 @@ export default function ShoppingListMasterView() {
             </p>
           </div>
         ) : (
-          <div data-wt="msl-items-list" className="space-y-4">
+          <div data-testid="shopping-items-list" data-wt="msl-items-list" className="space-y-4">
             {Object.entries(groupedUnchecked).map(([cat, arr]) => (
               <div
                 key={cat}
@@ -511,8 +540,9 @@ export default function ShoppingListMasterView() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  {arr.map((item) => (
+                  {arr.map((item, idx) => (
                     <div
+                      data-testid={idx === 0 && cat === Object.keys(groupedUnchecked)[0] ? "shopping-first-item" : undefined}
                       data-wt="msl-item-card"
                       key={item.id}
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
@@ -522,7 +552,7 @@ export default function ShoppingListMasterView() {
                       <Checkbox
                         data-wt="msl-item-checkoff"
                         checked={item.isChecked || false}
-                        onCheckedChange={() => toggleItem(item.id)}
+                        onCheckedChange={() => handleToggleItem(item.id)}
                         className="border-white/30"
                         data-testid={`checkbox-bought-${item.id}`}
                       />
@@ -657,7 +687,7 @@ export default function ShoppingListMasterView() {
                             >
                               <Checkbox
                                 checked={item.isChecked || false}
-                                onCheckedChange={() => toggleItem(item.id)}
+                                onCheckedChange={() => handleToggleItem(item.id)}
                                 className="border-white/30"
                                 data-testid={`checkbox-purchased-${item.id}`}
                               />
