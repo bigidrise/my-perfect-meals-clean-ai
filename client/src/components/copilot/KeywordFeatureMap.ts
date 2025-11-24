@@ -122,7 +122,7 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   
   // Supplement Hub
   {
-    path: "/supplement-hub-landing",
+    path: "/supplement-hub", // Changed from /supplement-hub-landing (landing page hidden)
     walkthroughId: "supplement-hub",
     keywords: ["supplements", "supplement hub", "vitamins", "nutrition supplements"],
   },

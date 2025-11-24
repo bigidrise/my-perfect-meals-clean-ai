@@ -136,7 +136,7 @@ export default function SupplementEducationPage() {
         {/* Back Button */}
         <div className="mb-6">
           <Button
-            onClick={() => setLocation("/supplement-hub-landing")}
+            onClick={() => setLocation("/supplement-hub")}
             className="flex items-center gap-2 bg-black/30 backdrop-blur-lg border border-white/20 text-white hover:bg-black/40 transition-all duration-200 rounded-xl shadow-lg"
           >
             <ArrowLeft className="h-4 w-4" />

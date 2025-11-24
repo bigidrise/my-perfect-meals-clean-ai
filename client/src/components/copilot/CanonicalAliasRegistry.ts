@@ -203,7 +203,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
   SUPPLEMENT_HUB: {
     id: "SUPPLEMENT_HUB",
     legacyId: "supplement-hub",
-    primaryRoute: "/supplement-hub-landing",
+    primaryRoute: "/supplement-hub", // Changed from /supplement-hub-landing (landing page hidden)
     isHub: true,
     hubSize: "small",
     keywords: ["supplements", "supplement hub", "vitamins", "nutrition supplements", "supplement"],

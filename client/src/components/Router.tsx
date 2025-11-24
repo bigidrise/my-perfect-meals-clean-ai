@@ -125,7 +125,7 @@ import FoundersPage from "@/pages/Founders";
 const VitalsLogger = () => <div>Vitals Logger - Coming Soon</div>;
 
 // Supplement Hub imports
-import SupplementHubLanding from "@/pages/SupplementHubLanding";
+// REMOVED: SupplementHubLanding (landing page not used - Copilot now routes to /supplement-hub directly)
 import SupplementHub from "@/pages/supplement-hub";
 import SupplementEducationPage from "@/pages/supplement-education";
 
@@ -462,10 +462,7 @@ export default function Router() {
         {/* Founders Route */}
         <Route path="/founders" component={FoundersPage} />
         {/* Supplement Hub Routes */}
-        <Route
-          path="/supplement-hub-landing"
-          component={SupplementHubLanding}
-        />
+        {/* REMOVED: /supplement-hub-landing route (landing page not used - Copilot routes to /supplement-hub directly) */}
         <Route path="/supplement-hub" component={SupplementHub} />
         <Route
           path="/supplement-education"
