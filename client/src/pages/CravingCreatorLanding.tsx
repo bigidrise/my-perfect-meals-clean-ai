@@ -20,6 +20,14 @@ export default function CravingCreatorLanding() {
   useEffect(() => {
     document.title = "Craving Creator Hub | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
+    
+    // Phase C.7: Emit "opened" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "craving-hub-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   const cravingFeatures: CravingFeature[] = [
@@ -29,7 +37,7 @@ export default function CravingCreatorLanding() {
       icon: Brain,
       route: "/craving-creator",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-create-your-own",
+      testId: "cravinghub-creator", // Phase C.7 hub anchor
     },
     {
       title: "Premade Cravings",
@@ -38,11 +46,19 @@ export default function CravingCreatorLanding() {
       icon: Sparkles,
       route: "/craving-presets",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-premade-cravings",
+      testId: "cravinghub-premades", // Phase C.7 hub anchor
     },
   ];
 
   const handleCardClick = (route: string) => {
+    // Phase C.7: Emit "selected" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "craving-hub-selected", event: "selected" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
+    
     setLocation(route);
   };
 

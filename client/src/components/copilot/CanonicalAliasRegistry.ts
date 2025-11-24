@@ -16,6 +16,7 @@ export interface SubOption {
   route: string;
   walkthroughId?: string; // Phase C.1: Links to walkthrough script ID in ScriptRegistry
   aliases: string[];
+  voiceHint?: string; // Phase C.7: Voice pronunciation hint for HubWalkthroughEngine
 }
 
 export interface FeatureDefinition {
@@ -27,6 +28,10 @@ export interface FeatureDefinition {
   hubSize?: "small" | "large";
   keywords: string[];
   subOptions?: SubOption[];
+  // Phase C.7: Hub Walkthrough Engine metadata
+  spokenPrompt?: string; // Welcome message when entering hub
+  selectionPrompt?: string; // Prompt for user to select sub-option
+  voiceTimeoutMessage?: string; // Message when voice times out
 }
 
 /**
@@ -38,23 +43,29 @@ export const HUBS: Record<string, FeatureDefinition> = {
     id: "CRAVING_HUB",
     legacyId: "craving-hub",
     primaryRoute: "/craving-creator-landing",
+    walkthroughId: "craving-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
     keywords: ["cravings", "craving creator", "craving hub", "satisfy cravings", "craving ideas", "i have a craving", "craving center", "cravings hub", "sweet tooth", "snack ideas", "pre mades", "premades", "presets", "craving premades"],
+    spokenPrompt: "Welcome to the Craving Hub! Here you can generate healthy versions of your cravings.",
+    selectionPrompt: "Which part do you want? Say 'Creator' to build custom meals, or 'Premades' to browse our curated recipes.",
+    voiceTimeoutMessage: "I didn't catch that. Try typing 'Creator' or 'Premades' instead.",
     subOptions: [
       {
         id: "CRAVING_CREATOR",
         label: "Craving Creator",
         route: "/craving-creator",
         walkthroughId: "craving-creator-walkthrough",
-        aliases: ["creator", "create", "custom craving", "make a craving", "craving creator", "create craving", "make my craving"]
+        aliases: ["creator", "create", "custom craving", "make a craving", "craving creator", "create craving", "make my craving"],
+        voiceHint: "creator"
       },
       {
         id: "CRAVING_PREMADES",
         label: "Craving Premades",
         route: "/craving-presets",
         walkthroughId: "craving-premades-walkthrough",
-        aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"]
+        aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"],
+        voiceHint: "premades"
       }
     ]
   },
@@ -63,9 +74,13 @@ export const HUBS: Record<string, FeatureDefinition> = {
     id: "ALCOHOL_HUB",
     legacyId: "alcohol-hub",
     primaryRoute: "/alcohol-hub",
+    walkthroughId: "alcohol-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "large",
     keywords: ["alcohol", "spirits", "drinks", "cocktails", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas", "spirits hub", "alcohol hub", "drinks hub", "lifestyle drinks", "bar hub", "booze", "hard drinks", "lean and social", "wine pairing", "beer pairing", "bourbon pairing", "bourbon", "wine", "beer", "alcohol log", "weaning off", "weaning", "taper", "meal pairing"],
+    spokenPrompt: "Welcome to the Spirits & Lifestyle Hub! Navigate social moments mindfully with smart drink choices and alternatives.",
+    selectionPrompt: "What would you like to explore? You can say: 'Lean & Social', 'Mocktails', 'Wine Pairing', 'Beer Pairing', 'Bourbon', 'Alcohol Log', 'Meal Pairing', or 'Weaning Off'.",
+    voiceTimeoutMessage: "I didn't catch that. Try typing one of the options instead: Lean & Social, Mocktails, Wine, Beer, Bourbon, Log, Meal Pairing, or Weaning Off.",
     subOptions: [
       {
         id: "LEAN_SOCIAL",
@@ -130,9 +145,13 @@ export const HUBS: Record<string, FeatureDefinition> = {
     id: "SOCIAL_HUB",
     legacyId: "social-hub",
     primaryRoute: "/social-hub",
+    walkthroughId: "social-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
     keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "social plans", "find meals", "meal finder", "find food", "nearby meals", "restaurant guide"],
+    spokenPrompt: "Welcome to the Socializing Hub! Eating out with friends? Make smart choices without missing the fun.",
+    selectionPrompt: "What do you need? Say 'Restaurant Guide' to get AI-powered healthy options from any restaurant, or 'Find Meals' to search local restaurants by craving and location.",
+    voiceTimeoutMessage: "I didn't catch that. Try typing 'Restaurant Guide' or 'Find Meals' instead.",
     subOptions: [
       {
         id: "RESTAURANT_GUIDE",
@@ -155,9 +174,13 @@ export const HUBS: Record<string, FeatureDefinition> = {
     id: "KIDS_HUB",
     legacyId: "kids-hub",
     primaryRoute: "/healthy-kids-meals",
+    walkthroughId: "kids-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
     keywords: ["kids", "kids meals", "children", "healthy kids", "kids food", "children meals", "kids hub", "kids meals hub", "children hub", "kids section", "toddler meals", "toddlers", "little kids", "baby meals"],
+    spokenPrompt: "Welcome to the Kids Meals Hub! Find nutritious, kid-friendly meals that your children will actually enjoy eating.",
+    selectionPrompt: "Choose what you need: 'Kids Meals' for ages 4-12, or 'Toddler Meals' for ages 1-3. Each collection is age-appropriate and nutrition-optimized.",
+    voiceTimeoutMessage: "I didn't catch that. Try typing 'Kids Meals' or 'Toddler Meals' instead.",
     subOptions: [
       {
         id: "KIDS_MEALS",
@@ -418,10 +441,17 @@ export function findSubOptionByAlias(hub: FeatureDefinition, query: string): Sub
 /**
  * Get hub prompt message based on hub size
  * Phase C.4: Hub-first routing with size-appropriate prompts
+ * Phase C.7: Prioritize selectionPrompt metadata when available
  */
 export function getHubPromptMessage(hub: FeatureDefinition): string {
   if (!hub.isHub || !hub.subOptions) return "";
 
+  // Phase C.7: Use selectionPrompt metadata if available
+  if (hub.selectionPrompt) {
+    return hub.selectionPrompt;
+  }
+
+  // Fallback to Phase C.4 dynamic generation
   const hubLabel = hub.id.replace(/_HUB$/, '').replace(/_/g, ' ');
   const formattedLabel = hubLabel.charAt(0).toUpperCase() + hubLabel.slice(1).toLowerCase();
 

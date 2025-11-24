@@ -20,6 +20,14 @@ export default function AlcoholHubLanding() {
   useEffect(() => {
     document.title = "Alcohol Hub | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
+    
+    // Phase C.7: Emit "opened" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "alcohol-hub-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   const alcoholFeatures: AlcoholFeature[] = [
@@ -29,7 +37,7 @@ export default function AlcoholHubLanding() {
       icon: Wine,
       route: "/alcohol/lean-and-social",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-lean-social",
+      testId: "alcoholhub-lean", // Phase C.7 hub anchor
     },
     {
       title: "Mocktails",
@@ -37,7 +45,7 @@ export default function AlcoholHubLanding() {
       icon: Sparkles,
       route: "/mocktails-low-cal-mixers",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-mocktails",
+      testId: "alcoholhub-mocktails", // Phase C.7 hub anchor
     },
     {
       title: "Meal Pairing",
@@ -45,7 +53,7 @@ export default function AlcoholHubLanding() {
       icon: CookingPot,
       route: "/meal-pairing-ai",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-meal-pairing",
+      testId: "alcoholhub-pairing", // Phase C.7 hub anchor
     },
     {
       title: "Wine Pairing",
@@ -53,7 +61,7 @@ export default function AlcoholHubLanding() {
       icon: Wine,
       route: "/wine-pairing",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-wine-pairing",
+      testId: "alcoholhub-wine", // Phase C.7 hub anchor
     },
     {
       title: "Beer Pairing",
@@ -61,7 +69,7 @@ export default function AlcoholHubLanding() {
       icon: Beer,
       route: "/beer-pairing",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-beer-pairing",
+      testId: "alcoholhub-beer", // Phase C.7 hub anchor
     },
     {
       title: "Bourbon Pairing",
@@ -69,7 +77,7 @@ export default function AlcoholHubLanding() {
       icon: GlassWater,
       route: "/bourbon-spirits",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-bourbon-pairing",
+      testId: "alcoholhub-bourbon", // Phase C.7 hub anchor
     },
     {
       title: "Alcohol Log",
@@ -77,7 +85,7 @@ export default function AlcoholHubLanding() {
       icon: Wine,
       route: "/alcohol-log",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-alcohol-log",
+      testId: "alcoholhub-log", // Phase C.7 hub anchor
     },
     {
       title: "Weaning Off Tool",
@@ -85,11 +93,19 @@ export default function AlcoholHubLanding() {
       icon: TrendingDown,
       route: "/weaning-off-tool",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-weaning-off",
+      testId: "alcoholhub-weaning", // Phase C.7 hub anchor
     },
   ];
 
   const handleCardClick = (route: string) => {
+    // Phase C.7: Emit "selected" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "alcohol-hub-selected", event: "selected" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
+    
     setLocation(route);
   };
 

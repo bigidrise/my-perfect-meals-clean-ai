@@ -19,6 +19,14 @@ export default function HealthyKidsMeals() {
   useEffect(() => {
     document.title = "Healthy Kids Meals | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
+    
+    // Phase C.7: Emit "opened" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "kids-hub-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   const kidsFeatures: KidsFeature[] = [
@@ -41,6 +49,14 @@ export default function HealthyKidsMeals() {
   ];
 
   const handleCardClick = (route: string) => {
+    // Phase C.7: Emit "selected" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "kids-hub-selected", event: "selected" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
+    
     setLocation(route);
   };
 

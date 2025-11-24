@@ -21,6 +21,10 @@ import AlcoholLogScript from "./scripts/AlcoholLogScript";
 import FindMealsScript from "./scripts/FindMealsScript";
 import MealPairingScript from "./scripts/MealPairingScript";
 import WeaningOffScript from "./scripts/WeaningOffScript";
+import CravingHubWalkthroughScript from "./scripts/CravingHubWalkthroughScript";
+import KidsHubWalkthroughScript from "./scripts/KidsHubWalkthroughScript";
+import AlcoholHubWalkthroughScript from "./scripts/AlcoholHubWalkthroughScript";
+import SocialHubWalkthroughScript from "./scripts/SocialHubWalkthroughScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -129,6 +133,24 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "weaning-off-walkthrough": WeaningOffScript,
   "weaning-off": WeaningOffScript,
   "weaning": WeaningOffScript,
+  
+  // Phase C.7: Hub Walkthroughs
+  "craving-hub-walkthrough": CravingHubWalkthroughScript,
+  "craving-hub": CravingHubWalkthroughScript,
+  "cravings-hub": CravingHubWalkthroughScript,
+  
+  "kids-hub-walkthrough": KidsHubWalkthroughScript,
+  "kids-hub": KidsHubWalkthroughScript,
+  "healthy-kids": KidsHubWalkthroughScript,
+  
+  "alcohol-hub-walkthrough": AlcoholHubWalkthroughScript,
+  "alcohol-hub": AlcoholHubWalkthroughScript,
+  "spirits-hub": AlcoholHubWalkthroughScript,
+  
+  "social-hub-walkthrough": SocialHubWalkthroughScript,
+  "social-hub": SocialHubWalkthroughScript,
+  "socializing-hub": SocialHubWalkthroughScript,
+  "socializing": SocialHubWalkthroughScript,
 };
 
 /**

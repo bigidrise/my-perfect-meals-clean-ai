@@ -20,6 +20,14 @@ export default function SocializingHub() {
   useEffect(() => {
     document.title = "Socializing Hub | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
+    
+    // Phase C.7: Emit "opened" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "social-hub-opened", event: "opened" },
+      });
+      window.dispatchEvent(event);
+    }, 500);
   }, []);
 
   const socialFeatures: SocialFeature[] = [
@@ -29,7 +37,7 @@ export default function SocializingHub() {
       icon: Utensils,
       route: "/social-hub/restaurant-guide",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-restaurant-guide",
+      testId: "socialhub-guide", // Phase C.7 hub anchor
     },
     {
       title: "Find Meals Near Me",
@@ -37,11 +45,19 @@ export default function SocializingHub() {
       icon: MapPin,
       route: "/social-hub/find",
       gradient: "from-orange-500/20 to-orange-600/20",
-      testId: "card-find-meals",
+      testId: "socialhub-find", // Phase C.7 hub anchor
     },
   ];
 
   const handleCardClick = (route: string) => {
+    // Phase C.7: Emit "selected" event for hub walkthrough
+    setTimeout(() => {
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "social-hub-selected", event: "selected" },
+      });
+      window.dispatchEvent(event);
+    }, 300);
+    
     setLocation(route);
   };
 

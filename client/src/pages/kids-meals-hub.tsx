@@ -84,10 +84,10 @@ export default function KidsMealsHub() {
       localStorage.setItem("hasSeenKidsMealsInfo", "true");
     }
     
-    // Dispatch "ready" event after page loads (500ms debounce)
+    // Phase C.7: Emit hub "opened" event after page loads
     setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
-        detail: { testId: "kids-meals-ready", event: "ready" },
+        detail: { testId: "kids-hub-opened", event: "opened" },
       });
       window.dispatchEvent(event);
     }, 500);
