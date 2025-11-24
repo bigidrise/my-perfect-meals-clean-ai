@@ -5,6 +5,7 @@ import {
 } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
+import launchWalkthrough from "./commands/launchWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
 import { findFeatureFromKeywords } from "./KeywordFeatureMap";
@@ -16,6 +17,7 @@ import {
   type FeatureDefinition,
   type SubOption,
 } from "./CanonicalAliasRegistry";
+import { hasScript } from "./walkthrough/ScriptRegistry";
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -1601,12 +1603,24 @@ async function handleVoiceQuery(transcript: string) {
       try {
         await waitForNavigationReady(spotlightFeatureMatch.path);
 
-        // Start walkthrough and send to Copilot state so SpotlightOverlay can mount
-        const walkthroughResponse = await startWalkthrough(
-          spotlightFeatureMatch.walkthroughId,
-        );
-        if (responseCallback) {
-          responseCallback(walkthroughResponse);
+        // Phase C.1: Check if a Phase C script exists for this feature
+        if (hasScript(spotlightFeatureMatch.walkthroughId)) {
+          console.log(`🚀 Phase C.1: Launching script-based walkthrough for ${spotlightFeatureMatch.walkthroughId}`);
+          await launchWalkthrough(spotlightFeatureMatch.walkthroughId);
+          
+          // Clear Copilot response (walkthrough takes over UI)
+          if (responseCallback) {
+            responseCallback(null);
+          }
+        } else {
+          // Phase B fallback: Use legacy walkthrough system
+          console.log(`📖 Phase B: Using legacy walkthrough for ${spotlightFeatureMatch.walkthroughId}`);
+          const walkthroughResponse = await startWalkthrough(
+            spotlightFeatureMatch.walkthroughId,
+          );
+          if (responseCallback) {
+            responseCallback(walkthroughResponse);
+          }
         }
       } catch (err) {
         console.warn("Navigation timeout, showing knowledge instead");

@@ -3,6 +3,8 @@ import { CopilotProvider, CopilotAction, useCopilot } from "./CopilotContext";
 import { CopilotButton } from "./CopilotButton";
 import { CopilotSheet } from "./CopilotSheet";
 import { executeCommand, setResponseHandler } from "./CopilotCommandRegistry";
+import { SpotlightOverlay } from "./SpotlightOverlay";
+import { useWalkthroughController } from "./walkthrough/useWalkthroughController";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
@@ -11,6 +13,7 @@ interface CopilotSystemProps {
 
 const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { setLastResponse } = useCopilot();
+  const walkthrough = useWalkthroughController();
 
   useEffect(() => {
     setResponseHandler((response) => {
@@ -23,6 +26,15 @@ const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children 
     <>
       {children}
       <CopilotSheet />
+      
+      {/* Phase C.1: Spotlight Walkthrough System */}
+      {walkthrough.state.isActive && walkthrough.currentSpotlightStep && (
+        <SpotlightOverlay
+          currentStep={walkthrough.currentSpotlightStep}
+          onAdvance={walkthrough.next}
+          onExit={walkthrough.cancel}
+        />
+      )}
     </>
   );
 };
