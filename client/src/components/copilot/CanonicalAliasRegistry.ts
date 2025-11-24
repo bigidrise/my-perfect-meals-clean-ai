@@ -38,19 +38,19 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/craving-creator-landing",
     isHub: true,
     hubSize: "small",
-    keywords: ["cravings", "craving creator", "craving hub", "satisfy cravings", "craving ideas", "i have a craving"],
+    keywords: ["cravings", "craving creator", "craving hub", "satisfy cravings", "craving ideas", "i have a craving", "craving center", "cravings hub"],
     subOptions: [
       {
         id: "CRAVING_CREATOR",
         label: "Craving Creator",
         route: "/craving-creator",
-        aliases: ["creator", "create", "custom craving", "make a craving"]
+        aliases: ["creator", "create", "custom craving", "make a craving", "craving creator", "create craving", "make my craving"]
       },
       {
         id: "CRAVING_PREMADES",
         label: "Craving Premades",
         route: "/craving-presets",
-        aliases: ["premades", "presets", "premade cravings", "premade"]
+        aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"]
       }
     ]
   },
@@ -61,55 +61,55 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/alcohol-hub",
     isHub: true,
     hubSize: "large",
-    keywords: ["alcohol", "spirits", "drinks", "cocktails", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas"],
+    keywords: ["alcohol", "spirits", "drinks", "cocktails", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas", "spirits hub", "alcohol hub", "drinks hub", "lifestyle drinks", "bar hub", "booze", "hard drinks"],
     subOptions: [
       {
         id: "LEAN_SOCIAL",
         label: "Alcohol Lean and Social",
         route: "/alcohol/lean-and-social",
-        aliases: ["lean", "social", "lean and social", "lean alcohol", "lean drinks"]
+        aliases: ["lean", "social", "lean and social", "lean alcohol", "lean drinks", "lean social", "low cal drinks", "diet drinks"]
       },
       {
         id: "MOCKTAILS",
         label: "Mocktails",
         route: "/mocktails-low-cal-mixers",
-        aliases: ["mocktails", "alcohol-free", "non-alcoholic", "mocktail", "low cal mixers"]
+        aliases: ["mocktails", "alcohol-free", "non-alcoholic", "mocktail", "low cal mixers", "no alcohol drinks", "zero proof", "virgin drinks"]
       },
       {
         id: "MEAL_PAIRING",
         label: "Meal Pairing",
         route: "/meal-pairing-ai",
-        aliases: ["meal pairing", "pairing", "pair meal", "pair my meal"]
+        aliases: ["meal pairing", "pairing", "pair meal", "pair my meal", "food pairing", "what to drink with", "pairing guide"]
       },
       {
         id: "WINE_PAIRING",
         label: "Wine Pairing",
         route: "/wine-pairing",
-        aliases: ["wine", "wine pairing", "wines", "pair wine"]
+        aliases: ["wine", "wine pairing", "wines", "pair wine", "wine guide", "wine with dinner"]
       },
       {
         id: "BEER_PAIRING",
         label: "Beer Pairing",
         route: "/beer-pairing",
-        aliases: ["beer", "beer pairing", "beers", "pair beer"]
+        aliases: ["beer", "beer pairing", "beers", "pair beer", "beer guide", "beer with dinner"]
       },
       {
         id: "BOURBON_PAIRING",
         label: "Bourbon Pairing",
         route: "/bourbon-spirits",
-        aliases: ["bourbon", "spirits", "whiskey", "bourbon pairing"]
+        aliases: ["bourbon", "spirits", "whiskey", "bourbon pairing", "bourbon guide", "whiskey pairing"]
       },
       {
         id: "ALCOHOL_LOG",
         label: "Alcohol Log",
         route: "/alcohol-log",
-        aliases: ["log", "track alcohol", "alcohol log", "alcohol tracker"]
+        aliases: ["log", "track alcohol", "alcohol log", "alcohol tracker", "alog", "drink log", "drinking log", "booze log"]
       },
       {
         id: "WEANING_OFF",
         label: "Weaning Off Tool",
         route: "/weaning-off-tool",
-        aliases: ["weaning", "taper", "weaning off", "taper off"]
+        aliases: ["weaning", "taper", "weaning off", "taper off", "wean", "cutting back", "quit drinking", "reduce alcohol"]
       }
     ]
   },
@@ -120,19 +120,19 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/social-hub",
     isHub: true,
     hubSize: "small",
-    keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat"],
+    keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "social plans"],
     subOptions: [
       {
         id: "RESTAURANT_GUIDE",
         label: "Restaurant Guide",
         route: "/social-hub/restaurant-guide",
-        aliases: ["restaurant guide", "guide", "restaurant", "eat out guide"]
+        aliases: ["restaurant guide", "guide", "restaurant", "eat out guide", "restaurant helper", "eat out", "ordering out", "restaurant menu help"]
       },
       {
         id: "FIND_MEALS",
         label: "Find Meals Near Me",
         route: "/social-hub/find",
-        aliases: ["find meals", "near me", "find", "meals near me", "nearby food"]
+        aliases: ["find meals", "near me", "find", "meals near me", "nearby food", "nearby meals", "nearby", "local meals"]
       }
     ]
   },
@@ -143,19 +143,19 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/healthy-kids-meals",
     isHub: true,
     hubSize: "small",
-    keywords: ["kids", "kids meals", "children", "healthy kids", "kids food", "children meals"],
+    keywords: ["kids", "kids meals", "children", "healthy kids", "kids food", "children meals", "kids hub", "kids meals hub", "children hub", "kids section"],
     subOptions: [
       {
         id: "KIDS_MEALS",
         label: "Kids Meals",
         route: "/kids-meals",
-        aliases: ["kids meals", "children meals", "kids", "meal picker"]
+        aliases: ["kids meals", "children meals", "kids", "meal picker", "big kids meals", "older kids", "school lunch"]
       },
       {
         id: "TODDLER_MEALS",
         label: "Toddler Meals",
         route: "/toddler-meals",
-        aliases: ["toddler", "toddler meals", "toddlers"]
+        aliases: ["toddler", "toddler meals", "toddlers", "little kids", "baby meals"]
       }
     ]
   },
@@ -166,7 +166,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/diabetic-hub",
     isHub: true,
     hubSize: "small",
-    keywords: ["diabetic", "diabetes", "blood sugar", "glucose", "sugar control", "diabetic meals"],
+    keywords: ["diabetic", "diabetes", "blood sugar", "glucose", "sugar control", "diabetic meals", "diabetic hub", "diabetes hub", "diabetes support"],
     subOptions: [
       {
         id: "DIABETES_SUPPORT",
@@ -178,7 +178,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "DIABETIC_BUILDER",
         label: "Diabetic Menu Builder",
         route: "/diabetic-menu-builder",
-        aliases: ["builder", "menu builder", "diabetic builder", "meal builder"]
+        aliases: ["builder", "menu builder", "diabetic builder", "meal builder", "diabetic meals", "diabetes meals", "d-build"]
       }
     ]
   },
@@ -189,13 +189,13 @@ export const HUBS: Record<string, FeatureDefinition> = {
     primaryRoute: "/glp1-hub",
     isHub: true,
     hubSize: "small",
-    keywords: ["glp", "glp-1", "glp1", "ozempic", "wegovy", "semaglutide", "injection", "glp one"],
+    keywords: ["glp", "glp-1", "glp1", "ozempic", "wegovy", "semaglutide", "injection", "glp one", "g l p one", "glp hub", "glp-1 hub", "weight loss meds"],
     subOptions: [
       {
         id: "GLP1_BUILDER",
         label: "GLP-1 Meal Builder",
         route: "/glp1-menu-builder",
-        aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder"]
+        aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder", "glp one builder", "glp meal builder", "glp menu", "glp-1 meals", "glp-build"]
       }
     ]
   },
