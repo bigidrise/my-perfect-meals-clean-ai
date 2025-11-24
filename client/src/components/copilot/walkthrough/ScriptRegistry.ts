@@ -11,6 +11,16 @@ import CravingPremadesScript from "./scripts/CravingPremadesScript";
 import KidsMealsScript from "./scripts/KidsMealsScript";
 import ToddlerMealsScript from "./scripts/ToddlerMealsScript";
 import RestaurantGuideScript from "./scripts/RestaurantGuideScript";
+import CravingCreatorScript from "./scripts/CravingCreatorScript";
+import LeanSocialScript from "./scripts/LeanSocialScript";
+import MocktailsScript from "./scripts/MocktailsScript";
+import WinePairingScript from "./scripts/WinePairingScript";
+import BeerPairingScript from "./scripts/BeerPairingScript";
+import BourbonPairingScript from "./scripts/BourbonPairingScript";
+import AlcoholLogScript from "./scripts/AlcoholLogScript";
+import FindMealsScript from "./scripts/FindMealsScript";
+import MealPairingScript from "./scripts/MealPairingScript";
+import WeaningOffScript from "./scripts/WeaningOffScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -72,6 +82,53 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "restaurant-guide-walkthrough": RestaurantGuideScript,
   "restaurant-guide": RestaurantGuideScript,
   "restaurant": RestaurantGuideScript,
+  
+  // Phase C.5: Craving Creator
+  "craving-creator-walkthrough": CravingCreatorScript,
+  "craving-creator": CravingCreatorScript,
+  
+  // Phase C.5: Lean & Social
+  "lean-social-walkthrough": LeanSocialScript,
+  "lean-social": LeanSocialScript,
+  "lean-and-social": LeanSocialScript,
+  
+  // Phase C.5: Mocktails
+  "mocktails-walkthrough": MocktailsScript,
+  "mocktails": MocktailsScript,
+  
+  // Phase C.5: Wine Pairing
+  "wine-pairing-walkthrough": WinePairingScript,
+  "wine-pairing": WinePairingScript,
+  "wine": WinePairingScript,
+  
+  // Phase C.5: Beer Pairing
+  "beer-pairing-walkthrough": BeerPairingScript,
+  "beer-pairing": BeerPairingScript,
+  "beer": BeerPairingScript,
+  
+  // Phase C.5: Bourbon Pairing
+  "bourbon-pairing-walkthrough": BourbonPairingScript,
+  "bourbon-pairing": BourbonPairingScript,
+  "bourbon": BourbonPairingScript,
+  
+  // Phase C.5: Alcohol Log
+  "alcohol-log-walkthrough": AlcoholLogScript,
+  "alcohol-log": AlcoholLogScript,
+  "alog": AlcoholLogScript,
+  
+  // Phase C.5: Find Meals Near Me
+  "find-meals-walkthrough": FindMealsScript,
+  "find-meals": FindMealsScript,
+  "find": FindMealsScript,
+  
+  // Phase C.5: Meal Pairing
+  "meal-pairing-walkthrough": MealPairingScript,
+  "meal-pairing": MealPairingScript,
+  
+  // Phase C.5: Weaning Off Tool
+  "weaning-off-walkthrough": WeaningOffScript,
+  "weaning-off": WeaningOffScript,
+  "weaning": WeaningOffScript,
 };
 
 /**

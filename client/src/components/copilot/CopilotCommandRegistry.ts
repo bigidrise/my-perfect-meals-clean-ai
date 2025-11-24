@@ -1587,22 +1587,45 @@ async function handleVoiceQuery(transcript: string) {
   // ===================================
   // PHASE C.4 — HUB-FIRST ROUTING + SPOTLIGHT WALKTHROUGH
   // ===================================
+  // Three-tier routing: (1) Built-ins, (2) Hub session, (3) Fresh feature discovery
+  // Hub session short-circuits ALL subsequent logic
   
-  // Phase C.4: Check if we're in a hub and waiting for sub-option selection
-  if (currentHub && hubRequiresSubSelection(currentHub)) {
+  // Phase C.4.A: Hub Session Resolution (Tier 2)
+  // When currentHub is active, ONLY check sub-options, SKIP all feature/keyword lookups
+  if (currentHub) {
     console.log(`🔄 Phase C.4: Hub session active for ${currentHub.id}, checking for sub-option match`);
     
+    // Check for cancel/back/exit commands
+    if (
+      lower.includes("cancel") ||
+      lower.includes("go back") ||
+      lower.includes("exit") ||
+      lower.includes("never mind")
+    ) {
+      console.log(`🚪 Phase C.4: User cancelled hub session`);
+      currentHub = null;
+      if (responseCallback) {
+        responseCallback({
+          title: "Hub Cancelled",
+          description: "No problem, exiting the hub.",
+          spokenText: "No problem, exiting the hub."
+        });
+      }
+      return; // Exit - hub session cancelled
+    }
+    
+    // Try to match sub-option
     const subOption = findSubOptionByAlias(currentHub, transcript);
     
     if (subOption) {
       console.log(`✅ Phase C.4: Sub-option matched: ${subOption.label} → ${subOption.route}`);
       
-      // Clear hub session
-      currentHub = null;
-      
       // Navigate to sub-option
       if (navigationCallback) {
         navigationCallback(subOption.route);
+        
+        // Clear hub session AFTER navigation starts
+        currentHub = null;
         
         // Wait for navigation, then start walkthrough if available
         try {
@@ -1649,38 +1672,39 @@ async function handleVoiceQuery(transcript: string) {
         }
       }
       
-      return;
-    } else {
-      // Didn't understand sub-option, re-prompt
-      console.log(`❓ Phase C.4: No sub-option match, re-prompting`);
-      if (responseCallback) {
-        const promptMessage = getHubPromptMessage(currentHub);
-        responseCallback({
-          title: currentHub.id.replace(/_/g, ' '),
-          description: "I didn't catch that. " + promptMessage,
-          spokenText: "I didn't catch that. " + promptMessage
-        });
-      }
-      return;
+      return; // Exit - sub-option matched and handled
     }
+    
+    // No sub-option match - re-prompt user
+    console.log(`❓ Phase C.4: No sub-option match, re-prompting`);
+    if (responseCallback) {
+      const promptMessage = getHubPromptMessage(currentHub);
+      responseCallback({
+        title: currentHub.id.replace(/_/g, ' '),
+        description: promptMessage,
+        spokenText: promptMessage
+      });
+    }
+    return; // Exit - stay in hub session, wait for valid sub-option
   }
   
-  // Phase C.4: Check for new feature/hub match via CanonicalAliasRegistry
+  // Phase C.4.B: Fresh Feature Discovery (Tier 3)
+  // No hub session active - check for new feature/hub match via CanonicalAliasRegistry
   const featureMatch = findFeatureFromRegistry(transcript);
   
   if (featureMatch && FEATURES.copilotSpotlight) {
     console.log(`✨ Phase C.4: Feature matched: ${featureMatch.id}`);
     
-    // Check if this is a hub
+    // Check if this is a hub that requires sub-selection
     if (featureMatch.isHub && hubRequiresSubSelection(featureMatch)) {
       console.log(`🏢 Phase C.4: Hub detected (${featureMatch.hubSize}): ${featureMatch.id}`);
       
-      // Set hub session state
-      currentHub = featureMatch;
-      
-      // Navigate to hub page
+      // Navigate to hub page FIRST
       if (navigationCallback) {
         navigationCallback(featureMatch.primaryRoute);
+        
+        // Set hub session state AFTER navigation starts
+        currentHub = featureMatch;
         
         // Wait for hub page to load, then prompt for sub-selection
         try {
@@ -1697,14 +1721,16 @@ async function handleVoiceQuery(transcript: string) {
           }
         } catch (err) {
           console.warn("Hub navigation timeout");
-          currentHub = null;
+          currentHub = null; // Clear session on timeout
         }
       }
       
-      return;
+      return; // Exit - hub session initiated
     }
     
     // Not a hub (or hub with single option) - navigate directly and start walkthrough
+    currentHub = null; // Clear any stale hub state
+    
     if (navigationCallback) {
       navigationCallback(featureMatch.primaryRoute);
       
@@ -1751,7 +1777,7 @@ async function handleVoiceQuery(transcript: string) {
       }
     }
     
-    return;
+    return; // Exit - direct feature navigation completed
   }
   
   // Fallback to KeywordFeatureMap for legacy features not yet in CanonicalAliasRegistry
