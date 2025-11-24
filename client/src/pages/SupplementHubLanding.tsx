@@ -51,7 +51,7 @@ export default function SupplementHubLanding() {
       className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#2b2b2b] pb-20 flex flex-col"
     >
       {/* Header */}
-      <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+      <div className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">   
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <Button
