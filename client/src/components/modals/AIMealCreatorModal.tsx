@@ -42,7 +42,6 @@ export default function AIMealCreatorModal({
 
   const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [customIngredients, setCustomIngredients] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -154,18 +153,10 @@ export default function AIMealCreatorModal({
   };
 
   const handleGenerateMeal = () => {
-    // Combine selected checkboxes + custom ingredients
-    const customItems = customIngredients
-      .split(',')
-      .map(i => i.trim())
-      .filter(i => i);
-    
-    const allIngredients = [...selectedIngredients, ...customItems];
-    
-    if (allIngredients.length === 0) {
+    if (selectedIngredients.length === 0) {
       toast({
         title: "No ingredients selected",
-        description: "Please select at least one ingredient or add custom ingredients",
+        description: "Please select at least one ingredient",
         variant: "destructive"
       });
       return;
@@ -173,7 +164,7 @@ export default function AIMealCreatorModal({
 
     // All prep should already be done (happened when clicking ingredients)
     // Just generate the meal with selected ingredients and their styles
-    generateMeal(allIngredients, cookingStyles);
+    generateMeal(selectedIngredients, cookingStyles);
   };
 
   const handlePrepSelect = (ingredient: string, style: string) => {
@@ -286,7 +277,6 @@ export default function AIMealCreatorModal({
   const handleCancel = () => {
     cleanupGeneration();
     setSelectedIngredients([]);
-    setCustomIngredients("");
     setSearchQuery("");
     onOpenChange(false);
   };
@@ -328,22 +318,9 @@ export default function AIMealCreatorModal({
           </p>
         </div>
 
-        {/* Macro Targeting Controls - Trainer Features Only (hidden in Beach Body mode) */}
-        {showMacroTargeting && !beachBodyMode && (
+        {/* Macro Targeting Controls - Trainer Features Only */}
+        {showMacroTargeting && (
           <MacroTargetingControls state={macroTargetingState} />
-        )}
-        
-        {/* Beach Body Mode - Fixed Guardrails Message */}
-        {beachBodyMode && (
-          <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 border border-pink-500/30 rounded-xl p-3 mb-4">
-            <p className="text-white/90 text-sm font-medium mb-1">🏖️ Beach Body Lean-Out Mode</p>
-            <p className="text-white/70 text-xs">
-              Every meal automatically targets: <span className="text-pink-300 font-semibold">35g protein</span>, <span className="text-purple-300 font-semibold">25g starchy carbs</span>, <span className="text-emerald-300 font-semibold">150g fibrous carbs</span>
-            </p>
-            <p className="text-white/60 text-xs mt-1">
-              Perfect for event prep: weddings, summer, photoshoots - high protein, low sugar, high fiber.
-            </p>
-          </div>
         )}
 
         {/* Category Tabs - Purple Style (Matching MealPremadePicker) */}
@@ -441,50 +418,11 @@ export default function AIMealCreatorModal({
           </div>
         )}
 
-        {/* Selected Ingredients Display Section */}
-        {!generating && selectedIngredients.length > 0 && (
-          <div className="mb-3 p-3 bg-black/30 border border-white/20 rounded-xl">
-            <p className="text-white/70 text-xs mb-2 font-medium">Selected Ingredients:</p>
-            <div className="flex flex-wrap gap-2">
-              {selectedIngredients.map((ing) => (
-                <div
-                  key={ing}
-                  className="px-2 py-1 bg-emerald-600/20 border border-emerald-500/30 rounded-lg text-xs text-white/90 flex items-center gap-1"
-                >
-                  <span>{cookingStyles[ing] ? `${cookingStyles[ing]} ${ing}` : ing}</span>
-                  <button
-                    onClick={() => toggleIngredient(ing)}
-                    className="text-white/50 hover:text-white/90 ml-1"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Custom Ingredient Input */}
-        {!generating && (
-          <div className="mb-3">
-            <label className="text-white/70 text-xs mb-1 block font-medium">
-              Add Custom Ingredients (comma-separated):
-            </label>
-            <Input
-              placeholder="e.g., tomatoes, garlic, olive oil"
-              value={customIngredients}
-              onChange={(e) => setCustomIngredients(e.target.value)}
-              className="bg-black/40 text-white border-white/20 placeholder:text-white/50"
-              data-wt="wmb-custom-ingredients-input"
-            />
-          </div>
-        )}
-
         {/* Action Buttons */}
         <div className="flex items-center gap-3 mb-3">
           <Button
             onClick={handleGenerateMeal}
-            disabled={generating || (selectedIngredients.length === 0 && !customIngredients.trim())}
+            disabled={generating || selectedIngredients.length === 0}
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white border-0"
             data-wt="wmb-generate-meal-button"
           >
