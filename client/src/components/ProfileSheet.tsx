@@ -70,8 +70,8 @@ export function ProfileSheet({ children }: ProfileSheetProps) {
       testId: "menu-subscription",
     },
     {
-      title: "Copilot Walkthroughs",
-      description: "Guided, step-by-step help using copilot",
+      title: "App Library",
+      description: "Learn the systems, the nutrition basics, and how to get the most out of the app.",
       icon: Video,
       route: "/learn",
       testId: "menu-tutorials",

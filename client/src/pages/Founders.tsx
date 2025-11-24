@@ -63,48 +63,100 @@ export default function FoundersPage() {
         className="max-w-6xl mx-auto px-4 text-white"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-      <section className="container mx-auto max-w-6xl px-4 md:px-6">
-        <div className="mb-8 p-6 rounded-2xl bg-black/50 ring-1 ring-white/10 backdrop-blur-md shadow-2xl text-center">
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]">
-            Meet Our Founders
-          </h1>
-          <p className="text-sm md:text-base text-white/80 mt-2">
-            The early believers who helped build My Perfect Meals.
-          </p>
-        </div>
+        <section className="container mx-auto max-w-6xl px-4 md:px-6">
+          {/* ABOUT MY PERFECT MEALS SECTION */}
+          <div className="mb-10 p-6 rounded-2xl bg-black/50 ring-1 ring-white/10 backdrop-blur-md shadow-2xl">
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-white mb-4 drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]">
+              About My Perfect Meals
+            </h2>
 
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-          {FOUNDERS.map((f) => (
-            <article
-              key={f.id}
-              className="relative overflow-hidden rounded-2xl bg-black/55 ring-1 ring-white/10 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
-              data-testid={`card-founder-${f.id}`}
-            >
-              <div className="aspect-[4/5] w-full overflow-hidden">
-                <img
-                  src={f.img}
-                  alt={f.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+            <p className="text-white/85 text-sm md:text-base leading-relaxed">
+              My Perfect Meals was built for real people with real lives — people who
+              love food, want to be healthier, and need a system that works in the
+              real world, not the imaginary world most diet apps are based on.
+            </p>
 
-              <div className="p-4 flex items-center justify-between gap-3">
-                <h3 className="text-white font-medium truncate">{f.name}</h3>
+            <p className="text-white/85 text-sm md:text-base leading-relaxed mt-3">
+              After nearly <strong>40 years in the fitness and nutrition industry</strong>,
+              and coaching clients since the early 2000s, I kept seeing the same
+              struggles: cravings, stress eating, chaotic schedules, confusion about
+              what to eat, and zero accountability. People didn’t need another diet —
+              <strong> they needed real solutions</strong>.
+            </p>
 
-                {f.badge && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 ring-1 ring-yellow-300/30 px-2.5 py-1 text-[11px] text-yellow-100">
-                    <Award className="h-3.5 w-3.5" />
-                    {f.badge}
-                  </span>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+            <p className="text-white/85 text-sm md:text-base leading-relaxed mt-3">
+              Before building this company, I served as an <strong>Air Force medic</strong>,
+              worked as a <strong>San Quentin correctional officer</strong>, performed as a{" "}
+              <strong>professional bodybuilder</strong>, and later earned my bachelor’s
+              degree in <strong>Business Administration</strong> with a concentration in{" "}
+              <strong>Social Media Marketing</strong> and a minor in{" "}
+              <strong>Generative AI</strong>. Everything I’ve learned about discipline,
+              structure, psychology, and human behavior shaped what this app became.
+            </p>
 
-        <div className="h-6" />
-      </section>
+            <p className="text-white/85 text-sm md:text-base leading-relaxed mt-3">
+              My Perfect Meals was created to solve the problems I’ve watched people
+              struggle with for decades — cravings, meal planning, social events,
+              daily food decisions, and the constant feeling of starting over every
+              Monday. This isn’t a diet app.{" "}
+              <strong>
+                It’s a food-lover’s lifestyle system, powered by Emotion AI, built to
+                help you eat the foods you love in a smarter way
+              </strong>
+              .
+            </p>
+
+            <p className="text-white/85 text-sm md:text-base leading-relaxed mt-3">
+              My mission is simple:{" "}
+              <strong>help real people succeed in the real world</strong>. If this app
+              can help you feel more confident, more in control, and less stressed
+              about food, then My Perfect Meals is doing exactly what it was created
+              to do.
+            </p>
+          </div>
+
+          {/* FOUNDERS SECTION */}
+          <div className="mb-8 p-6 rounded-2xl bg-black/50 ring-1 ring-white/10 backdrop-blur-md shadow-2xl text-center">
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]">
+              Meet Our Founders
+            </h1>
+            <p className="text-sm md:text-base text-white/80 mt-2">
+              The early believers who helped build My Perfect Meals.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+            {FOUNDERS.map((f) => (
+              <article
+                key={f.id}
+                className="relative overflow-hidden rounded-2xl bg-black/55 ring-1 ring-white/10 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
+                data-testid={`card-founder-${f.id}`}
+              >
+                <div className="aspect-[4/5] w-full overflow-hidden">
+                  <img
+                    src={f.img}
+                    alt={f.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="p-4 flex items-center justify-between gap-3">
+                  <h3 className="text-white font-medium truncate">{f.name}</h3>
+
+                  {f.badge && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 ring-1 ring-yellow-300/30 px-2.5 py-1 text-[11px] text-yellow-100">
+                      <Award className="h-3.5 w-3.5" />
+                      {f.badge}
+                    </span>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="h-6" />
+        </section>
       </div>
     </motion.div>
   );

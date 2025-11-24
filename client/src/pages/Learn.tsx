@@ -430,7 +430,7 @@ export default function Learn() {
           </Button>
           <h1 className="text-lg font-bold text-white flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Tutorial Hub
+            App Library
           </h1>
         </div>
       </div>
