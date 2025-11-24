@@ -14,6 +14,7 @@ import {
   findFeatureFromRegistry,
   findSubOptionByAlias,
   getHubPromptMessage,
+  hubRequiresSubSelection,
   type FeatureDefinition,
   type SubOption,
 } from "./CanonicalAliasRegistry";
@@ -1584,15 +1585,183 @@ async function handleVoiceQuery(transcript: string) {
   }
 
   // ===================================
-  // SPOTLIGHT WALKTHROUGH FALLBACK (Phase C+)
+  // PHASE C.4 — HUB-FIRST ROUTING + SPOTLIGHT WALKTHROUGH
   // ===================================
+  
+  // Phase C.4: Check if we're in a hub and waiting for sub-option selection
+  if (currentHub && hubRequiresSubSelection(currentHub)) {
+    console.log(`🔄 Phase C.4: Hub session active for ${currentHub.id}, checking for sub-option match`);
+    
+    const subOption = findSubOptionByAlias(currentHub, transcript);
+    
+    if (subOption) {
+      console.log(`✅ Phase C.4: Sub-option matched: ${subOption.label} → ${subOption.route}`);
+      
+      // Clear hub session
+      currentHub = null;
+      
+      // Navigate to sub-option
+      if (navigationCallback) {
+        navigationCallback(subOption.route);
+        
+        // Wait for navigation, then start walkthrough if available
+        try {
+          await waitForNavigationReady(subOption.route);
+          
+          if (subOption.walkthroughId && hasScript(subOption.walkthroughId)) {
+            console.log(`🚀 Phase C.4: Launching sub-option walkthrough: ${subOption.walkthroughId}`);
+            
+            const { success, response } = await beginScriptWalkthrough(
+              subOption.walkthroughId,
+              responseCallback || undefined
+            );
+            
+            if (responseCallback) {
+              responseCallback(response);
+            }
+            
+            if (!success) {
+              console.warn(`Walkthrough failed, falling back to legacy`);
+              const legacyResponse = await startWalkthrough(subOption.walkthroughId);
+              if (responseCallback) {
+                responseCallback(legacyResponse);
+              }
+            }
+          } else {
+            // No walkthrough available for this sub-option
+            if (responseCallback) {
+              responseCallback({
+                title: subOption.label,
+                description: `You're now viewing ${subOption.label}.`,
+                spokenText: `You're now viewing ${subOption.label}.`
+              });
+            }
+          }
+        } catch (err) {
+          console.warn("Navigation timeout");
+          if (responseCallback) {
+            responseCallback({
+              title: "Navigation Error",
+              description: "Could not navigate to that page.",
+              spokenText: "I couldn't navigate to that page."
+            });
+          }
+        }
+      }
+      
+      return;
+    } else {
+      // Didn't understand sub-option, re-prompt
+      console.log(`❓ Phase C.4: No sub-option match, re-prompting`);
+      if (responseCallback) {
+        const promptMessage = getHubPromptMessage(currentHub);
+        responseCallback({
+          title: currentHub.id.replace(/_/g, ' '),
+          description: "I didn't catch that. " + promptMessage,
+          spokenText: "I didn't catch that. " + promptMessage
+        });
+      }
+      return;
+    }
+  }
+  
+  // Phase C.4: Check for new feature/hub match via CanonicalAliasRegistry
+  const featureMatch = findFeatureFromRegistry(transcript);
+  
+  if (featureMatch && FEATURES.copilotSpotlight) {
+    console.log(`✨ Phase C.4: Feature matched: ${featureMatch.id}`);
+    
+    // Check if this is a hub
+    if (featureMatch.isHub && hubRequiresSubSelection(featureMatch)) {
+      console.log(`🏢 Phase C.4: Hub detected (${featureMatch.hubSize}): ${featureMatch.id}`);
+      
+      // Set hub session state
+      currentHub = featureMatch;
+      
+      // Navigate to hub page
+      if (navigationCallback) {
+        navigationCallback(featureMatch.primaryRoute);
+        
+        // Wait for hub page to load, then prompt for sub-selection
+        try {
+          await waitForNavigationReady(featureMatch.primaryRoute);
+          
+          const promptMessage = getHubPromptMessage(featureMatch);
+          
+          if (responseCallback) {
+            responseCallback({
+              title: featureMatch.id.replace(/_HUB$/, '').replace(/_/g, ' ') + ' Hub',
+              description: promptMessage,
+              spokenText: promptMessage
+            });
+          }
+        } catch (err) {
+          console.warn("Hub navigation timeout");
+          currentHub = null;
+        }
+      }
+      
+      return;
+    }
+    
+    // Not a hub (or hub with single option) - navigate directly and start walkthrough
+    if (navigationCallback) {
+      navigationCallback(featureMatch.primaryRoute);
+      
+      try {
+        await waitForNavigationReady(featureMatch.primaryRoute);
+        
+        if (featureMatch.walkthroughId && hasScript(featureMatch.walkthroughId)) {
+          console.log(`🚀 Phase C.4: Launching direct feature walkthrough: ${featureMatch.walkthroughId}`);
+          
+          const { success, response } = await beginScriptWalkthrough(
+            featureMatch.walkthroughId,
+            responseCallback || undefined
+          );
+          
+          if (responseCallback) {
+            responseCallback(response);
+          }
+          
+          if (!success) {
+            console.warn(`Walkthrough failed, falling back to legacy`);
+            const legacyResponse = await startWalkthrough(featureMatch.walkthroughId);
+            if (responseCallback) {
+              responseCallback(legacyResponse);
+            }
+          }
+        } else {
+          // No walkthrough available
+          if (responseCallback) {
+            responseCallback({
+              title: featureMatch.id.replace(/_/g, ' '),
+              description: `You're now viewing ${featureMatch.id.replace(/_/g, ' ')}.`,
+              spokenText: `You're now viewing ${featureMatch.id.replace(/_/g, ' ')}.`
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Navigation timeout, showing knowledge instead");
+        if (featureMatch.walkthroughId) {
+          const knowledge = await explainFeature(featureMatch.walkthroughId);
+          if (responseCallback) {
+            responseCallback(knowledge);
+          }
+        }
+      }
+    }
+    
+    return;
+  }
+  
+  // Fallback to KeywordFeatureMap for legacy features not yet in CanonicalAliasRegistry
   const spotlightFeatureMatch = FEATURES.copilotSpotlight
     ? findFeatureFromKeywords(transcript)
     : null;
 
   if (spotlightFeatureMatch && FEATURES.copilotSpotlight) {
     console.log(
-      `✨ Spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`,
+      `✨ Legacy spotlight walkthrough triggered: ${spotlightFeatureMatch.walkthroughId}`,
     );
 
     // Navigate to feature page

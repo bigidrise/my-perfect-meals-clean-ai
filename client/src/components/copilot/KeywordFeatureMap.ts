@@ -29,25 +29,25 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred", "get lean", "cut", "cutting", "beach prep", "physique", "stage prep"],
   },
   
-  // Craving Creator Hub
+  // Craving Hub (Phase C.4: Hub-first routing)
   {
     path: "/craving-creator-landing",
-    walkthroughId: "craving-creator",
-    keywords: ["cravings", "craving creator", "craving hub", "I have a craving", "make a craving meal", "crave", "satisfy cravings", "craving ideas", "craving center", "cravings hub"],
+    walkthroughId: "craving-hub",
+    keywords: ["cravings", "craving", "craving creator", "craving hub", "I have a craving", "crave", "satisfy cravings", "craving ideas", "craving center", "cravings hub", "sweet tooth", "snack ideas", "pre mades", "premades", "presets"],
   },
   
-  // Alcohol Hub
+  // Alcohol Hub (Phase C.4: Large hub with 8+ options)
   {
     path: "/alcohol-hub",
     walkthroughId: "alcohol-hub",
-    keywords: ["alcohol", "drinks", "cocktails", "spirits", "low calorie alcohol", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas", "spirits hub", "alcohol hub", "drinks hub", "lifestyle drinks", "bar hub", "booze", "hard drinks"],
+    keywords: ["alcohol", "drinks", "cocktails", "spirits", "low calorie alcohol", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas", "spirits hub", "alcohol hub", "drinks hub", "lifestyle drinks", "bar hub", "booze", "hard drinks", "lean and social", "wine pairing", "beer pairing", "bourbon pairing", "bourbon", "wine", "beer", "alcohol log", "weaning off", "weaning", "taper"],
   },
   
-  // Socializing Hub (main hub)
+  // Socializing Hub (Phase C.4: Hub-first routing)
   {
     path: "/social-hub",
     walkthroughId: "social-hub",
-    keywords: ["socializing", "social meals", "out to eat", "restaurant", "restaurants", "eating out", "social hub", "socializing hub", "going out", "night out", "social plans"],
+    keywords: ["socializing", "social meals", "out to eat", "restaurant", "restaurants", "eating out", "social hub", "socializing hub", "going out", "night out", "social plans", "find meals", "meal finder", "find food", "nearby meals"],
   },
   
   // Find Meals (Social sub-feature)
@@ -85,11 +85,11 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
     keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"],
   },
   
-  // Kids Meals Hub
+  // Kids Hub (Phase C.4: Hub-first routing)
   {
-    path: "/kids-meals",
-    walkthroughId: "kids-meals",
-    keywords: ["kids meals", "children meals", "kids hub", "meals for kids", "healthy kids meals", "children", "toddler", "kids", "kids food", "children meals", "kids meals hub", "children hub", "kids section"],
+    path: "/healthy-kids-meals",
+    walkthroughId: "kids-hub",
+    keywords: ["kids", "kids meals", "children", "healthy kids", "kids food", "children meals", "kids hub", "kids meals hub", "children hub", "kids section", "toddler meals", "toddlers", "little kids", "baby meals"],
   },
   
   // Master Shopping List
