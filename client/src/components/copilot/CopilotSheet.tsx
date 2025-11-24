@@ -16,9 +16,10 @@ export const CopilotSheet: React.FC = () => {
   const { toast } = useToast();
 
   // =========================================
-  // AUDIO (ElevenLabs) - with lifecycle management
+  // AUDIO (ElevenLabs) - with lifecycle management + mobile handling
   // =========================================
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioBlocked, setAudioBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -82,6 +83,42 @@ export const CopilotSheet: React.FC = () => {
     };
   }, [lastResponse]);
 
+  // =========================================
+  // MOBILE AUTOPLAY HANDLING - Try to play and show tap-to-play if blocked
+  // =========================================
+  useEffect(() => {
+    if (!audioUrl || !audioRef.current) return;
+
+    const tryPlay = async () => {
+      try {
+        await audioRef.current?.play();
+        setAudioBlocked(false); // Successfully playing
+      } catch (err: any) {
+        // Mobile autoplay blocked (NotAllowedError)
+        if (err.name === "NotAllowedError") {
+          console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
+          setAudioBlocked(true);
+        } else {
+          console.error("Audio playback error:", err);
+        }
+      }
+    };
+
+    tryPlay();
+  }, [audioUrl]);
+
+  // Manual play handler for tap-to-play fallback
+  const handleTapToPlay = async () => {
+    if (!audioRef.current) return;
+    
+    try {
+      await audioRef.current.play();
+      setAudioBlocked(false); // Hide prompt after successful play
+    } catch (err: any) {
+      console.error("Manual audio play failed:", err);
+    }
+  };
+
   // Cleanup audio and state when sheet closes
   useEffect(() => {
     if (!isOpen) {
@@ -95,6 +132,7 @@ export const CopilotSheet: React.FC = () => {
       }
       // Clear voice fallback state on close
       setNeedsRetry(false);
+      setAudioBlocked(false);
     }
   }, [isOpen, audioUrl, setNeedsRetry]);
 
@@ -363,11 +401,27 @@ export const CopilotSheet: React.FC = () => {
                   </button>
                 </div>
 
+                {/* Mobile Tap-to-Play Audio Fallback */}
+                {audioBlocked && (
+                  <div className="px-4 pt-2">
+                    <button
+                      onClick={handleTapToPlay}
+                      className="w-full rounded-xl bg-orange-500/20 border border-orange-400/40 px-4 py-3 text-center hover:bg-orange-500/30 transition-colors"
+                    >
+                      <p className="text-sm font-semibold text-orange-300">
+                        🔊 Tap to hear Copilot
+                      </p>
+                      <p className="text-xs text-orange-300/70 mt-1">
+                        Your browser needs permission to play audio
+                      </p>
+                    </button>
+                  </div>
+                )}
+
                 {/* Audio Player */}
                 {audioUrl && (
                   <audio 
                     ref={audioRef}
-                    autoPlay 
                     src={audioUrl}
                     onEnded={() => {
                       URL.revokeObjectURL(audioUrl);
