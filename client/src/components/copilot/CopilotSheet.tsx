@@ -77,28 +77,32 @@ export const CopilotSheet: React.FC = () => {
 
   // =========================================
   // MOBILE AUTOPLAY HANDLING - Retry with manual play if autoPlay blocked
+  // Only needed in dev for React StrictMode; production relies on native autoPlay
   // =========================================
   useEffect(() => {
     if (!audioUrl || !audioRef.current) return;
 
-    // Wait for element to be ready, then try manual play as fallback
-    requestAnimationFrame(async () => {
-      const audio = audioRef.current;
-      if (!audio) return;
+    // DEV ONLY: Wait for element to be ready, then try manual play as fallback
+    // Production relies on native autoPlay + tap-to-play fallback
+    if (import.meta.env.DEV) {
+      requestAnimationFrame(async () => {
+        const audio = audioRef.current;
+        if (!audio) return;
 
-      try {
-        await audio.play();
-        setAudioBlocked(false); // Successfully playing
-      } catch (err: any) {
-        // autoPlay blocked - show tap-to-play prompt
-        if (err.name === "NotAllowedError") {
-          console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
-          setAudioBlocked(true);
-        } else {
-          console.error("Audio playback error:", err);
+        try {
+          await audio.play();
+          setAudioBlocked(false); // Successfully playing
+        } catch (err: any) {
+          // autoPlay blocked - show tap-to-play prompt
+          if (err.name === "NotAllowedError") {
+            console.log("🔇 Mobile autoplay blocked, showing tap-to-play prompt");
+            setAudioBlocked(true);
+          } else {
+            console.error("Audio playback error:", err);
+          }
         }
-      }
-    });
+      });
+    }
   }, [audioUrl]);
 
   // Manual play handler for tap-to-play fallback
