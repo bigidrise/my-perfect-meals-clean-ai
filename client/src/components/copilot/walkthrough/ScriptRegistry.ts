@@ -4,6 +4,7 @@ import DiabeticMealBuilderScript from "./scripts/DiabeticMealBuilderScript";
 import GLP1MealBuilderScript from "./scripts/GLP1MealBuilderScript";
 import AntiInflammatoryMealBuilderScript from "./scripts/AntiInflammatoryMealBuilderScript";
 import BeachBodyMealBuilderScript from "./scripts/BeachBodyMealBuilderScript";
+import MacroCalculatorScript from "./scripts/MacroCalculatorScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -31,6 +32,10 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "beach-body-meal-builder": BeachBodyMealBuilderScript,
   "beach-body-board": BeachBodyMealBuilderScript,
   "hard-body-board": BeachBodyMealBuilderScript,
+  
+  // Macro Calculator
+  "macro-calculator-walkthrough": MacroCalculatorScript,
+  "macro-calculator": MacroCalculatorScript,
 };
 
 /**

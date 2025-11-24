@@ -335,8 +335,8 @@ export default function MacroCounter() {
     if (!results) return;
 
     const timeout = setTimeout(() => {
-      const event = new CustomEvent("ready", {
-        detail: { testId: "macro-results-ready" },
+      const event = new CustomEvent("walkthrough:event", {
+        detail: { testId: "macro-results-ready", event: "ready" },
       });
       window.dispatchEvent(event);
     }, 500);
@@ -842,11 +842,13 @@ export default function MacroCounter() {
                         user?.id,
                       );
 
-                      // Dispatch "done" event after successful save
-                      const event = new CustomEvent("done", {
-                        detail: { testId: "macro-targets-saved" },
-                      });
-                      window.dispatchEvent(event);
+                      // Dispatch "done" event after successful save (500ms debounce)
+                      setTimeout(() => {
+                        const event = new CustomEvent("walkthrough:event", {
+                          detail: { testId: "macro-targets-saved", event: "done" },
+                        });
+                        window.dispatchEvent(event);
+                      }, 500);
 
                       toast({
                         title: "Macro Targets Set!",

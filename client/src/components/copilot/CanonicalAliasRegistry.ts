@@ -239,6 +239,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "MACRO_CALCULATOR",
     legacyId: "macro-calculator",
     primaryRoute: "/macro-counter",
+    walkthroughId: "macro-calculator-walkthrough",
     isHub: false,
     keywords: ["macros", "macro calculator", "protein calculator", "calorie calculator", "macro counter", "calculator", "macro setup", "macro goals", "macro tool", "calculate macros", "macro math", "macro calc"]
   },
