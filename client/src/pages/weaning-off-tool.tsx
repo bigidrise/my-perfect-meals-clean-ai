@@ -286,7 +286,7 @@ const WeaningOffTool = () => {
                     <Button
                       variant={pace === "gentle" ? "default" : "outline"}
                       onClick={() => setPace("gentle")}
-                      className={`h-auto py-4 ${pace === "gentle" ? "bg-teal-500 text-white" : "bg-black/20 border-white/20 text-white hover:bg-black/30"}`}
+                      className={`h-auto py-4 ${pace === "gentle" ? "bg-white/20 border-2 border-white/40 text-white" : "bg-black/20 border border-white/20 text-white hover:bg-black/30"}`}
                       data-testid="button-pace-gentle"
                     >
                       <div className="text-center">
@@ -298,7 +298,7 @@ const WeaningOffTool = () => {
                     <Button
                       variant={pace === "standard" ? "default" : "outline"}
                       onClick={() => setPace("standard")}
-                      className={`h-auto py-4 ${pace === "standard" ? "bg-teal-500 text-white" : "bg-black/20 border-white/20 text-white hover:bg-black/30"}`}
+                      className={`h-auto py-4 ${pace === "standard" ? "bg-white/20 border-2 border-white/40 text-white" : "bg-black/20 border border-white/20 text-white hover:bg-black/30"}`}
                       data-testid="button-pace-standard"
                     >
                       <div className="text-center">
@@ -310,7 +310,7 @@ const WeaningOffTool = () => {
                     <Button
                       variant={pace === "custom" ? "default" : "outline"}
                       onClick={() => setPace("custom")}
-                      className={`h-auto py-4 ${pace === "custom" ? "bg-teal-500 text-white" : "bg-black/20 border-white/20 text-white hover:bg-black/30"}`}
+                      className={`h-auto py-4 ${pace === "custom" ? "bg-white/20 border-2 border-white/40 text-white" : "bg-black/20 border border-white/20 text-white hover:bg-black/30"}`}
                       data-testid="button-pace-custom"
                     >
                       <div className="text-center">
@@ -340,7 +340,7 @@ const WeaningOffTool = () => {
             {/* Generate Plan Button */}
             <Button
               onClick={generatePlan}
-              className="w-full bg-teal-500 hover:bg-teal-600 text-white text-lg py-6"
+              className="w-full bg-white/10 hover:bg-white/20 border border-white/30 text-white text-lg py-6"
               data-testid="button-generate-plan"
             >
               <Calendar className="mr-2 h-5 w-5" />
@@ -356,7 +356,7 @@ const WeaningOffTool = () => {
             <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-teal-400" />
+                    <Heart className="h-5 w-5 text-white/80" />
                     Your Progress
                   </CardTitle>
                 </CardHeader>
@@ -376,7 +376,7 @@ const WeaningOffTool = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center">
-                      <p className="text-5xl font-bold text-teal-400">
+                      <p className="text-5xl font-bold text-white">
                         ≤ {plan.weeklyTargets[currentWeek - 1].maxDrinks}
                       </p>
                       <p className="text-white/70 mt-2">drinks per day max</p>
@@ -449,7 +449,7 @@ const WeaningOffTool = () => {
                         <div
                           key={target.week}
                           className={`p-3 rounded-lg flex items-center justify-between ${
-                            isCurrent ? "bg-teal-500/30 border border-teal-500/50" : "bg-black/20"
+                            isCurrent ? "bg-white/20 border border-white/40" : "bg-black/20"
                           }`}
                           data-testid={`week-schedule-${target.week}`}
                         >
