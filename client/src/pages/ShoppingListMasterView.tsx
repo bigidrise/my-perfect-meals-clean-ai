@@ -75,16 +75,22 @@ export default function ShoppingListMasterView() {
 
   // Wrapper for toggleItem with walkthrough event
   const handleToggleItem = useCallback((id: string) => {
+    // Check current state before toggling
+    const item = items.find(i => i.id === id);
+    const wasUnchecked = item && !item.isChecked;
+    
     toggleItem(id);
     
-    // Dispatch "done" event after checking an item (500ms debounce)
-    setTimeout(() => {
-      const event = new CustomEvent("walkthrough:event", {
-        detail: { testId: "shopping-item-checked", event: "done" },
-      });
-      window.dispatchEvent(event);
-    }, 500);
-  }, [toggleItem]);
+    // Only dispatch event if item was unchecked and is now being checked
+    if (wasUnchecked) {
+      setTimeout(() => {
+        const event = new CustomEvent("walkthrough:event", {
+          detail: { testId: "shopping-item-checked", event: "done" },
+        });
+        window.dispatchEvent(event);
+      }, 500);
+    }
+  }, [items, toggleItem]);
 
   const counts = useMemo(
     () => ({

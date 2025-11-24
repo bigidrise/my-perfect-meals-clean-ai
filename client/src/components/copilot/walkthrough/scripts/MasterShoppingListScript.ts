@@ -5,7 +5,7 @@ const MasterShoppingListScript: WalkthroughScript = {
   id: "shopping-list-walkthrough",
   featureId: "SHOPPING_LIST",
   title: "Master Shopping List",
-  uiReady: false, // Will flip to true after all data-testids are wired and verified
+  uiReady: true,
   steps: [
     {
       id: "intro",

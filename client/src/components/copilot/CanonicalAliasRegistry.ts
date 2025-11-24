@@ -257,6 +257,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "SHOPPING_LIST",
     legacyId: "shopping-list",
     primaryRoute: "/shopping-list-v2",
+    walkthroughId: "shopping-list-walkthrough",
     isHub: false,
     keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping", "master shopping", "master shopping list", "grocery list", "list master", "grocery planner", "shop list", "food list"]
   },

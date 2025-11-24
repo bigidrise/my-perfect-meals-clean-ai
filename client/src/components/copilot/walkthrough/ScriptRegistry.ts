@@ -6,6 +6,7 @@ import AntiInflammatoryMealBuilderScript from "./scripts/AntiInflammatoryMealBui
 import BeachBodyMealBuilderScript from "./scripts/BeachBodyMealBuilderScript";
 import MacroCalculatorScript from "./scripts/MacroCalculatorScript";
 import BiometricsWalkthroughScript from "./scripts/BiometricsWalkthroughScript";
+import MasterShoppingListScript from "./scripts/MasterShoppingListScript";
 
 /**
  * Central registry for all walkthrough scripts
@@ -42,6 +43,11 @@ export const ScriptRegistry: Record<string, WalkthroughScript> = {
   "biometrics-walkthrough": BiometricsWalkthroughScript,
   "my-biometrics": BiometricsWalkthroughScript,
   "biometrics": BiometricsWalkthroughScript,
+  
+  // Master Shopping List
+  "shopping-list-walkthrough": MasterShoppingListScript,
+  "shopping-list": MasterShoppingListScript,
+  "master-shopping-list": MasterShoppingListScript,
 };
 
 /**
