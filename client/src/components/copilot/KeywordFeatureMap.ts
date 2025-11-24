@@ -12,112 +12,112 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/fridge-rescue",
     walkthroughId: "fridge-rescue",
-    keywords: ["fridge rescue", "rescue", "use my fridge", "ingredients", "what can I make"],
+    keywords: ["fridge rescue", "rescue", "use my fridge", "ingredients", "what can I make", "fridge", "pantry rescue", "pantry", "leftover helper", "use ingredients", "rescue mode"],
   },
   
   // Weekly Meal Builder
   {
     path: "/weekly-meal-board",
     walkthroughId: "weekly-board",
-    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "week"],
+    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "week", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan", "plan my week"],
   },
   
   // Beach Body Meal Builder
   {
     path: "/beach-body-meal-board",
     walkthroughId: "beach-body",
-    keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred"],
+    keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred", "get lean", "cut", "cutting", "beach prep", "physique", "stage prep"],
   },
   
   // Craving Creator Hub
   {
     path: "/craving-creator-landing",
     walkthroughId: "craving-creator",
-    keywords: ["cravings", "craving creator", "craving hub", "I have a craving", "make a craving meal", "crave"],
+    keywords: ["cravings", "craving creator", "craving hub", "I have a craving", "make a craving meal", "crave", "satisfy cravings", "craving ideas", "craving center", "cravings hub"],
   },
   
   // Alcohol Hub
   {
     path: "/alcohol-hub",
     walkthroughId: "alcohol-hub",
-    keywords: ["alcohol", "drinks", "cocktails", "spirits", "low calorie alcohol", "lean cocktails", "smart sips"],
+    keywords: ["alcohol", "drinks", "cocktails", "spirits", "low calorie alcohol", "lean cocktails", "smart sips", "mixed drinks", "mocktails", "mocktail ideas", "spirits hub", "alcohol hub", "drinks hub", "lifestyle drinks", "bar hub", "booze", "hard drinks"],
   },
   
   // Socializing Hub (main hub)
   {
     path: "/social-hub",
     walkthroughId: "social-hub",
-    keywords: ["socializing", "social meals", "out to eat"],
+    keywords: ["socializing", "social meals", "out to eat", "restaurant", "restaurants", "eating out", "social hub", "socializing hub", "going out", "night out", "social plans"],
   },
   
   // Find Meals (Social sub-feature)
   {
     path: "/social-hub/find",
     walkthroughId: "find-meals",
-    keywords: ["find meals", "find", "search", "nearby"],
+    keywords: ["find meals", "find", "search", "nearby", "near me", "meals near me", "nearby food", "nearby meals", "local meals"],
   },
   
   // Restaurant Guide (Social sub-feature)
   {
     path: "/social-hub/restaurant-guide",
     walkthroughId: "restaurant-guide",
-    keywords: ["restaurant", "dining", "eating out", "restaurant guide"],
+    keywords: ["restaurant guide", "guide", "restaurant", "dining", "eating out", "eat out guide", "restaurant helper", "eat out", "ordering out", "restaurant menu help"],
   },
   
   // Diabetic Hub
   {
     path: "/diabetic-hub",
     walkthroughId: "diabetic-hub",
-    keywords: ["diabetic", "diabetes", "sugar control", "diabetic meals", "blood sugar", "glucose"],
+    keywords: ["diabetic", "diabetes", "sugar control", "diabetic meals", "blood sugar", "glucose", "diabetic hub", "diabetes hub", "diabetes support"],
   },
   
   // GLP-1 Hub
   {
     path: "/glp1-hub",
     walkthroughId: "glp1-hub",
-    keywords: ["glp", "glp one", "glp-1", "ozempic", "wegovy", "semaglutide", "injection"],
+    keywords: ["glp", "glp one", "glp-1", "ozempic", "wegovy", "semaglutide", "injection", "g l p one", "glp hub", "glp-1 hub", "weight loss meds"],
   },
   
   // Anti-Inflammatory Meal Builder
   {
     path: "/anti-inflammatory-menu-builder",
     walkthroughId: "anti-inflammatory",
-    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti"],
+    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"],
   },
   
   // Kids Meals Hub
   {
     path: "/kids-meals",
     walkthroughId: "kids-meals",
-    keywords: ["kids meals", "children meals", "kids hub", "meals for kids", "healthy kids meals", "children", "toddler"],
+    keywords: ["kids meals", "children meals", "kids hub", "meals for kids", "healthy kids meals", "children", "toddler", "kids", "kids food", "children meals", "kids meals hub", "children hub", "kids section"],
   },
   
   // Master Shopping List
   {
     path: "/shopping-list-v2",
     walkthroughId: "shopping-master",
-    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping"],
+    keywords: ["shopping list", "groceries", "master list", "shopping planner", "grocery", "shopping", "master shopping", "master shopping list", "grocery list", "list master", "grocery planner", "shop list", "food list"],
   },
   
   // Macro Calculator
   {
     path: "/macro-counter",
     walkthroughId: "macro-calculator",
-    keywords: ["macros", "macro calculator", "protein calculator", "calorie calculator", "macro counter", "calculator", "calculate"],
+    keywords: ["macros", "macro calculator", "protein calculator", "calorie calculator", "macro counter", "calculator", "calculate", "macro setup", "macro goals", "macro tool", "calculate macros", "macro math", "macro calc"],
   },
   
   // My Diet Biometrics
   {
     path: "/biometrics",
     walkthroughId: "biometrics",
-    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight"],
+    keywords: ["biometrics", "diet numbers", "profile numbers", "my macros profile", "tracking", "weight", "my biometrics", "bio metrics", "body metrics", "weight tracking", "body data", "my stats", "track weight"],
   },
   
   // Get Inspiration
   {
     path: "/get-inspiration",
     walkthroughId: "inspiration",
-    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration"],
+    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse meals"],
   },
   
   // Supplement Hub
@@ -131,21 +131,21 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/lifestyle",
     walkthroughId: "lifestyle",
-    keywords: ["lifestyle", "main lifestyle page", "nutrition lifestyle"],
+    keywords: ["lifestyle", "main lifestyle page", "nutrition lifestyle", "lifestyle hub", "lifestyle page"],
   },
   
   // Pro Care Page
   {
     path: "/procare-cover",
     walkthroughId: "procare",
-    keywords: ["pro care", "professional care", "doctor care"],
+    keywords: ["pro care", "professional care", "doctor care", "procare", "medical care", "professional help", "doctor"],
   },
   
   // Planner Page
   {
     path: "/planner",
     walkthroughId: "planner",
-    keywords: ["planner", "meal planner", "planning board"],
+    keywords: ["planner", "meal planner", "planning board", "planner page", "main planner", "planner hub", "nutrition planner"],
   },
 ];
 
