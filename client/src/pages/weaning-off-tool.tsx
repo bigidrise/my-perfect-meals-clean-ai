@@ -188,8 +188,7 @@ const WeaningOffTool = () => {
         {/* Setup Step */}
         {step === "setup" && (
           <div className="space-y-6">
-            <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-              <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+            <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-lg text-white">Step 1: Your Baseline</CardTitle>
                 </CardHeader>
@@ -275,12 +274,10 @@ const WeaningOffTool = () => {
                     </Alert>
                   )}
                 </CardContent>
-              </Card>
-            </div>
+            </Card>
 
             {/* Pace Selection */}
-            <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-              <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+            <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-lg text-white">Step 2: Pick Your Pace</CardTitle>
                 </CardHeader>
@@ -338,8 +335,7 @@ const WeaningOffTool = () => {
                     </div>
                   )}
                 </CardContent>
-              </Card>
-            </div>
+            </Card>
 
             {/* Generate Plan Button */}
             <Button
@@ -357,8 +353,7 @@ const WeaningOffTool = () => {
         {step === "tracking" && plan && (
           <div className="space-y-6">
             {/* Progress */}
-            <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-              <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+            <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <Heart className="h-5 w-5 text-teal-400" />
@@ -371,13 +366,11 @@ const WeaningOffTool = () => {
                     Week {currentWeek} of {plan.weeklyTargets.length} • {getProgress()}% Complete
                   </p>
                 </CardContent>
-              </Card>
-            </div>
+            </Card>
 
             {/* Current Week Target */}
             {currentWeek <= plan.weeklyTargets.length && (
-              <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-                <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+              <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                   <CardHeader>
                     <CardTitle className="text-white">This Week's Target</CardTitle>
                   </CardHeader>
@@ -424,14 +417,12 @@ const WeaningOffTool = () => {
                       Pause & Repeat This Week
                     </Button>
                   </CardContent>
-                </Card>
-              </div>
+              </Card>
             )}
 
             {/* Complete Message */}
             {currentWeek > plan.weeklyTargets.length && (
-              <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-                <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+              <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                   <CardContent className="text-center py-12">
                     <div className="text-6xl mb-4">🎉</div>
                     <h3 className="text-2xl font-bold text-white mb-2">You Did It!</h3>
@@ -439,13 +430,11 @@ const WeaningOffTool = () => {
                       You've completed your weaning plan. Take pride in your journey!
                     </p>
                   </CardContent>
-                </Card>
-              </div>
+              </Card>
             )}
 
             {/* Weekly Schedule */}
-            <div className="rounded-2xl p-[1px] bg-gradient-to-r from-black/60 via-teal-500 to-black/80 transition">
-              <Card className="bg-black/30 backdrop-blur-lg border-transparent shadow-xl">
+            <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white">Full Schedule</CardTitle>
                 </CardHeader>
@@ -474,8 +463,7 @@ const WeaningOffTool = () => {
                     })}
                   </div>
                 </CardContent>
-              </Card>
-            </div>
+            </Card>
 
             {/* Reset Button */}
             <Button
