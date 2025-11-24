@@ -4,7 +4,7 @@ const WeeklyMealBuilderScript: WalkthroughScript = {
   id: "weekly-meal-builder",
   featureId: "WEEKLY_MEAL_BUILDER",
   title: "Weekly Meal Builder",
-  uiReady: false, // DORMANT: Awaiting UI team implementation of required data-testid attributes (see DATA_TESTID_REQUIREMENTS.md)
+  uiReady: true, // ✅ ACTIVATED: All 17 data-testid anchors + 4 custom events wired (Phase C.2 complete Nov 24 2025)
   steps: [
     {
       id: "intro",
