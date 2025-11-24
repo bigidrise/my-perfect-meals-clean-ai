@@ -196,7 +196,7 @@ export default function AlcoholLogPage() {
       </div>
 
       <div
-        className="max-w-4xl mx-auto px-4"
+        className="max-w-4xl mx-auto px-4 pb-32"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
         {/* Main Content Card */}
