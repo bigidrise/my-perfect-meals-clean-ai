@@ -175,12 +175,10 @@ export default function DiabeticHub() {
               <span className="text-sm font-medium">Back</span>
             </Button>
 
-
             {/* Title */}
             <h1 className="text-lg font-bold text-white">Diabetic Hub</h1>
 
             {/* Question Mark Button */}
-            
           </div>
         </div>
 
@@ -193,9 +191,6 @@ export default function DiabeticHub() {
           <section className="bg-black/30 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3 pointer-events-none" />
             <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg">
-                <Target className="h-6 w-6" />
-              </div>
               <div>
                 <h2 className="text-lg font-bold text-white">
                   Doctor / Coach Guardrails
