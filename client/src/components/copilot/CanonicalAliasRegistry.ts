@@ -407,25 +407,38 @@ export function findSubOptionByAlias(hub: FeatureDefinition, query: string): Sub
 
 /**
  * Get hub prompt message based on hub size
+ * Phase C.4: Hub-first routing with size-appropriate prompts
  */
 export function getHubPromptMessage(hub: FeatureDefinition): string {
   if (!hub.isHub || !hub.subOptions) return "";
 
+  const hubLabel = hub.id.replace(/_HUB$/, '').replace(/_/g, ' ');
+  const formattedLabel = hubLabel.charAt(0).toUpperCase() + hubLabel.slice(1).toLowerCase();
+
   if (hub.hubSize === "large") {
-    // Large hubs: generic prompt
-    return "Choose your page.";
+    // Large hubs (8+ options): Don't list all pages
+    return `You're in the ${formattedLabel} Hub. What would you like to open?`;
   }
 
-  // Small hubs: announce options
-  if (hub.subOptions.length === 1) {
-    return `Would you like to open the ${hub.subOptions[0].label}?`;
-  }
-
+  // Small hubs (2 options): List the choices
   if (hub.subOptions.length === 2) {
-    return `Do you want ${hub.subOptions[0].label} or ${hub.subOptions[1].label}?`;
+    const firstLabel = hub.subOptions[0].label.replace(/^(Craving|Kids|Toddler)\s+/i, '');
+    const secondLabel = hub.subOptions[1].label.replace(/^(Craving|Kids|Toddler)\s+/i, '');
+    return `You're in the ${formattedLabel} Hub. Say '${firstLabel}' or '${secondLabel}', or tap a button.`;
   }
 
-  // Fallback for 3+ options in small hub
+  // Fallback for 1 or 3+ options
+  if (hub.subOptions.length === 1) {
+    return `You're in the ${formattedLabel} Hub. Would you like to open ${hub.subOptions[0].label}?`;
+  }
+
   const optionNames = hub.subOptions.map(o => o.label).join(", ");
-  return `Which option would you like? ${optionNames}`;
+  return `You're in the ${formattedLabel} Hub. Choose from: ${optionNames}`;
+}
+
+/**
+ * Check if hub requires sub-selection (has multiple options)
+ */
+export function hubRequiresSubSelection(hub: FeatureDefinition): boolean {
+  return hub.isHub && (hub.subOptions?.length ?? 0) > 1;
 }
