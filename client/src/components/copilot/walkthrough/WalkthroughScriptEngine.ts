@@ -16,6 +16,7 @@ export class WalkthroughScriptEngine {
   private listeners: WalkthroughEventListener[] = [];
   private actionListener: ((e: Event) => void) | null = null;
   private currentElement: Element | null = null;
+  private eventElement: Element | null = null; // Separate tracking for waitForEvent target
   private status: EngineStatus = "idle";
 
   /**
@@ -194,25 +195,43 @@ export class WalkthroughScriptEngine {
       }
     }
 
+    // Resolve target selector (supports both legacy and new patterns)
+    const targetSelector = step.targetTestId
+      ? `[data-testid="${step.targetTestId}"]`
+      : step.target;
+
     // Handle target element
-    if (step.target) {
-      const element = await waitForElement(step.target, {
+    if (targetSelector) {
+      const element = await waitForElement(targetSelector, {
         timeout: 5000,
         retryInterval: 100,
       });
 
       if (!element) {
         console.warn(
-          `[WalkthroughScriptEngine] Element not found: ${step.target}`
+          `[WalkthroughScriptEngine] Element not found: ${targetSelector}`
         );
-        this.emitError(`Target element not found: ${step.target}`);
+        this.emitError(`Target element not found: ${targetSelector}`);
         return;
       }
 
       this.currentElement = element;
 
       // Setup action listener for auto-advance
-      if (step.waitForAction && step.waitForAction !== "none") {
+      // Support both legacy waitForAction and new waitForEvent patterns
+      if (step.waitForEvent) {
+        // New pattern: wait for specific event on specific element
+        const eventTargetSelector = `[data-testid="${step.waitForEvent.testId}"]`;
+        const foundEventElement = await waitForElement(eventTargetSelector, {
+          timeout: 5000,
+          retryInterval: 100,
+        });
+        if (foundEventElement) {
+          this.eventElement = foundEventElement; // Track event element separately
+          this.setupActionListener(foundEventElement, step.waitForEvent.event);
+        }
+      } else if (step.waitForAction && step.waitForAction !== "none") {
+        // Legacy pattern: wait for action on current element
         this.setupActionListener(element, step.waitForAction);
       }
     }
@@ -241,9 +260,17 @@ export class WalkthroughScriptEngine {
    * Cleanup current step (remove listeners, etc.)
    */
   private cleanupCurrentStep(): void {
-    if (this.actionListener && this.currentElement) {
+    if (this.actionListener) {
       const step = this.getCurrentStep();
-      if (step?.waitForAction) {
+      // Handle both legacy waitForAction and new waitForEvent patterns
+      if (step?.waitForEvent && this.eventElement) {
+        // Remove from event element (not spotlight element)
+        this.eventElement.removeEventListener(
+          step.waitForEvent.event,
+          this.actionListener
+        );
+      } else if (step?.waitForAction && this.currentElement) {
+        // Remove from current element (legacy pattern)
         this.currentElement.removeEventListener(
           step.waitForAction,
           this.actionListener
@@ -253,6 +280,7 @@ export class WalkthroughScriptEngine {
 
     this.actionListener = null;
     this.currentElement = null;
+    this.eventElement = null;
   }
 
   /**
@@ -263,6 +291,7 @@ export class WalkthroughScriptEngine {
     this.currentStepIndex = 0;
     this.status = "idle";
     this.currentElement = null;
+    this.eventElement = null;
     this.actionListener = null;
   }
 

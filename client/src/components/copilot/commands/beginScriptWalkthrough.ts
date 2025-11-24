@@ -41,6 +41,20 @@ export async function beginScriptWalkthrough(
     };
   }
 
+  // Phase C.1: Check if UI is ready for dormant scripts
+  if (script.uiReady === false) {
+    console.log(`[beginScriptWalkthrough] Script dormant (UI not ready): ${scriptId}`);
+    const notReadyResponse: KnowledgeResponse = {
+      title: "Walkthrough Not Ready",
+      description: "This walkthrough requires UI updates that are still in progress. Please check back soon!",
+      type: "knowledge",
+    };
+    return {
+      success: false,
+      response: notReadyResponse,
+    };
+  }
+
   // Cancel any active walkthrough and wait for idle state
   const currentState = walkthroughEngine.getState();
   if (currentState.isActive) {
@@ -82,10 +96,10 @@ export async function beginScriptWalkthrough(
           description: `Step ${state.currentStepIndex + 1} of ${state.totalSteps}`,
           type: "walkthrough",
           steps: script.steps.map((step) => ({
-            text: step.description,
-            targetId: step.target,
+            text: step.message || step.description || "",
+            targetId: step.targetTestId ? `[data-testid="${step.targetTestId}"]` : step.target,
           })),
-          spokenText: currentStep?.speak || currentStep?.description,
+          spokenText: currentStep?.speak || currentStep?.message || currentStep?.description,
         };
         responseCallback(updateResponse);
         break;
@@ -148,10 +162,10 @@ export async function beginScriptWalkthrough(
       description: "Follow these steps to learn this feature.",
       type: "walkthrough",
       steps: script.steps.map((step) => ({
-        text: step.description,
-        targetId: step.target,
+        text: step.message || step.description || "",
+        targetId: step.targetTestId ? `[data-testid="${step.targetTestId}"]` : step.target,
       })),
-      spokenText: script.steps[0]?.speak || script.steps[0]?.description,
+      spokenText: script.steps[0]?.speak || script.steps[0]?.message || script.steps[0]?.description,
     };
 
     console.log(`[beginScriptWalkthrough] Started successfully: ${script.title}`);

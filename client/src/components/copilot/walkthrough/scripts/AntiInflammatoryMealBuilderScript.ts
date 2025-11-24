@@ -1,17 +1,17 @@
 import type { WalkthroughScript } from "../WalkthroughTypes";
 
-const WeeklyMealBuilderScript: WalkthroughScript = {
-  id: "weekly-meal-builder",
-  featureId: "WEEKLY_MEAL_BUILDER",
-  title: "Weekly Meal Builder",
+const AntiInflammatoryMealBuilderScript: WalkthroughScript = {
+  id: "anti-inflammatory-meal-builder",
+  featureId: "ANTI_INFLAMMATORY_MEAL_BUILDER",
+  title: "Anti-Inflammatory Meal Builder",
   uiReady: false, // DORMANT: Awaiting UI team implementation of required data-testid attributes (see DATA_TESTID_REQUIREMENTS.md)
   steps: [
     {
       id: "intro",
       targetTestId: "weekly-builder-header",
-      description: "Welcome to the Weekly Meal Builder. Let's create your first day. We'll begin with breakfast.",
-      message: "Welcome to the Weekly Meal Builder. Let's create your first day. We'll begin with breakfast.",
-      speak: "Welcome to the Weekly Meal Builder. Let's create your first day.",
+      description: "Welcome to the Anti-Inflammatory Meal Builder. Let's create your first day. We'll begin with breakfast.",
+      message: "Welcome to the Anti-Inflammatory Meal Builder. Let's create your first day. We'll begin with breakfast.",
+      speak: "Welcome to the Anti-Inflammatory Meal Builder. Let's create your first day.",
       spotlight: true,
     },
     {
@@ -105,4 +105,4 @@ const WeeklyMealBuilderScript: WalkthroughScript = {
   ],
 };
 
-export default WeeklyMealBuilderScript;
+export default AntiInflammatoryMealBuilderScript;

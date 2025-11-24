@@ -1,17 +1,17 @@
 import type { WalkthroughScript } from "../WalkthroughTypes";
 
-const WeeklyMealBuilderScript: WalkthroughScript = {
-  id: "weekly-meal-builder",
-  featureId: "WEEKLY_MEAL_BUILDER",
-  title: "Weekly Meal Builder",
+const DiabeticMealBuilderScript: WalkthroughScript = {
+  id: "diabetic-meal-builder",
+  featureId: "DIABETIC_MEAL_BUILDER",
+  title: "Diabetic Meal Builder",
   uiReady: false, // DORMANT: Awaiting UI team implementation of required data-testid attributes (see DATA_TESTID_REQUIREMENTS.md)
   steps: [
     {
       id: "intro",
       targetTestId: "weekly-builder-header",
-      description: "Welcome to the Weekly Meal Builder. Let's create your first day. We'll begin with breakfast.",
-      message: "Welcome to the Weekly Meal Builder. Let's create your first day. We'll begin with breakfast.",
-      speak: "Welcome to the Weekly Meal Builder. Let's create your first day.",
+      description: "Welcome to the Diabetic Meal Builder. Let's create your first day. We'll begin with breakfast.",
+      message: "Welcome to the Diabetic Meal Builder. Let's create your first day. We'll begin with breakfast.",
+      speak: "Welcome to the Diabetic Meal Builder. Let's create your first day.",
       spotlight: true,
     },
     {
@@ -105,4 +105,4 @@ const WeeklyMealBuilderScript: WalkthroughScript = {
   ],
 };
 
-export default WeeklyMealBuilderScript;
+export default DiabeticMealBuilderScript;

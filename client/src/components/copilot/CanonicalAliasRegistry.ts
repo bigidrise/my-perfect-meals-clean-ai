@@ -14,6 +14,7 @@ export interface SubOption {
   id: string;
   label: string;
   route: string;
+  walkthroughId?: string; // Phase C.1: Links to walkthrough script ID in ScriptRegistry
   aliases: string[];
 }
 
@@ -21,6 +22,7 @@ export interface FeatureDefinition {
   id: string;
   legacyId?: string; // For backward compatibility with Spotlight/legacy systems
   primaryRoute: string;
+  walkthroughId?: string; // Phase C.1: Links to walkthrough script ID in ScriptRegistry
   isHub: boolean;
   hubSize?: "small" | "large";
   keywords: string[];
@@ -178,6 +180,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "DIABETIC_BUILDER",
         label: "Diabetic Menu Builder",
         route: "/diabetic-menu-builder",
+        walkthroughId: "diabetic-meal-builder",
         aliases: ["builder", "menu builder", "diabetic builder", "meal builder", "diabetic meals", "diabetes meals", "d-build"]
       }
     ]
@@ -195,6 +198,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "GLP1_BUILDER",
         label: "GLP-1 Meal Builder",
         route: "/glp1-menu-builder",
+        walkthroughId: "glp1-meal-builder",
         aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder", "glp one builder", "glp meal builder", "glp menu", "glp-1 meals", "glp-build"]
       }
     ]
@@ -259,6 +263,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "WEEKLY_MEAL_BUILDER",
     legacyId: "weekly-meal-board",
     primaryRoute: "/weekly-meal-board",
+    walkthroughId: "weekly-meal-builder",
     isHub: false,
     keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan"]
   },
@@ -275,6 +280,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "ANTI_INFLAMMATORY",
     legacyId: "anti-inflammatory",
     primaryRoute: "/anti-inflammatory-menu-builder",
+    walkthroughId: "anti-inflammatory-meal-builder",
     isHub: false,
     keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"]
   },
@@ -283,6 +289,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     id: "BEACH_BODY",
     legacyId: "beach-body",
     primaryRoute: "/beach-body-meal-board",
+    walkthroughId: "beach-body-meal-builder",
     isHub: false,
     keywords: ["beach body", "hard body", "summer shred", "lean out", "competition", "shred", "get lean", "cut", "cutting", "beach prep", "physique", "stage prep"]
   },
