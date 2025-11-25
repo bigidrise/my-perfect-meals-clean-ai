@@ -84,23 +84,26 @@ export default function ShoppingListMasterView() {
   }, []);
 
   // Wrapper for toggleItem with walkthrough event
-  const handleToggleItem = useCallback((id: string) => {
-    // Check current state before toggling
-    const item = items.find(i => i.id === id);
-    const wasUnchecked = item && !item.isChecked;
-    
-    toggleItem(id);
-    
-    // Only dispatch event if item was unchecked and is now being checked
-    if (wasUnchecked) {
-      setTimeout(() => {
-        const event = new CustomEvent("walkthrough:event", {
-          detail: { testId: "shopping-item-checked", event: "done" },
-        });
-        window.dispatchEvent(event);
-      }, 500);
-    }
-  }, [items, toggleItem]);
+  const handleToggleItem = useCallback(
+    (id: string) => {
+      // Check current state before toggling
+      const item = items.find((i) => i.id === id);
+      const wasUnchecked = item && !item.isChecked;
+
+      toggleItem(id);
+
+      // Only dispatch event if item was unchecked and is now being checked
+      if (wasUnchecked) {
+        setTimeout(() => {
+          const event = new CustomEvent("walkthrough:event", {
+            detail: { testId: "shopping-item-checked", event: "done" },
+          });
+          window.dispatchEvent(event);
+        }, 500);
+      }
+    },
+    [items, toggleItem],
+  );
 
   const counts = useMemo(
     () => ({
@@ -129,7 +132,7 @@ export default function ShoppingListMasterView() {
   const onClearChecked = useCallback(() => {
     if (!confirm("Clear all checked items?")) return;
     clearChecked();
-    
+
     // Dispatch "done" event after clearing checked items (500ms debounce)
     setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
@@ -142,7 +145,7 @@ export default function ShoppingListMasterView() {
   const onClearAll = useCallback(() => {
     if (!confirm("Clear entire shopping list?")) return;
     clearAll();
-    
+
     // Dispatch "done" event after clearing all items (500ms debounce)
     setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
@@ -379,13 +382,19 @@ export default function ShoppingListMasterView() {
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
       >
         {/* Stats */}
-        <div data-testid="shopping-summary-card" className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur">
+        <div
+          data-testid="shopping-summary-card"
+          className="rounded-2xl bg-white/5 border border-white/20 p-4 backdrop-blur"
+        >
           <div className="text-white/70 text-sm">
             {counts.total} items • {counts.checked} checked
           </div>
 
           {/* Add Item Actions */}
-          <div data-testid="shopping-add-buttons" className="mt-4 flex flex-wrap gap-2">
+          <div
+            data-testid="shopping-add-buttons"
+            className="mt-4 flex flex-wrap gap-2"
+          >
             <Button
               data-wt="msl-barcode-button"
               onClick={() => setBarcodeModalOpen(true)}
@@ -459,8 +468,7 @@ export default function ShoppingListMasterView() {
           </div>
         </div>
         {/* Add Other Items Section */}
-        <AddOtherItems />I don't think I have any pricing anywhere on the app
-        anymore just on the pricing page
+        <AddOtherItems />
         {/* Walmart Card - Single Integration */}
         <div className="rounded-2xl border border-white/20 bg-black/60 text-white p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
@@ -492,7 +500,10 @@ export default function ShoppingListMasterView() {
         </div>
         {/* Actions */}
         {(counts.checked > 0 || counts.total > 0) && (
-          <div data-testid="shopping-clear-buttons" className="flex flex-wrap gap-2">
+          <div
+            data-testid="shopping-clear-buttons"
+            className="flex flex-wrap gap-2"
+          >
             {counts.checked > 0 && (
               <Button
                 onClick={onClearChecked}
@@ -574,7 +585,11 @@ export default function ShoppingListMasterView() {
                 <div className="space-y-2">
                   {arr.map((item, idx) => (
                     <div
-                      data-testid={idx === 0 && cat === Object.keys(groupedUnchecked)[0] ? "shopping-first-item" : undefined}
+                      data-testid={
+                        idx === 0 && cat === Object.keys(groupedUnchecked)[0]
+                          ? "shopping-first-item"
+                          : undefined
+                      }
                       data-wt="msl-item-card"
                       key={item.id}
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
@@ -719,7 +734,9 @@ export default function ShoppingListMasterView() {
                             >
                               <Checkbox
                                 checked={item.isChecked || false}
-                                onCheckedChange={() => handleToggleItem(item.id)}
+                                onCheckedChange={() =>
+                                  handleToggleItem(item.id)
+                                }
                                 className="border-white/30"
                                 data-testid={`checkbox-purchased-${item.id}`}
                               />
@@ -860,9 +877,15 @@ export default function ShoppingListMasterView() {
                     if (barcodeText.trim()) {
                       // Dispatch "interacted" event
                       setTimeout(() => {
-                        const interactedEvent = new CustomEvent("walkthrough:event", {
-                          detail: { testId: "shopping-list-interacted", event: "interacted" },
-                        });
+                        const interactedEvent = new CustomEvent(
+                          "walkthrough:event",
+                          {
+                            detail: {
+                              testId: "shopping-list-interacted",
+                              event: "interacted",
+                            },
+                          },
+                        );
                         window.dispatchEvent(interactedEvent);
                       }, 300);
 
@@ -881,9 +904,15 @@ export default function ShoppingListMasterView() {
 
                       // Dispatch "completed" event
                       setTimeout(() => {
-                        const completedEvent = new CustomEvent("walkthrough:event", {
-                          detail: { testId: "shopping-list-completed", event: "completed" },
-                        });
+                        const completedEvent = new CustomEvent(
+                          "walkthrough:event",
+                          {
+                            detail: {
+                              testId: "shopping-list-completed",
+                              event: "completed",
+                            },
+                          },
+                        );
                         window.dispatchEvent(completedEvent);
                       }, 500);
                     }
