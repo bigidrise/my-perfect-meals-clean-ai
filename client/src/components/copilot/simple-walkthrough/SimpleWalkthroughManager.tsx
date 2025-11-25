@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useSimpleWalkthrough } from "./SimpleWalkthroughContext";
 import { SimpleStepOverlay } from "./SimpleStepOverlay";
-import { registerSimpleWalkthroughStarter } from "./simpleWalkthroughHelper";
+import { SimpleWalkthroughFlowController } from "./SimpleWalkthroughFlowController";
+import { registerSimpleWalkthroughStarter, registerFlowStarter } from "./simpleWalkthroughHelper";
 
 /**
  * SimpleWalkthroughManager
@@ -11,22 +12,24 @@ import { registerSimpleWalkthroughStarter } from "./simpleWalkthroughHelper";
  * Completely independent of voice/TTS systems.
  */
 export function SimpleWalkthroughManager() {
-  const { state, startWalkthrough, nextStep } = useSimpleWalkthrough();
+  const { state, startWalkthrough, startFlow, nextStep } = useSimpleWalkthrough();
 
   useEffect(() => {
     registerSimpleWalkthroughStarter(startWalkthrough);
-  }, [startWalkthrough]);
-
-  if (!state.isActive || !state.currentStep) {
-    return null;
-  }
+    registerFlowStarter(startFlow);
+  }, [startWalkthrough, startFlow]);
 
   return (
-    <SimpleStepOverlay
-      selector={state.currentStep.selector}
-      text={state.currentStep.text}
-      showArrow={state.currentStep.showArrow}
-      onTap={nextStep}
-    />
+    <>
+      <SimpleWalkthroughFlowController />
+      {state.isActive && state.currentStep && (
+        <SimpleStepOverlay
+          selector={state.currentStep.selector}
+          text={state.currentStep.text}
+          showArrow={state.currentStep.showArrow}
+          onTap={nextStep}
+        />
+      )}
+    </>
   );
 }

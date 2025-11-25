@@ -27,7 +27,8 @@ import { useToast } from "@/hooks/use-toast";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import { useAuth } from "@/contexts/AuthContext";
-import { startSimpleWalkthrough } from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
+import { startSimpleWalkthrough, startSimpleWalkthroughFlow } from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 type Goal = "loss" | "maint" | "gain";
 type Sex = "male" | "female";
@@ -877,13 +878,8 @@ export default function MacroCounter() {
                         user?.id,
                       );
 
-                      // Dispatch "done" event after successful save (500ms debounce)
-                      setTimeout(() => {
-                        const event = new CustomEvent("walkthrough:event", {
-                          detail: { testId: "macro-targets-saved", event: "done" },
-                        });
-                        window.dispatchEvent(event);
-                      }, 500);
+                      // Dispatch completion event for multi-page walkthrough flow
+                      dispatchWalkthroughCompletion('macro:saved');
 
                       toast({
                         title: "Macro Targets Set!",

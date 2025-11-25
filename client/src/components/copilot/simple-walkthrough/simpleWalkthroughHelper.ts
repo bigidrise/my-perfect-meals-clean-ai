@@ -22,9 +22,11 @@ interface SimpleStep {
 }
 
 type SimpleWalkthroughStarter = (scriptId: string, steps: SimpleStep[]) => void;
+type FlowStarter = (flowId: string) => void;
 type CopilotCloser = () => void;
 
 let walkthroughStarter: SimpleWalkthroughStarter | null = null;
+let flowStarter: FlowStarter | null = null;
 let copilotCloser: CopilotCloser | null = null;
 
 /**
@@ -32,6 +34,13 @@ let copilotCloser: CopilotCloser | null = null;
  */
 export function registerSimpleWalkthroughStarter(starter: SimpleWalkthroughStarter) {
   walkthroughStarter = starter;
+}
+
+/**
+ * Register the flow starter function (called by SimpleWalkthroughProvider)
+ */
+export function registerFlowStarter(starter: FlowStarter) {
+  flowStarter = starter;
 }
 
 /**
@@ -52,12 +61,28 @@ export function startSimpleWalkthrough(scriptId: string, steps: SimpleStep[]) {
     return;
   }
   
-  // Close Copilot modal when walkthrough starts
   if (copilotCloser) {
     copilotCloser();
   }
   
   walkthroughStarter(scriptId, steps);
+}
+
+/**
+ * Start a multi-page walkthrough flow
+ * Automatically closes the Copilot modal and begins the flow sequence
+ */
+export function startSimpleWalkthroughFlow(flowId: string) {
+  if (!flowStarter) {
+    console.warn('[SimpleWalkthrough] Flow starter not registered yet. Skipping flow:', flowId);
+    return;
+  }
+  
+  if (copilotCloser) {
+    copilotCloser();
+  }
+  
+  flowStarter(flowId);
 }
 
 /**
