@@ -19,6 +19,7 @@ import {
   type SubOption,
 } from "./CanonicalAliasRegistry";
 import { hasScript } from "./walkthrough/ScriptRegistry";
+import { hubWalkthroughEngine } from "./walkthrough/engines/HubWalkthroughEngine";
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;
@@ -1706,12 +1707,96 @@ async function handleVoiceQuery(transcript: string) {
         // Set hub session state AFTER navigation starts
         currentHub = featureMatch;
         
-        // Wait for hub page to load, then prompt for sub-selection
+        // Wait for hub page to load, then activate hub walkthrough engine
         try {
           await waitForNavigationReady(featureMatch.primaryRoute);
           
-          const promptMessage = getHubPromptMessage(featureMatch);
+          // Phase C.7: Activate hub walkthrough engine with voice/tap/timeout handling
+          console.log(`🎯 Phase C.7: Starting hub walkthrough engine for ${featureMatch.id}`);
           
+          // Create walkthrough ID map for sub-options (HubSubOption doesn't have walkthroughId property)
+          const walkthroughIdMap = new Map<string, string>();
+          (featureMatch.subOptions || []).forEach(opt => {
+            if (opt.walkthroughId) {
+              walkthroughIdMap.set(opt.id, opt.walkthroughId);
+            }
+          });
+          
+          await hubWalkthroughEngine.start({
+            hubId: featureMatch.id,
+            hubName: featureMatch.id.replace(/_HUB$/, '').replace(/_/g, ' '),
+            subOptions: (featureMatch.subOptions || []).map(opt => ({
+              id: opt.id,
+              name: opt.label,
+              route: opt.route,
+              testId: opt.testId,
+              voiceAliases: opt.aliases || []
+            })),
+            selectionPrompt: getHubPromptMessage(featureMatch),
+            voiceTimeoutMessage: featureMatch.voiceTimeoutMessage || "I didn't catch that. Try typing your selection instead, or tap one of the options on screen.",
+            onSelection: async (subOption) => {
+              console.log(`✅ Phase C.7: Hub sub-option selected: ${subOption.name}`);
+              
+              // Clear hub session
+              currentHub = null;
+              
+              // Navigate to sub-option
+              if (navigationCallback) {
+                navigationCallback(subOption.route);
+                
+                try {
+                  await waitForNavigationReady(subOption.route);
+                  
+                  // Get walkthrough ID from map
+                  const walkthroughId = walkthroughIdMap.get(subOption.id);
+                  
+                  // Start sub-option walkthrough if available
+                  if (walkthroughId && hasScript(walkthroughId)) {
+                    console.log(`🚀 Phase C.7: Launching sub-option walkthrough: ${walkthroughId}`);
+                    
+                    const { success, response } = await beginScriptWalkthrough(
+                      walkthroughId,
+                      responseCallback || undefined
+                    );
+                    
+                    if (responseCallback) {
+                      responseCallback(response);
+                    }
+                    
+                    if (!success) {
+                      console.warn(`Walkthrough failed for ${walkthroughId}`);
+                    }
+                  } else {
+                    // No walkthrough - just show confirmation
+                    if (responseCallback) {
+                      responseCallback({
+                        title: subOption.name,
+                        description: `You're now viewing ${subOption.name}.`,
+                        spokenText: `Opening ${subOption.name}.`
+                      });
+                    }
+                  }
+                } catch (err) {
+                  console.warn("Sub-option navigation timeout");
+                }
+              }
+            },
+            onError: (error) => {
+              console.warn(`⚠️ Phase C.7: Hub engine error: ${error}`);
+              
+              // Show fallback message for voice timeout
+              if (responseCallback) {
+                responseCallback({
+                  title: "Try Typing Instead",
+                  description: error,
+                  spokenText: error
+                });
+              }
+            }
+          });
+          
+          // Send initial prompt response
+          const promptMessage = getHubPromptMessage(featureMatch);
           if (responseCallback) {
             responseCallback({
               title: featureMatch.id.replace(/_HUB$/, '').replace(/_/g, ' ') + ' Hub',

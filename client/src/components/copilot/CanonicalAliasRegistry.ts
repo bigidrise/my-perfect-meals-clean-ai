@@ -14,6 +14,7 @@ export interface SubOption {
   id: string;
   label: string;
   route: string;
+  testId: string; // Phase C.7: data-testid for click listener binding
   walkthroughId?: string; // Phase C.1: Links to walkthrough script ID in ScriptRegistry
   aliases: string[];
   voiceHint?: string; // Phase C.7: Voice pronunciation hint for HubWalkthroughEngine
@@ -55,6 +56,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "CRAVING_CREATOR",
         label: "Craving Creator",
         route: "/craving-creator",
+        testId: "cravinghub-creator",
         walkthroughId: "craving-creator-walkthrough",
         aliases: ["creator", "create", "custom craving", "make a craving", "craving creator", "create craving", "make my craving"],
         voiceHint: "creator"
@@ -63,6 +65,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "CRAVING_PREMADES",
         label: "Craving Premades",
         route: "/craving-presets",
+        testId: "cravinghub-premades",
         walkthroughId: "craving-premades-walkthrough",
         aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"],
         voiceHint: "premades"
@@ -86,6 +89,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "LEAN_SOCIAL",
         label: "Alcohol Lean and Social",
         route: "/alcohol/lean-and-social",
+        testId: "alcoholhub-lean",
         walkthroughId: "lean-social-walkthrough",
         aliases: ["lean", "social", "lean and social", "lean alcohol", "lean drinks", "lean social", "low cal drinks", "diet drinks"]
       },
@@ -93,6 +97,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "MOCKTAILS",
         label: "Mocktails",
         route: "/mocktails-low-cal-mixers",
+        testId: "alcoholhub-mocktails",
         walkthroughId: "mocktails-walkthrough",
         aliases: ["mocktails", "alcohol-free", "non-alcoholic", "mocktail", "low cal mixers", "no alcohol drinks", "zero proof", "virgin drinks"]
       },
@@ -100,6 +105,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "MEAL_PAIRING",
         label: "Meal Pairing",
         route: "/meal-pairing-ai",
+        testId: "alcoholhub-pairing",
         walkthroughId: "meal-pairing-walkthrough",
         aliases: ["meal pairing", "pairing", "pair meal", "pair my meal", "food pairing", "what to drink with", "pairing guide"]
       },
@@ -107,6 +113,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "WINE_PAIRING",
         label: "Wine Pairing",
         route: "/wine-pairing",
+        testId: "alcoholhub-wine",
         walkthroughId: "wine-pairing-walkthrough",
         aliases: ["wine", "wine pairing", "wines", "pair wine", "wine guide", "wine with dinner"]
       },
@@ -114,6 +121,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "BEER_PAIRING",
         label: "Beer Pairing",
         route: "/beer-pairing",
+        testId: "alcoholhub-beer",
         walkthroughId: "beer-pairing-walkthrough",
         aliases: ["beer", "beer pairing", "beers", "pair beer", "beer guide", "beer with dinner"]
       },
@@ -121,6 +129,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "BOURBON_PAIRING",
         label: "Bourbon Pairing",
         route: "/bourbon-spirits",
+        testId: "alcoholhub-bourbon",
         walkthroughId: "bourbon-pairing-walkthrough",
         aliases: ["bourbon", "spirits", "whiskey", "bourbon pairing", "bourbon guide", "whiskey pairing"]
       },
@@ -128,6 +137,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "ALCOHOL_LOG",
         label: "Alcohol Log",
         route: "/alcohol-log",
+        testId: "alcoholhub-log",
         walkthroughId: "alcohol-log-walkthrough",
         aliases: ["log", "track alcohol", "alcohol log", "alcohol tracker", "alog", "drink log", "drinking log", "booze log"]
       },
@@ -135,6 +145,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "WEANING_OFF",
         label: "Weaning Off Tool",
         route: "/weaning-off-tool",
+        testId: "alcoholhub-weaning",
         walkthroughId: "weaning-off-walkthrough",
         aliases: ["weaning", "taper", "weaning off", "taper off", "wean", "cutting back", "quit drinking", "reduce alcohol"]
       }
@@ -157,6 +168,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "RESTAURANT_GUIDE",
         label: "Restaurant Guide",
         route: "/social-hub/restaurant-guide",
+        testId: "socialhub-guide",
         walkthroughId: "restaurant-guide-walkthrough",
         aliases: ["restaurant guide", "guide", "restaurant", "eat out guide", "restaurant helper", "eat out", "ordering out", "restaurant menu help"]
       },
@@ -164,6 +176,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "FIND_MEALS",
         label: "Find Meals Near Me",
         route: "/social-hub/find",
+        testId: "socialhub-find",
         walkthroughId: "find-meals-walkthrough",
         aliases: ["find meals", "near me", "find", "meals near me", "nearby food", "nearby meals", "nearby", "local meals"]
       }
@@ -186,6 +199,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "KIDS_MEALS",
         label: "Kids Meals",
         route: "/kids-meals",
+        testId: "card-kids-meals",
         walkthroughId: "kids-meals-walkthrough",
         aliases: ["kids meals", "children meals", "kids", "meal picker", "big kids meals", "older kids", "school lunch"]
       },
@@ -193,6 +207,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "TODDLER_MEALS",
         label: "Toddler Meals",
         route: "/toddler-meals",
+        testId: "card-toddler-meals",
         walkthroughId: "toddler-meals-walkthrough",
         aliases: ["toddler", "toddler meals", "toddlers", "little kids", "baby meals"]
       }
@@ -211,12 +226,14 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "DIABETES_SUPPORT",
         label: "Diabetes Support",
         route: "/diabetic-hub",
+        testId: "diabetichub-support",
         aliases: ["support", "diabetes support", "diabetic support", "hub"]
       },
       {
         id: "DIABETIC_BUILDER",
         label: "Diabetic Menu Builder",
         route: "/diabetic-menu-builder",
+        testId: "diabetichub-builder",
         walkthroughId: "diabetic-meal-builder",
         aliases: ["builder", "menu builder", "diabetic builder", "meal builder", "diabetic meals", "diabetes meals", "d-build"]
       }
@@ -235,6 +252,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "GLP1_BUILDER",
         label: "GLP-1 Meal Builder",
         route: "/glp1-menu-builder",
+        testId: "glp1hub-builder",
         walkthroughId: "glp1-meal-builder",
         aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder", "glp one builder", "glp meal builder", "glp menu", "glp-1 meals", "glp-build"]
       }
@@ -253,6 +271,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         id: "SUPPLEMENT_BROWSE",
         label: "Supplement Hub",
         route: "/supplement-hub",
+        testId: "supplementhub-browse",
         aliases: ["browse", "hub", "products", "supplement hub", "supplements"]
       }
     ]
