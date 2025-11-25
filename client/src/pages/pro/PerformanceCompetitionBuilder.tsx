@@ -53,7 +53,6 @@ import { linkUserToClient } from "@/lib/macroResolver";
 import { saveLastPerformanceClientId } from "@/lib/macroSourcesConfig";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -221,9 +220,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   // AI Meal Creator modal state
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
-
-  // Snack Picker state
-  const [snackPickerOpen, setSnackPickerOpen] = useState(false);
 
   // Guided Tour state
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
@@ -639,52 +635,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       }
     }
   }, [activeDayISO, aiMealSlot, board, saveBoard, toast]);
-
-  // Handler for snack selection from SnackPickerDrawer
-  const handleSnackSelect = useCallback(async (snack: any) => {
-    if (!board) return;
-
-    try {
-      // Add to the snacks slot
-      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
-        // Add to specific day
-        const dayLists = getDayLists(board, activeDayISO);
-        const updatedDayLists = {
-          ...dayLists,
-          snacks: [...dayLists.snacks, snack]
-        };
-        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-        await saveBoard(updatedBoard);
-      } else {
-        // Week mode: update local board and save
-        const updatedBoard = {
-          ...board,
-          lists: {
-            ...board.lists,
-            snacks: [...board.lists.snacks, snack]
-          },
-          version: board.version + 1,
-          meta: {
-            ...board.meta,
-            lastUpdatedAt: new Date().toISOString()
-          }
-        };
-        setBoard(updatedBoard);
-        await saveBoard(updatedBoard);
-      }
-
-      // Dispatch board update event
-      window.dispatchEvent(new CustomEvent("board:updated", { detail: { weekStartISO } }));
-      window.dispatchEvent(new Event("macros:updated"));
-    } catch (error) {
-      console.error("Failed to add snack:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add snack. Please try again.",
-        variant: "destructive"
-      });
-    }
-  }, [board, planningMode, activeDayISO, weekStartISO, saveBoard, toast]);
 
   // Add Snack handlers
   const onAddSnack = useCallback(() => setShowSnackModal(true), []);
@@ -1262,22 +1212,40 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               </section>
                 ))}
 
-                {/* Meal 5 - Additional meal slot for Pro Care */}
+                {/* Meal 5 - Identical to Meals 1-4 (uses snacks[1] slot) */}
                 <section key="meal5" className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
                     <div className="flex gap-2">
-                      {/* Meal 5 uses Snack Picker instead of AI Meal Creator */}
+                      {/* Premade Meals button */}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/70 hover:bg-white/10 border border-blue-400/30 text-xs font-medium"
+                        onClick={() => {
+                          setPickerList("snacks");
+                          setPickerOpen(true);
+                        }}
+                      >
+                        <ChefHat className="h-3 w-3 mr-1" />
+                        Premade Meals
+                      </Button>
+
+                      {/* AI Meal Creator button */}
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                        onClick={() => setSnackPickerOpen(true)}
+                        onClick={() => {
+                          setAiMealSlot("snacks");
+                          setAiMealModalOpen(true);
+                        }}
                       >
                         <Sparkles className="h-3 w-3" />
                         Create with AI
                       </Button>
 
+                      {/* Plus button for manual entry */}
                       <Button
                         size="sm"
                         variant="ghost"
@@ -1999,14 +1967,6 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         onSave={onSaveSnack}
       />
 
-      {/* Snack Picker Drawer - Anti-inflammatory snacks for athletes */}
-      <SnackPickerDrawer
-        open={snackPickerOpen}
-        onClose={() => setSnackPickerOpen(false)}
-        onSnackSelect={handleSnackSelect}
-        dietType="anti-inflammatory"
-      />
-
       <WeeklyOverviewModal
         open={showOverview}
         onClose={() => setShowOverview(false)}
@@ -2040,12 +2000,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         meal={shoppingListModal.meal}
       />
 
-      {/* AI Meal Creator Modal */}
+      {/* AI Meal Creator Modal - Competition Diet Type */}
       <AIMealCreatorModal
         open={aiMealModalOpen}
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
+        dietType="competition"
         showMacroTargeting={true}
       />
 
