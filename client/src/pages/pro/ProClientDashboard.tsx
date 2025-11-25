@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { proStore, Targets, ClinicalContext } from "@/lib/proData";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 import {
   Settings,
   ClipboardList,
@@ -194,7 +195,7 @@ export default function ProClientDashboard() {
               <Settings className="h-5 w-5" /> Macro Targets
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="form-client-macros">
             <div>
               <label className="text-sm text-white/70 mb-1 block">
                 Protein (g)
@@ -415,6 +416,7 @@ export default function ProClientDashboard() {
               <Button
                 onClick={saveTargets}
                 className="bg-white/10 border border-white/20 text-white hover:bg-white/20 active:bg-white/30"
+                data-testid="button-save-macros"
               >
                 Save Targets
               </Button>
@@ -450,6 +452,8 @@ export default function ProClientDashboard() {
                     );
                     linkUserToClient(clientId, clientId);
 
+                    dispatchWalkthroughCompletion("pro:macrosSent");
+                    
                     toast({
                       title: "✅ Macros Set to Biometrics!",
                       description: `${t.kcal} kcal coach-set targets saved for ${client?.name}`,
@@ -466,7 +470,7 @@ export default function ProClientDashboard() {
                   }
                 }}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-red-500/50 transition-all duration-200 flash-border"
-                data-testid="button-set-macros-biometrics-red"
+                data-testid="button-send-macros-to-biometrics"
               >
                 <Target className="h-5 w-5 mr-2" />
                 Send Macros to Biometrics

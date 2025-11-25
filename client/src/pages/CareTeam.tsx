@@ -34,6 +34,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 // Types
 type Role = "trainer" | "doctor" | "nutritionist" | "other";
@@ -161,6 +162,7 @@ export default function CareTeamPage() {
       });
       setMembers((prev) => [response.member, ...prev]);
       setAccessCode("");
+      dispatchWalkthroughCompletion("careteam:linked");
       alert(`✅ Successfully connected with access code!`);
     } catch (e: any) {
       setError(e?.message ?? "Invalid or expired access code.");

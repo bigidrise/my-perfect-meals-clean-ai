@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { proStore, ClientProfile, ProRole } from "@/lib/proData";
 import { Plus, User2, ArrowRight, ArrowLeft, Archive, RotateCcw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 export default function ProClients(){
   const [, setLocation] = useLocation();
@@ -39,7 +40,10 @@ export default function ProClients(){
     setClients([...proStore.listClients()]);
   };
   
-  const go = (id:string)=> setLocation(`/pro/clients/${id}`);
+  const go = (id:string)=> {
+    dispatchWalkthroughCompletion("pro:clientOpened");
+    setLocation(`/pro/clients/${id}`);
+  };
 
   return (
     <motion.div 
@@ -98,7 +102,7 @@ export default function ProClients(){
           {clients.filter(c => showArchived ? c.archived : !c.archived).length===0 ? (
             <div className="text-white">{showArchived ? "No archived clients." : "No active clients yet. Add one above."}</div>
           ) : clients.filter(c => showArchived ? c.archived : !c.archived).map(c=>(
-            <Card key={c.id} className="bg-white/5 border border-white/20">
+            <Card key={c.id} className="bg-white/5 border border-white/20" data-testid="pro-client-row">
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center"><User2 className="h-5 w-5 text-white" /></div>
@@ -151,7 +155,7 @@ export default function ProClients(){
                       <Archive className="h-4 w-4" />
                     </Button>
                   )}
-                  <Button onClick={()=>go(c.id)} className="bg-purple-600 hover:bg-purple-700 text-white">
+                  <Button onClick={()=>go(c.id)} className="bg-purple-600 hover:bg-purple-700 text-white" data-testid="button-open-client">
                     Open <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </div>

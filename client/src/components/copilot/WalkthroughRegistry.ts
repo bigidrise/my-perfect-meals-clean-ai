@@ -32,8 +32,32 @@ export function registerWalkthrough(pathname: string, config: WalkthroughConfig)
   registry[pathname] = config;
 }
 
+/**
+ * Match a pathname against a route pattern (supports :param syntax)
+ */
+function matchRoute(pattern: string, pathname: string): boolean {
+  const patternParts = pattern.split('/');
+  const pathParts = pathname.split('/');
+  
+  if (patternParts.length !== pathParts.length) return false;
+  
+  return patternParts.every((part, i) => {
+    return part.startsWith(':') || part === pathParts[i];
+  });
+}
+
 export function getWalkthroughConfig(pathname: string): WalkthroughConfig | null {
-  return registry[pathname] || null;
+  // First try exact match
+  if (registry[pathname]) return registry[pathname];
+  
+  // Then try pattern matching for dynamic routes
+  for (const [pattern, config] of Object.entries(registry)) {
+    if (matchRoute(pattern, pathname)) {
+      return config;
+    }
+  }
+  
+  return null;
 }
 
 export function registerOnboardingFlow(): void {
@@ -86,5 +110,29 @@ export function registerPageWalkthroughs(): void {
   });
 }
 
+export function registerCareTeamFlow(): void {
+  registerWalkthrough('/care-team', {
+    mode: 'flow',
+    flowId: 'careteam',
+    scriptId: 'careteam-join',
+    autoStartDelay: 500,
+  });
+
+  registerWalkthrough('/pro/clients', {
+    mode: 'flow',
+    flowId: 'careteam',
+    scriptId: 'pro-clients-list',
+    autoStartDelay: 500,
+  });
+
+  registerWalkthrough('/pro/clients/:id', {
+    mode: 'flow',
+    flowId: 'careteam',
+    scriptId: 'pro-client-dashboard',
+    autoStartDelay: 500,
+  });
+}
+
 registerOnboardingFlow();
 registerPageWalkthroughs();
+registerCareTeamFlow();

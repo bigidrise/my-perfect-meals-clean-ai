@@ -23,15 +23,33 @@ Our Copilot system provides guided walkthroughs for users across multiple pages.
 ```typescript
 const FLOW_SEQUENCES: FlowMap = {
   onboarding: ['/macro-counter', '/my-biometrics', '/weekly-meal-board', '/shopping-list-v2'],
+  careteam: ['/care-team', '/pro/clients', '/pro/clients/:id', '/my-biometrics'],
 };
 ```
 
 **Event Listeners (hardcoded):**
 ```typescript
+// Onboarding flow
 window.addEventListener('macro:saved', () => this.handleFlowStepComplete('/macro-counter'));
 window.addEventListener('biometrics:weightSaved', () => this.handleFlowStepComplete('/my-biometrics'));
 window.addEventListener('mealBuilder:planGenerated', () => this.handleFlowStepComplete('/weekly-meal-board'));
 window.addEventListener('shoppingList:viewed', () => this.handleFlowStepComplete('/shopping-list-v2'));
+
+// CareTeam flow
+window.addEventListener('careteam:linked', () => this.handleFlowStepComplete('/care-team'));
+window.addEventListener('pro:clientOpened', () => this.handleFlowStepComplete('/pro/clients'));
+window.addEventListener('pro:macrosSent', () => this.handleFlowStepComplete('/pro/clients/:id'));
+window.addEventListener('biometrics:saved', () => this.handleFlowStepComplete('/my-biometrics'));
+```
+
+**AutoNavigate Logic:**
+Before auto-navigating, FlowOrchestrator checks if the current PageSegment has `autoNavigate: false`. If so, it skips navigation and lets the page handle routing manually:
+```typescript
+const currentSegment = getPageSegment(this.currentFlowId, pathname);
+if (currentSegment && currentSegment.autoNavigate === false) {
+  this.notifyListeners();
+  return; // Skip auto-navigation
+}
 ```
 
 ---
@@ -86,14 +104,28 @@ export interface WalkthroughStep {
 }
 
 export interface PageSegment {
-  route: string;
+  route: string;              // Supports dynamic segments (e.g., '/pro/clients/:id')
   pageId: string;
   steps: WalkthroughStep[];
-  completionEvent?: string;     // Event name FlowOrchestrator listens for
+  completionEvent?: string;   // Event name FlowOrchestrator listens for
   nextRoute?: string;
-  autoNavigate?: boolean;
+  autoNavigate?: boolean;     // If false, page handles navigation manually
 }
 ```
+
+**Dynamic Route Matching:**
+The system supports parameterized routes using `:param` syntax (e.g., `/pro/clients/:id`). A `matchRoute()` helper function is used across all three core files:
+- **WalkthroughRegistry**: Match routes to find walkthrough configs
+- **FlowOrchestrator**: Match routes to initialize and advance flows
+- **simpleWalkthroughFlows**: Match routes to find page segments
+
+Example:
+- Pattern: `/pro/clients/:id`
+- Actual path: `/pro/clients/123`
+- Result: ✅ Match (`:id` acts as wildcard)
+
+**AutoNavigate Flag:**
+When `autoNavigate: false`, FlowOrchestrator skips automatic navigation and lets the page handle routing manually. This prevents conflicts when pages need to navigate to dynamic URLs (e.g., `/pro/clients/${clientId}`).
 
 **Example (Macro Calculator):**
 ```typescript
@@ -218,9 +250,59 @@ export const CARETEAM_FLOW: WalkthroughFlow = {
       ],
       completionEvent: 'careteam:linked',
       nextRoute: '/pro/clients',
+      autoNavigate: true  // FlowOrchestrator handles navigation
+    },
+    {
+      route: '/pro/clients',
+      pageId: 'pro-clients-list',
+      steps: [
+        {
+          selector: '[data-testid="pro-client-row"]',
+          text: 'This is your client list. Select the client you want to configure',
+          showArrow: true
+        },
+        {
+          selector: '[data-testid="button-open-client"]',
+          text: "Tap Open to go to this client's dashboard",
+          showArrow: true
+        }
+      ],
+      completionEvent: 'pro:clientOpened',
+      nextRoute: '/pro/clients/:id',
+      autoNavigate: false  // Page handles navigation to /pro/clients/${id}
+    },
+    {
+      route: '/pro/clients/:id',  // Dynamic route - matches /pro/clients/123
+      pageId: 'pro-client-dashboard',
+      steps: [
+        {
+          selector: '[data-testid="button-send-macros"]',
+          text: 'Send your macros to this client',
+          showArrow: true
+        }
+      ],
+      completionEvent: 'pro:macrosSent',
+      nextRoute: '/my-biometrics',
       autoNavigate: true
     },
-    // ... more pages
+    {
+      route: '/my-biometrics',
+      pageId: 'biometrics-page',
+      steps: [
+        {
+          selector: '[data-testid="input-weight"]',
+          text: 'Enter your weight',
+          showArrow: true
+        },
+        {
+          selector: '[data-testid="button-save-weight"]',
+          text: 'Tap Save to complete',
+          showArrow: true
+        }
+      ],
+      completionEvent: 'biometrics:saved',
+      autoNavigate: true
+    }
   ]
 };
 
@@ -247,7 +329,20 @@ export function registerCareTeamFlow(): void {
     autoStartDelay: 500,
   });
 
-  // ... more registrations
+  // Dynamic route - uses :id placeholder
+  registerWalkthrough('/pro/clients/:id', {
+    mode: 'flow',
+    flowId: 'careteam',
+    scriptId: 'pro-client-dashboard',
+    autoStartDelay: 500,
+  });
+
+  registerWalkthrough('/my-biometrics', {
+    mode: 'flow',
+    flowId: 'careteam',
+    scriptId: 'biometrics-page',
+    autoStartDelay: 500,
+  });
 }
 
 // Call it at the bottom

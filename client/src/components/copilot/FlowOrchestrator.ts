@@ -1,11 +1,27 @@
 import { getWalkthroughConfig } from './WalkthroughRegistry';
+import { getPageSegment } from './simple-walkthrough/simpleWalkthroughFlows';
 
 type FlowMap = Record<string, string[]>;
 type NavigationCallback = (path: string) => void;
 
 const FLOW_SEQUENCES: FlowMap = {
   onboarding: ['/macro-counter', '/my-biometrics', '/weekly-meal-board', '/shopping-list-v2'],
+  careteam: ['/care-team', '/pro/clients', '/pro/clients/:id', '/my-biometrics'],
 };
+
+/**
+ * Match a pathname against a route pattern (supports :param syntax)
+ */
+function matchRoute(pattern: string, pathname: string): boolean {
+  const patternParts = pattern.split('/');
+  const pathParts = pathname.split('/');
+  
+  if (patternParts.length !== pathParts.length) return false;
+  
+  return patternParts.every((part, i) => {
+    return part.startsWith(':') || part === pathParts[i];
+  });
+}
 
 class FlowOrchestratorService {
   private currentFlowId: string | null = null;
@@ -19,6 +35,12 @@ class FlowOrchestratorService {
       window.addEventListener('biometrics:weightSaved', () => this.handleFlowStepComplete('/my-biometrics'));
       window.addEventListener('mealBuilder:planGenerated', () => this.handleFlowStepComplete('/weekly-meal-board'));
       window.addEventListener('shoppingList:viewed', () => this.handleFlowStepComplete('/shopping-list-v2'));
+      
+      // CareTeam flow events
+      window.addEventListener('careteam:linked', () => this.handleFlowStepComplete('/care-team'));
+      window.addEventListener('pro:clientOpened', () => this.handleFlowStepComplete('/pro/clients'));
+      window.addEventListener('pro:macrosSent', () => this.handleFlowStepComplete('/pro/clients/:id'));
+      window.addEventListener('biometrics:saved', () => this.handleFlowStepComplete('/my-biometrics'));
     }
   }
 
@@ -41,7 +63,14 @@ class FlowOrchestratorService {
       return false;
     }
 
-    const stepIndex = flowSequence.indexOf(pathname);
+    // Try exact match first
+    let stepIndex = flowSequence.indexOf(pathname);
+    
+    // If no exact match, try pattern matching for dynamic routes
+    if (stepIndex === -1) {
+      stepIndex = flowSequence.findIndex(pattern => matchRoute(pattern, pathname));
+    }
+    
     if (stepIndex === -1) {
       return false;
     }
@@ -59,12 +88,21 @@ class FlowOrchestratorService {
     if (!flowSequence) return;
 
     const currentPath = flowSequence[this.currentStepIndex];
-    if (currentPath !== pathname) return;
+    // Match exact path or pattern
+    if (currentPath !== pathname && !matchRoute(currentPath, pathname)) return;
 
     const nextIndex = this.currentStepIndex + 1;
     if (nextIndex < flowSequence.length) {
       const nextPath = flowSequence[nextIndex];
       this.currentStepIndex = nextIndex;
+      
+      // Check if the current page segment has autoNavigate set to false
+      const currentSegment = getPageSegment(this.currentFlowId, pathname);
+      if (currentSegment && currentSegment.autoNavigate === false) {
+        // Skip auto-navigation - the page handles it manually
+        this.notifyListeners();
+        return;
+      }
       
       setTimeout(() => {
         if (this.navigateCallback) {
