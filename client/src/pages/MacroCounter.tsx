@@ -27,7 +27,10 @@ import { useToast } from "@/hooks/use-toast";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import { useAuth } from "@/contexts/AuthContext";
-import { startSimpleWalkthrough, startSimpleWalkthroughFlow } from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
+import {
+  startSimpleWalkthrough,
+  startSimpleWalkthroughFlow,
+} from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 type Goal = "loss" | "maint" | "gain";
@@ -267,27 +270,27 @@ export default function MacroCounter() {
   useEffect(() => {
     const timer = setTimeout(() => {
       // Start the new simple walkthrough system
-      startSimpleWalkthrough('macro-calculator', [
+      startSimpleWalkthrough("macro-calculator", [
         {
-          selector: '#goal-card',
-          text: 'Pick your fitness goal - weight loss, maintenance, or muscle gain',
-          showArrow: true
+          selector: "#goal-card",
+          text: "Pick your fitness goal - weight loss, maintenance, or muscle gain",
+          showArrow: true,
         },
         {
-          selector: '#bodytype-card',
-          text: 'Pick your body type - ectomorph burns fast, mesomorph is balanced, endomorph holds weight',
-          showArrow: true
+          selector: "#bodytype-card",
+          text: "Pick your body type - ectomorph burns fast, mesomorph is balanced, endomorph holds weight",
+          showArrow: true,
         },
         {
-          selector: '#details-card',
-          text: 'Enter your stats - age, height, weight, and activity level',
-          showArrow: true
+          selector: "#details-card",
+          text: "Enter your stats - age, height, weight, and activity level",
+          showArrow: true,
         },
         {
-          selector: '#set-targets-button',
-          text: 'Tap here to save your personalized macros',
-          showArrow: true
-        }
+          selector: "#set-targets-button",
+          text: "Tap here to save your personalized macros",
+          showArrow: true,
+        },
       ]);
     }, 3000); // Wait 3 seconds to let Copilot finish speaking before walkthrough starts
     return () => clearTimeout(timer);
@@ -482,9 +485,9 @@ export default function MacroCounter() {
                   className="mt-3 grid grid-cols-3 gap-3"
                 >
                   {[
-                    { v: "ecto", label: "Ectomorph" },
-                    { v: "meso", label: "Mesomorph" },
-                    { v: "endo", label: "Endomorph" },
+                    { v: "ecto", label: "Ecto" },
+                    { v: "meso", label: "Meso" },
+                    { v: "endo", label: "Endo" },
                   ].map((b) => (
                     <Label
                       key={b.v}
@@ -859,9 +862,15 @@ export default function MacroCounter() {
                   disabled={isSaving}
                   onClick={async () => {
                     // Dispatch "interacted" event
-                    const interactedEvent = new CustomEvent("walkthrough:event", {
-                      detail: { testId: "macro-calculator-interacted", event: "interacted" },
-                    });
+                    const interactedEvent = new CustomEvent(
+                      "walkthrough:event",
+                      {
+                        detail: {
+                          testId: "macro-calculator-interacted",
+                          event: "interacted",
+                        },
+                      },
+                    );
                     window.dispatchEvent(interactedEvent);
 
                     advance("calc");
@@ -879,7 +888,7 @@ export default function MacroCounter() {
                       );
 
                       // Dispatch completion event for multi-page walkthrough flow
-                      dispatchWalkthroughCompletion('macro:saved');
+                      dispatchWalkthroughCompletion("macro:saved");
 
                       toast({
                         title: "Macro Targets Set!",
