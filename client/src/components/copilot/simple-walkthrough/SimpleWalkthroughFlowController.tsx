@@ -7,6 +7,7 @@ export function SimpleWalkthroughFlowController() {
   const [location] = useLocation();
   const { state, startWalkthrough, getCurrentPageSegment, advanceToNextPage } = useSimpleWalkthrough();
   const hasStartedRef = useRef<string | null>(null);
+  const lastLocationRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!state.activeFlowId) {
@@ -20,19 +21,24 @@ export function SimpleWalkthroughFlowController() {
     const currentPage = flow.pages[state.currentPageIndex];
     if (!currentPage) return;
 
-    if (location !== currentPage.route) {
-      console.log("[FlowController] Not on expected route. Expected:", currentPage.route, "Got:", location);
+    // Check if we're on the expected route (handle both exact match and pathname)
+    const currentPath = window.location.pathname;
+    const isOnExpectedRoute = currentPath === currentPage.route || location === currentPage.route;
+    
+    if (!isOnExpectedRoute) {
+      console.log("[FlowController] Not on expected route. Expected:", currentPage.route, "Got:", currentPath, location);
       return;
     }
 
     const pageKey = `${state.activeFlowId}-${currentPage.pageId}-${state.currentPageIndex}`;
-    if (hasStartedRef.current === pageKey) {
+    if (hasStartedRef.current === pageKey && lastLocationRef.current === currentPath) {
       console.log("[FlowController] Already started walkthrough for this page");
       return;
     }
 
-    console.log("[FlowController] Starting walkthrough for page:", currentPage.pageId);
+    console.log("[FlowController] Starting walkthrough for page:", currentPage.pageId, "steps:", currentPage.steps.length);
     
+    // Wait for page elements to render
     const delay = setTimeout(() => {
       const steps = currentPage.steps.map(s => ({
         selector: s.selector,
@@ -42,18 +48,23 @@ export function SimpleWalkthroughFlowController() {
       
       startWalkthrough(currentPage.pageId, steps);
       hasStartedRef.current = pageKey;
-    }, 500);
+      lastLocationRef.current = currentPath;
+    }, 800);
 
     return () => clearTimeout(delay);
   }, [location, state.activeFlowId, state.currentPageIndex, startWalkthrough]);
 
+  // Listen for completion events from pages
   useEffect(() => {
     const handleCompletionEvent = (event: CustomEvent<{ eventName: string }>) => {
       const { eventName } = event.detail;
       const currentPage = getCurrentPageSegment();
       
+      console.log("[FlowController] Received completion event:", eventName, "Expected:", currentPage?.completionEvent);
+      
       if (currentPage && currentPage.completionEvent === eventName) {
-        console.log("[FlowController] Completion event received:", eventName);
+        console.log("[FlowController] Completion event matched! Advancing to next page...");
+        hasStartedRef.current = null; // Reset so next page can start
         advanceToNextPage();
       }
     };

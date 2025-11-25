@@ -105,6 +105,13 @@ export function SimpleWalkthroughProvider({ children }: { children: React.ReactN
       currentPageIndex: 0,
       completedPages: []
     });
+    
+    // Navigate to the first page of the flow
+    const firstPage = flow.pages[0];
+    if (firstPage && window.location.pathname !== firstPage.route) {
+      console.log("[SimpleWalkthrough] Navigating to first page:", firstPage.route);
+      window.location.href = firstPage.route;
+    }
   }, []);
 
   const nextStep = useCallback(() => {
@@ -125,22 +132,30 @@ export function SimpleWalkthroughProvider({ children }: { children: React.ReactN
     const flow = getFlowById(activeFlowId);
     if (!flow) return;
     
+    const currentPage = flow.pages[currentPageIndex];
     const nextIndex = currentPageIndex + 1;
+    
     if (nextIndex >= flow.pages.length) {
       console.log("[SimpleWalkthrough] Flow completed!");
       setActiveFlowId(null);
       setCurrentPageIndex(0);
       setCompletedPages([]);
+      setActiveScript(null);
+      setSteps([]);
+      setCurrentStepIndex(0);
       saveFlowProgress(null);
       return;
     }
     
-    const currentPage = flow.pages[currentPageIndex];
     const newCompleted = [...completedPages, currentPage.pageId];
+    const nextPage = flow.pages[nextIndex];
     
-    console.log("[SimpleWalkthrough] Advancing to page:", nextIndex, flow.pages[nextIndex].pageId);
+    console.log("[SimpleWalkthrough] Advancing to page:", nextIndex, nextPage.pageId);
     setCurrentPageIndex(nextIndex);
     setCompletedPages(newCompleted);
+    setActiveScript(null);
+    setSteps([]);
+    setCurrentStepIndex(0);
     
     saveFlowProgress({
       flowId: activeFlowId,
@@ -148,10 +163,12 @@ export function SimpleWalkthroughProvider({ children }: { children: React.ReactN
       completedPages: newCompleted
     });
     
-    const nextPage = flow.pages[nextIndex];
-    if (currentPage.autoNavigate && nextPage) {
+    // Auto-navigate to the next page
+    if (currentPage.autoNavigate && nextPage && window.location.pathname !== nextPage.route) {
       console.log("[SimpleWalkthrough] Auto-navigating to:", nextPage.route);
-      window.location.href = nextPage.route;
+      setTimeout(() => {
+        window.location.href = nextPage.route;
+      }, 500);
     }
   }, [activeFlowId, currentPageIndex, completedPages]);
 
