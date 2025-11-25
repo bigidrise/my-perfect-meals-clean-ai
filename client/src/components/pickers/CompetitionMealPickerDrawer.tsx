@@ -10,10 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Meal } from "@/components/MealCard";
-import {
-  getAthleteMealsByCategory,
-  type AthleteMeal,
-} from "@/data/athleteMeals";
+import type { AthleteMeal } from "@/data/athleteMeals";
+import { getCompetitionMealsByCategory } from "@/data/competitionPremadeMeals";
 import { Target } from "lucide-react";
 
 // 🔄 Convert AthleteMeal to standard Meal
@@ -74,7 +72,7 @@ const CATEGORY_OPTIONS = [
   { value: "eggs_shakes", label: "🥚 Eggs & Shakes" },
 ] as const;
 
-export function AthleteMealPickerDrawer({
+export function CompetitionMealPickerDrawer({
   open,
   list,
   onClose,
@@ -98,7 +96,7 @@ export function AthleteMealPickerDrawer({
 
   // Filter meals by selected category
   const filteredMeals = React.useMemo(() => {
-    return getAthleteMealsByCategory(category);
+    return getCompetitionMealsByCategory(category);
   }, [category]);
 
   // State for the info modal, assuming it's defined elsewhere or not needed for this specific change
@@ -113,11 +111,11 @@ export function AthleteMealPickerDrawer({
       <DialogContent className="bg-black/90 border border-white/20 text-white max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white flex items-center gap-2">
-            🏆 Premade Athlete Meals - Add to {list}
+            🏆 Competition Prep Meals - Add to {list}
             <button
               onClick={() => setShowInfoModal(true)}
               className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-xl w-5 h-5 flex items-center justify-center text-sm font-bold flash-border"
-              aria-label="How to use Athlete Meal Builder"
+              aria-label="How to use Performance & Competition Builder"
             >
               ?
             </button>
@@ -219,9 +217,9 @@ export function AthleteMealPickerDrawer({
             <div className="flex items-start gap-2 mb-2">
               <Target className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-emerald-400 mb-1">Premade Athlete Meals</p>
+                <p className="font-semibold text-emerald-400 mb-1">Competition Prep Meals</p>
                 <p className="text-white/80 text-xs mb-2">
-                  Pre-designed meals optimized for athletic performance and muscle building.
+                  Pre-designed athlete meals optimized for lean muscle building and performance.
                 </p>
                 <ul className="list-disc list-inside space-y-1 text-xs text-white/70 ml-2">
                   <li>Select your protein category (Chicken, Red Meat, Fish, Eggs)</li>
@@ -240,10 +238,10 @@ export function AthleteMealPickerDrawer({
     {showInfoModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
         <div className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-2xl p-6 max-w-md w-full shadow-xl">
-          <h3 className="text-xl font-bold text-white mb-4">How to Use Athlete Meal Builder</h3>
+          <h3 className="text-xl font-bold text-white mb-4">How to Use Performance & Competition Builder</h3>
 
           <div className="space-y-4 text-white/90 text-sm">
-            <p>Pre-designed meals optimized for athletic performance and muscle building.</p>
+            <p>Pre-designed athlete meals optimized for lean muscle building and performance.</p>
 
             <div>
               <h4 className="font-semibold text-white mb-2">Steps:</h4>

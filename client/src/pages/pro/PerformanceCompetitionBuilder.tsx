@@ -13,7 +13,7 @@ import {
   getWeekBoardByDate,
 } from "@/lib/boardApi";
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
-import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
+import { CompetitionMealPickerDrawer } from "@/components/pickers/CompetitionMealPickerDrawer";
 import { AddSnackModal } from "@/components/AddSnackModal";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
@@ -1962,7 +1962,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
       </div>
 
       {/* Modals */}
-      <AthleteMealPickerDrawer
+      <CompetitionMealPickerDrawer
         open={pickerOpen}
         list={pickerList}
         onClose={() => {
