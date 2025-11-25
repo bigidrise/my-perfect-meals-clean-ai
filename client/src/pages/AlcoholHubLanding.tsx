@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Wine, GlassWater, Sparkles, Beer, TrendingDown, CookingPot } from "lucide-react";
+import {
+  ArrowLeft,
+  Wine,
+  GlassWater,
+  Sparkles,
+  Beer,
+  TrendingDown,
+  CookingPot,
+} from "lucide-react";
 
 interface AlcoholFeature {
   title: string;
@@ -20,7 +28,7 @@ export default function AlcoholHubLanding() {
   useEffect(() => {
     document.title = "Alcohol Hub | My Perfect Meals";
     window.scrollTo({ top: 0, behavior: "instant" });
-    
+
     // Phase C.7: Emit "opened" event for hub walkthrough
     setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
@@ -105,7 +113,7 @@ export default function AlcoholHubLanding() {
       });
       window.dispatchEvent(event);
     }, 300);
-    
+
     setLocation(route);
   };
 
@@ -129,12 +137,13 @@ export default function AlcoholHubLanding() {
             data-testid="button-back-to-lifestyle"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
           </button>
 
           {/* Title */}
-          <h1 className="text-lg font-bold text-white">Spirits & Lifestyle Hub</h1>
-
-          
+          <h1 className="text-lg font-bold text-white">
+            Spirits & Lifestyle Hub
+          </h1>
         </div>
       </div>
 
@@ -146,18 +155,20 @@ export default function AlcoholHubLanding() {
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Hero Image Section */}
           <div className="relative h-40 rounded-xl overflow-hidden">
-            <img 
-              src="/images/alcohol/social-drinking.jpg" 
+            <img
+              src="/images/alcohol/social-drinking.jpg"
               alt="Social drinking"
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23dc2626;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3ESmart Choices%3C/text%3E%3C/svg%3E";
+                e.currentTarget.src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f97316;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23dc2626;stop-opacity:0.3' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif' dy='.3em'%3ESmart Choices%3C/text%3E%3C/svg%3E";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-3 left-3 right-3">
               <p className="text-white/90 text-sm">
-                Navigate social moments mindfully with smart drink choices and alternatives.
+                Navigate social moments mindfully with smart drink choices and
+                alternatives.
               </p>
             </div>
           </div>

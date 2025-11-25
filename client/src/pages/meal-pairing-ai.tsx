@@ -134,7 +134,7 @@ export default function MealPairingAIPage() {
       </div>
 
       <div
-        className="max-w-4xl mx-auto px-4"
+        className="max-w-4xl mx-auto px-4 pb-12"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
 

@@ -128,13 +128,11 @@ export default function SupplementHub() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Supplement Hub</h1>
-
-          
         </div>
       </div>
 
       <main
-        className="mx-auto max-w-screen-md px-4 pb-24"
+        className="mx-auto max-w-screen-md px-4 pb-12"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
         {/* Live Partner: Nutritional Frontiers (Nutraceuticals / Homeopathy-friendly) */}

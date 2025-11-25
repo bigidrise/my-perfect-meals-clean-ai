@@ -166,7 +166,7 @@ const WeaningOffTool = () => {
                 setLocation("/alcohol-hub");
               }
             }}
-            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+            className="flex items-center gap-1 text-white transition-all duration-200 p-2 rounded-2xl"
             data-testid="button-back-to-hub"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -181,7 +181,7 @@ const WeaningOffTool = () => {
       </div>
 
       <div
-        className="max-w-4xl mx-auto px-4"
+        className="max-w-4xl mx-auto px-4 pb-12"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
 
@@ -195,7 +195,7 @@ const WeaningOffTool = () => {
                 <CardContent className="space-y-6 text-white">
                   {/* Drinks Per Day */}
                   <div className="space-y-3">
-                    <Label className="text-sm text-white">Average drinks per drinking day</Label>
+                    <Label className="text-sm text-white font-medium">Average drinks per drinking day</Label>
                     <div className="flex items-center gap-4">
                       <Button
                         variant="outline"
@@ -210,7 +210,7 @@ const WeaningOffTool = () => {
                         type="number"
                         value={drinksPerDay}
                         onChange={(e) => setDrinksPerDay(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="bg-black/20 border-white/20 text-white text-center text-xl font-bold w-24"
+                        className="bg-black/20 border-white/20 text-white text-center text-medium font-bold w-24"
                         data-testid="input-drinks-per-day"
                       />
                       <Button
@@ -233,7 +233,7 @@ const WeaningOffTool = () => {
                         variant="outline"
                         size="icon"
                         onClick={() => setDaysPerWeek(Math.max(1, daysPerWeek - 1))}
-                        className="bg-black/20 border-white/20 text-white hover:bg-black/30"
+                        className="bg-black/20 border-white/20 text-medium text-white hover:bg-black/30"
                         data-testid="button-decrease-days"
                       >
                         <Minus className="h-4 w-4" />
@@ -242,7 +242,7 @@ const WeaningOffTool = () => {
                         type="number"
                         value={daysPerWeek}
                         onChange={(e) => setDaysPerWeek(Math.max(1, Math.min(7, parseInt(e.target.value) || 1)))}
-                        className="bg-black/20 border-white/20 text-white text-center text-2xl font-bold w-24"
+                        className="bg-black/20 border-white/20 text-white text-center text-lg font-bold w-24"
                         data-testid="input-days-per-week"
                       />
                       <Button
@@ -260,7 +260,7 @@ const WeaningOffTool = () => {
                   {/* Weekly Average */}
                   <div className="bg-black/20 p-4 rounded-lg text-center">
                     <p className="text-white/70 text-sm">Weekly average</p>
-                    <p className="text-xl font-bold text-teal-400">{weeklyAverage} drinks/week</p>
+                    <p className="text-lg font-bold text-teal-400">{weeklyAverage} drinks/week</p>
                   </div>
 
                   {/* Medical Warning */}
@@ -355,14 +355,14 @@ const WeaningOffTool = () => {
             {/* Progress */}
             <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
+                  <CardTitle className="text-white text-lg flex items-center gap-2">
                     <Heart className="h-5 w-5 text-white/80" />
                     Your Progress
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Progress value={getProgress()} className="h-3" />
-                  <p className="text-white text-center">
+                  <p className="text-white text-sm text-center">
                     Week {currentWeek} of {plan.weeklyTargets.length} • {getProgress()}% Complete
                   </p>
                 </CardContent>
@@ -372,35 +372,35 @@ const WeaningOffTool = () => {
             {currentWeek <= plan.weeklyTargets.length && (
               <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                   <CardHeader>
-                    <CardTitle className="text-white">This Week's Target</CardTitle>
+                    <CardTitle className="text-white text-lg">This Week's Target</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center">
-                      <p className="text-5xl font-bold text-white">
+                      <p className="text-2xl font-bold text-white">
                         ≤ {plan.weeklyTargets[currentWeek - 1].maxDrinks}
                       </p>
-                      <p className="text-white/70 mt-2">drinks per day max</p>
+                      <p className="text-white/70 text-sm mt-2">Drinks per day max</p>
                     </div>
 
                     {/* Check-in Buttons */}
                     <div className="grid grid-cols-3 gap-3 mt-6">
                       <Button
                         onClick={() => recordCheckIn("met")}
-                        className="bg-green-500/20 border border-green-500/50 text-white hover:bg-green-500/30"
+                        className="bg-green-500/20 border border-green-500/50 text-sm text-white hover:bg-green-500/30"
                         data-testid="button-met-cap"
                       >
                         ✓ Met Cap
                       </Button>
                       <Button
                         onClick={() => recordCheckIn("over")}
-                        className="bg-red-500/20 border border-red-500/50 text-white hover:bg-red-500/30"
+                        className="bg-red-500/20 border border-red-500/50 text-sm text-white hover:bg-red-500/30"
                         data-testid="button-went-over"
                       >
                         Went Over
                       </Button>
                       <Button
                         onClick={() => recordCheckIn("skip")}
-                        className="bg-gray-500/20 border border-gray-500/50 text-white hover:bg-gray-500/30"
+                        className="bg-gray-500/20 border border-gray-500/50 text-sm text-white hover:bg-gray-500/30"
                         data-testid="button-skip-week"
                       >
                         Skip
@@ -411,7 +411,7 @@ const WeaningOffTool = () => {
                     <Button
                       onClick={pauseWeek}
                       variant="outline"
-                      className="w-full mt-3 bg-black/20 border-white/20 text-white hover:bg-black/30"
+                      className="w-full mt-3 bg-black/20 border-white/20 text-sm text-white hover:bg-black/30"
                       data-testid="button-pause-week"
                     >
                       Pause & Repeat This Week
@@ -436,7 +436,7 @@ const WeaningOffTool = () => {
             {/* Weekly Schedule */}
             <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
-                  <CardTitle className="text-white">Full Schedule</CardTitle>
+                  <CardTitle className="text-white text-lg">Full Schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -455,7 +455,7 @@ const WeaningOffTool = () => {
                         >
                           <div className="flex items-center gap-3">
                             {isComplete && <span className="text-green-400">✓</span>}
-                            <span className="text-white font-medium">Week {target.week}</span>
+                            <span className="text-white text-sm font-medium">Week {target.week}</span>
                           </div>
                           <span className="text-white/90">≤ {target.maxDrinks} drinks/day</span>
                         </div>

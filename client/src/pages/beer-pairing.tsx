@@ -70,7 +70,9 @@ export default function BeerPairingMode() {
   const [mainIngredient, setMainIngredient] = useState<string>("Beef");
   const [occasion, setOccasion] = useState<string>("Casual dinner");
   const [price, setPrice] = useState<(typeof priceRanges)[number]>("$$");
-  const [flavorBias, setFlavorBias] = useState<"balanced" | "hoppy" | "malty" | "sour">("balanced");
+  const [flavorBias, setFlavorBias] = useState<
+    "balanced" | "hoppy" | "malty" | "sour"
+  >("balanced");
   const [calorieConscious, setCalorieConscious] = useState<boolean>(false);
   const [abvMin, setAbvMin] = useState<number>(4.0);
   const [abvMax, setAbvMax] = useState<number>(8.0);
@@ -147,7 +149,14 @@ export default function BeerPairingMode() {
       setRecs(null);
     } finally {
       setLoading(false);
-      setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 50);
+      setTimeout(
+        () =>
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          }),
+        50,
+      );
     }
   }
 
@@ -170,19 +179,18 @@ export default function BeerPairingMode() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Beer Pairing Mode</h1>
-
-          
         </div>
       </div>
 
       <div
-        className="max-w-4xl mx-auto px-6"
+        className="max-w-4xl mx-auto px-6 pb-12"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-
         <Card className="bg-black/50 border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>
-            <CardTitle className="text-lg text-white">Tell us about the meal</CardTitle>
+            <CardTitle className="text-lg text-white">
+              Tell us about the meal
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-white">
             <div className="grid sm:grid-cols-2 gap-4">
@@ -257,26 +265,30 @@ export default function BeerPairingMode() {
               <div>
                 <Label>Flavor Bias</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {(["balanced", "hoppy", "malty", "sour"] as const).map((k) => (
-                    <Button
-                      key={k}
-                      size="sm"
-                      onClick={() => setFlavorBias(k)}
-                      variant={flavorBias === k ? "default" : "outline"}
-                      className={
-                        flavorBias === k
-                          ? "bg-black/90 backdrop-blur-lg border border-white/30 text-white"
-                          : "bg-black/30 border-white/20 text-white hover:bg-black/40"
-                      }
-                    >
-                      {k}
-                    </Button>
-                  ))}
+                  {(["balanced", "hoppy", "malty", "sour"] as const).map(
+                    (k) => (
+                      <Button
+                        key={k}
+                        size="sm"
+                        onClick={() => setFlavorBias(k)}
+                        variant={flavorBias === k ? "default" : "outline"}
+                        className={
+                          flavorBias === k
+                            ? "bg-black/90 backdrop-blur-lg border border-white/30 text-white"
+                            : "bg-black/30 border-white/20 text-white hover:bg-black/40"
+                        }
+                      >
+                        {k}
+                      </Button>
+                    ),
+                  )}
                 </div>
               </div>
 
               <div className="sm:col-span-2">
-                <Label>ABV Range ({abvMin}% – {abvMax}%)</Label>
+                <Label>
+                  ABV Range ({abvMin}% – {abvMax}%)
+                </Label>
                 <div className="grid grid-cols-2 gap-3 mt-2">
                   <div className="flex items-center gap-2">
                     <Input
@@ -317,7 +329,9 @@ export default function BeerPairingMode() {
                     checked={calorieConscious}
                     onChange={(e) => setCalorieConscious(e.target.checked)}
                   />
-                  <span className="text-white/90">Prefer lower calorie styles</span>
+                  <span className="text-white/90">
+                    Prefer lower calorie styles
+                  </span>
                 </label>
               </div>
             </div>
@@ -355,12 +369,14 @@ export default function BeerPairingMode() {
                     <div className="space-y-1">
                       {b.brewery && (
                         <div>
-                          <span className="text-white/60">Brewery:</span> {b.brewery}
+                          <span className="text-white/60">Brewery:</span>{" "}
+                          {b.brewery}
                         </div>
                       )}
                       {b.region && (
                         <div>
-                          <span className="text-white/60">Region:</span> {b.region}
+                          <span className="text-white/60">Region:</span>{" "}
+                          {b.region}
                         </div>
                       )}
                       {(b.abv != null || b.ibu != null) && (
@@ -371,7 +387,9 @@ export default function BeerPairingMode() {
                       )}
                       {b.calories != null && (
                         <div>
-                          <span className="text-white/60">Calories (12oz):</span>{" "}
+                          <span className="text-white/60">
+                            Calories (12oz):
+                          </span>{" "}
                           {b.calories}
                         </div>
                       )}
@@ -379,7 +397,8 @@ export default function BeerPairingMode() {
                     <div className="space-y-1">
                       {b.glassware && (
                         <div>
-                          <span className="text-white/60">Glassware:</span> {b.glassware}
+                          <span className="text-white/60">Glassware:</span>{" "}
+                          {b.glassware}
                         </div>
                       )}
                       {b.servingTemp && (
@@ -413,7 +432,9 @@ export default function BeerPairingMode() {
 
                   {b.alternatives?.length ? (
                     <div className="mt-3">
-                      <div className="text-white/80 text-sm mb-1">Alternatives</div>
+                      <div className="text-white/80 text-sm mb-1">
+                        Alternatives
+                      </div>
                       <div className="flex flex-wrap gap-2">
                         {b.alternatives.map((alt, idx) => (
                           <span
