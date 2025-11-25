@@ -31,10 +31,12 @@ import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { startWalkthrough } = useCopilot();
 
   // Dispatch "opened" event on page mount
   useEffect(() => {
@@ -44,7 +46,9 @@ export default function ShoppingListMasterView() {
       });
       window.dispatchEvent(event);
     }, 500);
-  }, []);
+    // Start walkthrough if the page is for a Copilot feature
+    startWalkthrough("shopping-list");
+  }, [startWalkthrough]);
 
   // Extract "from" query parameter once on mount
   const [fromSlug, setFromSlug] = useState<string>(() => {

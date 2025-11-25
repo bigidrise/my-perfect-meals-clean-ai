@@ -161,7 +161,19 @@ interface MealData {
 const FridgeRescuePage = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { runAction, open } = useCopilot();
+  const { runAction, open, startWalkthrough } = useCopilot();
+
+  // 🎯 Auto-start walkthrough on first visit
+  useEffect(() => {
+    const hasSeenWalkthrough = localStorage.getItem("walkthrough-seen-fridge-rescue");
+    if (!hasSeenWalkthrough) {
+      const timer = setTimeout(() => {
+        startWalkthrough("fridge-rescue");
+        localStorage.setItem("walkthrough-seen-fridge-rescue", "true");
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [startWalkthrough]);
 
   // Auto-mark info as seen since Copilot provides guidance now
   useEffect(() => {
@@ -205,9 +217,6 @@ const FridgeRescuePage = () => {
   const [isReplacing, setIsReplacing] = useState<{ [key: string]: boolean }>(
     {},
   );
-
-  // Development user ID - consistent across app (UUID format)
-  const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
 
   // Replacement context state
   const [replaceCtx, setReplaceCtx] = useState<any>(null);

@@ -78,7 +78,19 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { runAction, open } = useCopilot();
+  const { runAction, open, startWalkthrough } = useCopilot();
+
+  // 🎯 Auto-start walkthrough on first visit
+  React.useEffect(() => {
+    const hasSeenWalkthrough = localStorage.getItem("walkthrough-seen-weekly-meal-builder");
+    if (!hasSeenWalkthrough && !loading) {
+      const timer = setTimeout(() => {
+        startWalkthrough("weekly-meal-builder");
+        localStorage.setItem("walkthrough-seen-weekly-meal-builder", "true");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [startWalkthrough, loading]);
 
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());

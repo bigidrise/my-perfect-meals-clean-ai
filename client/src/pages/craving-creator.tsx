@@ -84,6 +84,7 @@ interface MealData {
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import { setQuickView } from "@/lib/macrosQuickView";
 import TrashButton from "@/components/ui/TrashButton";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 // ---- Persist the generated meal so it never "disappears" ----
 const CACHE_KEY = "cravingCreator.cache.v1";
@@ -135,6 +136,7 @@ function getMealNutrition(meal: any) {
 export default function CravingCreator() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { startWalkthrough } = useCopilot();
   const [useOnboarding, setUseOnboarding] = useState(true); // ENFORCED: Always use onboarding for medical safety
   const [cravingInput, setCravingInput] = useState("");
   const [dietaryRestrictions, setDietaryRestrictions] = useState("");
@@ -151,6 +153,19 @@ export default function CravingCreator() {
   const tickerRef = useRef<number | null>(null);
   // Development user ID - consistent across app
   const userId = DEV_USER_ID;
+
+  // 🎯 Auto-start walkthrough on first visit
+  useEffect(() => {
+    const hasSeenWalkthrough = localStorage.getItem("walkthrough-seen-craving-creator");
+    if (!hasSeenWalkthrough) {
+      // Small delay to ensure page is fully rendered
+      const timer = setTimeout(() => {
+        startWalkthrough("craving-creator");
+        localStorage.setItem("walkthrough-seen-craving-creator", "true");
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [startWalkthrough]);
 
   const urlParams = new URLSearchParams(window.location.search);
   const replaceId = urlParams.get("replace");

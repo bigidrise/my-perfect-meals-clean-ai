@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCopilot } from "@/components/copilot/CopilotContext";
 
 type Goal = "loss" | "maint" | "gain";
 type Sex = "male" | "female";
@@ -130,7 +131,7 @@ function BodyTypeGuide() {
               shoulders/hips, and tends to struggle gaining weight or muscle.
               Often a faster metabolism.{" "}
               <span className="text-white/90">Strategy:</span> a bit more
-              calories and carbs; keep protein steady.
+              calories and carbs; keep protein protein steady.
             </p>
           </div>
 
@@ -209,6 +210,7 @@ export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { startWalkthrough } = useCopilot();
   const [isSaving, setIsSaving] = useState(false);
 
   // Load calculator settings from localStorage
@@ -263,13 +265,20 @@ export default function MacroCounter() {
 
   // Dispatch "opened" event on page mount
   useEffect(() => {
-    setTimeout(() => {
+    // Use setTimeout to ensure Copilot is initialized before sending event
+    const timer = setTimeout(() => {
       const event = new CustomEvent("walkthrough:event", {
         detail: { testId: "macro-calculator-opened", event: "opened" },
       });
       window.dispatchEvent(event);
+
+      // Start the walkthrough if auto-start is enabled
+      if (localStorage.getItem("coachMode") === "guided") {
+        startWalkthrough("macro-calculator");
+      }
     }, 500);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [startWalkthrough]);
 
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change

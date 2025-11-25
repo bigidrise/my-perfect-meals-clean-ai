@@ -78,6 +78,7 @@ interface CopilotContextValue extends CopilotState {
   registerTarget: (id: string) => void;
   unregisterTarget: (id: string) => void;
   setNeedsRetry: (needs: boolean) => void; // Set voice fallback flag
+  startWalkthrough: (scriptId: string) => Promise<void>; // Add startWalkthrough method
 }
 
 const CopilotContext = createContext<CopilotContextValue | null>(null);
@@ -111,7 +112,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
   const [targetRegistry, setTargetRegistry] = useState<Set<string>>(new Set());
   const [needsRetry, setNeedsRetry] = useState(false);
 
-  const open = useCallback(() => setIsOpen(true), []);
+  const openCopilot = useCallback(() => setIsOpen(true), []); // Renamed from open to avoid conflict with openCopilot
   const close = useCallback(() => {
     setIsOpen(false);
     setMode("idle");
@@ -164,6 +165,13 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
     [onAction],
   );
 
+  // Add startWalkthrough method
+  const startWalkthrough = useCallback(async (scriptId: string) => {
+    // Dynamically import the launchWalkthrough command
+    const { launchWalkthrough } = await import("./commands/launchWalkthrough");
+    await launchWalkthrough(scriptId);
+  }, []);
+
   const value = useMemo<CopilotContextValue>(
     () => ({
       isOpen,
@@ -174,7 +182,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       lastResponse,
       targetRegistry,
       needsRetry,
-      open,
+      open: openCopilot, // Use openCopilot here
       close,
       toggle,
       setMode,
@@ -186,6 +194,7 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       registerTarget,
       unregisterTarget,
       setNeedsRetry,
+      startWalkthrough, // Include startWalkthrough in the context value
     }),
     [
       isOpen,
@@ -196,13 +205,14 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
       lastResponse,
       targetRegistry,
       needsRetry,
-      open,
+      openCopilot, // Include openCopilot in dependencies
       close,
       toggle,
       setContextInfo,
       runAction,
       registerTarget,
       unregisterTarget,
+      startWalkthrough, // Include startWalkthrough in dependencies
     ],
   );
 
