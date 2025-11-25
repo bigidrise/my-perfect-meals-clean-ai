@@ -1,6 +1,6 @@
 8fbd606780106b444345853d7141e4ff  client/src/components/modals/AIMealCreatorModal.tsx
 d5288a7e9a121e75aa943c97d3de86c3  client/src/components/PreparationModal.tsx
-8d7014372b1b8a3b7203c8b7162be727  client/src/pages/WeeklyMealBoard.tsx
+167ba808d9f1d61da552fbf2ffa9484d  client/src/pages/WeeklyMealBoard.tsx
 8223cd50c2cb998ea72b1691f9f1f7a0  client/src/pages/BeachBodyMealBoard.tsx
 3dd8d061bbb443e09b66af7b6f1dde4c  client/src/pages/pro/PerformanceCompetitionBuilder.tsx
 428e77185e02dcc537ac1668cdcfade0  client/src/pages/Planner.tsx
