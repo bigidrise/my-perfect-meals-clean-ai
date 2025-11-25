@@ -1657,7 +1657,7 @@ export default function WeeklyMealBoard() {
         onOpenChange={setAiMealModalOpen}
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
-        showMacroTargeting={true}
+        showMacroTargeting={false}
       />
 
       {/* Shopping List Buttons - Dual buttons in Day Mode, single in Week Mode */}
@@ -1805,7 +1805,7 @@ export default function WeeklyMealBoard() {
         onClose={() => setPremadePickerOpen(false)}
         mealType={premadePickerSlot}
         onMealSelect={handlePremadeSelect}
-        showMacroTargeting={true}
+        showMacroTargeting={false}
       />
       </div>
     </motion.div>

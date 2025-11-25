@@ -2005,7 +2005,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         onMealGenerated={handleAIMealGenerated}
         mealSlot={aiMealSlot}
         dietType="competition"
-        showMacroTargeting={true}
+        showMacroTargeting={false}
       />
 
       {/* Shopping List Buttons */}
