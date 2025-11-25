@@ -810,6 +810,52 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     });
   }, [dynamicMealCount, toast]);
 
+  // Remove a dynamic meal slot and clean up board data
+  const handleRemoveMealSlot = useCallback(async (mealNumber: number) => {
+    if (!board) return;
+
+    try {
+      // Clean up meals with this slot's ID prefix from the board
+      const slotPrefix = `dyn-${mealNumber}-`;
+      
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // DAY MODE: Remove meals from day-specific lists
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          snacks: dayLists.snacks.filter((meal: Meal) => !meal.id.startsWith(slotPrefix))
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // WEEK MODE: Remove from board.lists
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            snacks: board.lists.snacks.filter((meal: Meal) => !meal.id.startsWith(slotPrefix))
+          }
+        };
+        await saveBoard(updatedBoard);
+      }
+
+      // Decrement counter (this will shift all subsequent meal numbers down)
+      setDynamicMealCount(prev => Math.max(0, prev - 1));
+      
+      toast({
+        title: "Meal Slot Removed",
+        description: `Meal ${mealNumber} has been deleted`,
+      });
+    } catch (error) {
+      console.error("Failed to remove meal slot:", error);
+      toast({
+        title: "Error",
+        description: "Failed to remove meal slot",
+        variant: "destructive",
+      });
+    }
+  }, [board, planningMode, activeDayISO, saveBoard, toast]);
+
   // Get coach-set macro targets from ProCare
   const coachMacroTargets = useMemo(() => {
     const targets = proStore.getTargets(clientId);
@@ -1197,15 +1243,16 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               </section>
                 ))}
 
-                {/* Dynamic Meal Cards (Meal 4+) */}
+                {/* Dynamic Meal Cards (Meal 4+) - Matches Meals 1-3 structure */}
                 {Array.from({ length: dynamicMealCount }, (_, i) => {
                   const mealNumber = 4 + i;
+                  const dynamicSlotKey = `dyn-${mealNumber}` as "breakfast" | "lunch" | "dinner";
                   return (
                     <section key={`dynamic-meal-${mealNumber}`} className="rounded-2xl border border-emerald-800 bg-emerald-950/40 backdrop-blur p-4">
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
                         <div className="flex gap-2">
-                          {/* Dynamic meals use AI Meal Creator with competition diet type */}
+                          {/* Create with AI button - Competition diet type */}
                           <Button
                             size="sm"
                             variant="ghost"
@@ -1219,6 +1266,21 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             Create with AI
                           </Button>
 
+                          {/* AI Premades button - Competition meals (matching Meals 1-3) */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                            onClick={() => {
+                              setPremadePickerSlot(dynamicSlotKey);
+                              setPremadePickerOpen(true);
+                            }}
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            AI Premades
+                          </Button>
+
+                          {/* Plus button for manual entry */}
                           <Button
                             size="sm"
                             variant="ghost"
@@ -1226,6 +1288,16 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             onClick={() => openManualModal("snacks")}
                           >
                             <Plus className="h-4 w-4" />
+                          </Button>
+
+                          {/* Delete button - Remove this dynamic meal slot */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                            onClick={() => handleRemoveMealSlot(mealNumber)}
+                          >
+                            <X className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>

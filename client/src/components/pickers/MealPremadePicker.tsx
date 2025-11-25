@@ -55,13 +55,18 @@ import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
 import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
 import { DIABETIC_DINNER_MEALS } from '@/data/diabeticPremadeDinner';
 import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
+import { 
+  proteinOnlyOptions, 
+  proteinFibrousOptions, 
+  proteinFibrousStarchyOptions 
+} from '@/data/competitionMealCatalog';
 
 interface MealPremadePickerProps {
   open: boolean;
   onClose: () => void;
   onMealSelect?: (meal: any) => void;
   mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
-  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory';
+  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory' | 'competition';
   showMacroTargeting?: boolean;
 }
 
@@ -190,6 +195,25 @@ const diabeticDinnerPremades = {
     id: `diabetic-d6-${idx}`,
     name: meal.title,
     ingredients: []
+  }))
+};
+
+// Build competition premades (macro-based categories, not meal times)
+const competitionPremades = {
+  'Protein Only (30g)': proteinOnlyOptions.map((meal) => ({
+    id: meal.id,
+    name: meal.title,
+    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
+  })),
+  'Protein + Fibrous (30g + 100g)': proteinFibrousOptions.map((meal) => ({
+    id: meal.id,
+    name: meal.title,
+    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
+  })),
+  'Protein + Fibrous + Starchy (30g + 100g + 25g)': proteinFibrousStarchyOptions.map((meal) => ({
+    id: meal.id,
+    name: meal.title,
+    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
   }))
 };
 
@@ -379,7 +403,10 @@ export default function MealPremadePicker({
   showMacroTargeting = false
 }: MealPremadePickerProps) {
   // Determine which premade set to use based on meal type and diet type
-  const premadeData = mealType === 'breakfast' 
+  // Competition mode uses macro-based categories (same data for all meal slots)
+  const premadeData = dietType === 'competition'
+    ? competitionPremades
+    : mealType === 'breakfast' 
     ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
     ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)
@@ -495,8 +522,8 @@ export default function MealPremadePicker({
   }, [open, mealType]);
 
   const handleSelectPremade = (meal: any, category: string) => {
-    // 🔥 DIABETIC/GLP-1/ANTI-INFLAMMATORY: Title-only meals ALWAYS need prep modal
-    const isMedicalDiet = dietType === 'diabetic' || dietType === 'glp1' || dietType === 'anti-inflammatory';
+    // 🔥 DIABETIC/GLP-1/ANTI-INFLAMMATORY/COMPETITION: Title-only meals ALWAYS need prep modal
+    const isMedicalDiet = dietType === 'diabetic' || dietType === 'glp1' || dietType === 'anti-inflammatory' || dietType === 'competition';
     const hasMealIngredients = meal.actualIngredients && Array.isArray(meal.actualIngredients) && meal.actualIngredients.length > 0;
     
     // Check meal ingredients for items that need prep selection
