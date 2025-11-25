@@ -125,7 +125,7 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
           }}
         />
 
-        {/* Optional animated arrow */}
+        {/* Optional animated arrow - points DOWN toward the element */}
         {showArrow && (
           <motion.div
             className="absolute pointer-events-none"
@@ -134,7 +134,7 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
               left: arrowPosition.left,
             }}
             animate={{
-              y: [0, -10, 0],
+              y: [0, 10, 0],
             }}
             transition={{
               duration: 1.5,
@@ -144,7 +144,7 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
           >
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
               <path
-                d="M15 5 L15 25 M15 5 L10 10 M15 5 L20 10"
+                d="M15 5 L15 25 M15 25 L10 20 M15 25 L20 20"
                 stroke="rgba(59, 130, 246, 0.9)"
                 strokeWidth="3"
                 strokeLinecap="round"
