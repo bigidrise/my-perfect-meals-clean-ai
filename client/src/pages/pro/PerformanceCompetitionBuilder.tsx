@@ -40,6 +40,7 @@ import {
   Target,
   Home,
   Info,
+  ChefHat,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FEATURES } from "@/utils/features";
@@ -1113,20 +1114,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-white/90 text-lg font-medium">{label}</h2>
                   <div className="flex gap-2">
-                    {/* AI Meal Creator button for breakfast/lunch/dinner, Snack Picker for snacks */}
+                    {/* AI Meal Creator button - Competition diet type for all meals */}
                     <Button
                       size="sm"
                       variant="ghost"
                       className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                       onClick={() => {
-                        if (key === "snacks") {
-                          // Open dedicated Snack Picker
-                          setSnackPickerOpen(true);
-                        } else {
-                          // Open AI Meal Creator for meals
-                          setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
-                          setAiMealModalOpen(true);
-                        }
+                        setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                        setAiMealModalOpen(true);
                       }}
                       data-wt="wmb-create-ai-button"
                     >
@@ -1312,12 +1307,15 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
                         <div className="flex gap-2">
-                          {/* Dynamic meals use Snack Picker instead of AI Meal Creator */}
+                          {/* Dynamic meals use AI Meal Creator with competition diet type */}
                           <Button
                             size="sm"
                             variant="ghost"
                             className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                            onClick={() => setSnackPickerOpen(true)}
+                            onClick={() => {
+                              setAiMealSlot("snacks");
+                              setAiMealModalOpen(true);
+                            }}
                           >
                             <Sparkles className="h-3 w-3" />
                             Create with AI
@@ -1394,12 +1392,15 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-white/90 text-lg font-medium">Snacks</h2>
                     <div className="flex gap-2">
-                      {/* Snacks use Snack Picker instead of AI Meal Creator */}
+                      {/* Snacks use AI Meal Creator with competition diet type */}
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                        onClick={() => setSnackPickerOpen(true)}
+                        onClick={() => {
+                          setAiMealSlot("snacks");
+                          setAiMealModalOpen(true);
+                        }}
                       >
                         <Sparkles className="h-3 w-3" />
                         Create with AI
@@ -1527,20 +1528,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white/90 text-lg font-medium">{label}</h2>
               <div className="flex gap-2">
-                {/* AI Meal Creator button for breakfast/lunch/dinner, Snack Picker for snacks */}
+                {/* AI Meal Creator button - Competition diet type for all meals */}
                 <Button
                   size="sm"
                   variant="ghost"
                   className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
                   onClick={() => {
-                    if (key === "snacks") {
-                      // Open dedicated Snack Picker
-                      setSnackPickerOpen(true);
-                    } else {
-                      // Open AI Meal Creator for meals
-                      setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
-                      setAiMealModalOpen(true);
-                    }
+                    setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                    setAiMealModalOpen(true);
                   }}
                 >
                   <Sparkles className="h-3 w-3" />
@@ -1629,12 +1624,15 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-white/90 text-lg font-medium">Meal 5</h2>
                 <div className="flex gap-2">
-                  {/* Meal 5 uses Snack Picker instead of AI Meal Creator */}
+                  {/* Meal 5 uses AI Meal Creator with competition diet type */}
                   <Button
                     size="sm"
                     variant="ghost"
                     className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                    onClick={() => setSnackPickerOpen(true)}
+                    onClick={() => {
+                      setAiMealSlot("snacks");
+                      setAiMealModalOpen(true);
+                    }}
                   >
                     <Sparkles className="h-3 w-3" />
                     Create with AI
