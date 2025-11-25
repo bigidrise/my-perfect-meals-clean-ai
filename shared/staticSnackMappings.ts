@@ -92,14 +92,29 @@ export function getStaticSnackImage(snackName: string): string {
 }
 
 /**
- * Check if a meal name is a snack (based on common patterns)
+ * Check if a meal name is a snack (deterministic + pattern-based)
+ * LAYER 1: Check if name exists in static mappings (deterministic, catches all mapped snacks)
+ * LAYER 2: Keyword matching for unmapped snacks (pattern-based fallback)
  * This helps identify snacks even when mealType isn't explicitly set
  */
 export function isLikelySnack(mealName: string): boolean {
-  const normalized = mealName.toLowerCase();
+  const normalized = mealName.toLowerCase().trim();
+  
+  // LAYER 1: Deterministic check - if it's in our mapping, it's a snack
+  // This catches ALL mapped snacks (almonds, cottage cheese, trail mix, etc.)
+  for (const snackKey of Object.keys(STATIC_SNACK_MAPPINGS)) {
+    if (normalized.includes(snackKey) || snackKey.includes(normalized)) {
+      return true;
+    }
+  }
+  
+  // LAYER 2: Conservative keyword fallback (avoids false positives)
+  // NOTE: Removed broad keywords like "smoothie", "shake" to avoid blocking breakfast meals
+  // If mealType is missing, some snacks may still slip through - that's acceptable
   const snackKeywords = [
-    'snack', 'nuts', 'yogurt', 'protein bar', 'energy ball',
-    'popcorn', 'jerky', 'granola', 'fruit', 'berries'
+    ' snack', 'trail mix', 'protein bar', 'energy ball', 'energy balls',
+    'beef jerky', 'turkey jerky', 'cheese stick', 'string cheese',
+    'rice cake', 'rice cakes', 'granola bar'
   ];
   
   return snackKeywords.some(keyword => normalized.includes(keyword));

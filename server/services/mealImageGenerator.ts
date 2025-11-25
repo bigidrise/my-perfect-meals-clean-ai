@@ -5,7 +5,7 @@
 import OpenAI from 'openai';
 import crypto from 'crypto';
 import { uploadImageToPermanentStorage, checkImageExists } from './permanentImageStorage';
-import { getStaticSnackImage, DEFAULT_SNACK_IMAGE } from '../../shared/staticSnackMappings';
+import { getStaticSnackImage, DEFAULT_SNACK_IMAGE, isLikelySnack } from '../../shared/staticSnackMappings';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -57,15 +57,22 @@ function createImagePrompt(request: MealImageRequest): string {
 export async function generateMealImage(request: MealImageRequest): Promise<GeneratedImage> {
   const hash = generateImageHash(request);
   
-  // 🚫 SNACK FIREWALL: Block ALL snacks from reaching DALL-E (saves money + time)
-  if (request.mealType === 'snack') {
+  // 🚫 SNACK FIREWALL LAYER 1: Explicit mealType check (most reliable)
+  // 🚫 SNACK FIREWALL LAYER 2: Fallback pattern detection (catches snacks without mealType)
+  const isSnackByType = request.mealType === 'snack';
+  const isSnackByPattern = !request.mealType && isLikelySnack(request.mealName);
+  
+  if (isSnackByType || isSnackByPattern) {
     const staticImage = getStaticSnackImage(request.mealName);
-    console.log(`🍎 SNACK FIREWALL: Using static image for "${request.mealName}" → ${staticImage}`);
-    console.log(`💰 COST SAVED: Blocked DALL-E API call for snack`);
+    const detectionMethod = isSnackByType ? 'explicit mealType' : 'pattern detection';
+    
+    console.log(`🍎 SNACK FIREWALL (${detectionMethod}): Using static image for "${request.mealName}" → ${staticImage}`);
+    console.log(`💰 COST SAVED: Blocked DALL-E API call (estimated $0.04-$0.08)`);
+    console.log(`⚡ TIME SAVED: Instant static image (vs ~5-10s AI generation)`);
     
     const result: GeneratedImage = {
       url: staticImage,
-      prompt: `Static image (no AI): ${request.mealName}`,
+      prompt: `Static image (no AI, ${detectionMethod}): ${request.mealName}`,
       templateRef: request.templateRef,
       hash,
       createdAt: new Date().toISOString()
