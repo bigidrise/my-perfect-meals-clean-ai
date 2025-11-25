@@ -34,6 +34,7 @@ import {
   BarChart3,
   ShoppingCart,
   X,
+  Trash2,
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
@@ -1297,7 +1298,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                             className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
                             onClick={() => handleRemoveMealSlot(mealNumber)}
                           >
-                            <X className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
