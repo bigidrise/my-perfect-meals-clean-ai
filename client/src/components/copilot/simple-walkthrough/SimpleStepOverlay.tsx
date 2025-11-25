@@ -13,8 +13,13 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
+    const element = document.querySelector(selector) as HTMLElement | null;
+    
+    // Save original styles to restore later
+    let originalZIndex = "";
+    let originalPosition = "";
+    
     const updateTargetRect = () => {
-      const element = document.querySelector(selector);
       if (element) {
         const rect = element.getBoundingClientRect();
         setTargetRect(rect);
@@ -22,6 +27,14 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
         setTargetRect(null);
       }
     };
+
+    // Elevate target element above the overlay (z-9999)
+    if (element) {
+      originalZIndex = element.style.zIndex;
+      originalPosition = element.style.position;
+      element.style.zIndex = "10000";
+      element.style.position = "relative";
+    }
 
     updateTargetRect();
 
@@ -36,6 +49,11 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
     window.addEventListener("scroll", updateTargetRect, true);
 
     return () => {
+      // Restore original styles
+      if (element) {
+        element.style.zIndex = originalZIndex;
+        element.style.position = originalPosition;
+      }
       observer.disconnect();
       window.removeEventListener("resize", updateTargetRect);
       window.removeEventListener("scroll", updateTargetRect, true);
