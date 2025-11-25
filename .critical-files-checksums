@@ -2,6 +2,6 @@
 d5288a7e9a121e75aa943c97d3de86c3  client/src/components/PreparationModal.tsx
 167ba808d9f1d61da552fbf2ffa9484d  client/src/pages/WeeklyMealBoard.tsx
 8223cd50c2cb998ea72b1691f9f1f7a0  client/src/pages/BeachBodyMealBoard.tsx
-3dd8d061bbb443e09b66af7b6f1dde4c  client/src/pages/pro/PerformanceCompetitionBuilder.tsx
+c87de532ad57e918ab1bdff91d023b4d  client/src/pages/pro/PerformanceCompetitionBuilder.tsx
 428e77185e02dcc537ac1668cdcfade0  client/src/pages/Planner.tsx
 e43f2831f6a95fc192ce80cf88278d03  server/routes/manualMacros.ts
