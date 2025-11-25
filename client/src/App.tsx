@@ -130,18 +130,7 @@ export default function App() {
                 <Toaster />
               </CopilotSystem>
               
-              {/* Visual-First Walkthrough Overlay - Apple App Store Ready */}
-              {currentSpotlightStep && (
-                <SpotlightOverlay
-                  currentStep={currentSpotlightStep}
-                  onAdvance={next}
-                  onExit={cancel}
-                  canGoPrevious={state.canGoPrevious}
-                  canGoNext={state.canGoNext}
-                  onPrevious={previous}
-                  onSkip={skip}
-                />
-              )}
+              {/* Walkthrough overlay temporarily disabled - fixing race condition */}
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>
