@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Baby, Users } from "lucide-react";
+import { ArrowLeft, Baby, Users } from "lucide-react";
 
 interface KidsFeature {
   title: string;
@@ -74,10 +74,14 @@ export default function HealthyKidsMeals() {
       >
         <div className="px-8 py-3 flex items-center gap-3">
           {/* Back Button */}
-          
+          <button
+            onClick={() => setLocation("/lifestyle")}
+            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
 
-
-          
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Healthy Kids Meals</h1>
 
