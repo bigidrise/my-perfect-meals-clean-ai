@@ -353,51 +353,59 @@ export const CopilotSheet: React.FC = () => {
                   <div className="h-1 w-10 rounded-full bg-white/15" />
                 </div>
 
-                {/* Header */}
-                <div className="flex items-center gap-3 px-4 pt-3">
-                  <ChefCapIcon size={32} />
-                  <div className="flex flex-col flex-1">
-                    <span className="text-xs uppercase tracking-[0.16em] text-orange-300/90">
-                      My Perfect Meals Copilot
-                    </span>
-                    <span className="text-sm text-white/80">
-                      {mode === "thinking"
-                        ? "Tuning this to your lifestyle..."
-                        : mode === "listening"
-                        ? "Listening..."
-                        : "Your chef-coach for every screen."}
-                    </span>
+                {/* Header - Responsive: stacked on mobile, horizontal on desktop */}
+                <div className="px-4 pt-3">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-3">
+                    {/* Row 1: Info (icon + title + subtitle) */}
+                    <div className="flex items-center gap-3 md:flex-1">
+                      <ChefCapIcon size={32} />
+                      <div className="flex flex-col flex-1">
+                        <span className="text-xs uppercase tracking-[0.16em] text-orange-300/90">
+                          My Perfect Meals Copilot
+                        </span>
+                        <span className="text-sm text-white/80">
+                          {mode === "thinking"
+                            ? "Tuning this to your lifestyle..."
+                            : mode === "listening"
+                            ? "Listening..."
+                            : "Your chef-coach for every screen."}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Controls (Speak, Guide, Close) */}
+                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                      {/* Voice Button */}
+                      <button
+                        onClick={handleVoiceStart}
+                        disabled={listening}
+                        className={`text-sm px-3 py-1 rounded-full transition-all ${
+                          listening
+                            ? "bg-red-600 text-white animate-pulse"
+                            : "bg-white/10 text-white/70 hover:bg-white/20"
+                        }`}
+                      >
+                        {listening ? "🎙 Listening..." : "🎙 Speak"}
+                      </button>
+
+                      {/* Guided Mode Toggle */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1">
+                        <span className="text-xs text-white/70">Guide</span>
+                        <Switch
+                          checked={isGuidedModeEnabled}
+                          onCheckedChange={toggleGuidedMode}
+                          className="data-[state=checked]:bg-orange-500"
+                        />
+                      </div>
+
+                      <button
+                        onClick={close}
+                        className="rounded-full bg-white/5 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Voice Button */}
-                  <button
-                    onClick={handleVoiceStart}
-                    disabled={listening}
-                    className={`text-sm px-3 py-1 rounded-full transition-all ${
-                      listening
-                        ? "bg-red-600 text-white animate-pulse"
-                        : "bg-white/10 text-white/70 hover:bg-white/20"
-                    }`}
-                  >
-                    {listening ? "🎙 Listening..." : "🎙 Speak"}
-                  </button>
-
-                  {/* Guided Mode Toggle */}
-                  <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1">
-                    <span className="text-xs text-white/70">Guide</span>
-                    <Switch
-                      checked={isGuidedModeEnabled}
-                      onCheckedChange={toggleGuidedMode}
-                      className="data-[state=checked]:bg-orange-500"
-                    />
-                  </div>
-
-                  <button
-                    onClick={close}
-                    className="rounded-full bg-white/5 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
-                  >
-                    Close
-                  </button>
                 </div>
 
                 {/* Mobile Tap-to-Play Audio Fallback */}
