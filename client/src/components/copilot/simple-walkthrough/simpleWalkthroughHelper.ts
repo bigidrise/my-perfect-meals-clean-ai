@@ -22,8 +22,10 @@ interface SimpleStep {
 }
 
 type SimpleWalkthroughStarter = (scriptId: string, steps: SimpleStep[]) => void;
+type CopilotCloser = () => void;
 
 let walkthroughStarter: SimpleWalkthroughStarter | null = null;
+let copilotCloser: CopilotCloser | null = null;
 
 /**
  * Register the walkthrough starter function (called by SimpleWalkthroughProvider)
@@ -33,13 +35,26 @@ export function registerSimpleWalkthroughStarter(starter: SimpleWalkthroughStart
 }
 
 /**
+ * Register the Copilot closer function (called by App.tsx or wherever CopilotProvider is set up)
+ */
+export function registerCopilotCloser(closer: CopilotCloser) {
+  copilotCloser = closer;
+}
+
+/**
  * Start a simple walkthrough with the given steps
  * This function is completely independent of voice/TTS systems
+ * Automatically closes the Copilot modal when walkthrough starts
  */
 export function startSimpleWalkthrough(scriptId: string, steps: SimpleStep[]) {
   if (!walkthroughStarter) {
     console.warn('[SimpleWalkthrough] Starter not registered yet. Skipping walkthrough:', scriptId);
     return;
+  }
+  
+  // Close Copilot modal when walkthrough starts
+  if (copilotCloser) {
+    copilotCloser();
   }
   
   walkthroughStarter(scriptId, steps);

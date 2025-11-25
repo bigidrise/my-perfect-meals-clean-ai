@@ -5,6 +5,7 @@ import { CopilotSheet } from "./CopilotSheet";
 import { executeCommand, setResponseHandler } from "./CopilotCommandRegistry";
 import { SpotlightOverlay } from "./SpotlightOverlay";
 import { useWalkthroughController } from "./walkthrough/useWalkthroughController";
+import { registerCopilotCloser } from "./simple-walkthrough/simpleWalkthroughHelper";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ interface CopilotSystemProps {
 }
 
 const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { setLastResponse } = useCopilot();
+  const { setLastResponse, close } = useCopilot();
   const walkthrough = useWalkthroughController();
 
   useEffect(() => {
@@ -21,6 +22,11 @@ const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children 
       setLastResponse(response);
     });
   }, [setLastResponse]);
+
+  // Register Copilot closer so simple walkthrough can hide it
+  useEffect(() => {
+    registerCopilotCloser(close);
+  }, [close]);
 
   return (
     <>
