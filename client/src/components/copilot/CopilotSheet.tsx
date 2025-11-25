@@ -11,10 +11,13 @@ import { CopilotInputBar } from "./CopilotInputBar";
 import { isLikelyMisheard } from "./query/QueryProcessor";
 import { startCopilotIntro } from "./CopilotCommandRegistry";
 import { ttsService } from "@/lib/tts";
+import { useCopilotGuidedMode } from "./CopilotGuidedModeContext";
+import { Switch } from "@/components/ui/switch";
 
 export const CopilotSheet: React.FC = () => {
   const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse, needsRetry, setNeedsRetry } = useCopilot();
   const { toast } = useToast();
+  const { isGuidedModeEnabled, toggleGuidedMode } = useCopilotGuidedMode();
 
   // =========================================
   // AUDIO - Visual-First with Graceful Degradation
@@ -379,6 +382,16 @@ export const CopilotSheet: React.FC = () => {
                     {listening ? "🎙 Listening..." : "🎙 Speak"}
                   </button>
 
+                  {/* Guided Mode Toggle */}
+                  <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1">
+                    <span className="text-xs text-white/70">Guide</span>
+                    <Switch
+                      checked={isGuidedModeEnabled}
+                      onCheckedChange={toggleGuidedMode}
+                      className="data-[state=checked]:bg-orange-500"
+                    />
+                  </div>
+
                   <button
                     onClick={close}
                     className="rounded-full bg-white/5 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
@@ -583,6 +596,9 @@ export const CopilotSheet: React.FC = () => {
           currentStep={spotlightStep}
           onAdvance={nextStep}
           onExit={handleExitSpotlight}
+          canGoPrevious={false}
+          canGoNext={true}
+          onPrevious={() => {}}
         />
       )}
     </AnimatePresence>

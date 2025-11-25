@@ -32,6 +32,7 @@ import {
   startSimpleWalkthroughFlow,
 } from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
+import { usePageWalkthrough } from "@/hooks/usePageWalkthrough";
 
 type Goal = "loss" | "maint" | "gain";
 type Sex = "male" | "female";
@@ -215,6 +216,8 @@ export default function MacroCounter() {
   const { toast } = useToast();
   const { user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
+
+  usePageWalkthrough('macro-calculator');
 
   // Load calculator settings from localStorage
   const loadCalculatorSettings = () => {

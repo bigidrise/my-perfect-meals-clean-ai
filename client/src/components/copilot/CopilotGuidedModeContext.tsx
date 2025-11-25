@@ -11,26 +11,46 @@ interface CopilotGuidedModeContextValue {
 
 const CopilotGuidedModeContext = createContext<CopilotGuidedModeContextValue | null>(null);
 
+function getStoredGuidedMode(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const saved = localStorage.getItem(GUIDED_MODE_KEY);
+    return saved === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function setStoredGuidedMode(enabled: boolean): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(GUIDED_MODE_KEY, enabled ? 'true' : 'false');
+  } catch {
+    console.warn('Failed to persist guided mode preference');
+  }
+}
+
 export function CopilotGuidedModeProvider({ children }: { children: React.ReactNode }) {
-  const [isGuidedModeEnabled, setIsGuidedModeEnabled] = useState<boolean>(() => {
-    try {
-      const saved = localStorage.getItem(GUIDED_MODE_KEY);
-      return saved === 'true';
-    } catch {
-      return false;
-    }
-  });
+  const [isGuidedModeEnabled, setIsGuidedModeEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsGuidedModeEnabled(getStoredGuidedMode());
+  }, []);
 
   const enableGuidedMode = useCallback(() => {
     setIsGuidedModeEnabled(true);
-    localStorage.setItem(GUIDED_MODE_KEY, 'true');
-    window.dispatchEvent(new CustomEvent('copilot-guided-mode-changed', { detail: { enabled: true } }));
+    setStoredGuidedMode(true);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('copilot-guided-mode-changed', { detail: { enabled: true } }));
+    }
   }, []);
 
   const disableGuidedMode = useCallback(() => {
     setIsGuidedModeEnabled(false);
-    localStorage.setItem(GUIDED_MODE_KEY, 'false');
-    window.dispatchEvent(new CustomEvent('copilot-guided-mode-changed', { detail: { enabled: false } }));
+    setStoredGuidedMode(false);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('copilot-guided-mode-changed', { detail: { enabled: false } }));
+    }
   }, []);
 
   const toggleGuidedMode = useCallback(() => {

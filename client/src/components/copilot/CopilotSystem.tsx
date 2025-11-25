@@ -6,6 +6,7 @@ import { executeCommand, setResponseHandler } from "./CopilotCommandRegistry";
 import { SpotlightOverlay } from "./SpotlightOverlay";
 import { useWalkthroughController } from "./walkthrough/useWalkthroughController";
 import { registerCopilotCloser } from "./simple-walkthrough/simpleWalkthroughHelper";
+import { CopilotGuidedModeProvider } from "./CopilotGuidedModeContext";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
@@ -39,6 +40,9 @@ const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children 
           currentStep={walkthrough.currentSpotlightStep}
           onAdvance={walkthrough.next}
           onExit={walkthrough.cancel}
+          canGoPrevious={false}
+          canGoNext={true}
+          onPrevious={() => {}}
         />
       )}
     </>
@@ -58,10 +62,12 @@ export const CopilotSystem: React.FC<CopilotSystemProps> = ({
   };
 
   return (
-    <CopilotProvider onAction={handleAction}>
-      <CopilotSystemInner>
-        {children}
-      </CopilotSystemInner>
-    </CopilotProvider>
+    <CopilotGuidedModeProvider>
+      <CopilotProvider onAction={handleAction}>
+        <CopilotSystemInner>
+          {children}
+        </CopilotSystemInner>
+      </CopilotProvider>
+    </CopilotGuidedModeProvider>
   );
 };
