@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import PreparationModal, { normalizeIngredientName } from '@/components/PreparationModal';
 import { SNACK_CATEGORIES } from '@/data/snackIngredients';
 import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
+import { GLP1_SNACK_CATEGORIES } from '@/data/glp1Snacks';
 import antiInflammatorySnacks from '@/data/antiInflammatory.snacks';
 import { getStaticSnackImage } from '../../../../shared/staticSnackMappings';
 
@@ -20,8 +21,8 @@ interface SnackPickerDrawerProps {
 
 // Build snack data based on diet type
 function getSnackDataByDiet(dietType: string) {
-  if (dietType === 'diabetic' || dietType === 'glp1') {
-    // Diabetic and GLP-1 use the same snack structure
+  if (dietType === 'diabetic') {
+    // Diabetic snacks - isolated from GLP-1
     return {
       [DIABETIC_SNACK_CATEGORIES[0].name]: DIABETIC_SNACK_CATEGORIES[0].items.map((item, idx) => ({
         id: `diabetic-snack-${DIABETIC_SNACK_CATEGORIES[0].name}-${idx}`,
@@ -41,6 +42,38 @@ function getSnackDataByDiet(dietType: string) {
       })),
       [DIABETIC_SNACK_CATEGORIES[4].name]: DIABETIC_SNACK_CATEGORIES[4].items.map((item, idx) => ({
         id: `diabetic-snack-${DIABETIC_SNACK_CATEGORIES[4].name}-${idx}`,
+        name: item
+      })),
+      [DIABETIC_SNACK_CATEGORIES[5].name]: DIABETIC_SNACK_CATEGORIES[5].items.map((item, idx) => ({
+        id: `diabetic-snack-${DIABETIC_SNACK_CATEGORIES[5].name}-${idx}`,
+        name: item
+      }))
+    };
+  } else if (dietType === 'glp1') {
+    // GLP-1 snacks - completely separate from diabetic
+    return {
+      [GLP1_SNACK_CATEGORIES[0].name]: GLP1_SNACK_CATEGORIES[0].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[0].name}-${idx}`,
+        name: item
+      })),
+      [GLP1_SNACK_CATEGORIES[1].name]: GLP1_SNACK_CATEGORIES[1].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[1].name}-${idx}`,
+        name: item
+      })),
+      [GLP1_SNACK_CATEGORIES[2].name]: GLP1_SNACK_CATEGORIES[2].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[2].name}-${idx}`,
+        name: item
+      })),
+      [GLP1_SNACK_CATEGORIES[3].name]: GLP1_SNACK_CATEGORIES[3].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[3].name}-${idx}`,
+        name: item
+      })),
+      [GLP1_SNACK_CATEGORIES[4].name]: GLP1_SNACK_CATEGORIES[4].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[4].name}-${idx}`,
+        name: item
+      })),
+      [GLP1_SNACK_CATEGORIES[5].name]: GLP1_SNACK_CATEGORIES[5].items.map((item, idx) => ({
+        id: `glp1-snack-${GLP1_SNACK_CATEGORIES[5].name}-${idx}`,
         name: item
       }))
     };
