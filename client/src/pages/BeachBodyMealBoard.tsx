@@ -1269,68 +1269,6 @@ export default function BeachBodyMealBoard() {
                     </section>
                   ))}
 
-                {/* Snacks Section */}
-                <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-white/90 text-lg font-medium">Snacks</h2>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-white/80 hover:bg-black/50 border border-amber-400/30 text-xs font-medium flex items-center gap-1"
-                        onClick={() => setSnackPickerOpen(true)}
-                      >
-                        <ChefHat className="h-3 w-3" />
-                        Pick Snacks
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-white/80 hover:bg-white/10"
-                        onClick={() => openManualModal("snacks")}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith("bb-dyn-")).map((meal: Meal, idx: number) => (
-                      <MealCard
-                        key={meal.id}
-                        date={activeDayISO}
-                        slot="snacks"
-                        meal={meal}
-                        onUpdated={(m) => {
-                          if (m === null) {
-                            const updatedDayLists = {
-                              ...dayLists,
-                              snacks: dayLists.snacks.filter((existingMeal: Meal) => existingMeal.id !== meal.id)
-                            };
-                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                            saveBoard(updatedBoard);
-                          } else {
-                            const updatedDayLists = {
-                              ...dayLists,
-                              snacks: dayLists.snacks.map((existingMeal: Meal) =>
-                                existingMeal.id === meal.id ? m : existingMeal
-                              )
-                            };
-                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                            saveBoard(updatedBoard);
-                          }
-                        }}
-                      />
-                    ))}
-                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith("bb-dyn-")).length === 0 && (
-                      <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
-                        <p className="mb-2">No snacks yet</p>
-                        <p className="text-xs text-white/40">Use "Pick Snacks" to add</p>
-                      </div>
-                    )}
-                  </div>
-                </section>
-
                 {/* Add Meal Button */}
                 <section className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/20 backdrop-blur p-4 flex items-center justify-center min-h-[120px]">
                   <Button
@@ -1618,7 +1556,7 @@ export default function BeachBodyMealBoard() {
             <MacroFixCoach
               totals={totals}
               targets={{
-                protein: targets.proteinGrams || 0,
+                protein: targets.daily.protein || 0,
                 starchy: 0,
                 fibrous: 0,
               }}
@@ -1659,12 +1597,12 @@ export default function BeachBodyMealBoard() {
         }}
       />
 
-      {/* Snack Picker Drawer - Anti-inflammatory snacks for performance/fitness */}
+      {/* Snack Picker Drawer - Competition prep snacks (one category) */}
       <SnackPickerDrawer
         open={snackPickerOpen}
         onClose={() => setSnackPickerOpen(false)}
         onSnackSelect={handleSnackSelect}
-        dietType="anti-inflammatory"
+        dietType="competition"
       />
 
       <WeeklyOverviewModal
@@ -1725,9 +1663,6 @@ export default function BeachBodyMealBoard() {
       <QuickAddMacrosModal
         open={fixOpen}
         onOpenChange={setFixOpen}
-        onSaved={() => {
-          window.dispatchEvent(new Event("macros:updated"));
-        }}
       />
 
       {board && (() => {
