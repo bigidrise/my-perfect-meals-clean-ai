@@ -1,0 +1,63 @@
+/**
+ * Simple Walkthrough Helper
+ * 
+ * Provides standalone walkthrough functionality that works independently
+ * of voice navigation, TTS, and the complex WalkthroughScriptEngine.
+ * 
+ * Usage:
+ * ```ts
+ * import { startSimpleWalkthrough } from './simpleWalkthroughHelper';
+ * 
+ * startSimpleWalkthrough('my-feature', [
+ *   { selector: '#step-1', text: 'Click here first', showArrow: true },
+ *   { selector: '.step-2', text: 'Then do this' },
+ * ]);
+ * ```
+ */
+
+interface SimpleStep {
+  selector: string;
+  text?: string;
+  showArrow?: boolean;
+}
+
+type SimpleWalkthroughStarter = (scriptId: string, steps: SimpleStep[]) => void;
+
+let walkthroughStarter: SimpleWalkthroughStarter | null = null;
+
+/**
+ * Register the walkthrough starter function (called by SimpleWalkthroughProvider)
+ */
+export function registerSimpleWalkthroughStarter(starter: SimpleWalkthroughStarter) {
+  walkthroughStarter = starter;
+}
+
+/**
+ * Start a simple walkthrough with the given steps
+ * This function is completely independent of voice/TTS systems
+ */
+export function startSimpleWalkthrough(scriptId: string, steps: SimpleStep[]) {
+  if (!walkthroughStarter) {
+    console.warn('[SimpleWalkthrough] Starter not registered yet. Skipping walkthrough:', scriptId);
+    return;
+  }
+  
+  walkthroughStarter(scriptId, steps);
+}
+
+/**
+ * Pre-defined walkthrough scripts
+ * Add your walkthroughs here for easy reuse
+ */
+export const SIMPLE_WALKTHROUGHS = {
+  'macro-calculator': [
+    { selector: '[data-walkthrough="macro-input"]', text: 'Enter your details here', showArrow: true },
+    { selector: '[data-walkthrough="calculate-button"]', text: 'Click to calculate your macros' },
+    { selector: '[data-walkthrough="results"]', text: 'Your personalized results will appear here' },
+  ],
+  'meal-creator': [
+    { selector: '[data-walkthrough="meal-type"]', text: 'Choose your meal type', showArrow: true },
+    { selector: '[data-walkthrough="dietary-prefs"]', text: 'Set your dietary preferences' },
+    { selector: '[data-walkthrough="generate"]', text: 'Generate your AI meal' },
+  ],
+} as const;

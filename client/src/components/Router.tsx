@@ -119,6 +119,9 @@ import SocialRestaurantGuide from "@/pages/SocialRestaurantGuide";
 // Founders page
 import FoundersPage from "@/pages/Founders";
 
+// Simple Walkthrough Demo
+import SimpleWalkthroughDemo from "@/pages/SimpleWalkthroughDemo";
+
 // DELETED: AffiliatesPage
 
 // Vitals Logger - Creating a placeholder for this route
@@ -468,6 +471,8 @@ export default function Router() {
           path="/supplement-education"
           component={SupplementEducationPage}
         />
+        {/* Simple Walkthrough Demo */}
+        <Route path="/walkthrough-demo" component={SimpleWalkthroughDemo} />
         {/* 404 fallback */}
         <Route component={NotFound} />
       </Switch>

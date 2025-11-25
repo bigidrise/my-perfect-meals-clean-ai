@@ -26,9 +26,10 @@ import { SpotlightOverlay } from "./components/copilot/SpotlightOverlay";
 import { useWalkthroughController } from "./components/copilot/walkthrough/useWalkthroughController";
 import { TourProvider } from "./contexts/TourContext";
 import { MobileVoiceHandler } from "./components/MobileVoiceHandler";
-import { AvatarProvider } from "./hooks/useAvatarContext";
 import { OnboardingFooter } from "./components/OnboardingFooter";
 import { CopilotProvider } from "./components/copilot/CopilotContext";
+import { SimpleWalkthroughProvider } from "./components/copilot/simple-walkthrough/SimpleWalkthroughContext";
+import { SimpleWalkthroughManager } from "./components/copilot/simple-walkthrough/SimpleWalkthroughManager";
 
 
 
@@ -109,7 +110,8 @@ export default function App() {
         <TooltipProvider>
           <AuthProvider>
             <AudioProvider>
-              <ScrollManager />
+              <SimpleWalkthroughProvider>
+                <ScrollManager />
 
               {/* Forced Update Modal (blocks app access if version too old) */}
               {versionState?.forceUpdate && versionState.remoteInfo && (
@@ -131,8 +133,9 @@ export default function App() {
                 <Toaster />
               </CopilotSystem>
               
-              {/* Walkthrough overlay disabled - ENABLE_WALKTHROUGH_OVERLAY = false */}
-              {/* Copilot voice commands still work via CopilotSystem */}
+                {/* Simple Walkthrough System - Independent of voice/TTS */}
+                <SimpleWalkthroughManager />
+              </SimpleWalkthroughProvider>
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>
