@@ -39,6 +39,7 @@ import PreparationModal, { normalizeIngredientName } from "@/components/Preparat
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
 import { mealIngredients } from "@/data/mealIngredients";
+import { proFoods } from "@/data/proFoods";
 import { useMacroTargeting } from "@/hooks/useMacroTargeting";
 import { MacroTargetingControls } from "@/components/macro-targeting/MacroTargetingControls";
 
@@ -48,7 +49,7 @@ interface AIMealCreatorModalProps {
   onMealGenerated: (meal: any) => void;
   mealSlot: "breakfast" | "lunch" | "dinner" | "snacks";
   showMacroTargeting?: boolean;
-  dietType?: "weekly" | "diabetic";
+  dietType?: "weekly" | "diabetic" | "professional";
   beachBodyMode?: boolean;
 }
 
@@ -64,6 +65,10 @@ export default function AIMealCreatorModal({
   const ACTIVE_SNACK_CATEGORIES = (dietType === "diabetic" && mealSlot === "snacks") 
     ? DIABETIC_SNACK_CATEGORIES 
     : SNACK_CATEGORIES;
+
+  const activeMealIngredients = (dietType === "professional" && mealSlot !== "snacks")
+    ? proFoods
+    : mealIngredients;
 
   const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -317,7 +322,7 @@ export default function AIMealCreatorModal({
 
   // Get ingredients for current category
   const categoryIngredients = mealSlot !== "snacks" 
-    ? (mealIngredients[activeCategory as keyof typeof mealIngredients] || [])
+    ? (activeMealIngredients[activeCategory as keyof typeof activeMealIngredients] || [])
     : [];
 
   const filteredIngredients = searchQuery.trim()
@@ -351,7 +356,7 @@ export default function AIMealCreatorModal({
         {/* Category Tabs - Purple Style (Matching MealPremadePicker) */}
         {!generating && mealSlot !== "snacks" && (
           <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
-            {Object.keys(mealIngredients).map((category) => {
+            {Object.keys(activeMealIngredients).map((category) => {
               const displayName = category === 'proteins' ? 'Proteins' 
                 : category === 'starchyCarbs' ? 'Starchy Carbs'
                 : category === 'fibrousCarbs' ? 'Fibrous Carbs'
