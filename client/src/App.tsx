@@ -37,8 +37,9 @@ export default function App() {
   const { versionState } = useVersionCheck();
   const [, setLocation] = useLocation();
   
-  // Walkthrough controller for visual-first overlay system
-  const { currentSpotlightStep, state, next, previous, skip, cancel } = useWalkthroughController();
+  // Walkthrough system disabled - race condition issues
+  // TODO: Re-enable after architectural fix
+  const ENABLE_WALKTHROUGH_OVERLAY = false;
 
   useEffect(() => {
     setNavigationHandler((path) => {
@@ -130,7 +131,8 @@ export default function App() {
                 <Toaster />
               </CopilotSystem>
               
-              {/* Walkthrough overlay temporarily disabled - fixing race condition */}
+              {/* Walkthrough overlay disabled - ENABLE_WALKTHROUGH_OVERLAY = false */}
+              {/* Copilot voice commands still work via CopilotSystem */}
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>
