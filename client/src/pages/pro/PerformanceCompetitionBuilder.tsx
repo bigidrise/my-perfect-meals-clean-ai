@@ -15,6 +15,8 @@ import {
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { CompetitionMealPickerDrawer } from "@/components/pickers/CompetitionMealPickerDrawer";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
+import MealPremadePicker from "@/components/pickers/MealPremadePicker";
+import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
@@ -206,6 +208,13 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   // AI Meal Creator modal state
   const [aiMealModalOpen, setAiMealModalOpen] = useState(false);
   const [aiMealSlot, setAiMealSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
+
+  // AI Premades modal state
+  const [premadePickerOpen, setPremadePickerOpen] = useState(false);
+  const [premadePickerSlot, setPremadePickerSlot] = useState<"breakfast" | "lunch" | "dinner">("breakfast");
+
+  // Snack Picker state
+  const [snackPickerOpen, setSnackPickerOpen] = useState(false);
 
   // Guided Tour state
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
@@ -622,6 +631,90 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     }
   }, [activeDayISO, aiMealSlot, board, saveBoard, toast]);
 
+  // Handler for premade meal selection (Competition AI Premades)
+  const handlePremadeSelect = useCallback(async (meal: any) => {
+    if (!board) return;
+
+    try {
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // Add to specific day
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          [premadePickerSlot]: [...dayLists[premadePickerSlot], meal]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // Add to week board
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            [premadePickerSlot]: [...board.lists[premadePickerSlot], meal]
+          }
+        };
+        await saveBoard(updatedBoard);
+      }
+
+      toast({
+        title: "Meal Added!",
+        description: `${meal.title} added successfully`,
+      });
+
+      setPremadePickerOpen(false);
+    } catch (error) {
+      console.error("Failed to add premade meal:", error);
+      toast({
+        title: "Failed to add meal",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  }, [board, premadePickerSlot, planningMode, activeDayISO, saveBoard, toast]);
+
+  // Handler for snack selection from SnackPickerDrawer (Competition Snacks)
+  const handleSnackSelect = useCallback(async (snack: any) => {
+    if (!board) return;
+
+    try {
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // Add to specific day
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          snacks: [...dayLists.snacks, snack]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // Add to week board
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            snacks: [...board.lists.snacks, snack]
+          }
+        };
+        await saveBoard(updatedBoard);
+      }
+
+      toast({
+        title: "Snack Added!",
+        description: `${snack.title} added successfully`,
+      });
+
+      setSnackPickerOpen(false);
+    } catch (error) {
+      console.error("Failed to add snack:", error);
+      toast({
+        title: "Failed to add snack",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  }, [board, planningMode, activeDayISO, saveBoard, toast]);
+
   // Week navigation
   const gotoWeek = useCallback(
     async (targetISO: string) => {
@@ -1024,6 +1117,20 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                       Create with AI
                     </Button>
 
+                    {/* AI Premades button - Competition meals */}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                      onClick={() => {
+                        setPremadePickerSlot(key as "breakfast" | "lunch" | "dinner");
+                        setPremadePickerOpen(true);
+                      }}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      AI Premades
+                    </Button>
+
                     {/* Plus button for manual entry */}
                     <Button
                       size="sm"
@@ -1179,6 +1286,64 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 </div>
 
                 {/* ================================
+                    SNACKS SECTION - Competition Snacks
+                ==================================== */}
+                <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4 col-span-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-white/90 text-lg font-medium">Snacks</h2>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-white/80 hover:bg-black/50 border border-emerald-400/30 text-xs font-medium flex items-center gap-1"
+                      onClick={() => setSnackPickerOpen(true)}
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Snack
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith('dyn-')).map((meal: Meal, idx: number) => (
+                      <MealCard
+                        key={meal.id}
+                        date={activeDayISO}
+                        slot="snacks"
+                        meal={meal}
+                        onUpdated={(m) => {
+                          if (m === null) {
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.filter((existingMeal) =>
+                                existingMeal.id !== meal.id
+                              )
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard).catch((err) => {
+                              console.error("❌ Delete failed (Day mode):", err);
+                            });
+                          } else {
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.map((existingMeal) =>
+                                existingMeal.id === meal.id ? m : existingMeal
+                              )
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard);
+                          }
+                        }}
+                      />
+                    ))}
+                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith('dyn-')).length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                        <p className="mb-2">No snacks yet</p>
+                        <p className="text-xs text-white/40">Use "Add Snack" to add competition-safe snacks</p>
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                {/* ================================
                     COACH TARGETS (Performance Builder) - READ ONLY
                     Set from Client Dashboard
                 ==================================== */}
@@ -1248,6 +1413,20 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
                 >
                   <Sparkles className="h-3 w-3" />
                   Create with AI
+                </Button>
+
+                {/* AI Premades button - Competition meals */}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                  onClick={() => {
+                    setPremadePickerSlot(key as "breakfast" | "lunch" | "dinner");
+                    setPremadePickerOpen(true);
+                  }}
+                >
+                  <Sparkles className="h-3 w-3" />
+                  AI Premades
                 </Button>
 
                 {/* Plus button for manual entry */}
@@ -1616,6 +1795,24 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
         mealSlot={aiMealSlot}
         dietType="competition"
         showMacroTargeting={false}
+      />
+
+      {/* Meal Premade Picker Modal - Competition Meals */}
+      <MealPremadePicker
+        open={premadePickerOpen}
+        onClose={() => setPremadePickerOpen(false)}
+        mealType={premadePickerSlot}
+        onMealSelect={handlePremadeSelect}
+        showMacroTargeting={false}
+        dietType="competition"
+      />
+
+      {/* Snack Picker Drawer - Competition Snacks */}
+      <SnackPickerDrawer
+        open={snackPickerOpen}
+        onClose={() => setSnackPickerOpen(false)}
+        onSnackSelect={handleSnackSelect}
+        dietType="competition"
       />
 
       {/* Shopping List Buttons */}
