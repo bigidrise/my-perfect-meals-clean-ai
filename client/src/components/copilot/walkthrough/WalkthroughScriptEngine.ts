@@ -229,6 +229,13 @@ export class WalkthroughScriptEngine {
 
       this.currentElement = element;
 
+      // Emit step_changed event after element is found so UI can update
+      this.emitEvent({
+        type: "step_changed",
+        scriptId: this.script!.id,
+        stepIndex: this.currentStepIndex,
+      });
+
       // Setup action listener for auto-advance
       // Support both legacy waitForAction and new waitForEvent patterns
       if (step.waitForEvent) {
