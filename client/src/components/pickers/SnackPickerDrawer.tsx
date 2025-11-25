@@ -10,13 +10,14 @@ import { SNACK_CATEGORIES } from '@/data/snackIngredients';
 import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
 import { GLP1_SNACK_CATEGORIES } from '@/data/glp1Snacks';
 import antiInflammatorySnacks from '@/data/antiInflammatory.snacks';
+import { competitionSnackOptions } from '@/data/competitionSnacks';
 import { getStaticSnackImage } from '../../../../shared/staticSnackMappings';
 
 interface SnackPickerDrawerProps {
   open: boolean;
   onClose: () => void;
   onSnackSelect?: (snack: any) => void;
-  dietType?: 'normal' | 'diabetic' | 'glp1' | 'anti-inflammatory';
+  dietType?: 'normal' | 'diabetic' | 'glp1' | 'anti-inflammatory' | 'competition';
 }
 
 // Build snack data based on diet type
@@ -99,6 +100,15 @@ function getSnackDataByDiet(dietType: string) {
       'High Protein': antiInflammatorySnacks.HighProtein.map((item, idx) => ({
         id: `anti-inflammatory-snack-protein-${idx}`,
         name: item
+      }))
+    };
+  } else if (dietType === 'competition') {
+    // Competition prep snacks - ONE CATEGORY ONLY
+    // 20 prep-safe snacks: low sugar, clean fats, high protein
+    return {
+      'Contest Prep Snacks': competitionSnackOptions.map((snack) => ({
+        id: snack.id,
+        name: snack.title
       }))
     };
   } else {
