@@ -64,46 +64,46 @@ export const ONBOARDING_FLOW: WalkthroughFlow = {
       pageId: 'biometrics',
       steps: [
         {
-          selector: '[data-testid="save-weight-button"], #save-weight-button, [data-walkthrough="save-weight"]',
+          selector: '#save-weight-button, [data-testid="biometrics-save-weight-button"], [data-walkthrough="save-weight"]',
           text: 'Save your current body weight to track your progress',
           showArrow: true
         }
       ],
       completionEvent: 'biometrics:weightSaved',
-      nextRoute: '/weekly-board',
+      nextRoute: '/weekly-meal-board',
       autoNavigate: true
     },
     {
-      route: '/weekly-board',
+      route: '/weekly-meal-board',
       pageId: 'weekly-meal-builder',
       steps: [
         {
-          selector: '[data-testid="meal-type-selector"], .meal-type-card, [data-walkthrough="meal-type"]',
-          text: 'Choose what meal you want to create - breakfast, lunch, or dinner',
+          selector: '[data-walkthrough="day-chip"], [data-testid="day-chip"], .day-chip',
+          text: 'Pick a day to start planning your meals',
           showArrow: true
         },
         {
-          selector: '[data-testid="generate-meal-button"], #generate-meal, [data-walkthrough="generate"]',
-          text: 'Tap to generate your personalized AI meal',
+          selector: '[data-walkthrough="add-meal"], [data-testid="add-meal-button"], button:has(.plus-icon)',
+          text: 'Tap to add a meal - breakfast, lunch, dinner, or snacks',
           showArrow: true
         }
       ],
       completionEvent: 'mealBuilder:planGenerated',
-      nextRoute: '/shopping-list',
+      nextRoute: '/shopping-list-v2',
       autoNavigate: true
     },
     {
-      route: '/shopping-list',
+      route: '/shopping-list-v2',
       pageId: 'shopping-list',
       steps: [
         {
-          selector: '[data-testid="shopping-list-container"], .shopping-list, [data-walkthrough="shopping-list"]',
+          selector: '[data-walkthrough="shopping-list-items"], [data-testid="shopping-list-items"], .shopping-list-content',
           text: 'Here is your shopping list with all ingredients for your meal plan',
           showArrow: true
         },
         {
-          selector: '[data-testid="start-shopping-button"], #start-shopping, [data-walkthrough="start-shopping"]',
-          text: 'Ready to shop? Tap here to begin or come back later!',
+          selector: '[data-walkthrough="start-shopping"], [data-testid="start-shopping-button"], .start-shopping-btn',
+          text: 'Ready to shop? Check items as you go or come back later!',
           showArrow: true
         }
       ],

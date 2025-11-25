@@ -31,24 +31,18 @@ import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import AddOtherItems from "@/components/AddOtherItems";
 import { readOtherItems } from "@/stores/otherItemsStore";
 import { buildWalmartSearchUrl } from "@/lib/walmartLinkBuilder";
-import { useCopilot } from "@/components/copilot/CopilotContext";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 export default function ShoppingListMasterView() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { startWalkthrough } = useCopilot();
 
-  // Dispatch "opened" event on page mount
+  // Dispatch completion event for multi-page walkthrough flow when shopping list loads
   useEffect(() => {
     setTimeout(() => {
-      const event = new CustomEvent("walkthrough:event", {
-        detail: { testId: "shopping-list-opened", event: "opened" },
-      });
-      window.dispatchEvent(event);
-    }, 500);
-    // Start walkthrough if the page is for a Copilot feature
-    startWalkthrough("shopping-list");
-  }, [startWalkthrough]);
+      dispatchWalkthroughCompletion('shoppingList:viewed');
+    }, 1000);
+  }, []);
 
   // Extract "from" query parameter once on mount
   const [fromSlug, setFromSlug] = useState<string>(() => {

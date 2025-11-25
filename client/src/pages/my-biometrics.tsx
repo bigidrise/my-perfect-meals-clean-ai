@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import OpenAI from "openai";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 // ============================== CONFIG ==============================
 const SYNC_ENDPOINT = ""; // optional API endpoint; if set, we POST after local save
@@ -673,13 +674,8 @@ export default function MyBiometrics() {
         toast({ title: "✓ Weight saved", description: "Your weight has been saved successfully." });
       }
       
-      // Dispatch "done" event after successfully saving weight (500ms debounce)
-      setTimeout(() => {
-        const event = new CustomEvent("walkthrough:event", {
-          detail: { testId: "biometrics-weight-saved", event: "done" },
-        });
-        window.dispatchEvent(event);
-      }, 500);
+      // Dispatch completion event for multi-page walkthrough flow
+      dispatchWalkthroughCompletion('biometrics:weightSaved');
     } catch (error) {
       console.error("Error saving weight:", error);
       toast({ 
@@ -1140,7 +1136,7 @@ export default function MyBiometrics() {
                   <Input inputMode="decimal" className="bg-black/20 border-white/20 text-white" value={waistIn} onChange={e=>setWaistIn(e.target.value)} data-testid="input-waist" />
                 </div>
               </div>
-              <Button data-testid="biometrics-save-weight-button" onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2">Save Weight</Button>
+              <Button id="save-weight-button" data-testid="biometrics-save-weight-button" data-walkthrough="save-weight" onClick={saveWeight} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 mb-2">Save Weight</Button>
               <ReadOnlyNote>
                 Track your weight progress here over time. Your weight data automatically syncs with the <strong>Macro Calculator</strong>.
               </ReadOnlyNote>

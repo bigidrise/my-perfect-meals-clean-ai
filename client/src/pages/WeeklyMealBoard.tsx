@@ -37,6 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { useCopilot } from "@/components/copilot/CopilotContext";
+import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -121,6 +122,9 @@ export default function WeeklyMealBoard() {
       await saveToHook(updatedBoard as any, uuidv4());
       setJustSaved(true);
       setTimeout(() => setJustSaved(false), 2000);
+      
+      // Dispatch completion event for multi-page walkthrough flow
+      dispatchWalkthroughCompletion('mealBuilder:planGenerated');
     } catch (err) {
       console.error("Failed to save board:", err);
       toast({ title: "Save failed", description: "Changes will retry when you're online", variant: "destructive" });
