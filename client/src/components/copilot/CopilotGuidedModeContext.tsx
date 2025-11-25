@@ -12,12 +12,13 @@ interface CopilotGuidedModeContextValue {
 const CopilotGuidedModeContext = createContext<CopilotGuidedModeContextValue | null>(null);
 
 function getStoredGuidedMode(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') return true;
   try {
     const saved = localStorage.getItem(GUIDED_MODE_KEY);
+    if (saved === null) return true;
     return saved === 'true';
   } catch {
-    return false;
+    return true;
   }
 }
 
@@ -31,7 +32,7 @@ function setStoredGuidedMode(enabled: boolean): void {
 }
 
 export function CopilotGuidedModeProvider({ children }: { children: React.ReactNode }) {
-  const [isGuidedModeEnabled, setIsGuidedModeEnabled] = useState<boolean>(false);
+  const [isGuidedModeEnabled, setIsGuidedModeEnabled] = useState<boolean>(true);
 
   useEffect(() => {
     setIsGuidedModeEnabled(getStoredGuidedMode());
