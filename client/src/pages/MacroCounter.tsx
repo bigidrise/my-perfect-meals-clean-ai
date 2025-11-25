@@ -27,7 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { setMacroTargets } from "@/lib/dailyLimits";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCopilot } from "@/components/copilot/CopilotContext";
+import { startSimpleWalkthrough } from "@/components/copilot/simple-walkthrough/simpleWalkthroughHelper";
 
 type Goal = "loss" | "maint" | "gain";
 type Sex = "male" | "female";
@@ -210,7 +210,6 @@ export default function MacroCounter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { startWalkthrough } = useCopilot();
   const [isSaving, setIsSaving] = useState(false);
 
   // Load calculator settings from localStorage
@@ -263,22 +262,35 @@ export default function MacroCounter() {
     savedSettings?.sugarCapMode ?? "AHA",
   );
 
-  // Dispatch "opened" event on page mount
+  // Start simple walkthrough on page mount
   useEffect(() => {
-    // Use setTimeout to ensure Copilot is initialized before sending event
     const timer = setTimeout(() => {
-      const event = new CustomEvent("walkthrough:event", {
-        detail: { testId: "macro-calculator-opened", event: "opened" },
-      });
-      window.dispatchEvent(event);
-
-      // Start the walkthrough if auto-start is enabled
-      if (localStorage.getItem("coachMode") === "guided") {
-        startWalkthrough("macro-calculator");
-      }
-    }, 500);
+      // Start the new simple walkthrough system
+      startSimpleWalkthrough('macro-calculator', [
+        {
+          selector: '#goal-card',
+          text: 'Pick your fitness goal - weight loss, maintenance, or muscle gain',
+          showArrow: true
+        },
+        {
+          selector: '#bodytype-card',
+          text: 'Pick your body type - ectomorph burns fast, mesomorph is balanced, endomorph holds weight',
+          showArrow: true
+        },
+        {
+          selector: '#details-card',
+          text: 'Enter your stats - age, height, weight, and activity level',
+          showArrow: true
+        },
+        {
+          selector: '#set-targets-button',
+          text: 'Tap here to save your personalized macros',
+          showArrow: true
+        }
+      ]);
+    }, 1000); // Wait 1 second for page to fully load
     return () => clearTimeout(timer);
-  }, [startWalkthrough]);
+  }, []);
 
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change
@@ -843,7 +855,6 @@ export default function MacroCounter() {
               <div className="flex justify-center">
                 <Button
                   data-testid="macro-calc-button"
-                  id="calc-button"
                   disabled={isSaving}
                   onClick={async () => {
                     // Dispatch "interacted" event
@@ -891,6 +902,7 @@ export default function MacroCounter() {
                       setIsSaving(false);
                     }
                   }}
+                  id="set-targets-button"
                   className="bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white font-bold px-8 text-lg py-3 shadow-2xl hover:shadow-lime-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Target className="h-5 w-5 mr-2" />

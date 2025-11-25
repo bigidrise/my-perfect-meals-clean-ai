@@ -5,7 +5,7 @@ const MacroCalculatorWalkthroughScript: WalkthroughScript = {
   id: "macro-calculator-walkthrough",
   featureId: "MACRO_CALCULATOR",
   title: "Macro Calculator",
-  uiReady: true, // ✅ ACTIVATED: Phase C.8 complete - all anchors + events wired (Nov 24 2025)
+  uiReady: false, // ❌ DISABLED: Replaced with Simple Walkthrough System (Nov 25 2025)
   steps: [
     {
       id: "intro",
