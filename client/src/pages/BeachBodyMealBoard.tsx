@@ -170,6 +170,10 @@ export default function BeachBodyMealBoard() {
   // Snack Picker state
   const [snackPickerOpen, setSnackPickerOpen] = useState(false);
 
+  // AI Premade Picker state (competition meals)
+  const [premadePickerOpen, setPremadePickerOpen] = useState(false);
+  const [premadePickerSlot, setPremadePickerSlot] = useState<"breakfast" | "lunch" | "dinner" | "snacks">("breakfast");
+
   // Guided Tour state
   const [hasSeenInfo, setHasSeenInfo] = useState(false);
   const [tourStep, setTourStep] = useState<"breakfast" | "lunch" | "dinner" | "snacks" | "complete">("breakfast");
@@ -187,7 +191,7 @@ export default function BeachBodyMealBoard() {
     meal: any | null;
   }>({ isOpen: false, meal: null });
 
-  // Dynamic meal tracking (Meal 6+)
+  // Dynamic meal slot tracking (Meal 4+) - simple counter approach like Competition Builder
   const [dynamicMealCount, setDynamicMealCount] = useState(0);
 
   // Add a new dynamic meal slot
@@ -195,9 +199,114 @@ export default function BeachBodyMealBoard() {
     setDynamicMealCount(prev => prev + 1);
     toast({
       title: "Meal Slot Added",
-      description: `Meal ${6 + dynamicMealCount} is ready to use`,
+      description: `Meal ${4 + dynamicMealCount} is ready to use`,
     });
   }, [dynamicMealCount, toast]);
+
+  // Remove a dynamic meal slot and clean up board data
+  const handleRemoveMealSlot = useCallback(async (mealNumber: number) => {
+    if (!board) return;
+
+    try {
+      const slotPrefix = `bb-dyn-${mealNumber}-`;
+      
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        // DAY MODE: Remove meals from day-specific lists
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          snacks: dayLists.snacks.filter((m: Meal) => !m.id.startsWith(slotPrefix))
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        // WEEK MODE: Remove meals from global snacks list
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            snacks: board.lists.snacks.filter((m: Meal) => !m.id.startsWith(slotPrefix))
+          }
+        };
+        await saveBoard(updatedBoard);
+      }
+
+      // Decrement counter if removing the highest slot
+      setDynamicMealCount(prev => Math.max(0, prev - 1));
+
+      toast({
+        title: "Meal Slot Removed",
+        description: `Meal ${mealNumber} has been deleted`,
+      });
+    } catch (err) {
+      console.error("Failed to remove meal slot:", err);
+      toast({
+        title: "Error",
+        description: "Failed to remove meal slot",
+        variant: "destructive",
+      });
+    }
+  }, [board, planningMode, activeDayISO, saveBoard, toast]);
+
+  // Track current dynamic slot for meal additions
+  const [currentDynamicSlot, setCurrentDynamicSlot] = useState<number | null>(null);
+
+  // Open premade picker for a specific slot
+  const handleOpenPremadePicker = useCallback((slot: "breakfast" | "lunch" | "dinner" | "snacks", dynamicSlotNumber?: number) => {
+    setPremadePickerSlot(slot);
+    setCurrentDynamicSlot(dynamicSlotNumber || null);
+    setPremadePickerOpen(true);
+  }, []);
+
+  // Handle premade meal selection
+  const handlePremadeSelect = useCallback(async (meal: Meal) => {
+    if (!board) return;
+    
+    try {
+      // Generate proper ID with dynamic slot prefix if applicable
+      const mealId = currentDynamicSlot 
+        ? `bb-dyn-${currentDynamicSlot}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+        : meal.id || `premade-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      const mealWithId = {
+        ...meal,
+        id: mealId,
+      };
+
+      if (FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO) {
+        const dayLists = getDayLists(board, activeDayISO);
+        const updatedDayLists = {
+          ...dayLists,
+          [premadePickerSlot]: [...dayLists[premadePickerSlot], mealWithId]
+        };
+        const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+        await saveBoard(updatedBoard);
+      } else {
+        const updatedBoard = {
+          ...board,
+          lists: {
+            ...board.lists,
+            [premadePickerSlot]: [...board.lists[premadePickerSlot], mealWithId]
+          }
+        };
+        await saveBoard(updatedBoard);
+      }
+
+      toast({
+        title: "Meal Added",
+        description: `${meal.title || meal.name} added to your plan`,
+      });
+      setPremadePickerOpen(false);
+      setCurrentDynamicSlot(null);
+    } catch (err) {
+      console.error("Failed to add premade meal:", err);
+      toast({
+        title: "Error",
+        description: "Failed to add meal",
+        variant: "destructive",
+      });
+    }
+  }, [board, planningMode, activeDayISO, premadePickerSlot, currentDynamicSlot, saveBoard, toast]);
 
   // Macro Fix Coach state
   const [fixOpen, setFixOpen] = useState(false);
@@ -924,97 +1033,280 @@ export default function BeachBodyMealBoard() {
         </div>
       </div>
 
-      {/* Meal Cards Grid - 5 meal cards for Beach Body board */}
+      {/* Meal Cards Grid - Meals 1-3 fixed + dynamic meals */}
       <div className="max-w-[1600px] mx-auto px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-6">
         {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board ? (
           (() => {
             const dayLists = getDayLists(board, activeDayISO);
-            // Use beachBodyLists to include Meal 5
-            return beachBodyLists.map(([key, label]) => (
-              <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-white/90 text-lg font-medium">{label}</h2>
-                  <div className="flex gap-2">
-                    {/* AI Meal Creator button for breakfast/lunch/dinner, Snack Picker for snacks */}
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                      onClick={() => {
-                        if (key === "snacks") {
-                          // Open dedicated Snack Picker
-                          setSnackPickerOpen(true);
-                        } else {
-                          // Open AI Meal Creator for meals
-                          setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
-                          setAiMealModalOpen(true);
-                        }
-                      }}
-                      data-wt="wmb-create-ai-button"
-                    >
-                      <Sparkles className="h-3 w-3" />
-                      Create with AI
-                    </Button>
+            
+            return (
+              <>
+                {/* Fixed Meals 1-3 */}
+                {lists.map(([key, label]) => (
+                  <section key={key} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-white/90 text-lg font-medium">{label}</h2>
+                      <div className="flex gap-2">
+                        {/* Create with AI button */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                          onClick={() => {
+                            setAiMealSlot(key as "breakfast" | "lunch" | "dinner" | "snacks");
+                            setAiMealModalOpen(true);
+                          }}
+                          data-wt="wmb-create-ai-button"
+                        >
+                          <Sparkles className="h-3 w-3" />
+                          Create with AI
+                        </Button>
 
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-white/80 hover:bg-white/10"
-                      onClick={() => openManualModal(key)}
-                      data-wt="wmb-add-custom-button"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+                        {/* AI Premades button */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-white/80 hover:bg-black/50 border border-emerald-400/30 text-xs font-medium flex items-center gap-1"
+                          onClick={() => handleOpenPremadePicker(key)}
+                        >
+                          <ChefHat className="h-3 w-3" />
+                          AI Premades
+                        </Button>
 
-                <div className="space-y-3">
-                  {dayLists[key as keyof typeof dayLists].map((meal: Meal, idx: number) => (
-                    <MealCard
-                      key={meal.id}
-                      date={activeDayISO}
-                      slot={key}
-                      meal={meal}
-                      data-wt="wmb-meal-card"
-                      onUpdated={(m) => {
-                        if (m === null) {
-                          if (meal.id.startsWith('ai-meal-')) {
-                            clearAIMealsCache();
-                          }
-
-                          const updatedDayLists = {
-                            ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) =>
-                              existingMeal.id !== meal.id
-                            )
-                          };
-                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          saveBoard(updatedBoard)
-                            .catch((err) => {
-                              console.error("Delete failed:", err);
-                            });
-                        } else {
-                          const updatedDayLists = {
-                            ...dayLists,
-                            [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) =>
-                              i === idx ? m : existingMeal
-                            )
-                          };
-                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          saveBoard(updatedBoard);
-                        }
-                      }}
-                    />
-                  ))}
-                  {dayLists[key as keyof typeof dayLists].length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
-                      <p className="mb-2">No {label.toLowerCase()} meals yet</p>
-                      <p className="text-xs text-white/40">Use "+" to add meals</p>
+                        {/* Manual entry button */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-white/80 hover:bg-white/10"
+                          onClick={() => openManualModal(key)}
+                          data-wt="wmb-add-custom-button"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </section>
-            ));
+
+                    <div className="space-y-3">
+                      {dayLists[key as keyof typeof dayLists].map((meal: Meal, idx: number) => (
+                        <MealCard
+                          key={meal.id}
+                          date={activeDayISO}
+                          slot={key}
+                          meal={meal}
+                          data-wt="wmb-meal-card"
+                          onUpdated={(m) => {
+                            if (m === null) {
+                              if (meal.id.startsWith('ai-meal-')) {
+                                clearAIMealsCache();
+                              }
+
+                              const updatedDayLists = {
+                                ...dayLists,
+                                [key]: dayLists[key as keyof typeof dayLists].filter((existingMeal) =>
+                                  existingMeal.id !== meal.id
+                                )
+                              };
+                              const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                              saveBoard(updatedBoard)
+                                .catch((err) => {
+                                  console.error("Delete failed:", err);
+                                });
+                            } else {
+                              const updatedDayLists = {
+                                ...dayLists,
+                                [key]: dayLists[key as keyof typeof dayLists].map((existingMeal, i) =>
+                                  i === idx ? m : existingMeal
+                                )
+                              };
+                              const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                              saveBoard(updatedBoard);
+                            }
+                          }}
+                        />
+                      ))}
+                      {dayLists[key as keyof typeof dayLists].length === 0 && (
+                        <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                          <p className="mb-2">No {label.toLowerCase()} meals yet</p>
+                          <p className="text-xs text-white/40">Use "+" to add meals</p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                ))}
+
+                {/* Dynamic Meal Slots (Meal 4+) */}
+                {Array.from({ length: dynamicMealCount }, (_, i) => {
+                  const mealNumber = 4 + i;
+                  return (
+                    <section key={`dyn-${mealNumber}`} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
+                        <div className="flex gap-2">
+                          {/* Create with AI */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
+                            onClick={() => {
+                              setCurrentDynamicSlot(mealNumber);
+                              setAiMealSlot("snacks");
+                              setAiMealModalOpen(true);
+                            }}
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            Create with AI
+                          </Button>
+
+                          {/* AI Premades */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/80 hover:bg-black/50 border border-emerald-400/30 text-xs font-medium flex items-center gap-1"
+                            onClick={() => handleOpenPremadePicker("snacks", mealNumber)}
+                          >
+                            <ChefHat className="h-3 w-3" />
+                            AI Premades
+                          </Button>
+
+                          {/* Manual entry */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-white/80 hover:bg-white/10"
+                            onClick={() => {
+                              setCurrentDynamicSlot(mealNumber);
+                              openManualModal("snacks");
+                            }}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+
+                          {/* Delete slot */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                            onClick={() => handleRemoveMealSlot(mealNumber)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`bb-dyn-${mealNumber}-`)).map((meal: Meal, idx: number) => (
+                          <MealCard
+                            key={meal.id}
+                            date={activeDayISO}
+                            slot="snacks"
+                            meal={meal}
+                            onUpdated={(m) => {
+                              if (m === null) {
+                                const updatedDayLists = {
+                                  ...dayLists,
+                                  snacks: dayLists.snacks.filter((existingMeal: Meal) => existingMeal.id !== meal.id)
+                                };
+                                const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                                saveBoard(updatedBoard);
+                              } else {
+                                const updatedDayLists = {
+                                  ...dayLists,
+                                  snacks: dayLists.snacks.map((existingMeal: Meal) =>
+                                    existingMeal.id === meal.id ? m : existingMeal
+                                  )
+                                };
+                                const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                                saveBoard(updatedBoard);
+                              }
+                            }}
+                          />
+                        ))}
+                        {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`bb-dyn-${mealNumber}-`)).length === 0 && (
+                          <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                            <p className="mb-2">No meals yet</p>
+                            <p className="text-xs text-white/40">Use buttons above to add meals</p>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  );
+                })}
+
+                {/* Snacks Section */}
+                <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-white/90 text-lg font-medium">Snacks</h2>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/80 hover:bg-black/50 border border-amber-400/30 text-xs font-medium flex items-center gap-1"
+                        onClick={() => setSnackPickerOpen(true)}
+                      >
+                        <ChefHat className="h-3 w-3" />
+                        Pick Snacks
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-white/80 hover:bg-white/10"
+                        onClick={() => openManualModal("snacks")}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith("bb-dyn-")).map((meal: Meal, idx: number) => (
+                      <MealCard
+                        key={meal.id}
+                        date={activeDayISO}
+                        slot="snacks"
+                        meal={meal}
+                        onUpdated={(m) => {
+                          if (m === null) {
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.filter((existingMeal: Meal) => existingMeal.id !== meal.id)
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard);
+                          } else {
+                            const updatedDayLists = {
+                              ...dayLists,
+                              snacks: dayLists.snacks.map((existingMeal: Meal) =>
+                                existingMeal.id === meal.id ? m : existingMeal
+                              )
+                            };
+                            const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
+                            saveBoard(updatedBoard);
+                          }
+                        }}
+                      />
+                    ))}
+                    {dayLists.snacks.filter((m: Meal) => !m.id.startsWith("bb-dyn-")).length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
+                        <p className="mb-2">No snacks yet</p>
+                        <p className="text-xs text-white/40">Use "Pick Snacks" to add</p>
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                {/* Add Meal Button */}
+                <section className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/20 backdrop-blur p-4 flex items-center justify-center min-h-[120px]">
+                  <Button
+                    variant="ghost"
+                    className="text-white/60 hover:text-white hover:bg-white/10 flex flex-col items-center gap-2 py-6"
+                    onClick={handleAddMealSlot}
+                  >
+                    <Plus className="h-8 w-8" />
+                    <span className="text-sm">Add Meal {4 + dynamicMealCount}</span>
+                  </Button>
+                </section>
+              </>
+            );
           })()
         ) : (
           // This part renders the meals for the entire week if not in 'day' planning mode
@@ -1110,14 +1402,14 @@ export default function BeachBodyMealBoard() {
           ))
         )}
 
-          {/* Add Meal Button */}
+          {/* Add Meal Button - WEEK MODE */}
           <div className="col-span-full flex justify-center my-4">
             <Button
               onClick={handleAddMealSlot}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
             >
               <Plus className="h-5 w-5" />
-              Add Meal {6 + dynamicMealCount}
+              Add Meal {getNextMealNumber()}
             </Button>
           </div>
 
@@ -1284,79 +1576,6 @@ export default function BeachBodyMealBoard() {
               </div>
             )}
 
-          {/* Dynamic Meal Cards (Meal 6+) - Day Mode */}
-          {FEATURES.dayPlanning === 'alpha' && planningMode === 'day' && activeDayISO && board && Array.from({ length: dynamicMealCount }, (_, i) => {
-            const mealNumber = 6 + i;
-            const dayLists = getDayLists(board, activeDayISO);
-            return (
-              <section key={`dynamic-meal-${mealNumber}`} className="rounded-2xl border border-emerald-800 bg-emerald-950/40 backdrop-blur p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-white/80 hover:bg-black/50 border border-pink-400/30 text-xs font-medium flex items-center gap-1 flash-border"
-                      onClick={() => {
-                        setAiMealSlot("snacks");
-                        setAiMealModalOpen(true);
-                      }}
-                    >
-                      <Sparkles className="h-3 w-3" />
-                      Create with AI
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-white/80 hover:bg-white/10"
-                      onClick={() => openManualModal("snacks")}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`dyn-${mealNumber}-`)).map((meal: Meal) => (
-                    <MealCard
-                      key={meal.id}
-                      date={activeDayISO}
-                      slot="snacks"
-                      meal={meal}
-                      onUpdated={(m) => {
-                        if (m === null) {
-                          const updatedDayLists = {
-                            ...dayLists,
-                            snacks: dayLists.snacks.filter((existingMeal) =>
-                              existingMeal.id !== meal.id
-                            )
-                          };
-                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          saveBoard(updatedBoard);
-                        } else {
-                          const updatedDayLists = {
-                            ...dayLists,
-                            snacks: dayLists.snacks.map((existingMeal) =>
-                              existingMeal.id === meal.id ? m : existingMeal
-                            )
-                          };
-                          const updatedBoard = setDayLists(board, activeDayISO, updatedDayLists);
-                          saveBoard(updatedBoard);
-                        }
-                      }}
-                    />
-                  ))}
-                  {dayLists.snacks.filter((m: Meal) => m.id.startsWith(`dyn-${mealNumber}-`)).length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-zinc-700 text-white/50 p-6 text-center text-sm">
-                      <p className="mb-2">No Meal {mealNumber} yet</p>
-                      <p className="text-xs text-white/40">Use "+" to add meals</p>
-                    </div>
-                  )}
-                </div>
-              </section>
-            );
-          })}
 
           <div className="col-span-full">
             <MacroFixCoach
@@ -1451,6 +1670,19 @@ export default function BeachBodyMealBoard() {
         mealSlot={aiMealSlot}
         showMacroTargeting={false}
         beachBodyMode={true}
+      />
+
+      {/* AI Premade Picker - Competition Meals */}
+      <MealPremadePicker
+        open={premadePickerOpen}
+        onClose={() => {
+          setPremadePickerOpen(false);
+          setCurrentDynamicSlot(null);
+        }}
+        mealType={premadePickerSlot}
+        onMealSelect={handlePremadeSelect}
+        showMacroTargeting={false}
+        dietType="competition"
       />
 
       <QuickAddMacrosModal
