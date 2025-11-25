@@ -154,20 +154,25 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
           </motion.div>
         )}
 
-        {/* Optional step text */}
-        {text && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="absolute pointer-events-none bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm max-w-xs"
-            style={{
-              top: targetRect.bottom + 12,
-              left: Math.max(12, Math.min(targetRect.left, window.innerWidth - 300)),
-            }}
+        {/* Step text with Next button */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute bg-blue-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-xs"
+          style={{
+            top: targetRect.bottom + 12,
+            left: Math.max(12, Math.min(targetRect.left, window.innerWidth - 280)),
+            pointerEvents: "auto",
+          }}
+        >
+          {text && <p className="mb-2">{text}</p>}
+          <button
+            onClick={onTap}
+            className="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded-md hover:bg-blue-50 transition-colors"
           >
-            {text}
-          </motion.div>
-        )}
+            Next →
+          </button>
+        </motion.div>
       </motion.div>
     </AnimatePresence>,
     document.body
