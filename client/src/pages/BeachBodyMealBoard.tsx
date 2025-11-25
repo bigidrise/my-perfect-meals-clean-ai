@@ -15,6 +15,7 @@ import {
 import { ManualMealModal } from "@/components/pickers/ManualMealModal";
 import { AthleteMealPickerDrawer } from "@/components/pickers/AthleteMealPickerDrawer";
 import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
+import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import { MacroBridgeFooter } from "@/components/biometrics/MacroBridgeFooter";
 import WeeklyOverviewModal from "@/components/WeeklyOverviewModal";
@@ -37,6 +38,8 @@ import {
   ChevronRight,
   Copy,
   Info,
+  Trash2,
+  ChefHat,
 } from "lucide-react";
 import { FEATURES } from "@/utils/features";
 import { DayWeekToggle } from "@/components/DayWeekToggle";
@@ -78,18 +81,11 @@ function formatWeekLabel(weekStartISO: string): string {
   return `${fmt(start)}–${fmt(end)}`;
 }
 
-// Meal Slots
+// Fixed Meal Slots (Meals 1-3 only, dynamic meals 4+ handled separately)
 const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
   ["breakfast","Meal 1"],
   ["lunch","Meal 2"],
   ["dinner","Meal 3"],
-  ["snacks","Meal 4"]
-];
-
-// Add Meal 5 to the lists for Beach Body Meal Board
-const beachBodyLists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
-  ...lists,
-  ["breakfast", "Meal 5"] // Adding Meal 5 for breakfast slot, adjust if a different slot is intended
 ];
 
 
