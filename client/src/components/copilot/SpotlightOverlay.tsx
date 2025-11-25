@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { WalkthroughControls } from "./walkthrough/WalkthroughControls";
+import { walkthroughEngine } from "./walkthrough/WalkthroughScriptEngine";
 
 export interface SpotlightStep {
   target: string; // CSS selector or data attribute
@@ -118,7 +120,7 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[9999] pointer-events-none"
         style={{
-          background: "rgba(0, 0, 0, 0.7)",
+          background: "rgba(0, 0, 0, 0.45)",
         }}
       >
         {/* Exit button */}
@@ -165,16 +167,12 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
                 {currentStep.instruction}
               </p>
 
-              {showManualAdvance && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onClick={onAdvance}
-                  className="w-full py-2 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium"
-                >
-                  Next →
-                </motion.button>
-              )}
+              {/* Manual navigation controls - always visible for reliability */}
+              <WalkthroughControls
+                canGoPrevious={walkthroughEngine.getState().canGoPrevious}
+                canGoNext={walkthroughEngine.getState().canGoNext}
+                onNext={onAdvance}
+              />
             </div>
           </motion.div>
         </div>

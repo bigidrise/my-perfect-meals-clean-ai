@@ -10,55 +10,44 @@ import { convertToSpotlightStep } from "./WalkthroughEngine";
 import { CopilotInputBar } from "./CopilotInputBar";
 import { isLikelyMisheard } from "./query/QueryProcessor";
 import { startCopilotIntro } from "./CopilotCommandRegistry";
+import { ttsService } from "@/lib/tts";
 
 export const CopilotSheet: React.FC = () => {
   const { isOpen, close, mode, setMode, lastResponse, suggestions, runAction, setLastResponse, needsRetry, setNeedsRetry } = useCopilot();
   const { toast } = useToast();
 
   // =========================================
-  // AUDIO (ElevenLabs) - with lifecycle management + mobile handling
+  // AUDIO - Visual-First with Graceful Degradation
+  // ElevenLabs → Browser SpeechSynthesis → Silent Mode
+  // Apple App Store Ready - Works 100% offline
   // =========================================
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!lastResponse?.spokenText) return;
 
     const speak = async () => {
       try {
-        // Abort any in-flight TTS requests
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
+        // Use TTS service with automatic fallback
+        const result = await ttsService.speak(lastResponse.spokenText);
+
+        // If we got ElevenLabs audio, set it up for playback
+        if (result.audioUrl) {
+          setAudioUrl(prevUrl => {
+            if (prevUrl) {
+              URL.revokeObjectURL(prevUrl);
+            }
+            return result.audioUrl!;
+          });
         }
-
-        abortControllerRef.current = new AbortController();
-
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: lastResponse.spokenText }),
-          signal: abortControllerRef.current.signal,
-        });
-
-        if (!res.ok) throw new Error("TTS failed");
-
-        const buf = await res.arrayBuffer();
-        const blob = new Blob([buf], { type: "audio/mpeg" });
-        const url = URL.createObjectURL(blob);
         
-        // Revoke previous URL when setting new one
-        setAudioUrl(prevUrl => {
-          if (prevUrl) {
-            URL.revokeObjectURL(prevUrl);
-          }
-          return url;
-        });
+        // Browser speech happens automatically in ttsService.speak()
+        // No need to handle it here - it's already playing
       } catch (err: any) {
-        if (err.name !== 'AbortError') {
-          console.error("TTS error:", err);
-        }
+        console.error("TTS error:", err);
+        // Silent mode - continue without audio
       }
     };
 
@@ -66,9 +55,7 @@ export const CopilotSheet: React.FC = () => {
 
     // Cleanup on unmount or response change
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      ttsService.stop();
       if (audioRef.current) {
         audioRef.current.pause();
       }
