@@ -119,9 +119,9 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
             left: cutout.left,
             width: cutout.width,
             height: cutout.height,
-            boxShadow: "0 0 20px 4px rgba(59, 130, 246, 0.6)",
+            boxShadow: "0 0 20px 4px rgba(249, 115, 22, 0.6)",
             borderRadius: "12px",
-            border: "3px solid rgba(59, 130, 246, 0.9)",
+            border: "3px solid rgba(249, 115, 22, 0.9)",
           }}
         />
 
@@ -145,7 +145,7 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
               <path
                 d="M15 5 L15 25 M15 25 L10 20 M15 25 L20 20"
-                stroke="rgba(59, 130, 246, 0.9)"
+                stroke="rgba(249, 115, 22, 0.9)"
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -154,21 +154,27 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
           </motion.div>
         )}
 
-        {/* Step text with Next button */}
+        {/* Step text with Next button - Orange/Black gradient */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bg-blue-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-xs"
+          className="absolute text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-xs"
           style={{
             top: targetRect.bottom + 12,
             left: Math.max(12, Math.min(targetRect.left, window.innerWidth - 280)),
             pointerEvents: "auto",
+            background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #f97316 100%)",
+            border: "1px solid rgba(249, 115, 22, 0.5)",
           }}
         >
           {text && <p className="mb-2">{text}</p>}
           <button
             onClick={onTap}
-            className="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded-md hover:bg-blue-50 transition-colors"
+            className="w-full font-semibold py-2 px-4 rounded-md transition-colors"
+            style={{
+              background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+              color: "white",
+            }}
           >
             Next →
           </button>
