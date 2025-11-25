@@ -45,6 +45,7 @@ export interface WalkthroughState {
 export type WalkthroughEventType = 
   | "started"
   | "step_changed"
+  | "step_ready"
   | "completed"
   | "cancelled"
   | "error";

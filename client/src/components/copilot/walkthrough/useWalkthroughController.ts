@@ -23,9 +23,12 @@ export function useWalkthroughController() {
       // Update state
       setState(walkthroughEngine.getState());
 
-      // Update spotlight step
-      if (event.type === "step_changed" || event.type === "started") {
+      // Update spotlight step only when step is ready (element found)
+      if (event.type === "step_ready") {
         updateSpotlightStep();
+      } else if (event.type === "started" || event.type === "step_changed") {
+        // Clear spotlight until step_ready fires
+        setCurrentSpotlightStep(null);
       } else if (event.type === "completed" || event.type === "cancelled") {
         setCurrentSpotlightStep(null);
       }

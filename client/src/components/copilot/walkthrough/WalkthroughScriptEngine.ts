@@ -229,9 +229,9 @@ export class WalkthroughScriptEngine {
 
       this.currentElement = element;
 
-      // Emit step_changed event after element is found so UI can update
+      // Emit step_ready event now that element is found
       this.emitEvent({
-        type: "step_changed",
+        type: "step_ready",
         scriptId: this.script!.id,
         stepIndex: this.currentStepIndex,
       });
