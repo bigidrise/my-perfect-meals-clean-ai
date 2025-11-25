@@ -26,10 +26,13 @@ export const CopilotSheet: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (!lastResponse?.spokenText) return;
+    // Only run TTS in browser context (skip SSR/tests)
+    if (typeof window === 'undefined' || !lastResponse?.spokenText) return;
 
     const speak = async () => {
       try {
+        if (!lastResponse.spokenText) return;
+        
         // Use TTS service with automatic fallback
         const result = await ttsService.speak(lastResponse.spokenText);
 

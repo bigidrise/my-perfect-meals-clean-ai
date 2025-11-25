@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { WalkthroughControls } from "./walkthrough/WalkthroughControls";
-import { walkthroughEngine } from "./walkthrough/WalkthroughScriptEngine";
 
 export interface SpotlightStep {
   target: string; // CSS selector or data attribute
@@ -15,16 +14,22 @@ interface SpotlightOverlayProps {
   currentStep: SpotlightStep | null;
   onAdvance: () => void;
   onExit: () => void;
+  canGoPrevious: boolean;
+  canGoNext: boolean;
+  onPrevious: () => void;
+  onSkip?: () => void;
 }
 
 export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
   currentStep,
   onAdvance,
   onExit,
+  canGoPrevious,
+  canGoNext,
+  onPrevious,
+  onSkip,
 }) => {
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-  const [showManualAdvance, setShowManualAdvance] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   // Update spotlight position when target element changes
@@ -93,22 +98,6 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
     };
   }, [currentStep, targetRect, onAdvance]);
 
-  // Show manual advance button after 10 seconds
-  useEffect(() => {
-    setShowManualAdvance(false);
-
-    if (currentStep) {
-      timeoutRef.current = setTimeout(() => {
-        setShowManualAdvance(true);
-      }, 10000);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentStep]);
 
   if (!currentStep) return null;
 
@@ -149,7 +138,6 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
               boxShadow:
                 "0 0 0 4px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.6)",
               background: "transparent",
-              animation: showManualAdvance ? "pulse 2s infinite" : "none",
             }}
           />
         )}
@@ -167,11 +155,13 @@ export const SpotlightOverlay: React.FC<SpotlightOverlayProps> = ({
                 {currentStep.instruction}
               </p>
 
-              {/* Manual navigation controls - always visible for reliability */}
+              {/* Manual navigation controls - always visible for Apple App Store reliability */}
               <WalkthroughControls
-                canGoPrevious={walkthroughEngine.getState().canGoPrevious}
-                canGoNext={walkthroughEngine.getState().canGoNext}
+                canGoPrevious={canGoPrevious}
+                canGoNext={canGoNext}
+                onPrevious={onPrevious}
                 onNext={onAdvance}
+                onSkip={onSkip}
               />
             </div>
           </motion.div>

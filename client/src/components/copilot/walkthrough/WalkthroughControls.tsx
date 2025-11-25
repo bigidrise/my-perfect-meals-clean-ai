@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
-import { walkthroughEngine } from "./WalkthroughScriptEngine";
 
 interface WalkthroughControlsProps {
   canGoPrevious: boolean;
   canGoNext: boolean;
-  onPrevious?: () => void;
-  onNext?: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
   onSkip?: () => void;
 }
 
 /**
  * Manual navigation controls for walkthrough
  * Ensures users can always advance even if automation fails
+ * Apple App Store Ready - Always accessible
  */
 export function WalkthroughControls({
   canGoPrevious,
@@ -26,7 +26,7 @@ export function WalkthroughControls({
       <Button
         variant="outline"
         size="sm"
-        onClick={onPrevious || (() => walkthroughEngine.previous())}
+        onClick={onPrevious}
         disabled={!canGoPrevious}
         className="bg-black/40 backdrop-blur-sm border-white/20 text-white hover:bg-black/60"
       >
@@ -37,7 +37,7 @@ export function WalkthroughControls({
       <Button
         variant="outline"
         size="sm"
-        onClick={onNext || (() => walkthroughEngine.next())}
+        onClick={onNext}
         disabled={!canGoNext}
         className="bg-black/40 backdrop-blur-sm border-white/20 text-white hover:bg-black/60"
       >
@@ -45,15 +45,17 @@ export function WalkthroughControls({
         <ChevronRight className="w-4 h-4 ml-1" />
       </Button>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onSkip || (() => walkthroughEngine.skip())}
-        className="bg-black/40 backdrop-blur-sm border-white/20 text-white/70 hover:bg-black/60 hover:text-white"
-      >
-        <SkipForward className="w-4 h-4 mr-1" />
-        Skip
-      </Button>
+      {onSkip && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onSkip}
+          className="bg-black/40 backdrop-blur-sm border-white/20 text-white/70 hover:bg-black/60 hover:text-white"
+        >
+          <SkipForward className="w-4 h-4 mr-1" />
+          Skip
+        </Button>
+      )}
     </div>
   );
 }

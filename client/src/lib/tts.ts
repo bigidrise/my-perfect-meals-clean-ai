@@ -3,6 +3,7 @@
  * ElevenLabs → Browser SpeechSynthesis → Silent Mode
  * 
  * Apple App Store Ready - Works 100% offline
+ * SSR/Test Safe - Guards all browser APIs
  */
 
 type TTSProvider = 'elevenlabs' | 'browser' | 'silent';
@@ -13,6 +14,9 @@ interface TTSResult {
   success: boolean;
   error?: string;
 }
+
+// Browser API availability check
+const isBrowser = typeof window !== 'undefined';
 
 class TTSService {
   private failureCount = 0;
@@ -59,6 +63,10 @@ class TTSService {
    * Try ElevenLabs API
    */
   private async tryElevenLabs(text: string): Promise<TTSResult> {
+    if (!isBrowser || typeof fetch === 'undefined') {
+      return { provider: 'elevenlabs', success: false, error: 'Not in browser context' };
+    }
+
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
@@ -100,11 +108,11 @@ class TTSService {
    * Works offline, no cost, no rate limits
    */
   private async tryBrowserSpeech(text: string): Promise<TTSResult> {
-    try {
-      if (!('speechSynthesis' in window)) {
-        throw new Error('SpeechSynthesis not supported');
-      }
+    if (!isBrowser || !window.speechSynthesis) {
+      return { provider: 'browser', success: false, error: 'Not in browser context' };
+    }
 
+    try {
       // Cancel any ongoing speech
       window.speechSynthesis.cancel();
 
@@ -144,7 +152,7 @@ class TTSService {
    * Stop any ongoing speech
    */
   stop(): void {
-    if ('speechSynthesis' in window) {
+    if (isBrowser && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
   }

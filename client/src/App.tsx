@@ -31,32 +31,14 @@ import { OnboardingFooter } from "./components/OnboardingFooter";
 import { CopilotProvider } from "./components/copilot/CopilotContext";
 
 
-function AppContent() {
-  const { currentSpotlightStep, next, skip } = useWalkthroughController();
-
-  return (
-    <>
-      <ForcedUpdateModal />
-      <AppRouter />
-      <OnboardingFooter />
-      <CopilotSystem />
-      <MobileVoiceHandler />
-      <Toaster />
-      {currentSpotlightStep && (
-        <SpotlightOverlay
-          step={currentSpotlightStep}
-          onNext={next}
-          onSkip={skip}
-        />
-      )}
-    </>
-  );
-}
 
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const { versionState } = useVersionCheck();
   const [, setLocation] = useLocation();
+  
+  // Walkthrough controller for visual-first overlay system
+  const { currentSpotlightStep, state, next, previous, skip, cancel } = useWalkthroughController();
 
   useEffect(() => {
     setNavigationHandler((path) => {
@@ -147,6 +129,19 @@ export default function App() {
                 <VoiceConcierge />
                 <Toaster />
               </CopilotSystem>
+              
+              {/* Visual-First Walkthrough Overlay - Apple App Store Ready */}
+              {currentSpotlightStep && (
+                <SpotlightOverlay
+                  currentStep={currentSpotlightStep}
+                  onAdvance={next}
+                  onExit={cancel}
+                  canGoPrevious={state.canGoPrevious}
+                  canGoNext={state.canGoNext}
+                  onPrevious={previous}
+                  onSkip={skip}
+                />
+              )}
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>
