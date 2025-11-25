@@ -124,7 +124,8 @@ export default function CravingPresetsPage() {
             variant="ghost"
             className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
           </Button>
 
           {/* Title */}

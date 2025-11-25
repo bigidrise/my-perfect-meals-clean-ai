@@ -83,6 +83,7 @@ export default function CravingCreatorLanding() {
             data-testid="button-back-to-lifestyle"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
           </Button>
 
           {/* Title */}
