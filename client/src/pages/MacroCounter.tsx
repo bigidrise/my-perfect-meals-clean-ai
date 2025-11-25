@@ -288,7 +288,7 @@ export default function MacroCounter() {
           showArrow: true
         }
       ]);
-    }, 1000); // Wait 1 second for page to fully load
+    }, 3000); // Wait 3 seconds to let Copilot finish speaking before walkthrough starts
     return () => clearTimeout(timer);
   }, []);
 
