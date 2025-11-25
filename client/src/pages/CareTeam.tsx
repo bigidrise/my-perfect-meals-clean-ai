@@ -228,7 +228,7 @@ export default function CareTeamPage() {
       </div>
 
       <div
-        className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6 pb-12"
+        className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6 pb-8"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
 
