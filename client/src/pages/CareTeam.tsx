@@ -334,14 +334,14 @@ export default function CareTeamPage() {
                   onChange={(e) => setAccessCode(e.target.value)}
                   placeholder="e.g. MP-9ZX4-QL"
                   className="bg-black/40 text-white border-white/20 placeholder:text-white/40"
-                  data-testid="input-access-code"
+                  data-testid="input-careteam-code"
                 />
               </div>
               <Button
                 disabled={loading}
                 onClick={connectWithCode}
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white"
-                data-testid="button-connect-code"
+                data-testid="button-submit-code"
               >
                 <ClipboardEdit className="h-4 w-4 mr-2" />
                 Link with Code
