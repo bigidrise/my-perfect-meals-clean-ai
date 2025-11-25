@@ -713,7 +713,7 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
     setDynamicMealCount(prev => prev + 1);
     toast({
       title: "Meal Slot Added",
-      description: `Meal ${6 + dynamicMealCount} is ready to use`,
+      description: `Meal ${4 + dynamicMealCount} is ready to use`,
     });
   }, [dynamicMealCount, toast]);
 
