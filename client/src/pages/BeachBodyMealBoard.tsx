@@ -191,17 +191,47 @@ export default function BeachBodyMealBoard() {
     meal: any | null;
   }>({ isOpen: false, meal: null });
 
-  // Dynamic meal slot tracking (Meal 4+) - simple counter approach like Competition Builder
-  const [dynamicMealCount, setDynamicMealCount] = useState(0);
+  // Dynamic meal slot tracking (Meal 4+) - track specific slot numbers as a Set
+  const [dynamicSlots, setDynamicSlots] = useState<Set<number>>(new Set());
+  
+  // Derive dynamicSlots from saved meals when board loads
+  useEffect(() => {
+    if (!board) return;
+    
+    // Scan all snacks for bb-dyn-{N}- prefixed meals to find which slots exist
+    const allSnacks = planningMode === 'day' && activeDayISO 
+      ? getDayLists(board, activeDayISO).snacks 
+      : board.lists.snacks;
+    
+    const slots = new Set<number>();
+    const prefix = "bb-dyn-";
+    allSnacks.forEach((meal: Meal) => {
+      if (meal.id.startsWith(prefix)) {
+        const match = meal.id.match(/bb-dyn-(\d+)-/);
+        if (match) {
+          slots.add(parseInt(match[1], 10));
+        }
+      }
+    });
+    
+    setDynamicSlots(slots);
+  }, [board, planningMode, activeDayISO]);
+  
+  // Calculate next available slot number
+  const nextSlotNumber = useMemo(() => {
+    if (dynamicSlots.size === 0) return 4;
+    return Math.max(...Array.from(dynamicSlots)) + 1;
+  }, [dynamicSlots]);
 
   // Add a new dynamic meal slot
   const handleAddMealSlot = useCallback(() => {
-    setDynamicMealCount(prev => prev + 1);
+    const newSlot = nextSlotNumber;
+    setDynamicSlots(prev => new Set([...prev, newSlot]));
     toast({
       title: "Meal Slot Added",
-      description: `Meal ${4 + dynamicMealCount} is ready to use`,
+      description: `Meal ${newSlot} is ready to use`,
     });
-  }, [dynamicMealCount, toast]);
+  }, [nextSlotNumber, toast]);
 
   // Remove a dynamic meal slot and clean up board data
   const handleRemoveMealSlot = useCallback(async (mealNumber: number) => {
@@ -231,8 +261,12 @@ export default function BeachBodyMealBoard() {
         await saveBoard(updatedBoard);
       }
 
-      // Decrement counter if removing the highest slot
-      setDynamicMealCount(prev => Math.max(0, prev - 1));
+      // Remove slot from set
+      setDynamicSlots(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(mealNumber);
+        return newSet;
+      });
 
       toast({
         title: "Meal Slot Removed",
@@ -247,6 +281,12 @@ export default function BeachBodyMealBoard() {
       });
     }
   }, [board, planningMode, activeDayISO, saveBoard, toast]);
+  
+  // Sorted array of dynamic slot numbers for rendering
+  const sortedDynamicSlots = useMemo(() => 
+    Array.from(dynamicSlots).sort((a, b) => a - b), 
+    [dynamicSlots]
+  );
 
   // Track current dynamic slot for meal additions
   const [currentDynamicSlot, setCurrentDynamicSlot] = useState<number | null>(null);
@@ -1135,9 +1175,7 @@ export default function BeachBodyMealBoard() {
                 ))}
 
                 {/* Dynamic Meal Slots (Meal 4+) */}
-                {Array.from({ length: dynamicMealCount }, (_, i) => {
-                  const mealNumber = 4 + i;
-                  return (
+                {sortedDynamicSlots.map((mealNumber) => (
                     <section key={`dyn-${mealNumber}`} className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-white/90 text-lg font-medium">Meal {mealNumber}</h2>
@@ -1229,8 +1267,7 @@ export default function BeachBodyMealBoard() {
                         )}
                       </div>
                     </section>
-                  );
-                })}
+                  ))}
 
                 {/* Snacks Section */}
                 <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur p-4">
@@ -1302,7 +1339,7 @@ export default function BeachBodyMealBoard() {
                     onClick={handleAddMealSlot}
                   >
                     <Plus className="h-8 w-8" />
-                    <span className="text-sm">Add Meal {4 + dynamicMealCount}</span>
+                    <span className="text-sm">Add Meal {nextSlotNumber}</span>
                   </Button>
                 </section>
               </>
@@ -1409,7 +1446,7 @@ export default function BeachBodyMealBoard() {
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl flex items-center gap-2"
             >
               <Plus className="h-5 w-5" />
-              Add Meal {getNextMealNumber()}
+              Add Meal {nextSlotNumber}
             </Button>
           </div>
 
@@ -1679,7 +1716,7 @@ export default function BeachBodyMealBoard() {
           setPremadePickerOpen(false);
           setCurrentDynamicSlot(null);
         }}
-        mealType={premadePickerSlot}
+        mealType={premadePickerSlot === "snacks" ? "snack" : premadePickerSlot}
         onMealSelect={handlePremadeSelect}
         showMacroTargeting={false}
         dietType="competition"
@@ -1688,7 +1725,6 @@ export default function BeachBodyMealBoard() {
       <QuickAddMacrosModal
         open={fixOpen}
         onOpenChange={setFixOpen}
-        source="beach-body-board"
         onSaved={() => {
           window.dispatchEvent(new Event("macros:updated"));
         }}
