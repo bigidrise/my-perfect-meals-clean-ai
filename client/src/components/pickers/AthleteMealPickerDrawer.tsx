@@ -14,6 +14,7 @@ import {
   getAthleteMealsByCategory,
   type AthleteMeal,
 } from "@/data/athleteMeals";
+import { getCompetitionMealsByCategory } from "@/data/competitionPremadeMeals";
 import { Target } from "lucide-react";
 
 // 🔄 Convert AthleteMeal to standard Meal
@@ -79,11 +80,13 @@ export function AthleteMealPickerDrawer({
   list,
   onClose,
   onPick,
+  dietType = "weekly",
 }: {
   open: boolean;
   list: "breakfast" | "lunch" | "dinner" | "snacks" | null;
   onClose: () => void;
   onPick: (meal: Meal) => void;
+  dietType?: "weekly" | "competition";
 }) {
   const [category, setCategory] =
     React.useState<AthleteMeal["category"]>(DEFAULT_CATEGORY);
@@ -98,8 +101,10 @@ export function AthleteMealPickerDrawer({
 
   // Filter meals by selected category
   const filteredMeals = React.useMemo(() => {
-    return getAthleteMealsByCategory(category);
-  }, [category]);
+    return dietType === "competition"
+      ? getCompetitionMealsByCategory(category)
+      : getAthleteMealsByCategory(category);
+  }, [category, dietType]);
 
   // State for the info modal, assuming it's defined elsewhere or not needed for this specific change
   // const [showInfoModal, setShowInfoModal] = React.useState(false);

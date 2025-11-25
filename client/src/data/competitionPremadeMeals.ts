@@ -487,4 +487,7 @@ export const competitionPremadeMeals: AthleteMeal[] = [
   }
 ];
 
+export const getCompetitionMealsByCategory = (category: AthleteMeal["category"]) =>
+  competitionPremadeMeals.filter((meal) => meal.category === category);
+
 export default competitionPremadeMeals;
