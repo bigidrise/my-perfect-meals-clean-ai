@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useSimpleWalkthrough } from "./SimpleWalkthroughContext";
 import { SimpleStepOverlay } from "./SimpleStepOverlay";
-import { SimpleWalkthroughFlowController } from "./SimpleWalkthroughFlowController";
 import { registerSimpleWalkthroughStarter, registerFlowStarter } from "./simpleWalkthroughHelper";
 
 /**
@@ -21,7 +20,6 @@ export function SimpleWalkthroughManager() {
 
   return (
     <>
-      <SimpleWalkthroughFlowController />
       {state.isActive && state.currentStep && (
         <SimpleStepOverlay
           selector={state.currentStep.selector}

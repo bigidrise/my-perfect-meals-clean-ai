@@ -4,7 +4,7 @@ type FlowMap = Record<string, string[]>;
 type NavigationCallback = (path: string) => void;
 
 const FLOW_SEQUENCES: FlowMap = {
-  onboarding: ['/macro-counter', '/my-biometrics', '/weekly-meal-board'],
+  onboarding: ['/macro-counter', '/my-biometrics', '/weekly-meal-board', '/shopping-list-v2'],
 };
 
 class FlowOrchestratorService {
