@@ -91,12 +91,11 @@ function formatWeekLabel(weekStartISO: string): string {
   return `${fmt(start)}–${fmt(end)}`;
 }
 
-// Pro Care Meal Slots - 5 meals for competition prep (fixed)
-const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
+// Pro Care Meal Slots - 3 meals for competition prep (fixed)
+const lists: Array<["breakfast"|"lunch"|"dinner", string]> = [
   ["breakfast","Meal 1"],
   ["lunch","Meal 2"],
-  ["dinner","Meal 3"],
-  ["snacks","Meal 4"]
+  ["dinner","Meal 3"]
 ];
 
 // Meal 5 will be rendered separately using the snacks slot
