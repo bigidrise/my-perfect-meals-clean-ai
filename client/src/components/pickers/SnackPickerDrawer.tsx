@@ -9,6 +9,7 @@ import PreparationModal, { normalizeIngredientName } from '@/components/Preparat
 import { SNACK_CATEGORIES } from '@/data/snackIngredients';
 import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
 import antiInflammatorySnacks from '@/data/antiInflammatory.snacks';
+import { getStaticSnackImage } from '../../../../shared/staticSnackMappings';
 
 interface SnackPickerDrawerProps {
   open: boolean;
@@ -238,17 +239,6 @@ export default function SnackPickerDrawer({
     }
   };
 
-  // Map simple snacks to static images (no AI generation needed)
-  const STATIC_SNACK_IMAGES: Record<string, string> = {
-    'Air-Popped Popcorn': '/images/templates/air-popped-popcorn.jpg',
-    'Apple slices with almond butter': '/images/templates/apple-pb-slices.jpg',
-    'Apple + PB Slices': '/images/templates/apple-pb-slices.jpg',
-    'Hummus + Veg Sticks': '/images/templates/hummus-veg-sticks.jpg',
-    'Greek Yogurt Ranch Dip + Veg': '/images/templates/yogurt-ranch-dip.jpg',
-    'Protein Energy Balls': '/images/templates/energy-balls.jpg',
-    'Zucchini Fries (Air-Fryer)': '/images/templates/zucchini-fries.jpg',
-  };
-
   const generateSnackMeal = async (snack: any, category: string, styles: Record<string, string>) => {
     setGenerating(true);
     startProgressTicker();
@@ -290,9 +280,10 @@ export default function SnackPickerDrawer({
         throw new Error('No snack found in response');
       }
       
-      // Use static image if available, otherwise use AI-generated or fallback
-      const staticImage = STATIC_SNACK_IMAGES[snack.name];
-      const finalImageUrl = staticImage || generatedSnack.imageUrl || '/assets/meals/default-snack.jpg';
+      // 🍎 ALL snacks use static images (server already blocked DALL-E)
+      // Use centralized mapping with intelligent fallback
+      const finalImageUrl = getStaticSnackImage(snack.name);
+      console.log(`🍎 Snack image resolved: "${snack.name}" → ${finalImageUrl}`);
       
       // Transform to match board format
       const snackMeal = {
@@ -315,7 +306,7 @@ export default function SnackPickerDrawer({
         category: category
       };
       
-      console.log(`✅ Generated snack with image (${staticImage ? 'static' : 'AI'}):`, snackMeal.imageUrl);
+      console.log(`✅ Snack created with STATIC image (no DALL-E):`, snackMeal.imageUrl);
       
       // Call the parent's onSnackSelect handler
       if (onSnackSelect) {

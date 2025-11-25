@@ -9,7 +9,7 @@ export const mealImagesRouter = Router();
 // Generate single meal image
 mealImagesRouter.post('/meal-images/generate', async (req, res) => {
   try {
-    const { mealName, ingredients, style, templateRef } = req.body;
+    const { mealName, ingredients, style, templateRef, mealType } = req.body;
     
     if (!mealName || !Array.isArray(ingredients)) {
       return res.status(400).json({ 
@@ -21,7 +21,8 @@ mealImagesRouter.post('/meal-images/generate', async (req, res) => {
       mealName,
       ingredients,
       style,
-      templateRef
+      templateRef,
+      mealType // 🍎 Pass mealType to enable snack firewall
     });
     
     res.json({ 
@@ -53,7 +54,8 @@ mealImagesRouter.post('/meal-images/generate-batch', async (req, res) => {
       mealName: meal.name || meal.title,
       ingredients: meal.ingredients?.map((ing: any) => ing.name) || [],
       style: meal.style || 'overhead',
-      templateRef: meal.id || meal.slug
+      templateRef: meal.id || meal.slug,
+      mealType: meal.mealType // 🍎 Pass mealType to enable snack firewall
     }));
     
     const results = await generateMealImages(requests);
@@ -76,7 +78,7 @@ mealImagesRouter.post('/meal-images/generate-batch', async (req, res) => {
 // Get cached image if available
 mealImagesRouter.post('/meal-images/cached', (req, res) => {
   try {
-    const { mealName, ingredients, style } = req.body;
+    const { mealName, ingredients, style, mealType } = req.body;
     
     if (!mealName || !Array.isArray(ingredients)) {
       return res.status(400).json({ 
@@ -84,7 +86,7 @@ mealImagesRouter.post('/meal-images/cached', (req, res) => {
       });
     }
     
-    const cached = getCachedImage({ mealName, ingredients, style });
+    const cached = getCachedImage({ mealName, ingredients, style, mealType });
     
     if (cached) {
       res.json({ 
@@ -152,7 +154,8 @@ mealImagesRouter.post('/meal-images/hydrate-with-image', async (req, res) => {
           mealName: validated.title,
           ingredients: validated.ingredients.map((ing: any) => ing.name),
           style: 'overhead',
-          templateRef: validated.id
+          templateRef: validated.id,
+          mealType: (validated as any).mealType // 🍎 Pass mealType to enable snack firewall
         });
         
         imageUrl = imageResult.url;
