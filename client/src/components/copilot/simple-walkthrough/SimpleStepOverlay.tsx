@@ -28,12 +28,23 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
       }
     };
 
+    // Handler to advance walkthrough when target is clicked
+    const handleTargetClick = () => {
+      // Small delay to let the button's own action complete first
+      setTimeout(() => {
+        onTap();
+      }, 100);
+    };
+
     // Elevate target element above the overlay (z-9999)
     if (element) {
       originalZIndex = element.style.zIndex;
       originalPosition = element.style.position;
       element.style.zIndex = "10000";
       element.style.position = "relative";
+      
+      // Add click listener to advance walkthrough
+      element.addEventListener("click", handleTargetClick);
     }
 
     updateTargetRect();
@@ -49,16 +60,17 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
     window.addEventListener("scroll", updateTargetRect, true);
 
     return () => {
-      // Restore original styles
+      // Restore original styles and remove listener
       if (element) {
         element.style.zIndex = originalZIndex;
         element.style.position = originalPosition;
+        element.removeEventListener("click", handleTargetClick);
       }
       observer.disconnect();
       window.removeEventListener("resize", updateTargetRect);
       window.removeEventListener("scroll", updateTargetRect, true);
     };
-  }, [selector]);
+  }, [selector, onTap]);
 
   if (!targetRect) return null;
 
