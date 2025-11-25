@@ -97,6 +97,8 @@ Following professional software company best practices (Facebook/Twitter model):
 - **Wellness Hub**: Unified health navigation.
 - **Permanent Meal Image Storage**: DALL-E images stored in Replit Object Storage with caching.
 - **Meal Logging and Weight Tracking**: Restored meal logging APIs with compound cursor pagination and dual-write server-as-truth weight tracking.
+- **Three-Tier Snack Architecture**: Complete isolation for Diabetic, GLP-1, and Anti-inflammatory snack systems with dedicated data files and zero cross-contamination.
+- **Performance & Competition Builder Data**: Standalone competition-prep ingredient set (competitionIngredients.ts) and premade meals (competitionPremadeMeals.ts) following AthleteMeal interface for coaches/trainers prepping athletes for bodybuilding shows and sports performance.
 
 # External Dependencies
 - **Core Framework**: React 18, Vite, TypeScript
