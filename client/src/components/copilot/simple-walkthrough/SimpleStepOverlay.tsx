@@ -49,6 +49,16 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
     left: targetRect.left + targetRect.width / 2 - 15,
   };
 
+  // Calculate cutout bounds with padding
+  const cutout = {
+    top: targetRect.top - 4,
+    left: targetRect.left - 4,
+    width: targetRect.width + 8,
+    height: targetRect.height + 8,
+    bottom: targetRect.top + targetRect.height + 4,
+    right: targetRect.left + targetRect.width + 4,
+  };
+
   return createPortal(
     <AnimatePresence>
       <motion.div
@@ -57,23 +67,43 @@ export function SimpleStepOverlay({ selector, text, showArrow = false, onTap }: 
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[9999] pointer-events-none"
       >
-        {/* Dim overlay - tap anywhere to advance */}
+        {/* 4 overlay panels around the target - tap to advance */}
+        {/* Top panel */}
         <div
-          className="absolute inset-0 bg-black/40 pointer-events-auto cursor-pointer"
+          className="absolute bg-black/50 pointer-events-auto cursor-pointer"
+          style={{ top: 0, left: 0, right: 0, height: cutout.top }}
+          onClick={onTap}
+        />
+        {/* Bottom panel */}
+        <div
+          className="absolute bg-black/50 pointer-events-auto cursor-pointer"
+          style={{ top: cutout.bottom, left: 0, right: 0, bottom: 0 }}
+          onClick={onTap}
+        />
+        {/* Left panel */}
+        <div
+          className="absolute bg-black/50 pointer-events-auto cursor-pointer"
+          style={{ top: cutout.top, left: 0, width: cutout.left, height: cutout.height }}
+          onClick={onTap}
+        />
+        {/* Right panel */}
+        <div
+          className="absolute bg-black/50 pointer-events-auto cursor-pointer"
+          style={{ top: cutout.top, left: cutout.right, right: 0, height: cutout.height }}
           onClick={onTap}
         />
 
-        {/* Highlight cutout - allows interaction with target */}
+        {/* Highlight border around target - pointer-events-none so clicks go through */}
         <div
           className="absolute pointer-events-none"
           style={{
-            top: targetRect.top - 4,
-            left: targetRect.left - 4,
-            width: targetRect.width + 8,
-            height: targetRect.height + 8,
-            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.4), 0 0 20px 4px rgba(59, 130, 246, 0.5)",
+            top: cutout.top,
+            left: cutout.left,
+            width: cutout.width,
+            height: cutout.height,
+            boxShadow: "0 0 20px 4px rgba(59, 130, 246, 0.6)",
             borderRadius: "12px",
-            border: "2px solid rgba(59, 130, 246, 0.8)",
+            border: "3px solid rgba(59, 130, 246, 0.9)",
           }}
         />
 
