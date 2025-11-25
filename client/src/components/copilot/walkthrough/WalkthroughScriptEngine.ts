@@ -154,11 +154,23 @@ export class WalkthroughScriptEngine {
   }
 
   /**
-   * Get current step
+   * Get current step with resolved target selector
    */
   getCurrentStep(): WalkthroughScriptStep | null {
     if (!this.script || this.status === "idle") return null;
-    return this.script.steps[this.currentStepIndex] || null;
+    const step = this.script.steps[this.currentStepIndex];
+    if (!step) return null;
+    
+    // Return step with resolved target selector
+    // Convert targetTestId to CSS selector if needed
+    const targetSelector = step.targetTestId
+      ? `[data-testid="${step.targetTestId}"]`
+      : step.target;
+    
+    return {
+      ...step,
+      target: targetSelector,
+    };
   }
 
   /**
