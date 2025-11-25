@@ -22,6 +22,36 @@ import { CopilotSystem } from "@/components/copilot/CopilotSystem";
 import type { CopilotAction } from "@/components/copilot/CopilotContext";
 import { setNavigationHandler, setModalHandler } from "@/components/copilot/CopilotCommandRegistry";
 import { useLocation } from "wouter";
+import { SpotlightOverlay } from "./components/copilot/SpotlightOverlay";
+import { useWalkthroughController } from "./components/copilot/walkthrough/useWalkthroughController";
+import { TourProvider } from "./contexts/TourContext";
+import { MobileVoiceHandler } from "./components/MobileVoiceHandler";
+import { AvatarProvider } from "./hooks/useAvatarContext";
+import { OnboardingFooter } from "./components/OnboardingFooter";
+import { CopilotProvider } from "./components/copilot/CopilotContext";
+
+
+function AppContent() {
+  const { currentSpotlightStep, next, skip } = useWalkthroughController();
+
+  return (
+    <>
+      <ForcedUpdateModal />
+      <AppRouter />
+      <OnboardingFooter />
+      <CopilotSystem />
+      <MobileVoiceHandler />
+      <Toaster />
+      {currentSpotlightStep && (
+        <SpotlightOverlay
+          step={currentSpotlightStep}
+          onNext={next}
+          onSkip={skip}
+        />
+      )}
+    </>
+  );
+}
 
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
