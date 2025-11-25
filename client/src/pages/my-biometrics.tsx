@@ -904,15 +904,6 @@ export default function MyBiometrics() {
             <CardTitle className="text-white text-lg flex items-center gap-2">
               <BarChart3 className="h-5 w-5"/> 
               Today's Macros
-              {pendingWeightSync && (
-                <button
-                  onClick={() => setShowTodaysMacrosInfoModal(true)}
-                  className="ml-auto bg-lime-700 hover:bg-lime-800 border-2 border-lime-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flash-border"
-                  title="Macro targets info"
-                >
-                  ?
-                </button>
-              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
