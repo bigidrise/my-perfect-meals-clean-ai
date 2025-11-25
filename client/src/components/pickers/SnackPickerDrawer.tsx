@@ -280,10 +280,11 @@ export default function SnackPickerDrawer({
         throw new Error('No snack found in response');
       }
       
-      // 🍎 ALL snacks use static images (server already blocked DALL-E)
-      // Use centralized mapping with intelligent fallback
-      const finalImageUrl = getStaticSnackImage(snack.name);
-      console.log(`🍎 Snack image resolved: "${snack.name}" → ${finalImageUrl}`);
+      // 🎨 Use server-generated image (DALL-E or static depending on server logic)
+      // Fridge Rescue returns DALL-E images for custom meals
+      // Pre-made snacks use static images (already determined server-side)
+      const finalImageUrl = generatedSnack.imageUrl || getStaticSnackImage(snack.name);
+      console.log(`🎨 Snack image: "${generatedSnack.name || snack.name}" → ${finalImageUrl}`);
       
       // Transform to match board format
       const snackMeal = {
@@ -306,7 +307,7 @@ export default function SnackPickerDrawer({
         category: category
       };
       
-      console.log(`✅ Snack created with STATIC image (no DALL-E):`, snackMeal.imageUrl);
+      console.log(`✅ Snack created with image:`, snackMeal.imageUrl);
       
       // Call the parent's onSnackSelect handler
       if (onSnackSelect) {
