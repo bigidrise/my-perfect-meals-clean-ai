@@ -57,6 +57,13 @@ export function registerOnboardingFlow(): void {
     scriptId: 'weekly-meal-builder',
     autoStartDelay: 500,
   });
+
+  registerWalkthrough('/shopping-list-v2', {
+    mode: 'flow',
+    flowId: 'onboarding',
+    scriptId: 'shopping-list',
+    autoStartDelay: 500,
+  });
 }
 
 export function registerPageWalkthroughs(): void {
