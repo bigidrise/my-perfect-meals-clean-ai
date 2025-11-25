@@ -55,14 +55,13 @@ import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
 import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
 import { DIABETIC_DINNER_MEALS } from '@/data/diabeticPremadeDinner';
 import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
-import { proPremadeMeals } from '@/data/proPremadeMeals';
 
 interface MealPremadePickerProps {
   open: boolean;
   onClose: () => void;
   onMealSelect?: (meal: any) => void;
   mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
-  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory' | 'professional';
+  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory';
   showMacroTargeting?: boolean;
 }
 
@@ -190,30 +189,6 @@ const diabeticDinnerPremades = {
   'Smart Plate Dinners': DIABETIC_DINNER_MEALS['smart-plate-dinners'].map((meal, idx) => ({
     id: `diabetic-d6-${idx}`,
     name: meal.title,
-    ingredients: []
-  }))
-};
-
-// Build professional premades (simple title-only format)
-const professionalPremades = {
-  'Protein Only': proPremadeMeals.proteinOnly.map((meal, idx) => ({
-    id: `pro-p-${idx}`,
-    name: meal,
-    ingredients: []
-  })),
-  'Protein + Veggie': proPremadeMeals.proteinVeggie.map((meal, idx) => ({
-    id: `pro-pv-${idx}`,
-    name: meal,
-    ingredients: []
-  })),
-  'Protein + Starch + Veggie': proPremadeMeals.proteinStarchVeggie.map((meal, idx) => ({
-    id: `pro-psv-${idx}`,
-    name: meal,
-    ingredients: []
-  })),
-  'Protein + Fruit': proPremadeMeals.proteinFruit.map((meal, idx) => ({
-    id: `pro-pf-${idx}`,
-    name: meal,
     ingredients: []
   }))
 };
@@ -404,9 +379,7 @@ export default function MealPremadePicker({
   showMacroTargeting = false
 }: MealPremadePickerProps) {
   // Determine which premade set to use based on meal type and diet type
-  const premadeData = dietType === 'professional'
-    ? professionalPremades
-    : mealType === 'breakfast' 
+  const premadeData = mealType === 'breakfast' 
     ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
     : mealType === 'lunch' 
     ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)

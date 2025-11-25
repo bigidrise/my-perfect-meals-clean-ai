@@ -39,7 +39,6 @@ import PreparationModal, { normalizeIngredientName } from "@/components/Preparat
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
 import { mealIngredients } from "@/data/mealIngredients";
-import { proFoods } from "@/data/proFoods";
 import { useMacroTargeting } from "@/hooks/useMacroTargeting";
 import { MacroTargetingControls } from "@/components/macro-targeting/MacroTargetingControls";
 
@@ -49,7 +48,7 @@ interface AIMealCreatorModalProps {
   onMealGenerated: (meal: any) => void;
   mealSlot: "breakfast" | "lunch" | "dinner" | "snacks";
   showMacroTargeting?: boolean;
-  dietType?: "weekly" | "diabetic" | "professional";
+  dietType?: "weekly" | "diabetic";
   beachBodyMode?: boolean;
 }
 
@@ -66,9 +65,7 @@ export default function AIMealCreatorModal({
     ? DIABETIC_SNACK_CATEGORIES 
     : SNACK_CATEGORIES;
 
-  const activeMealIngredients = (dietType === "professional" && mealSlot !== "snacks")
-    ? proFoods
-    : mealIngredients;
+  const activeMealIngredients = mealIngredients;
 
   const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
