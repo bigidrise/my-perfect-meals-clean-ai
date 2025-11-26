@@ -234,7 +234,7 @@ export class HubWalkthroughEngine {
   }
 
   /**
-   * Private: Start voice timeout (6 seconds)
+   * Private: Start voice timeout (10 seconds)
    */
   private startVoiceTimeout(): void {
     if (!this.config) return;
@@ -243,7 +243,7 @@ export class HubWalkthroughEngine {
       if (this.status === "waiting_for_selection") {
         this.emitError(this.config?.voiceTimeoutMessage || "Voice timeout - please try typing your selection instead.");
       }
-    }, 6000);
+    }, 10000);
   }
 
   /**
