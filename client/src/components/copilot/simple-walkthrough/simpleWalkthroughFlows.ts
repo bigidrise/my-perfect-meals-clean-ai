@@ -64,7 +64,7 @@ export const ONBOARDING_FLOW: WalkthroughFlow = {
       pageId: 'biometrics',
       steps: [
         {
-          selector: '#save-weight-button, [data-testid="biometrics-save-weight-button"], [data-walkthrough="save-weight"]',
+          selector: '[data-testid="biometrics-save-weight-button"], #save-weight-button, [data-walkthrough="save-weight"]',
           text: 'Save your current body weight to track your progress',
           showArrow: true
         }
@@ -97,13 +97,18 @@ export const ONBOARDING_FLOW: WalkthroughFlow = {
       pageId: 'shopping-list',
       steps: [
         {
-          selector: '[data-walkthrough="shopping-list-items"], [data-testid="shopping-list-items"], .shopping-list-content',
-          text: 'Here is your shopping list with all ingredients for your meal plan',
+          selector: '[data-testid="shopping-summary-card"]',
+          text: 'Here is your shopping list summary with all your ingredients',
           showArrow: true
         },
         {
-          selector: '[data-walkthrough="start-shopping"], [data-testid="start-shopping-button"], .start-shopping-btn',
-          text: 'Ready to shop? Check items as you go or come back later!',
+          selector: '[data-testid="shopping-list"]',
+          text: 'Your ingredients organized by category - check them off as you shop',
+          showArrow: true
+        },
+        {
+          selector: '[data-testid="shopping-send-to-store"]',
+          text: 'Send your list to your favorite store for easy pickup or delivery',
           showArrow: true
         }
       ],
