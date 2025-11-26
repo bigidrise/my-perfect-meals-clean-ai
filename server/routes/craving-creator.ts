@@ -38,57 +38,47 @@ const logMealSchema = z.object({
 // POST /api/craving-creator/generate - Generate recipe based on craving
 router.post('/generate', requireAuth, async (req, res) => {
   try {
-    const input = cravingSchema.parse(req.body);
+    const { craving, mealType = 'dinner', userId = '1', macroTargets } = req.body;
     
-    // Import server-side ingredient normalizer
-    const { normalizeIngredient } = await import('../services/mealgenV2');
+    console.log('🍳 Craving Creator generating meal:', { craving, mealType, userId });
     
-    // Mock AI recipe generation - replace with actual AI service
-    const rawIngredients = [
-      { name: "Main ingredient", amount: "1", unit: "portion" },
-      { name: "Supporting ingredient", amount: "1/2", unit: "cup" },
-      { name: "Seasoning", amount: "1", unit: "tsp" }
-    ];
+    // Import the actual AI meal generator
+    const { generateCravingMeal } = await import('../services/mealgenV2');
+    const { users } = await import('@shared/schema');
+    const { db } = await import('../db');
+    const { eq } = await import('drizzle-orm');
     
-    // Normalize ALL ingredients through universal schema pipeline
-    const normalizedIngredients = rawIngredients.map((ing: any) => {
-      // Parse quantity to handle string fractions
-      const parsedQuantity = typeof ing.amount === 'string' && ing.amount.includes('/')
-        ? eval(ing.amount.replace(/(\d+)\/(\d+)/, '($1/$2)'))
-        : parseFloat(ing.amount) || 1;
-      
-      return {
-        name: String(ing.name || '').trim(),
-        quantity: parsedQuantity,
-        unit: String(ing.unit || '').trim(),
-        amount: `${parsedQuantity} ${ing.unit || ''}`.trim()
-      };
-    });
-    
-    const generatedRecipe = {
-      title: `Healthy ${input.craving}`,
-      ingredients: normalizedIngredients,
-      instructions: `1. Prepare ingredients for your ${input.craving} craving\n2. Cook according to preference\n3. Season to satisfy your craving\n4. Serve and enjoy`,
-      nutrition: {
-        calories: 400,
-        protein: 25,
-        carbs: 35,
-        fat: 18,
-        fiber: 6
-      },
-      servings: input.servings,
-      prepTime: 15,
-      cookTime: 20
-    };
+    // Get user data for medical personalization
+    let user = null;
+    if (userId) {
+      try {
+        const [dbUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+        user = dbUser || null;
+      } catch (error) {
+        console.log("Could not fetch user for craving creator personalization:", error);
+      }
+    }
 
-    res.json({
-      success: true,
-      recipe: generatedRecipe,
-      source: 'craving-creator'
-    });
+    // Generate the meal using AI
+    const generatedMeal = await generateCravingMeal(
+      mealType,
+      craving,
+      {
+        userId: userId?.toString() || "1",
+        dietaryRestrictions: user?.dietaryRestrictions || [],
+        allergies: user?.allergies || [],
+        medicalFlags: user?.healthConditions || [],
+        macroTargets: macroTargets || undefined
+      }
+    );
+
+    console.log('✅ Craving Creator generated:', generatedMeal.name);
+    console.log('🏥 Medical badges:', generatedMeal.medicalBadges?.length || 0);
+
+    res.json({ meal: generatedMeal });
   } catch (error) {
-    console.error("Error generating craving recipe:", error);
-    res.status(500).json({ error: "Failed to generate recipe" });
+    console.error("❌ Craving Creator error:", error);
+    res.status(500).json({ error: "Failed to generate craving meal" });
   }
 });
 
