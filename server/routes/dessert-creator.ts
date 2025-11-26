@@ -67,17 +67,16 @@ CRITERIA:
 - imageUrl should be a short descriptive image prompt (no quotes).
 `;
 
-    // Call OpenAI Chat Completions API
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
-      max_tokens: 2000,
+    // Call OpenAI Responses API (v4)
+    const completion = await openai.responses.create({
+      model: "gpt-4.1",
+      input: prompt,
+      response_format: { type: "json" },
     });
 
     let meal: any;
     try {
-      const rawText = completion.choices[0]?.message?.content || "{}";
+      const rawText = completion.output[0].content[0].text;
       meal = JSON.parse(rawText);
     } catch (parseErr) {
       console.error("Dessert Creator JSON parse error:", parseErr);
@@ -102,8 +101,29 @@ CRITERIA:
 
     const medicalBadges = computeMedicalBadges(constraints, ingredientNames);
 
+    // Generate image for dessert
+    let imageUrl = null;
+    try {
+      const { generateImage } = await import("../services/imageService");
+      imageUrl = await generateImage({
+        name: meal.name,
+        description: meal.description || `A delicious dessert featuring ${ingredientNames.slice(0, 3).join(', ')}`,
+        type: 'meal',
+        style: 'homemade',
+        ingredients: ingredientNames,
+        calories: meal.nutrition?.calories || 0,
+        protein: meal.nutrition?.protein || 0,
+        carbs: meal.nutrition?.carbs || 0,
+        fat: meal.nutrition?.fat || 0,
+      });
+      console.log(`📸 Generated image for ${meal.name}`);
+    } catch (error) {
+      console.log(`❌ Image generation failed for ${meal.name}:`, error);
+    }
+
     return res.json({
       ...meal,
+      imageUrl,
       medicalBadges,
       meta: {
         userId: userId ?? "1",

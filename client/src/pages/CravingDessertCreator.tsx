@@ -16,8 +16,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, ArrowLeft, Users, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
+import { generateMedicalBadges, getUserMedicalProfile } from "@/utils/medicalBadges";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import { setQuickView } from "@/lib/macrosQuickView";
+import TrashButton from "@/components/ui/TrashButton";
 import PhaseGate from "@/components/PhaseGate";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -129,6 +133,20 @@ export default function DessertCreator() {
       fat: Number(n.fat ?? meal.fat ?? 0),
     };
   }
+
+  // Function to generate medical badges, placeholder for now
+  async function generateBadges(mealData: any) {
+    try {
+      const userProfile = await getUserMedicalProfile(DEV_USER_ID); // Assuming DEV_USER_ID is available
+      const badges = await generateMedicalBadges(userProfile, mealData);
+      return badges;
+    } catch (error) {
+      console.error("Error generating medical badges:", error);
+      return [];
+    }
+  }
+
+  const medicalBadges = generatedDessert ? generateBadges(generatedDessert) : Promise.resolve([]);
 
   return (
     <PhaseGate phase="PHASE_1_CORE" feature="dessert-creator">
@@ -336,6 +354,17 @@ export default function DessertCreator() {
                       <p className="text-sm text-white/80">{generatedDessert.reasoning}</p>
                     </div>
                   )}
+
+                  {/* Medical Badges */}
+                  {generatedDessert.medicalBadges && generatedDessert.medicalBadges.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2 text-white">
+                        <HealthBadgesPopover badges={generatedDessert.medicalBadges} />
+                        Health Badges:
+                      </h4>
+                    </div>
+                  )}
+
 
                   {/* Add Macros */}
                   <GlassButton
