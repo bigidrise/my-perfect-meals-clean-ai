@@ -1590,12 +1590,12 @@ async function handleVoiceQuery(transcript: string) {
   // ===================================
   // Three-tier routing: (1) Built-ins, (2) Hub session, (3) Fresh feature discovery
   // Hub session short-circuits ALL subsequent logic
-  
+
   // Phase C.4.A: Hub Session Resolution (Tier 2)
   // When currentHub is active, ONLY check sub-options, SKIP all feature/keyword lookups
   if (currentHub) {
     console.log(`🔄 Phase C.4: Hub session active for ${currentHub.id}, checking for sub-option match`);
-    
+
     // Check for cancel/back/exit commands
     if (
       lower.includes("cancel") ||
@@ -1614,36 +1614,36 @@ async function handleVoiceQuery(transcript: string) {
       }
       return; // Exit - hub session cancelled
     }
-    
+
     // Try to match sub-option
     const subOption = findSubOptionByAlias(currentHub, transcript);
-    
+
     if (subOption) {
       console.log(`✅ Phase C.4: Sub-option matched: ${subOption.label} → ${subOption.route}`);
-      
+
       // Navigate to sub-option
       if (navigationCallback) {
         navigationCallback(subOption.route);
-        
+
         // Clear hub session AFTER navigation starts
         currentHub = null;
-        
+
         // Wait for navigation, then start walkthrough if available
         try {
           await waitForNavigationReady(subOption.route);
-          
+
           if (subOption.walkthroughId && hasScript(subOption.walkthroughId)) {
             console.log(`🚀 Phase C.4: Launching sub-option walkthrough: ${subOption.walkthroughId}`);
-            
+
             const { success, response } = await beginScriptWalkthrough(
               subOption.walkthroughId,
               responseCallback || undefined
             );
-            
+
             if (responseCallback) {
               responseCallback(response);
             }
-            
+
             if (!success) {
               console.warn(`Walkthrough failed, falling back to legacy`);
               const legacyResponse = await startWalkthrough(subOption.walkthroughId);
@@ -1672,10 +1672,10 @@ async function handleVoiceQuery(transcript: string) {
           }
         }
       }
-      
+
       return; // Exit - sub-option matched and handled
     }
-    
+
     // No sub-option match - re-prompt user
     console.log(`❓ Phase C.4: No sub-option match, re-prompting`);
     if (responseCallback) {
@@ -1688,32 +1688,32 @@ async function handleVoiceQuery(transcript: string) {
     }
     return; // Exit - stay in hub session, wait for valid sub-option
   }
-  
+
   // Phase C.4.B: Fresh Feature Discovery (Tier 3)
   // No hub session active - check for new feature/hub match via CanonicalAliasRegistry
   const featureMatch = findFeatureFromRegistry(transcript);
-  
+
   if (featureMatch && FEATURES.copilotSpotlight) {
     console.log(`✨ Phase C.4: Feature matched: ${featureMatch.id}`);
-    
+
     // Check if this is a hub that requires sub-selection
     if (featureMatch.isHub && hubRequiresSubSelection(featureMatch)) {
       console.log(`🏢 Phase C.4: Hub detected (${featureMatch.hubSize}): ${featureMatch.id}`);
-      
+
       // Navigate to hub page FIRST
       if (navigationCallback) {
         navigationCallback(featureMatch.primaryRoute);
-        
+
         // Set hub session state AFTER navigation starts
         currentHub = featureMatch;
-        
+
         // Wait for hub page to load, then activate hub walkthrough engine
         try {
           await waitForNavigationReady(featureMatch.primaryRoute);
-          
+
           // Phase C.7: Activate hub walkthrough engine with voice/tap/timeout handling
           console.log(`🎯 Phase C.7: Starting hub walkthrough engine for ${featureMatch.id}`);
-          
+
           // Create walkthrough ID map for sub-options (HubSubOption doesn't have walkthroughId property)
           const walkthroughIdMap = new Map<string, string>();
           (featureMatch.subOptions || []).forEach(opt => {
@@ -1721,7 +1721,7 @@ async function handleVoiceQuery(transcript: string) {
               walkthroughIdMap.set(opt.id, opt.walkthroughId);
             }
           });
-          
+
           await hubWalkthroughEngine.start({
             hubId: featureMatch.id,
             hubName: featureMatch.id.replace(/_HUB$/, '').replace(/_/g, ' '),
@@ -1736,33 +1736,33 @@ async function handleVoiceQuery(transcript: string) {
             voiceTimeoutMessage: featureMatch.voiceTimeoutMessage || "I didn't catch that. Try typing your selection instead, or tap one of the options on screen.",
             onSelection: async (subOption) => {
               console.log(`✅ Phase C.7: Hub sub-option selected: ${subOption.name}`);
-              
+
               // Clear hub session
               currentHub = null;
-              
+
               // Navigate to sub-option
               if (navigationCallback) {
                 navigationCallback(subOption.route);
-                
+
                 try {
                   await waitForNavigationReady(subOption.route);
-                  
+
                   // Get walkthrough ID from map
                   const walkthroughId = walkthroughIdMap.get(subOption.id);
-                  
+
                   // Start sub-option walkthrough if available
                   if (walkthroughId && hasScript(walkthroughId)) {
                     console.log(`🚀 Phase C.7: Launching sub-option walkthrough: ${walkthroughId}`);
-                    
+
                     const { success, response } = await beginScriptWalkthrough(
                       walkthroughId,
                       responseCallback || undefined
                     );
-                    
+
                     if (responseCallback) {
                       responseCallback(response);
                     }
-                    
+
                     if (!success) {
                       console.warn(`Walkthrough failed for ${walkthroughId}`);
                     }
@@ -1783,7 +1783,7 @@ async function handleVoiceQuery(transcript: string) {
             },
             onError: (error) => {
               console.warn(`⚠️ Phase C.7: Hub engine error: ${error}`);
-              
+
               // Show fallback message for voice timeout
               if (responseCallback) {
                 responseCallback({
@@ -1794,7 +1794,7 @@ async function handleVoiceQuery(transcript: string) {
               }
             }
           });
-          
+
           // Send initial prompt response
           const promptMessage = getHubPromptMessage(featureMatch);
           if (responseCallback) {
@@ -1809,31 +1809,31 @@ async function handleVoiceQuery(transcript: string) {
           currentHub = null; // Clear session on timeout
         }
       }
-      
+
       return; // Exit - hub session initiated
     }
-    
+
     // Not a hub (or hub with single option) - navigate directly and start walkthrough
     currentHub = null; // Clear any stale hub state
-    
+
     if (navigationCallback) {
       navigationCallback(featureMatch.primaryRoute);
-      
+
       try {
         await waitForNavigationReady(featureMatch.primaryRoute);
-        
+
         if (featureMatch.walkthroughId && hasScript(featureMatch.walkthroughId)) {
           console.log(`🚀 Phase C.4: Launching direct feature walkthrough: ${featureMatch.walkthroughId}`);
-          
+
           const { success, response } = await beginScriptWalkthrough(
             featureMatch.walkthroughId,
             responseCallback || undefined
           );
-          
+
           if (responseCallback) {
             responseCallback(response);
           }
-          
+
           if (!success) {
             console.warn(`Walkthrough failed, falling back to legacy`);
             const legacyResponse = await startWalkthrough(featureMatch.walkthroughId);
@@ -1861,10 +1861,10 @@ async function handleVoiceQuery(transcript: string) {
         }
       }
     }
-    
+
     return; // Exit - direct feature navigation completed
   }
-  
+
   // Fallback to KeywordFeatureMap for legacy features not yet in CanonicalAliasRegistry
   const spotlightFeatureMatch = FEATURES.copilotSpotlight
     ? findFeatureFromKeywords(transcript)
@@ -1886,7 +1886,7 @@ async function handleVoiceQuery(transcript: string) {
         // Phase C.1: Check if a Phase C script exists for this feature
         if (hasScript(spotlightFeatureMatch.walkthroughId)) {
           console.log(`🚀 Phase C.1: Launching script-based walkthrough for ${spotlightFeatureMatch.walkthroughId}`);
-          
+
           // Use new script-walkthrough helper with event streaming
           const { success, response } = await beginScriptWalkthrough(
             spotlightFeatureMatch.walkthroughId,
