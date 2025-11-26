@@ -43,7 +43,7 @@ router.post('/generate', requireAuth, async (req, res) => {
     console.log('🍳 Craving Creator generating meal:', { craving, mealType, userId });
     
     // Import the actual AI meal generator
-    const { generateCravingMeal } = await import('../services/mealgenV2');
+    const { generateCravingMeal } = await import('../services/stableMealGenerator');
     const { users } = await import('@shared/schema');
     const { db } = await import('../db');
     const { eq } = await import('drizzle-orm');

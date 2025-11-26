@@ -48,6 +48,14 @@ export default function CravingCreatorLanding() {
       gradient: "from-orange-500/20 to-orange-600/20",
       testId: "cravinghub-premades", // Phase C.7 hub anchor
     },
+    {
+      title: "Dessert Creator",
+      description: "AI-powered dessert recipes: pies, cakes, cookies, brownies & more",
+      icon: Sparkles, // using same icon family for cohesion
+      route: "/craving-desserts",
+      gradient: "from-orange-500/20 to-orange-600/20",
+      testId: "cravinghub-desserts", // Phase C.7 hub anchor
+    },
   ];
 
   const handleCardClick = (route: string) => {

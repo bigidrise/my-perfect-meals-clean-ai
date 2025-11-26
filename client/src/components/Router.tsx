@@ -95,6 +95,7 @@ import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuB
 // Craving pages
 // DELETED: CravingHub (moved to _quarantine - replaced by CravingCreatorLanding)
 import CravingCreatorLanding from "@/pages/CravingCreatorLanding";
+import CravingDessertCreator from "@/pages/CravingDessertCreator";
 import CravingPresets from "@/pages/CravingPresets";
 
 // Alcohol Hub pages
@@ -440,6 +441,7 @@ export default function Router() {
           component={CravingCreatorLanding}
         />
         {/* DELETED: /craving-hub route (old CravingHub moved to _quarantine - use /craving-creator-landing instead) */}
+        <Route path="/craving-desserts" component={CravingDessertCreator} />
         <Route path="/craving-presets" component={CravingPresets} />
         {/* Alcohol Hub Routes */}
         <Route path="/alcohol-hub" component={AlcoholHubLanding} />

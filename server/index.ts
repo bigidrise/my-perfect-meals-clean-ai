@@ -66,6 +66,7 @@ import onboardingProgressRouter from "./routes/onboardingProgress";
 import { requireDeviceId } from "./middleware/deviceId";
 import { resolveCuisineMiddleware } from "./middleware/resolveCuisineMiddleware";
 import cravingCreatorRouter from "./routes/craving-creator";
+import dessertCreatorRouter from "./routes/dessert-creator";
 import holidayFeastRouter from "./routes/holiday-feast";
 import breakfastRouter from "./routes/breakfast";
 import lunchRouter from "./routes/lunch";
@@ -331,6 +332,7 @@ app.use("/api/avatar", avatarContextRoutes);
 
 // Meal Replacement System
 app.use("/api/craving-creator", cravingCreatorRouter);  
+app.use("/api/meals/dessert-creator", dessertCreatorRouter);
 app.use("/api/holiday-feast", holidayFeastRouter);
 app.use("/api/breakfast", breakfastRouter);
 app.use("/api/lunch", lunchRouter);

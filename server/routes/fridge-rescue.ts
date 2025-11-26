@@ -106,30 +106,8 @@ router.post('/log', requireAuth, async (req, res) => {
         throw new Error('Failed to replace meal');
       }
 
-      // Generate simple fallback meals for testing
-    const mockMeals = fridgeItems.slice(0, 3).map((item, idx) => ({
-      id: `fridge-${Date.now()}-${idx}`,
-      name: `${item} Special`,
-      description: `A delicious recipe featuring ${item}`,
-      ingredients: [
-        { name: item, quantity: "1", unit: "serving" },
-        { name: "olive oil", quantity: "1", unit: "tbsp" },
-        { name: "salt and pepper", quantity: "to taste", unit: "" }
-      ],
-      instructions: `Cook ${item} with olive oil, season with salt and pepper to taste.`,
-      calories: 300 + idx * 50,
-      protein: 20 + idx * 5,
-      carbs: 25 + idx * 5,
-      fat: 12 + idx * 3,
-      cookingTime: "15 minutes",
-      difficulty: "Easy",
-      medicalBadges: []
-    }));
-
-    const mealsArray = mockMeals;
-
-
-      return res.json(mealsArray);
+      const result = await response.json();
+      return res.json(result);
     } else {
       // Create new standalone meal instance
       const [newInstance] = await db.insert(mealInstances).values({
