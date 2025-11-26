@@ -1,426 +1,486 @@
 /**
  * 🔒 LOCKED COMPONENT - DO NOT MODIFY UI STRUCTURE
- * 
+ *
  * This file is PROTECTED under the Meal Picker Lockdown Protocol (November 24, 2025)
  * See LOCKDOWN.md for complete guidelines before making ANY changes.
- * 
+ *
  * ❌ PROHIBITED CHANGES:
  * - Adding new UI sections (banners, displays, input fields)
  * - Modifying modal layout or structure
  * - Changing meal grid rendering
  * - Adding extra state or complexity
- * 
+ *
  * ✅ ALLOWED (with approval):
  * - Bug fixes that don't alter UI structure
  * - Performance optimizations
  * - Backend API updates
- * 
+ *
  * REASON FOR LOCK: This picker has the CORRECT clean structure that AI Meal Creator
  * should match. Any changes here risk breaking the proven working layout.
- * 
+ *
  * LAST LOCKED: November 24, 2025
  * LOCKED BY: User explicit request
  */
 
-import React, { useState, useRef, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import PreparationModal, { normalizeIngredientName } from '@/components/PreparationModal';
-import { useMacroTargeting } from '@/hooks/useMacroTargeting';
-import { MacroTargetingControls } from '@/components/macro-targeting/MacroTargetingControls';
-import { 
-  AI_PREMADE_BREAKFAST_MEALS, 
+import React, { useState, useRef, useEffect } from "react";
+import { X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import PreparationModal, {
+  normalizeIngredientName,
+} from "@/components/PreparationModal";
+import { useMacroTargeting } from "@/hooks/useMacroTargeting";
+import { MacroTargetingControls } from "@/components/macro-targeting/MacroTargetingControls";
+import {
+  AI_PREMADE_BREAKFAST_MEALS,
   getBreakfastMealsByCategory,
-  type BreakfastCategory 
-} from '@/data/aiPremadeBreakfast';
+  type BreakfastCategory,
+} from "@/data/aiPremadeBreakfast";
 import {
   AI_PREMADE_LUNCH_MEALS,
   getLunchMealsByCategory,
   LUNCH_CATEGORY_DISPLAY_NAMES,
-  type LunchCategory
-} from '@/data/aiPremadeLunch';
+  type LunchCategory,
+} from "@/data/aiPremadeLunch";
 import {
   AI_PREMADE_DINNER_MEALS,
   getDinnerMealsByCategory,
   DINNER_CATEGORY_DISPLAY_NAMES,
-  type DinnerCategory
-} from '@/data/aiPremadeDinner';
-import { DIABETIC_BREAKFAST_MEALS } from '@/data/diabeticPremadeBreakfast';
-import { DIABETIC_LUNCH_MEALS } from '@/data/diabeticPremadeLunch';
-import { DIABETIC_DINNER_MEALS } from '@/data/diabeticPremadeDinner';
-import { DIABETIC_SNACK_CATEGORIES } from '@/data/diabeticPremadeSnacks';
-import { 
-  proteinOnlyOptions, 
-  proteinFibrousOptions, 
-  proteinFibrousStarchyOptions 
-} from '@/data/competitionMealCatalog';
+  type DinnerCategory,
+} from "@/data/aiPremadeDinner";
+import { DIABETIC_BREAKFAST_MEALS } from "@/data/diabeticPremadeBreakfast";
+import { DIABETIC_LUNCH_MEALS } from "@/data/diabeticPremadeLunch";
+import { DIABETIC_DINNER_MEALS } from "@/data/diabeticPremadeDinner";
+import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
+import {
+  proteinOnlyOptions,
+  proteinFibrousOptions,
+  proteinFibrousStarchyOptions,
+} from "@/data/competitionMealCatalog";
 
 interface MealPremadePickerProps {
   open: boolean;
   onClose: () => void;
   onMealSelect?: (meal: any) => void;
-  mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
-  dietType?: 'weekly' | 'diabetic' | 'glp1' | 'anti-inflammatory' | 'competition';
+  mealType?: "breakfast" | "lunch" | "dinner" | "snack";
+  dietType?:
+    | "weekly"
+    | "diabetic"
+    | "glp1"
+    | "anti-inflammatory"
+    | "competition";
   showMacroTargeting?: boolean;
 }
 
 // Map category names to display names
 const categoryDisplayNames: Record<BreakfastCategory, string> = {
-  'all-protein': 'All Protein',
-  'protein-carb': 'Protein + Carb',
-  'egg-based': 'Egg-Based Meals'
+  "all-protein": "All Protein",
+  "protein-carb": "Protein + Carb",
+  "egg-based": "Egg-Based Meals",
 };
 
 // Build diabetic breakfast premades (simple title-only format)
 const diabeticBreakfastPremades = {
-  'All Protein': DIABETIC_BREAKFAST_MEALS['all-protein'].map((meal, idx) => ({
+  "All Protein": DIABETIC_BREAKFAST_MEALS["all-protein"].map((meal, idx) => ({
     id: `diabetic-bp-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'Protein + Carb': DIABETIC_BREAKFAST_MEALS['protein-carb'].map((meal, idx) => ({
-    id: `diabetic-pc-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'Egg-Based Meals': DIABETIC_BREAKFAST_MEALS['egg-based'].map((meal, idx) => ({
+  "Protein + Carb": DIABETIC_BREAKFAST_MEALS["protein-carb"].map(
+    (meal, idx) => ({
+      id: `diabetic-pc-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "Egg-Based Meals": DIABETIC_BREAKFAST_MEALS["egg-based"].map((meal, idx) => ({
     id: `diabetic-eb-${idx}`,
     name: meal.title,
-    ingredients: []
-  }))
+    ingredients: [],
+  })),
 };
 
 // Build diabetic lunch premades (simple title-only format)
 const diabeticLunchPremades = {
-  'Lean Plates': DIABETIC_LUNCH_MEALS['lean-plates'].map((meal, idx) => ({
+  "Lean Plates": DIABETIC_LUNCH_MEALS["lean-plates"].map((meal, idx) => ({
     id: `diabetic-l1-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'Protein + Carb Bowls': DIABETIC_LUNCH_MEALS['satisfying-protein-carb-bowls'].map((meal, idx) => ({
+  "Protein + Carb Bowls": DIABETIC_LUNCH_MEALS[
+    "satisfying-protein-carb-bowls"
+  ].map((meal, idx) => ({
     id: `diabetic-l2-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'High Protein Plates': DIABETIC_LUNCH_MEALS['high-protein-plates'].map((meal, idx) => ({
-    id: `diabetic-l3-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'Protein + Veggie Plates': DIABETIC_LUNCH_MEALS['simple-protein-veggie-plates'].map((meal, idx) => ({
+  "High Protein Plates": DIABETIC_LUNCH_MEALS["high-protein-plates"].map(
+    (meal, idx) => ({
+      id: `diabetic-l3-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "Protein + Veggie Plates": DIABETIC_LUNCH_MEALS[
+    "simple-protein-veggie-plates"
+  ].map((meal, idx) => ({
     id: `diabetic-l4-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'One-Pan Meals': DIABETIC_LUNCH_MEALS['one-pan-meals'].map((meal, idx) => ({
+  "One-Pan Meals": DIABETIC_LUNCH_MEALS["one-pan-meals"].map((meal, idx) => ({
     id: `diabetic-l5-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'Smart Plate Dinners': DIABETIC_LUNCH_MEALS['smart-plate-dinners'].map((meal, idx) => ({
-    id: `diabetic-l6-${idx}`,
-    name: meal.title,
-    ingredients: []
-  }))
+  "Smart Plate Dinners": DIABETIC_LUNCH_MEALS["smart-plate-dinners"].map(
+    (meal, idx) => ({
+      id: `diabetic-l6-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
 };
 
 // Build diabetic snack premades (simple title-only format)
 const diabeticSnackPremades = {
-  'Sweet Treats': DIABETIC_SNACK_CATEGORIES[0].items.map((snack, idx) => ({
+  "Sweet Treats": DIABETIC_SNACK_CATEGORIES[0].items.map((snack, idx) => ({
     id: `diabetic-snack-sweet-${idx}`,
     name: snack,
-    ingredients: []
+    ingredients: [],
   })),
-  'Savory & Crunchy': DIABETIC_SNACK_CATEGORIES[1].items.map((snack, idx) => ({
+  "Savory & Crunchy": DIABETIC_SNACK_CATEGORIES[1].items.map((snack, idx) => ({
     id: `diabetic-snack-savory-${idx}`,
     name: snack,
-    ingredients: []
+    ingredients: [],
   })),
-  'Light & Gentle': DIABETIC_SNACK_CATEGORIES[2].items.map((snack, idx) => ({
+  "Light & Gentle": DIABETIC_SNACK_CATEGORIES[2].items.map((snack, idx) => ({
     id: `diabetic-snack-light-${idx}`,
     name: snack,
-    ingredients: []
+    ingredients: [],
   })),
-  'Protein & Energy': DIABETIC_SNACK_CATEGORIES[3].items.map((snack, idx) => ({
+  "Protein & Energy": DIABETIC_SNACK_CATEGORIES[3].items.map((snack, idx) => ({
     id: `diabetic-snack-protein-${idx}`,
     name: snack,
-    ingredients: []
+    ingredients: [],
   })),
-  'Drinkables': DIABETIC_SNACK_CATEGORIES[4].items.map((snack, idx) => ({
+  Drinkables: DIABETIC_SNACK_CATEGORIES[4].items.map((snack, idx) => ({
     id: `diabetic-snack-drink-${idx}`,
     name: snack,
-    ingredients: []
+    ingredients: [],
   })),
-  'Dessert Bites': DIABETIC_SNACK_CATEGORIES[5].items.map((snack, idx) => ({
+  "Dessert Bites": DIABETIC_SNACK_CATEGORIES[5].items.map((snack, idx) => ({
     id: `diabetic-snack-dessert-${idx}`,
     name: snack,
-    ingredients: []
-  }))
+    ingredients: [],
+  })),
 };
 
 // Build diabetic dinner premades (simple title-only format)
 const diabeticDinnerPremades = {
-  'Lean Protein Plates': DIABETIC_DINNER_MEALS['lean-protein-plates'].map((meal, idx) => ({
-    id: `diabetic-d1-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'Protein + Carb Bowls': DIABETIC_DINNER_MEALS['protein-carb-bowls'].map((meal, idx) => ({
-    id: `diabetic-d2-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'High Protein Plates': DIABETIC_DINNER_MEALS['high-protein-plates'].map((meal, idx) => ({
-    id: `diabetic-d3-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'Protein + Veggie': DIABETIC_DINNER_MEALS['simple-protein-veggie'].map((meal, idx) => ({
-    id: `diabetic-d4-${idx}`,
-    name: meal.title,
-    ingredients: []
-  })),
-  'One-Pan Meals': DIABETIC_DINNER_MEALS['one-pan-meals'].map((meal, idx) => ({
+  "Lean Protein Plates": DIABETIC_DINNER_MEALS["lean-protein-plates"].map(
+    (meal, idx) => ({
+      id: `diabetic-d1-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "Protein + Carb Bowls": DIABETIC_DINNER_MEALS["protein-carb-bowls"].map(
+    (meal, idx) => ({
+      id: `diabetic-d2-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "High Protein Plates": DIABETIC_DINNER_MEALS["high-protein-plates"].map(
+    (meal, idx) => ({
+      id: `diabetic-d3-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "Protein + Veggie": DIABETIC_DINNER_MEALS["simple-protein-veggie"].map(
+    (meal, idx) => ({
+      id: `diabetic-d4-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
+  "One-Pan Meals": DIABETIC_DINNER_MEALS["one-pan-meals"].map((meal, idx) => ({
     id: `diabetic-d5-${idx}`,
     name: meal.title,
-    ingredients: []
+    ingredients: [],
   })),
-  'Smart Plate Dinners': DIABETIC_DINNER_MEALS['smart-plate-dinners'].map((meal, idx) => ({
-    id: `diabetic-d6-${idx}`,
-    name: meal.title,
-    ingredients: []
-  }))
+  "Smart Plate Dinners": DIABETIC_DINNER_MEALS["smart-plate-dinners"].map(
+    (meal, idx) => ({
+      id: `diabetic-d6-${idx}`,
+      name: meal.title,
+      ingredients: [],
+    }),
+  ),
 };
 
 // Build competition premades (macro-based categories, not meal times)
 const competitionPremades = {
-  'Protein Only (30g)': proteinOnlyOptions.map((meal) => ({
+  "Protein Only (30g)": proteinOnlyOptions.map((meal) => ({
     id: meal.id,
     name: meal.title,
-    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
+    ingredients: [{ name: meal.ingredient, qty: 1, unit: "serving" }],
   })),
-  'Protein + Fibrous (30g + 100g)': proteinFibrousOptions.map((meal) => ({
+  "Protein + Fibrous (30g + 100g)": proteinFibrousOptions.map((meal) => ({
     id: meal.id,
     name: meal.title,
-    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
+    ingredients: [{ name: meal.ingredient, qty: 1, unit: "serving" }],
   })),
-  'Protein + Fibrous + Starchy (30g + 100g + 25g)': proteinFibrousStarchyOptions.map((meal) => ({
-    id: meal.id,
-    name: meal.title,
-    ingredients: [{ name: meal.ingredient, qty: 1, unit: 'serving' }]
-  }))
+  "Protein + Fibrous + Starchy (30g + 100g + 25g)":
+    proteinFibrousStarchyOptions.map((meal) => ({
+      id: meal.id,
+      name: meal.title,
+      ingredients: [{ name: meal.ingredient, qty: 1, unit: "serving" }],
+    })),
 };
 
 // Build breakfast premades from AI data with actual ingredients
 const breakfastPremades = {
-  'All Protein': getBreakfastMealsByCategory('all-protein').map(meal => ({
+  "All Protein": getBreakfastMealsByCategory("all-protein").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'Protein + Carb': getBreakfastMealsByCategory('protein-carb').map(meal => ({
+  "Protein + Carb": getBreakfastMealsByCategory("protein-carb").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'Egg-Based Meals': getBreakfastMealsByCategory('egg-based').map(meal => ({
+  "Egg-Based Meals": getBreakfastMealsByCategory("egg-based").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
+  })),
 };
 
 // Lunch premade meals organized by category
 const lunchPremades = {
-  'Lean Plates': getLunchMealsByCategory('lean-plates').map(meal => ({
+  "Lean Plates": getLunchMealsByCategory("lean-plates").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'Protein + Carb Bowls': getLunchMealsByCategory('satisfying-protein-carb-bowls').map(meal => ({
+  "Protein + Carb Bowls": getLunchMealsByCategory(
+    "satisfying-protein-carb-bowls",
+  ).map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'High Protein Plates': getLunchMealsByCategory('high-protein-plates').map(meal => ({
+  "High Protein Plates": getLunchMealsByCategory("high-protein-plates").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
+  "Protein + Veggie Plates": getLunchMealsByCategory(
+    "simple-protein-veggie-plates",
+  ).map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'Protein + Veggie Plates': getLunchMealsByCategory('simple-protein-veggie-plates').map(meal => ({
+  "One-Pan Meals": getLunchMealsByCategory("one-pan-meals").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'One-Pan Meals': getLunchMealsByCategory('one-pan-meals').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'Smart Plate Lunches': getLunchMealsByCategory('smart-plate-dinners').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  }))
+  "Smart Plate Lunches": getLunchMealsByCategory("smart-plate-dinners").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
 };
 
 // Dinner premade meals organized by category
 const dinnerPremades = {
-  'Lean Protein Plates': getDinnerMealsByCategory('lean-protein-plates').map(meal => ({
+  "Lean Protein Plates": getDinnerMealsByCategory("lean-protein-plates").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
+  "Protein + Carb Bowls": getDinnerMealsByCategory("protein-carb-bowls").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
+  "High Protein Plates": getDinnerMealsByCategory("high-protein-plates").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
+  "Protein + Veggie Plates": getDinnerMealsByCategory(
+    "simple-protein-veggie",
+  ).map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'Protein + Carb Bowls': getDinnerMealsByCategory('protein-carb-bowls').map(meal => ({
+  "One-Pan Meals": getDinnerMealsByCategory("one-pan-meals").map((meal) => ({
     id: meal.id,
     name: meal.name,
     defaultCookingMethod: meal.defaultCookingMethod,
     actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
+    ingredients: meal.ingredients.map((ing) => ({
       item: ing.item,
       amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
+      preparation: meal.defaultCookingMethod || "as preferred",
+    })),
   })),
-  'High Protein Plates': getDinnerMealsByCategory('high-protein-plates').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'Protein + Veggie Plates': getDinnerMealsByCategory('simple-protein-veggie').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'One-Pan Meals': getDinnerMealsByCategory('one-pan-meals').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  })),
-  'Smart Plate Dinners': getDinnerMealsByCategory('smart-plate-dinners').map(meal => ({
-    id: meal.id,
-    name: meal.name,
-    defaultCookingMethod: meal.defaultCookingMethod,
-    actualIngredients: meal.ingredients,
-    ingredients: meal.ingredients.map(ing => ({
-      item: ing.item,
-      amount: `${ing.quantity} ${ing.unit}`,
-      preparation: meal.defaultCookingMethod || 'as preferred'
-    }))
-  }))
+  "Smart Plate Dinners": getDinnerMealsByCategory("smart-plate-dinners").map(
+    (meal) => ({
+      id: meal.id,
+      name: meal.name,
+      defaultCookingMethod: meal.defaultCookingMethod,
+      actualIngredients: meal.ingredients,
+      ingredients: meal.ingredients.map((ing) => ({
+        item: ing.item,
+        amount: `${ing.quantity} ${ing.unit}`,
+        preparation: meal.defaultCookingMethod || "as preferred",
+      })),
+    }),
+  ),
 };
 
 export default function MealPremadePicker({
   open,
   onClose,
   onMealSelect,
-  mealType = 'breakfast',
-  dietType = 'weekly',
-  showMacroTargeting = false
+  mealType = "breakfast",
+  dietType = "weekly",
+  showMacroTargeting = false,
 }: MealPremadePickerProps) {
   // Determine which premade set to use based on meal type and diet type
   // Competition mode uses macro-based categories (same data for all meal slots)
-  const premadeData = dietType === 'competition'
-    ? competitionPremades
-    : mealType === 'breakfast' 
-    ? (dietType === 'diabetic' ? diabeticBreakfastPremades : breakfastPremades)
-    : mealType === 'lunch' 
-    ? (dietType === 'diabetic' ? diabeticLunchPremades : lunchPremades)
-    : mealType === 'snack'
-    ? diabeticSnackPremades
-    : (dietType === 'diabetic' ? diabeticDinnerPremades : dinnerPremades);
+  const premadeData =
+    dietType === "competition"
+      ? competitionPremades
+      : mealType === "breakfast"
+        ? dietType === "diabetic"
+          ? diabeticBreakfastPremades
+          : breakfastPremades
+        : mealType === "lunch"
+          ? dietType === "diabetic"
+            ? diabeticLunchPremades
+            : lunchPremades
+          : mealType === "snack"
+            ? diabeticSnackPremades
+            : dietType === "diabetic"
+              ? diabeticDinnerPremades
+              : dinnerPremades;
 
-  const [activeCategory, setActiveCategory] = useState<string>('');
+  const [activeCategory, setActiveCategory] = useState<string>("");
   const [generating, setGenerating] = useState(false);
   const [prepModalOpen, setPrepModalOpen] = useState(false);
-  const [currentIngredient, setCurrentIngredient] = useState('');
+  const [currentIngredient, setCurrentIngredient] = useState("");
   const [pendingMeal, setPendingMeal] = useState<any>(null);
-  const [pendingCategory, setPendingCategory] = useState<string>('');
-  const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
+  const [pendingCategory, setPendingCategory] = useState<string>("");
+  const [cookingStyles, setCookingStyles] = useState<Record<string, string>>(
+    {},
+  );
   const [progress, setProgress] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const tickerRef = useRef<number | null>(null);
@@ -428,7 +488,9 @@ export default function MealPremadePicker({
   const { toast } = useToast();
 
   // Macro targeting for trainer features
-  const macroTargetingState = useMacroTargeting('macroTargets::trainer::premadePicker');
+  const macroTargetingState = useMacroTargeting(
+    "macroTargets::trainer::premadePicker",
+  );
 
   const startProgressTicker = () => {
     if (tickerRef.current) return;
@@ -451,18 +513,18 @@ export default function MealPremadePicker({
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-    
+
     // Stop and reset progress ticker
     if (tickerRef.current) {
       clearInterval(tickerRef.current);
       tickerRef.current = null;
     }
-    
+
     // Reset all state
     setGenerating(false);
     setProgress(0);
     setPendingMeal(null);
-    setPendingCategory('');
+    setPendingCategory("");
     setCookingStyles({});
   };
 
@@ -476,39 +538,98 @@ export default function MealPremadePicker({
   // List of ingredients that need cooking style selection (FULL LIST from MealIngredientPicker)
   const NEEDS_PREP = [
     // Eggs
-    'Eggs', 'Egg Whites', 'Whole Eggs',
-    
+    "Eggs",
+    "Egg Whites",
+    "Whole Eggs",
+
     // Steaks
-    'Steak', 'Ribeye', 'Ribeye Steak', 'Sirloin Steak', 'Top Sirloin', 'Filet Mignon',
-    'New York Strip', 'NY Strip', 'Strip Steak', 'Porterhouse', 'Porterhouse Steak',
-    'T-Bone', 'T-Bone Steak', 'TBone Steak', 'Skirt Steak', 'Flank Steak',
-    'Flat Iron Steak', 'Tri-Tip', 'Tri-Tip Steak', 'Hanger Steak',
-    'Kobe Steak', 'Kobe Beef', 'Wagyu Steak', 'Wagyu Beef',
-    
+    "Steak",
+    "Ribeye",
+    "Ribeye Steak",
+    "Sirloin Steak",
+    "Top Sirloin",
+    "Filet Mignon",
+    "New York Strip",
+    "NY Strip",
+    "Strip Steak",
+    "Porterhouse",
+    "Porterhouse Steak",
+    "T-Bone",
+    "T-Bone Steak",
+    "TBone Steak",
+    "Skirt Steak",
+    "Flank Steak",
+    "Flat Iron Steak",
+    "Tri-Tip",
+    "Tri-Tip Steak",
+    "Hanger Steak",
+    "Kobe Steak",
+    "Kobe Beef",
+    "Wagyu Steak",
+    "Wagyu Beef",
+
     // Chicken (base + variations)
-    'Chicken', 'Chicken Breast', 'Chicken Thighs', 'Chicken Sausage', 'Ground Chicken',
-    
+    "Chicken",
+    "Chicken Breast",
+    "Chicken Thighs",
+    "Chicken Sausage",
+    "Ground Chicken",
+
     // Turkey (base + variations)
-    'Turkey', 'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
-    
+    "Turkey",
+    "Turkey Breast",
+    "Ground Turkey",
+    "Turkey Sausage",
+
     // Fish
-    'Salmon', 'Tilapia', 'Cod', 'Tuna', 'Tuna Steak', 'Halibut', 'Mahi Mahi',
-    'Trout', 'Sardines', 'Anchovies', 'Catfish', 'Sea Bass', 'Red Snapper',
-    'Flounder', 'Orange Roughy', 'Sole',
-    
+    "Salmon",
+    "Tilapia",
+    "Cod",
+    "Tuna",
+    "Tuna Steak",
+    "Halibut",
+    "Mahi Mahi",
+    "Trout",
+    "Sardines",
+    "Anchovies",
+    "Catfish",
+    "Sea Bass",
+    "Red Snapper",
+    "Flounder",
+    "Orange Roughy",
+    "Sole",
+
     // Potatoes (ALL PLURAL)
-    'Potatoes', 'Red Potatoes', 'Sweet Potatoes', 'Yams',
-    
+    "Potatoes",
+    "Red Potatoes",
+    "Sweet Potatoes",
+    "Yams",
+
     // Rice
-    'Rice', 'White Rice', 'Brown Rice', 'Jasmine Rice', 'Basmati Rice', 'Wild Rice',
-    
+    "Rice",
+    "White Rice",
+    "Brown Rice",
+    "Jasmine Rice",
+    "Basmati Rice",
+    "Wild Rice",
+
     // Vegetables
-    'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',
-    'Cauliflower', 'Brussels Sprouts', 'Kale', 'Spinach',
-    'Carrots', 'Celery', 'Cucumber',
-    
+    "Broccoli",
+    "Asparagus",
+    "Green Beans",
+    "Mixed Vegetables",
+    "Cauliflower",
+    "Brussels Sprouts",
+    "Kale",
+    "Spinach",
+    "Carrots",
+    "Celery",
+    "Cucumber",
+
     // Salads
-    'Lettuce', 'Romaine Lettuce', 'Spring Mix'
+    "Lettuce",
+    "Romaine Lettuce",
+    "Spring Mix",
   ];
 
   // Set initial category when modal opens or meal type changes
@@ -523,20 +644,27 @@ export default function MealPremadePicker({
 
   const handleSelectPremade = (meal: any, category: string) => {
     // 🔥 DIABETIC/GLP-1/ANTI-INFLAMMATORY/COMPETITION: Title-only meals ALWAYS need prep modal
-    const isMedicalDiet = dietType === 'diabetic' || dietType === 'glp1' || dietType === 'anti-inflammatory' || dietType === 'competition';
-    const hasMealIngredients = meal.actualIngredients && Array.isArray(meal.actualIngredients) && meal.actualIngredients.length > 0;
-    
+    const isMedicalDiet =
+      dietType === "diabetic" ||
+      dietType === "glp1" ||
+      dietType === "anti-inflammatory" ||
+      dietType === "competition";
+    const hasMealIngredients =
+      meal.actualIngredients &&
+      Array.isArray(meal.actualIngredients) &&
+      meal.actualIngredients.length > 0;
+
     // Check meal ingredients for items that need prep selection
     let needsPrepIngredient: string | undefined;
-    
+
     // First check the actual ingredients array if it exists
     if (hasMealIngredients) {
       for (const ing of meal.actualIngredients) {
-        const ingredientName = ing.item || '';
+        const ingredientName = ing.item || "";
         // 🔥 Use normalization to match ingredient
         const normalizedName = normalizeIngredientName(ingredientName);
-        const match = NEEDS_PREP.find(prep => 
-          normalizeIngredientName(prep) === normalizedName
+        const match = NEEDS_PREP.find(
+          (prep) => normalizeIngredientName(prep) === normalizedName,
         );
         if (match) {
           needsPrepIngredient = ingredientName;
@@ -544,15 +672,15 @@ export default function MealPremadePicker({
         }
       }
     }
-    
+
     // For medical diets OR fallback: check meal name to detect main ingredient
     if (!needsPrepIngredient || isMedicalDiet) {
       const mealNameLower = meal.name.toLowerCase();
-      const foundInName = NEEDS_PREP.find(ing => {
+      const foundInName = NEEDS_PREP.find((ing) => {
         const normalizedPrep = normalizeIngredientName(ing);
         return mealNameLower.includes(normalizedPrep.toLowerCase());
       });
-      
+
       // For medical diets, prefer the name-based ingredient
       if (isMedicalDiet && foundInName) {
         needsPrepIngredient = foundInName;
@@ -576,99 +704,128 @@ export default function MealPremadePicker({
   const handlePrepSelect = (ingredient: string, style: string) => {
     const updatedStyles = { ...cookingStyles, [ingredient]: style };
     setCookingStyles(updatedStyles);
-    
+
     // Generate meal with selected style
     if (pendingMeal) {
       generateMealImage(pendingMeal, pendingCategory, updatedStyles);
       setPendingMeal(null);
-      setPendingCategory('');
+      setPendingCategory("");
     }
   };
 
-  const generateMealImage = async (meal: any, category: string, styles: Record<string, string>) => {
-    console.log('🎨 Starting meal generation for:', meal.name);
-    console.log('📋 Meal data:', meal);
-    console.log('🎯 Category:', category);
-    console.log('👨‍🍳 Cooking styles:', styles);
-    
+  const generateMealImage = async (
+    meal: any,
+    category: string,
+    styles: Record<string, string>,
+  ) => {
+    console.log("🎨 Starting meal generation for:", meal.name);
+    console.log("📋 Meal data:", meal);
+    console.log("🎯 Category:", category);
+    console.log("👨‍🍳 Cooking styles:", styles);
+
     setGenerating(true);
     startProgressTicker();
-    
+
     // Create new AbortController for this request
     abortControllerRef.current = new AbortController();
-    
+
     try {
       // Build ingredient list with cooking methods applied
       let ingredientsList: string[] = [];
-      
+
       if (meal.actualIngredients && meal.actualIngredients.length > 0) {
         ingredientsList = meal.actualIngredients.map((ing: any) => {
           const styleForIng = styles[ing.item] || meal.defaultCookingMethod;
-          const fullName = styleForIng ? `${styleForIng} ${ing.item}` : ing.item;
+          const fullName = styleForIng
+            ? `${styleForIng} ${ing.item}`
+            : ing.item;
           return `${ing.quantity} ${ing.unit} ${fullName}`;
         });
       } else {
         ingredientsList = [meal.name];
       }
-      
-      console.log(`🎨 Generating ${mealType} meal with ingredients:`, ingredientsList);
-      console.log('📡 Calling API endpoint: /api/meals/fridge-rescue');
-      
+
+      console.log(
+        `🎨 Generating ${mealType} meal with ingredients:`,
+        ingredientsList,
+      );
+      console.log("📡 Calling API endpoint: /api/meals/fridge-rescue");
+
       // Get custom macro targets if enabled
       const customMacroTargets = macroTargetingState.serializeForRequest();
-      
+
       // Use the SAME endpoint as the working AI Meal Creator
       const requestBody = {
         fridgeItems: ingredientsList,
         userId: 1,
         mealType: mealType,
-        ...(customMacroTargets && { macroTargets: customMacroTargets })
+        ...(customMacroTargets && { macroTargets: customMacroTargets }),
       };
-      
-      console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
-      
-      const response = await fetch('/api/meals/fridge-rescue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-        signal: abortControllerRef.current.signal
+
+      console.log("📤 Request body:", JSON.stringify(requestBody, null, 2));
+
+      const response = await fetch("/fridge-rescue/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // Canonical backend contract
+          items: ingredientsList,
+
+          // Optional macro guardrails
+          ...(customMacroTargets && {
+            macroTargetsPerMeal: customMacroTargets,
+          }),
+
+          // Useful metadata (ignored if backend doesn't use it)
+          mealSlot: mealType,
+          context: "AI_PREMADE_PICKER",
+        }),
+        signal: abortControllerRef.current.signal,
       });
-      
-      console.log('📥 Response status:', response.status);
-      
+
+      console.log("📥 Response status:", response.status);
+
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ API Error Response:', errorText);
-        throw new Error(`Failed to generate premade meal: ${response.status} - ${errorText}`);
+        console.error("❌ API Error Response:", errorText);
+        throw new Error(
+          `Failed to generate premade meal: ${response.status} - ${errorText}`,
+        );
       }
-      
+
       const data = await response.json();
-      console.log('📦 API Response data:', data);
-      
+      console.log("📦 API Response data:", data);
+
       // Handle both response formats
       let generatedMeal;
       if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
         generatedMeal = data.meals[0];
-        console.log('✅ Found meal in data.meals[0]');
+        console.log("✅ Found meal in data.meals[0]");
       } else if (data.meal) {
         generatedMeal = data.meal;
-        console.log('✅ Found meal in data.meal');
+        console.log("✅ Found meal in data.meal");
       } else {
-        console.error('❌ No meal found in response. Data structure:', Object.keys(data));
-        throw new Error('No meal found in response');
+        console.error(
+          "❌ No meal found in response. Data structure:",
+          Object.keys(data),
+        );
+        throw new Error("No meal found in response");
       }
-      
-      console.log('🍽️ Generated meal:', generatedMeal);
-      
+
+      console.log("🍽️ Generated meal:", generatedMeal);
+
       // Transform to match board format
-      const defaultImage = mealType === 'breakfast' 
-        ? '/assets/meals/default-breakfast.jpg'
-        : mealType === 'lunch'
-        ? '/assets/meals/default-lunch.jpg'
-        : mealType === 'snack'
-        ? '/assets/meals/default-snack.jpg'
-        : '/assets/meals/default-dinner.jpg';
-        
+      const defaultImage =
+        mealType === "breakfast"
+          ? "/assets/meals/default-breakfast.jpg"
+          : mealType === "lunch"
+            ? "/assets/meals/default-lunch.jpg"
+            : mealType === "snack"
+              ? "/assets/meals/default-snack.jpg"
+              : "/assets/meals/default-dinner.jpg";
+
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
         title: generatedMeal.name || meal.name,
@@ -682,42 +839,45 @@ export default function MealPremadePicker({
           calories: generatedMeal.calories || 350,
           protein: generatedMeal.protein || 30,
           carbs: generatedMeal.carbs || 20,
-          fat: generatedMeal.fat || 15
+          fat: generatedMeal.fat || 15,
         },
         medicalBadges: generatedMeal.medicalBadges || [],
-        source: 'premade',
-        category: category
+        source: "premade",
+        category: category,
       };
-      
-      console.log(`✅ Generated ${mealType} meal with image:`, premadeMeal.imageUrl);
-      
+
+      console.log(
+        `✅ Generated ${mealType} meal with image:`,
+        premadeMeal.imageUrl,
+      );
+
       // Call the parent's onMealSelect handler
       if (onMealSelect) {
         onMealSelect(premadeMeal);
       }
-      
+
       toast({
-        title: 'Meal Added!',
+        title: "Meal Added!",
         description: `${meal.name} has been added to your ${mealType}`,
       });
-      
+
       // Clean up and close on success
       cleanupGeneration();
       onClose();
     } catch (error: any) {
       // Don't show error if request was cancelled
-      if (error.name === 'AbortError') {
-        console.log('Meal generation cancelled by user');
+      if (error.name === "AbortError") {
+        console.log("Meal generation cancelled by user");
         return;
       }
-      
-      console.error('Error generating premade meal:', error);
+
+      console.error("Error generating premade meal:", error);
       toast({
-        title: 'Error',
-        description: 'Failed to generate meal image. Please try again.',
-        variant: 'destructive'
+        title: "Error",
+        description: "Failed to generate meal image. Please try again.",
+        variant: "destructive",
       });
-      
+
       // Clean up on error
       cleanupGeneration();
     }
@@ -726,7 +886,7 @@ export default function MealPremadePicker({
   const handleCancel = () => {
     // Use shared cleanup routine
     cleanupGeneration();
-    
+
     // Close modal
     onClose();
   };
@@ -740,12 +900,13 @@ export default function MealPremadePicker({
   };
 
   const categories = Object.keys(premadeData);
-  const allMeals = (premadeData[activeCategory as keyof typeof premadeData] || []) as any[];
-  
+  const allMeals = (premadeData[activeCategory as keyof typeof premadeData] ||
+    []) as any[];
+
   // Filter meals by search query
   const currentMeals = searchQuery.trim()
-    ? allMeals.filter(meal => 
-        meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ? allMeals.filter((meal) =>
+        meal.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : allMeals;
 
@@ -771,8 +932,8 @@ export default function MealPremadePicker({
               onClick={() => setActiveCategory(category)}
               className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                 activeCategory === category
-                  ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
-                  : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
+                  ? "bg-purple-600/40 border-2 border-purple-400 text-white shadow-md"
+                  : "bg-black/40 border border-white/20 text-white/70 hover:bg-white/10"
               }`}
             >
               {category}
@@ -825,8 +986,12 @@ export default function MealPremadePicker({
         {generating && (
           <div className="w-full mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-white/80">AI Analysis Progress</span>
-              <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+              <span className="text-sm text-white/80">
+                AI Analysis Progress
+              </span>
+              <span className="text-sm text-white/80">
+                {Math.round(progress)}%
+              </span>
             </div>
             <Progress
               value={progress}

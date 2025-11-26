@@ -1,24 +1,24 @@
 /**
  * 🔒 LOCKED COMPONENT - DO NOT MODIFY UI STRUCTURE
- * 
+ *
  * This file is PROTECTED under the Meal Picker Lockdown Protocol (November 24, 2025)
  * See LOCKDOWN.md for complete guidelines before making ANY changes.
- * 
+ *
  * ❌ PROHIBITED CHANGES:
  * - Adding new UI sections (banners, displays, input fields)
  * - Modifying modal layout or structure
  * - Changing ingredient grid rendering
  * - Adding extra state or complexity
- * 
+ *
  * ✅ ALLOWED (with approval):
  * - Bug fixes that don't alter UI structure
  * - Performance optimizations
  * - Backend API updates
- * 
+ *
  * REASON FOR LOCK: Recent UI additions (Beach Body banner, selected ingredients
  * display, custom ingredients input) caused modal crowding and broke the category
  * tabs/ingredient grid. Structure must remain stable.
- * 
+ *
  * LAST LOCKED: November 24, 2025
  * LOCKED BY: User explicit request
  */
@@ -31,11 +31,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import PreparationModal, { normalizeIngredientName } from "@/components/PreparationModal";
+import PreparationModal, {
+  normalizeIngredientName,
+} from "@/components/PreparationModal";
 import { SNACK_CATEGORIES } from "@/data/snackIngredients";
 import { DIABETIC_SNACK_CATEGORIES } from "@/data/diabeticPremadeSnacks";
 import { mealIngredients } from "@/data/mealIngredients";
@@ -62,13 +64,13 @@ export default function AIMealCreatorModal({
   dietType = "weekly",
   beachBodyMode = false,
 }: AIMealCreatorModalProps) {
-  const ACTIVE_SNACK_CATEGORIES = (dietType === "diabetic" && mealSlot === "snacks") 
-    ? DIABETIC_SNACK_CATEGORIES 
-    : SNACK_CATEGORIES;
+  const ACTIVE_SNACK_CATEGORIES =
+    dietType === "diabetic" && mealSlot === "snacks"
+      ? DIABETIC_SNACK_CATEGORIES
+      : SNACK_CATEGORIES;
 
-  const activeMealIngredients = dietType === "competition" 
-    ? competitionIngredients 
-    : mealIngredients;
+  const activeMealIngredients =
+    dietType === "competition" ? competitionIngredients : mealIngredients;
 
   const [activeCategory, setActiveCategory] = useState<string>("proteins");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -76,9 +78,11 @@ export default function AIMealCreatorModal({
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [prepModalOpen, setPrepModalOpen] = useState(false);
-  const [currentIngredient, setCurrentIngredient] = useState('');
+  const [currentIngredient, setCurrentIngredient] = useState("");
   const [pendingIngredients, setPendingIngredients] = useState<string[]>([]);
-  const [cookingStyles, setCookingStyles] = useState<Record<string, string>>({});
+  const [cookingStyles, setCookingStyles] = useState<Record<string, string>>(
+    {},
+  );
   const [needsPrepQueue, setNeedsPrepQueue] = useState<string[]>([]);
   const [currentPrepIndex, setCurrentPrepIndex] = useState(0);
   const tickerRef = useRef<number | null>(null);
@@ -86,27 +90,88 @@ export default function AIMealCreatorModal({
   const { toast } = useToast();
 
   // Macro targeting for trainer features
-  const macroTargetingState = useMacroTargeting('macroTargets::trainer::aiMealCreator');
+  const macroTargetingState = useMacroTargeting(
+    "macroTargets::trainer::aiMealCreator",
+  );
 
   // List of ingredients that need cooking style selection (matching MealPremadePicker)
   const NEEDS_PREP = [
-    'Eggs', 'Egg Whites', 'Whole Eggs',
-    'Steak', 'Ribeye', 'Ribeye Steak', 'Sirloin Steak', 'Top Sirloin', 'Filet Mignon',
-    'New York Strip', 'NY Strip', 'Strip Steak', 'Porterhouse', 'Porterhouse Steak',
-    'T-Bone', 'T-Bone Steak', 'TBone Steak', 'Skirt Steak', 'Flank Steak',
-    'Flat Iron Steak', 'Tri-Tip', 'Tri-Tip Steak', 'Hanger Steak',
-    'Kobe Steak', 'Kobe Beef', 'Wagyu Steak', 'Wagyu Beef',
-    'Chicken', 'Chicken Breast', 'Chicken Thighs', 'Chicken Sausage', 'Ground Chicken',
-    'Turkey', 'Turkey Breast', 'Ground Turkey', 'Turkey Sausage',
-    'Salmon', 'Tilapia', 'Cod', 'Tuna', 'Tuna Steak', 'Halibut', 'Mahi Mahi',
-    'Trout', 'Sardines', 'Anchovies', 'Catfish', 'Sea Bass', 'Red Snapper',
-    'Flounder', 'Orange Roughy', 'Sole',
-    'Potatoes', 'Red Potatoes', 'Sweet Potatoes', 'Yams',
-    'Rice', 'White Rice', 'Brown Rice', 'Jasmine Rice', 'Basmati Rice', 'Wild Rice',
-    'Broccoli', 'Asparagus', 'Green Beans', 'Mixed Vegetables',
-    'Cauliflower', 'Brussels Sprouts', 'Kale', 'Spinach',
-    'Carrots', 'Celery', 'Cucumber',
-    'Lettuce', 'Romaine Lettuce', 'Spring Mix'
+    "Eggs",
+    "Egg Whites",
+    "Whole Eggs",
+    "Steak",
+    "Ribeye",
+    "Ribeye Steak",
+    "Sirloin Steak",
+    "Top Sirloin",
+    "Filet Mignon",
+    "New York Strip",
+    "NY Strip",
+    "Strip Steak",
+    "Porterhouse",
+    "Porterhouse Steak",
+    "T-Bone",
+    "T-Bone Steak",
+    "TBone Steak",
+    "Skirt Steak",
+    "Flank Steak",
+    "Flat Iron Steak",
+    "Tri-Tip",
+    "Tri-Tip Steak",
+    "Hanger Steak",
+    "Kobe Steak",
+    "Kobe Beef",
+    "Wagyu Steak",
+    "Wagyu Beef",
+    "Chicken",
+    "Chicken Breast",
+    "Chicken Thighs",
+    "Chicken Sausage",
+    "Ground Chicken",
+    "Turkey",
+    "Turkey Breast",
+    "Ground Turkey",
+    "Turkey Sausage",
+    "Salmon",
+    "Tilapia",
+    "Cod",
+    "Tuna",
+    "Tuna Steak",
+    "Halibut",
+    "Mahi Mahi",
+    "Trout",
+    "Sardines",
+    "Anchovies",
+    "Catfish",
+    "Sea Bass",
+    "Red Snapper",
+    "Flounder",
+    "Orange Roughy",
+    "Sole",
+    "Potatoes",
+    "Red Potatoes",
+    "Sweet Potatoes",
+    "Yams",
+    "Rice",
+    "White Rice",
+    "Brown Rice",
+    "Jasmine Rice",
+    "Basmati Rice",
+    "Wild Rice",
+    "Broccoli",
+    "Asparagus",
+    "Green Beans",
+    "Mixed Vegetables",
+    "Cauliflower",
+    "Brussels Sprouts",
+    "Kale",
+    "Spinach",
+    "Carrots",
+    "Celery",
+    "Cucumber",
+    "Lettuce",
+    "Romaine Lettuce",
+    "Spring Mix",
   ];
 
   const startProgressTicker = () => {
@@ -136,12 +201,12 @@ export default function AIMealCreatorModal({
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-    
+
     if (tickerRef.current) {
       clearInterval(tickerRef.current);
       tickerRef.current = null;
     }
-    
+
     setGenerating(false);
     setProgress(0);
     setPendingIngredients([]);
@@ -155,13 +220,17 @@ export default function AIMealCreatorModal({
   }, []);
 
   const toggleIngredient = (ingredientName: string) => {
-    const isSelected = selectedIngredients.some((i) => i.toLowerCase() === ingredientName.toLowerCase());
-    
+    const isSelected = selectedIngredients.some(
+      (i) => i.toLowerCase() === ingredientName.toLowerCase(),
+    );
+
     if (isSelected) {
       // Remove from selected
-      setSelectedIngredients(prev => prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase()));
+      setSelectedIngredients((prev) =>
+        prev.filter((i) => i.toLowerCase() !== ingredientName.toLowerCase()),
+      );
       // Also remove its cooking style if it had one
-      setCookingStyles(prev => {
+      setCookingStyles((prev) => {
         const updated = { ...prev };
         delete updated[ingredientName];
         return updated;
@@ -169,15 +238,17 @@ export default function AIMealCreatorModal({
     } else {
       // Check if this ingredient needs prep
       const normalizedIng = normalizeIngredientName(ingredientName);
-      const needsPrep = NEEDS_PREP.some(prep => normalizeIngredientName(prep) === normalizedIng);
-      
+      const needsPrep = NEEDS_PREP.some(
+        (prep) => normalizeIngredientName(prep) === normalizedIng,
+      );
+
       if (needsPrep) {
         // Show prep modal IMMEDIATELY
         setCurrentIngredient(ingredientName);
         setPrepModalOpen(true);
       } else {
         // No prep needed, just add to selected list
-        setSelectedIngredients(prev => [...prev, ingredientName]);
+        setSelectedIngredients((prev) => [...prev, ingredientName]);
       }
     }
   };
@@ -187,7 +258,7 @@ export default function AIMealCreatorModal({
       toast({
         title: "No ingredients selected",
         description: "Please select at least one ingredient",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -199,52 +270,66 @@ export default function AIMealCreatorModal({
 
   const handlePrepSelect = (ingredient: string, style: string) => {
     // Save the cooking style
-    setCookingStyles(prev => ({ ...prev, [ingredient]: style }));
-    
+    setCookingStyles((prev) => ({ ...prev, [ingredient]: style }));
+
     // Add ingredient to selected list
-    setSelectedIngredients(prev => [...prev, ingredient]);
-    
+    setSelectedIngredients((prev) => [...prev, ingredient]);
+
     // Close prep modal - user can continue selecting more ingredients
     setPrepModalOpen(false);
-    setCurrentIngredient('');
+    setCurrentIngredient("");
   };
 
-  const generateMeal = async (ingredients: string[], styles: Record<string, string>) => {
+  const generateMeal = async (
+    ingredients: string[],
+    styles: Record<string, string>,
+  ) => {
     setGenerating(true);
     startProgressTicker();
-    
+
     abortControllerRef.current = new AbortController();
-    
+
     try {
       // Apply cooking styles to ingredients that have them
-      const ingredientsWithStyles = ingredients.map(ing => {
+      const ingredientsWithStyles = ingredients.map((ing) => {
         const style = styles[ing];
         return style ? `${style} ${ing}` : ing;
       });
 
       // Beach Body Mode: Fixed guardrails for lean-out meals
       // 35g protein (macronutrient) | 25g starchy carbs (macronutrient) | 150g fibrous carbs (macronutrient)
-      const beachBodyGuardrails = beachBodyMode ? {
-        protein_g: 35,
-        starchy_carbs_g: 25,
-        fibrous_carbs_g: 150
-      } : null;
+      const beachBodyGuardrails = beachBodyMode
+        ? {
+            protein_g: 35,
+            starchy_carbs_g: 25,
+            fibrous_carbs_g: 150,
+          }
+        : null;
 
       // Get custom macro targets if enabled (ignored if Beach Body mode)
-      const customMacroTargets = beachBodyMode ? beachBodyGuardrails : macroTargetingState.serializeForRequest();
+      const customMacroTargets = beachBodyMode
+        ? beachBodyGuardrails
+        : macroTargetingState.serializeForRequest();
 
-      const response = await fetch("/api/meals/fridge-rescue", {
+      const response = await fetch("/api/fridge-rescue/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fridgeItems: ingredientsWithStyles,
-          userId: 1,
-          mealType: mealSlot,
-          ...(customMacroTargets && { macroTargets: customMacroTargets })
+          // Correct canonical contract
+          items: ingredientsWithStyles,
+
+          // Optional macro guardrails (Beach Body or trainer macros)
+          ...(customMacroTargets && {
+            macroTargetsPerMeal: customMacroTargets,
+          }),
+
+          // Helpful metadata (safe — backend ignores if unused)
+          mealSlot,
+          context: "AI_MEAL_CREATOR",
         }),
-        signal: abortControllerRef.current.signal
+        signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
@@ -254,18 +339,23 @@ export default function AIMealCreatorModal({
       const data = await response.json();
       console.log("🍳 AI Meal Creator received data:", data);
 
-      let meal;
-      if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        meal = data.meals[0];
-      } else if (data.meal) {
-        meal = data.meal;
-      } else {
+      // Canonical response: ALWAYS { meals: UnifiedMeal[] }
+      if (
+        !data.meals ||
+        !Array.isArray(data.meals) ||
+        data.meals.length === 0
+      ) {
         console.error("❌ Invalid data structure:", data);
-        throw new Error("No meal found in response");
+        throw new Error("No meals returned from engine");
       }
 
+      // Always take first meal
+      const meal = data.meals[0];
+
       if (!meal.imageUrl) {
-        meal.imageUrl = `/assets/meals/default-${mealSlot}.jpg` || "/assets/meals/default-meal.jpg";
+        meal.imageUrl =
+          `/assets/meals/default-${mealSlot}.jpg` ||
+          "/assets/meals/default-meal.jpg";
       }
       if (!meal.id) {
         meal.id = `ai-meal-${Date.now()}`;
@@ -275,7 +365,7 @@ export default function AIMealCreatorModal({
       stopProgressTicker();
 
       onMealGenerated(meal);
-      
+
       toast({
         title: "Meal Created!",
         description: `${meal.name} has been added`,
@@ -287,19 +377,19 @@ export default function AIMealCreatorModal({
       setSearchQuery("");
       onOpenChange(false);
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('Meal generation cancelled by user');
+      if (error.name === "AbortError") {
+        console.log("Meal generation cancelled by user");
         return;
       }
-      
+
       console.error("Error generating meal:", error);
       stopProgressTicker();
       toast({
         title: "Error",
         description: "Failed to generate meal. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
-      
+
       cleanupGeneration();
     }
   };
@@ -321,13 +411,16 @@ export default function AIMealCreatorModal({
   };
 
   // Get ingredients for current category
-  const categoryIngredients = mealSlot !== "snacks" 
-    ? (activeMealIngredients[activeCategory as keyof typeof activeMealIngredients] || [])
-    : [];
+  const categoryIngredients =
+    mealSlot !== "snacks"
+      ? activeMealIngredients[
+          activeCategory as keyof typeof activeMealIngredients
+        ] || []
+      : [];
 
   const filteredIngredients = searchQuery.trim()
     ? categoryIngredients.filter((item: any) => {
-        const itemName = typeof item === 'string' ? item : item.name;
+        const itemName = typeof item === "string" ? item : item.name;
         return itemName.toLowerCase().includes(searchQuery.toLowerCase());
       })
     : categoryIngredients;
@@ -344,7 +437,8 @@ export default function AIMealCreatorModal({
         <div className="text-center mb-4">
           <p className="text-white/90 text-sm">
             Select ingredients and we'll create a delicious{" "}
-            <span className="font-semibold text-white">{mealSlot}</span> recipe for you!
+            <span className="font-semibold text-white">{mealSlot}</span> recipe
+            for you!
           </p>
         </div>
 
@@ -357,26 +451,38 @@ export default function AIMealCreatorModal({
         {!generating && mealSlot !== "snacks" && (
           <div className="flex flex-nowrap gap-2 mb-3 overflow-x-auto w-full min-w-0 pb-2 overscroll-x-contain touch-pan-x">
             {Object.keys(activeMealIngredients).map((category) => {
-              const displayName = category === 'proteins' ? 'Proteins' 
-                : category === 'starchyCarbs' ? 'Starchy Carbs'
-                : category === 'fibrousCarbs' ? 'Fibrous Carbs'
-                : category === 'fats' ? 'Fats'
-                : category === 'fruits' ? 'Fruits'
-                : category;
-              const dataWtAttr = category === 'proteins' ? 'wmb-protein-category-tab'
-                : category === 'starchyCarbs' ? 'wmb-starchy-carbs-category-tab'
-                : category === 'fibrousCarbs' ? 'wmb-fibrous-carbs-category-tab'
-                : category === 'fats' ? 'wmb-fats-category-tab'
-                : category === 'fruits' ? 'wmb-fruits-category-tab'
-                : undefined;
+              const displayName =
+                category === "proteins"
+                  ? "Proteins"
+                  : category === "starchyCarbs"
+                    ? "Starchy Carbs"
+                    : category === "fibrousCarbs"
+                      ? "Fibrous Carbs"
+                      : category === "fats"
+                        ? "Fats"
+                        : category === "fruits"
+                          ? "Fruits"
+                          : category;
+              const dataWtAttr =
+                category === "proteins"
+                  ? "wmb-protein-category-tab"
+                  : category === "starchyCarbs"
+                    ? "wmb-starchy-carbs-category-tab"
+                    : category === "fibrousCarbs"
+                      ? "wmb-fibrous-carbs-category-tab"
+                      : category === "fats"
+                        ? "wmb-fats-category-tab"
+                        : category === "fruits"
+                          ? "wmb-fruits-category-tab"
+                          : undefined;
               return (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
                   className={`flex-shrink-0 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                     activeCategory === category
-                      ? 'bg-purple-600/40 border-2 border-purple-400 text-white shadow-md'
-                      : 'bg-black/40 border border-white/20 text-white/70 hover:bg-white/10'
+                      ? "bg-purple-600/40 border-2 border-purple-400 text-white shadow-md"
+                      : "bg-black/40 border border-white/20 text-white/70 hover:bg-white/10"
                   }`}
                   data-wt={dataWtAttr}
                 >
@@ -396,7 +502,9 @@ export default function AIMealCreatorModal({
                 type="button"
                 onClick={() => {
                   const categoryItems = category.items.slice(0, 5);
-                  setSelectedIngredients((prev) => [...new Set([...prev, ...categoryItems])]);
+                  setSelectedIngredients((prev) => [
+                    ...new Set([...prev, ...categoryItems]),
+                  ]);
                 }}
                 className="px-3 py-1 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-400/30 rounded-lg text-xs text-white/90 transition-colors"
               >
@@ -422,11 +530,15 @@ export default function AIMealCreatorModal({
           <div className="overflow-y-auto max-h-[50vh] mb-3 min-h-0">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-2 gap-y-1">
               {filteredIngredients.map((item: any) => {
-                const itemName = typeof item === 'string' ? item : item.name;
-                const dataWtAttr = activeCategory === 'proteins' ? 'wmb-protein-item'
-                  : activeCategory === 'starchyCarbs' ? 'wmb-starchy-item'
-                  : activeCategory === 'fibrousCarbs' ? 'wmb-fibrous-item'
-                  : undefined;
+                const itemName = typeof item === "string" ? item : item.name;
+                const dataWtAttr =
+                  activeCategory === "proteins"
+                    ? "wmb-protein-item"
+                    : activeCategory === "starchyCarbs"
+                      ? "wmb-starchy-item"
+                      : activeCategory === "fibrousCarbs"
+                        ? "wmb-fibrous-item"
+                        : undefined;
                 return (
                   <div
                     key={itemName}
@@ -472,8 +584,12 @@ export default function AIMealCreatorModal({
         {generating && (
           <div className="w-full mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-white/80">AI Analysis Progress</span>
-              <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+              <span className="text-sm text-white/80">
+                AI Analysis Progress
+              </span>
+              <span className="text-sm text-white/80">
+                {Math.round(progress)}%
+              </span>
             </div>
             <Progress
               value={progress}
