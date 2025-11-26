@@ -159,7 +159,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
     walkthroughId: "social-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
-    keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "social plans", "find meals", "meal finder", "find food", "nearby meals", "restaurant guide"],
+    keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "find meals", "meal finder", "find food", "nearby meals", "restaurant guide"],
     spokenPrompt: "Welcome to the Socializing Hub! Eating out with friends? Make smart choices without missing the fun.",
     selectionPrompt: "What do you need? Say 'Restaurant Guide' to get AI-powered healthy options from any restaurant, or 'Find Meals' to search local restaurants by craving and location.",
     voiceTimeoutMessage: "I didn't catch that. Try typing 'Restaurant Guide' or 'Find Meals' instead.",
