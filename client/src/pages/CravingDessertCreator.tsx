@@ -16,12 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, ArrowLeft, Users, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import HealthBadgesPopover from "@/components/badges/HealthBadgesPopover";
-import { generateMedicalBadges, getUserMedicalProfile } from "@/utils/medicalPersonalization";
-import CopyRecipeButton from "@/components/CopyRecipeButton";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import { setQuickView } from "@/lib/macrosQuickView";
-import TrashButton from "@/components/ui/TrashButton";
 import PhaseGate from "@/components/PhaseGate";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
