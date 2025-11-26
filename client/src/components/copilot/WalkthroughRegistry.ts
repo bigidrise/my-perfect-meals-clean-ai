@@ -11,16 +11,20 @@ const registry: Record<string, WalkthroughConfig> = {};
 
 const PAGE_SCRIPTS: Record<string, any[]> = {
   'restaurant-guide': [
-    { selector: '[data-walkthrough="restaurant-list"]', text: 'Browse your saved restaurants', showArrow: true },
-    { selector: '[data-walkthrough="add-restaurant"]', text: 'Add a new restaurant to your list', showArrow: true },
+    { selector: '[data-testid="restaurant-guide-form"]', text: 'Tell us what you are craving and where you want to eat', showArrow: true },
+    { selector: '[data-testid="restaurant-guide-craving"]', text: 'Type your craving here - pizza, sushi, healthy salad, anything!', showArrow: true },
+    { selector: '[data-testid="restaurant-guide-restaurant"]', text: 'Enter the restaurant name or let us suggest one', showArrow: true },
+    { selector: '[data-testid="restaurant-guide-search"]', text: 'Tap Search to find the best meal options for you', showArrow: true },
   ],
   'craving-creator': [
-    { selector: '[data-walkthrough="craving-input"]', text: 'Describe what you re craving', showArrow: true },
-    { selector: '[data-walkthrough="generate-meal"]', text: 'Generate a meal that satisfies your craving', showArrow: true },
+    { selector: '[data-testid="cravingcreator-input-box"]', text: 'Describe what you are craving - be as specific as you like!', showArrow: true },
+    { selector: '[data-testid="cravingcreator-create-button"]', text: 'Tap Create to generate a meal that satisfies your craving', showArrow: true },
+    { selector: '[data-testid="cravingcreator-results"]', text: 'Your personalized meal will appear here with full nutrition info', showArrow: true },
   ],
   'shopping-list': [
-    { selector: '[data-walkthrough="shopping-items"]', text: 'Your shopping list with all ingredients', showArrow: true },
-    { selector: '[data-walkthrough="check-items"]', text: 'Check off items as you shop', showArrow: true },
+    { selector: '[data-testid="shopping-summary-card"]', text: 'Here is your shopping list summary with all your ingredients', showArrow: true },
+    { selector: '[data-testid="shopping-list"]', text: 'Your ingredients organized by category - check them off as you shop', showArrow: true },
+    { selector: '[data-testid="shopping-send-to-store"]', text: 'Send your list to your favorite store for easy pickup or delivery', showArrow: true },
   ],
 };
 
