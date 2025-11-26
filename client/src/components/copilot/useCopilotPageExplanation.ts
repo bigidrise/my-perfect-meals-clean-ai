@@ -44,7 +44,7 @@ export function useCopilotPageExplanation() {
 
         if (explanation.autoClose) {
           const wordCount = explanation.spokenText.split(' ').length;
-          const estimatedDuration = Math.max(5000, wordCount * 400);
+          const estimatedDuration = Math.max(7000, wordCount * 400);
           
           autoCloseTimerRef.current = setTimeout(() => {
             close();
