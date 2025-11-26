@@ -67,16 +67,17 @@ CRITERIA:
 - imageUrl should be a short descriptive image prompt (no quotes).
 `;
 
-    // Call OpenAI Responses API (v4)
-    const completion = await openai.responses.create({
-      model: "gpt-4.1",
-      input: prompt,
-      response_format: { type: "json" },
+    // Call OpenAI Chat Completions API
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
+      max_tokens: 2000,
     });
 
     let meal: any;
     try {
-      const rawText = completion.output[0].content[0].text;
+      const rawText = completion.choices[0]?.message?.content || "{}";
       meal = JSON.parse(rawText);
     } catch (parseErr) {
       console.error("Dessert Creator JSON parse error:", parseErr);
