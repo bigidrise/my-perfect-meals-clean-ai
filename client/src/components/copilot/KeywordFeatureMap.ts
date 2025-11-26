@@ -19,7 +19,7 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/weekly-meal-board",
     walkthroughId: "weekly-board",
-    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "week", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan", "plan my week"],
+    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "week", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan", "plan my week", "plan"],
   },
   
   // Beach Body Meal Builder

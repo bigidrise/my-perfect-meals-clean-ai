@@ -325,7 +325,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     primaryRoute: "/weekly-meal-board",
     walkthroughId: "weekly-meal-builder",
     isHub: false,
-    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan"]
+    keywords: ["weekly board", "meal board", "weekly planner", "meal builder", "meal board builder", "weekly", "plan my week", "weekly meal board", "weekly meal builder", "week planner", "meal week", "weekly meals", "weekly plan", "week", "plan"]
   },
 
   GET_INSPIRATION: {
