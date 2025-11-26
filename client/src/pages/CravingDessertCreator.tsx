@@ -37,7 +37,7 @@ export default function DessertCreator() {
   const tickerRef = useRef<number | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Activate Copilot page explanation
+  // Activate Copilot page explanation (like Craving Creator)
   useCopilotPageExplanation();
 
   // Safe-area + onboarding

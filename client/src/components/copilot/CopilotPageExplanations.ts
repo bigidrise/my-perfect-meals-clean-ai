@@ -18,8 +18,8 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
   '/dessert-creator': {
     pageId: 'dessert-creator',
     title: 'Dessert Creator',
-    description: 'Create healthy desserts that satisfy your cravings. Describe what you want, choose a dessert type (pie, cake, cookie, etc.), add flavor preferences, and set your servings. The AI will generate a complete recipe with nutrition info.',
-    spokenText: 'Dessert Creator. Describe what dessert you\'re craving, like warm apple pie or fudge brownies. Choose what type of dessert you want from the dropdown, like pie, cake, cookie, brownie, cheesecake, smoothie, frozen treat, pudding, no-bake dessert, bars, muffins, cupcakes, pastry, or surprise me. Add any flavor preferences, like rich and gooey or light and fluffy. Select your servings and dietary needs if you have any, then press Create My Dessert. The AI will generate a complete recipe with ingredients, instructions, and nutrition information. Close Copilot anytime if you don\'t need help.',
+    description: 'Describe your dessert, pick what type like pie or cake, choose flavor and texture, select servings and dietary requirements, then create your dessert.',
+    spokenText: 'Dessert Creator. Describe your dessert. Pick what type of dessert, whether it\'s a pie, cake, or whatever. Pick your flavor texture if you need to. Pick your servings. Pick your dietary requirements if you have any. Then create your dessert. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
 
