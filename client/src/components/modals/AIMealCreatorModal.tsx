@@ -311,23 +311,23 @@ export default function AIMealCreatorModal({
         ? beachBodyGuardrails
         : macroTargetingState.serializeForRequest();
 
-      const response = await fetch("/api/fridge-rescue/generate", {
+      const response = await fetch("/api/craving-creator/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Correct canonical contract
-          items: ingredientsWithStyles,
-
+          // AI generation requires craving input
+          craving: ingredientsWithStyles.join(", "),
+          
           // Optional macro guardrails (Beach Body or trainer macros)
           ...(customMacroTargets && {
-            macroTargetsPerMeal: customMacroTargets,
+            macroTargets: customMacroTargets,
           }),
 
-          // Helpful metadata (safe — backend ignores if unused)
-          mealSlot,
-          context: "AI_MEAL_CREATOR",
+          // Meal context
+          mealType: mealSlot,
+          userId: "1", // Default user for now
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -339,18 +339,13 @@ export default function AIMealCreatorModal({
       const data = await response.json();
       console.log("🍳 AI Meal Creator received data:", data);
 
-      // Canonical response: ALWAYS { meals: UnifiedMeal[] }
-      if (
-        !data.meals ||
-        !Array.isArray(data.meals) ||
-        data.meals.length === 0
-      ) {
+      // AI Craving Creator returns { meal: UnifiedMeal }
+      if (!data.meal) {
         console.error("❌ Invalid data structure:", data);
-        throw new Error("No meals returned from engine");
+        throw new Error("No meal returned from AI generator");
       }
 
-      // Always take first meal
-      const meal = data.meals[0];
+      const meal = data.meal;
 
       if (!meal.imageUrl) {
         meal.imageUrl =
