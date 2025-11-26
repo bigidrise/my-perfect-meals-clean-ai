@@ -14,7 +14,7 @@ const dessertCreatorRouter = Router();
 
 dessertCreatorRouter.post("/", async (req, res) => {
   try {
-    const { dessert, flavor, dietary, servings, userId } = req.body ?? {};
+    const { dessert, dessertType, flavor, dietary, servings, userId } = req.body ?? {};
 
     // Only REQUIRE dessert name; userId is optional for now
     if (!dessert) {
@@ -57,6 +57,7 @@ Return JSON ONLY, following this exact schema:
 
 CRITERIA:
 - Dessert requested: "${dessert}"
+- Dessert TYPE: "${dessertType ?? "any style that fits best"}"
 - Flavor/texture vibe: "${flavor ?? ""}"
 - Dietary requirements: "${dietary ?? ""}"
 - Number of servings: ${safeServings}

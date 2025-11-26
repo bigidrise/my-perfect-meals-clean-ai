@@ -31,6 +31,7 @@ export default function DessertCreator() {
   const { toast } = useToast();
 
   const [dessert, setDessert] = useState("");
+  const [dessertType, setDessertType] = useState("");
   const [flavor, setFlavor] = useState("");
   const [dietary, setDietary] = useState("");
   const [servings, setServings] = useState(8);
@@ -89,6 +90,7 @@ export default function DessertCreator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dessert,
+          dessertType,
           flavor,
           dietary,
           servings,
@@ -205,6 +207,34 @@ export default function DessertCreator() {
                 <p className="text-xs text-white/70 text-right mt-1">
                   {dessert.length}/200
                 </p>
+              </div>
+
+              {/* Dessert Type Dropdown */}
+              <div>
+                <label className="block text-xs font-medium mb-1 text-white">
+                  What type of dessert?
+                </label>
+                <Select value={dessertType} onValueChange={(v) => setDessertType(v)}>
+                  <SelectTrigger className="w-full text-sm bg-black text-white border-white/30">
+                    <SelectValue placeholder="Select dessert type (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pie">Pie</SelectItem>
+                    <SelectItem value="cake">Cake</SelectItem>
+                    <SelectItem value="cookie">Cookie</SelectItem>
+                    <SelectItem value="brownie">Brownie</SelectItem>
+                    <SelectItem value="cheesecake">Cheesecake</SelectItem>
+                    <SelectItem value="smoothie">Smoothie</SelectItem>
+                    <SelectItem value="frozen">Frozen Dessert</SelectItem>
+                    <SelectItem value="pudding">Pudding / Custard</SelectItem>
+                    <SelectItem value="nobake">No-Bake Dessert</SelectItem>
+                    <SelectItem value="bars">Bars</SelectItem>
+                    <SelectItem value="muffin">Muffins</SelectItem>
+                    <SelectItem value="cupcake">Cupcakes</SelectItem>
+                    <SelectItem value="pastry">Pastry</SelectItem>
+                    <SelectItem value="surprise">Surprise Me</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Flavor Input */}
