@@ -26,8 +26,8 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
   '/craving-creator-landing': {
     pageId: 'craving-creator-landing',
     title: 'Craving Creator Hub',
-    description: 'Choose Creator for custom cravings or Premades for ready-made options.',
-    spokenText: 'Craving Creator Hub. Say Creator to describe your own craving, or say Premades to browse ready-made options. Close Copilot anytime if you don\'t need help.',
+    description: 'Choose from three options: Creator for custom AI-generated cravings, Premades for ready-made craving recipes, or Dessert Creator for healthy desserts like pies, cakes, cookies, and more.',
+    spokenText: 'Craving Creator Hub. You have three options here. Say Creator to build a custom craving with AI. Say Premades to browse ready-made craving recipes. Or say Dessert Creator to make healthy desserts like pies, cakes, cookies, brownies, and more. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
 
