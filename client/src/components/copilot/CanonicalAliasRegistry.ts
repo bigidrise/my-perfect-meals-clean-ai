@@ -159,7 +159,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
     walkthroughId: "social-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
-    keywords: ["restaurant", "socializing", "eating out", "social meals", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "find meals", "meal finder", "find food", "nearby meals", "restaurant guide"],
+    keywords: ["restaurant", "socializing", "eating out", "restaurants", "out to eat", "social hub", "socializing hub", "going out", "night out", "find food", "food near me", "restaurant guide"],
     spokenPrompt: "Welcome to the Socializing Hub! Eating out with friends? Make smart choices without missing the fun.",
     selectionPrompt: "What do you need? Say 'Restaurant Guide' to get AI-powered healthy options from any restaurant, or 'Find Meals' to search local restaurants by craving and location.",
     voiceTimeoutMessage: "I didn't catch that. Try typing 'Restaurant Guide' or 'Find Meals' instead.",
@@ -178,7 +178,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         route: "/social-hub/find",
         testId: "socialhub-find",
         walkthroughId: "find-meals-walkthrough",
-        aliases: ["find meals", "near me", "find", "meals near me", "nearby food", "nearby meals", "nearby", "local meals"]
+        aliases: ["food near me", "near me", "find", "nearby food", "nearby", "local food", "food nearby"]
       }
     ]
   },
@@ -235,7 +235,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         route: "/diabetic-menu-builder",
         testId: "diabetichub-builder",
         walkthroughId: "diabetic-meal-builder",
-        aliases: ["builder", "menu builder", "diabetic builder", "meal builder", "diabetic meals", "diabetes meals", "d-build"]
+        aliases: ["diabetic builder", "diabetes builder", "d-build", "build diabetic"]
       }
     ]
   },
@@ -254,7 +254,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         route: "/glp1-menu-builder",
         testId: "glp1hub-builder",
         walkthroughId: "glp1-meal-builder",
-        aliases: ["builder", "meal builder", "glp1 builder", "glp-1 builder", "menu builder", "glp one builder", "glp meal builder", "glp menu", "glp-1 meals", "glp-build"]
+        aliases: ["glp1 builder", "glp-1 builder", "glp one builder", "glp menu", "glp-build", "build glp"]
       }
     ]
   },
@@ -334,7 +334,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     primaryRoute: "/get-inspiration",
     walkthroughId: "inspiration-walkthrough", // Phase C.8
     isHub: false,
-    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse meals"]
+    keywords: ["inspiration", "ideas", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse recipes"]
   },
 
   ANTI_INFLAMMATORY: {
@@ -343,7 +343,7 @@ export const DIRECT_PAGES: Record<string, FeatureDefinition> = {
     primaryRoute: "/anti-inflammatory-menu-builder",
     walkthroughId: "anti-inflammatory-meal-builder",
     isHub: false,
-    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"]
+    keywords: ["anti-inflammatory", "inflammation", "anti inflammatory", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"]
   },
 
   BEACH_BODY: {

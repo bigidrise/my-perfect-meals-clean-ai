@@ -47,14 +47,14 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/social-hub",
     walkthroughId: "social-hub",
-    keywords: ["socializing", "social meals", "social hub", "socializing hub", "going out", "night out"],
+    keywords: ["socializing", "social hub", "socializing hub", "going out", "night out", "eating out", "restaurant"],
   },
   
   // Diabetic Hub
   {
     path: "/diabetic-hub",
     walkthroughId: "diabetic-hub",
-    keywords: ["diabetic", "diabetes", "sugar control", "diabetic meals", "blood sugar", "glucose", "diabetic hub", "diabetes hub", "diabetes support"],
+    keywords: ["diabetic", "diabetes", "sugar control", "blood sugar", "glucose", "diabetic hub", "diabetes hub"],
   },
   
   // GLP-1 Hub
@@ -68,7 +68,7 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/anti-inflammatory-menu-builder",
     walkthroughId: "anti-inflammatory",
-    keywords: ["anti-inflammatory", "inflammation", "healing meals", "anti inflammatory builder", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"],
+    keywords: ["anti-inflammatory", "inflammation", "anti inflammatory", "anti", "reduce inflammation", "inflammatory diet", "healing diet", "anti inflam"],
   },
   
   // Kids Hub (Phase C.4: High-level summons only)
@@ -103,7 +103,7 @@ export const KEYWORD_FEATURE_MAP: FeatureMapping[] = [
   {
     path: "/get-inspiration",
     walkthroughId: "inspiration",
-    keywords: ["inspiration", "ideas", "meal ideas", "meal inspiration", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse meals"],
+    keywords: ["inspiration", "ideas", "get ideas", "inspire me", "food ideas", "recipe ideas", "cooking ideas", "browse recipes"],
   },
   
   // Supplement Hub
