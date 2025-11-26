@@ -7,6 +7,7 @@ import { SpotlightOverlay } from "./SpotlightOverlay";
 import { useWalkthroughController } from "./walkthrough/useWalkthroughController";
 import { registerCopilotCloser } from "./simple-walkthrough/simpleWalkthroughHelper";
 import { CopilotGuidedModeProvider } from "./CopilotGuidedModeContext";
+import { useCopilotPageExplanation } from "./useCopilotPageExplanation";
 
 interface CopilotSystemProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ interface CopilotSystemProps {
 const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { setLastResponse, close } = useCopilot();
   const walkthrough = useWalkthroughController();
+
+  useCopilotPageExplanation();
 
   useEffect(() => {
     setResponseHandler((response) => {
