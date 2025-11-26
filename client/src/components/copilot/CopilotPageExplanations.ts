@@ -15,6 +15,14 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     autoClose: true,
   },
 
+  '/dessert-creator': {
+    pageId: 'dessert-creator',
+    title: 'Dessert Creator',
+    description: 'Create healthy desserts that satisfy your cravings. Describe what you want, choose a dessert type (pie, cake, cookie, etc.), add flavor preferences, and set your servings. The AI will generate a complete recipe with nutrition info.',
+    spokenText: 'Dessert Creator. Describe what dessert you\'re craving, like warm apple pie or fudge brownies. Choose what type of dessert you want from the dropdown. Add any flavor preferences, like rich and gooey or light and fluffy. Select your servings and dietary needs, then press Create My Dessert. Close Copilot anytime if you don\'t need help.',
+    autoClose: true,
+  },
+
   '/craving-creator-landing': {
     pageId: 'craving-creator-landing',
     title: 'Craving Creator Hub',
