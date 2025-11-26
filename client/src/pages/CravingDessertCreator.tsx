@@ -18,6 +18,7 @@ import { Sparkles, ArrowLeft, Users, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import PhaseGate from "@/components/PhaseGate";
+import { useCopilotPageExplanation } from "@/components/copilot/useCopilotPageExplanation";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -35,6 +36,9 @@ export default function DessertCreator() {
   const [progress, setProgress] = useState(0);
   const tickerRef = useRef<number | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Activate Copilot page explanation
+  useCopilotPageExplanation();
 
   // Safe-area + onboarding
   useEffect(() => {
