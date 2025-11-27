@@ -380,13 +380,7 @@ export default function RestaurantGuidePage() {
 
         <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
           <CardContent className="p-6">
-            <div className="mb-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
-              <p className="text-sm text-blue-200">
-                <Clock className="inline h-4 w-4 mr-1" />
-                <strong>Generation Time:</strong> AI is finding healthy options at this restaurant.
-                This usually takes 15-30 seconds. Your results will auto-save here.
-              </p>
-            </div>
+            
 
             <div className="space-y-3 mb-6">
               <div>
