@@ -2,16 +2,16 @@
 // STATUS: Production-ready, permanently locked for testing phase
 // USER COMMAND: "lockdown the restaurant guide... we dont have to change anything it working great"
 // FEATURES LOCKED: ✅ AI meal generation ✅ Animated progress bar ✅ Medical badges ✅ Image generation ✅ Caching system
-// 
+//
 // ⚠️ ZERO-TOLERANCE LOCKDOWN POLICY ⚠️
 // DO NOT MODIFY ANY CODE IN THIS FILE WITHOUT EXPLICIT USER APPROVAL
 // ALL FEATURES ARE PRODUCTION-READY AND LOCKED FOR TESTING DEPLOYMENT
-// 
+//
 // 🔒 PROTECTED SYSTEMS:
 // - AI restaurant meal generation with GPT-5 integration
 // - Animated "power bar" progress system (3-5 minute generation time)
 // - Medical compatibility badge system
-// - DALL-E image generation for meal visualization  
+// - DALL-E image generation for meal visualization
 // - Persistent caching system (survives navigation/refresh)
 // - Real-time progress ticker (0-90% with visual feedback)
 // - Medical personalization with user health data integration
@@ -64,7 +64,11 @@ function loadRestaurantCache(): CachedRestaurantState | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     // Minimal sanity checks
-    if (!parsed?.restaurantData?.meals || !Array.isArray(parsed.restaurantData.meals)) return null;
+    if (
+      !parsed?.restaurantData?.meals ||
+      !Array.isArray(parsed.restaurantData.meals)
+    )
+      return null;
     return parsed as CachedRestaurantState;
   } catch {
     return null;
@@ -210,7 +214,8 @@ export default function RestaurantGuidePage() {
       setMatchedCuisine(cached.cuisine || null);
       toast({
         title: "🔄 Restaurant Guide Restored",
-        description: "Your generated restaurant meals will remain saved on this page until you search again.",
+        description:
+          "Your generated restaurant meals will remain saved on this page until you search again.",
       });
     }
   }, []); // Only run once on mount
@@ -252,7 +257,11 @@ export default function RestaurantGuidePage() {
 
   // Restaurant meal generation mutation
   const generateMealsMutation = useMutation({
-    mutationFn: async (params: { restaurantName: string; craving: string; cuisine: string }) => {
+    mutationFn: async (params: {
+      restaurantName: string;
+      craving: string;
+      cuisine: string;
+    }) => {
       return apiRequest("/api/restaurants/guide", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -284,7 +293,7 @@ export default function RestaurantGuidePage() {
         title: "🍽️ Restaurant Meals Generated!",
         description: `Found ${data.recommendations?.length || 0} healthy options for you.`,
       });
-      
+
       // Emit search-complete event after successful generation
       setTimeout(() => {
         const event = new CustomEvent("walkthrough:event", {
@@ -338,18 +347,16 @@ export default function RestaurantGuidePage() {
     });
   };
 
-  
-
   return (
     <PhaseGate phase="PHASE_1_CORE" feature="restaurant-guide">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="min-h-screen bg-gradient-to-br from-black/60 via-orange-600 to-black/80"
         style={{
           paddingTop: "env(safe-area-inset-top, 0px)",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)"
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
       >
         {/* Universal Safe-Area Header */}
@@ -367,292 +374,311 @@ export default function RestaurantGuidePage() {
               <span className="text-sm font-medium">Back</span>
             </button>
 
-
             {/* Title */}
             <h1 className="text-lg font-bold text-white">Restaurant Guide</h1>
-
-            
           </div>
         </div>
 
         {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden pb-8" style={{ paddingTop: "6rem" }}>
-
-        <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
-          <CardContent className="p-6">
-            
-
-            <div className="space-y-3 mb-6">
-              <div>
-                <label htmlFor="craving-input" className="block text-sm font-semibold text-white mb-2">
-                  What dish are you craving?
-                </label>
-                <div className="relative">
-                  <Input
-                    data-wt="rg-craving-input"
-                    id="craving-input"
-                    placeholder="e.g. chicken, salmon, pasta"
-                    value={cravingInput}
-                    onChange={(e) => setCravingInput(e.target.value)}
-                    className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                  />
-                  {cravingInput && (
-                    <button
-                      onClick={() => setCravingInput("")}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
-                      type="button"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label htmlFor="restaurant-input" className="block text-sm font-semibold text-white mb-2">
-                  Where are you eating? <span className="text-white/60">(Specific Restaurant)</span>
-                </label>
-                <div className="relative">
-                  <Input
-                    data-testid="restaurantguide-search"
-                    data-wt="rg-restaurant-input"
-                    id="restaurant-input"
-                    placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
-                    value={restaurantInput}
-                    onChange={(e) => setRestaurantInput(e.target.value)}
-                    className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                  />
-                  {restaurantInput && (
-                    <button
-                      onClick={() => setRestaurantInput("")}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
-                      type="button"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              </div>
-              <Button
-                data-wt="rg-search-button"
-                onClick={handleSearch}
-                disabled={generateMealsMutation.isPending}
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
-              >
-                {generateMealsMutation.isPending ? "Finding Dishes..." : "Find Dishes"}
-              </Button>
-
-              {generateMealsMutation.isPending && (
-                <div className="mt-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/80">AI Analysis Progress</span>
-                    <span className="text-sm text-white/80">{Math.round(progress)}%</span>
+        <div
+          className="max-w-4xl mx-auto px-4 sm:px-6 overflow-x-hidden pb-8"
+          style={{ paddingTop: "6rem" }}
+        >
+          <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl">
+            <CardContent className="p-6">
+              <div className="space-y-3 mb-6">
+                <div>
+                  <label
+                    htmlFor="craving-input"
+                    className="block text-lg font-semibold text-white mb-2"
+                  >
+                    What dish are you craving?
+                  </label>
+                  <div className="relative">
+                    <Input
+                      data-wt="rg-craving-input"
+                      id="craving-input"
+                      placeholder="e.g. chicken, salmon, pasta"
+                      value={cravingInput}
+                      onChange={(e) => setCravingInput(e.target.value)}
+                      className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                    />
+                    {cravingInput && (
+                      <button
+                        onClick={() => setCravingInput("")}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
-                  <Progress
-                    value={progress}
-                    className="h-3 bg-black/30 border border-white/20"
-                  />
-                  <p className="text-white/70 text-sm text-center mt-3">
-                    
-                  </p>
+                </div>
+                <div>
+                  <label
+                    htmlFor="restaurant-input"
+                    className="block text-lg font-semibold text-white mb-2"
+                  >
+                    Where are you eating?{" "}
+                    <span className="text-md text-white/60">
+                      (Specific Restaurant)
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <Input
+                      data-testid="restaurantguide-search"
+                      data-wt="rg-restaurant-input"
+                      id="restaurant-input"
+                      placeholder="e.g. Cheesecake Factory, P.F. Chang's, Chipotle"
+                      value={restaurantInput}
+                      onChange={(e) => setRestaurantInput(e.target.value)}
+                      className="w-full pr-10 bg-black/40 backdrop-blur-lg border border-white/20 text-white placeholder:text-white/50"
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                    />
+                    {restaurantInput && (
+                      <button
+                        onClick={() => setRestaurantInput("")}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  data-wt="rg-search-button"
+                  onClick={handleSearch}
+                  disabled={generateMealsMutation.isPending}
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+                >
+                  {generateMealsMutation.isPending
+                    ? "Finding Dishes..."
+                    : "Find Dishes"}
+                </Button>
+
+                {generateMealsMutation.isPending && (
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-white/80">
+                        AI Analysis Progress
+                      </span>
+                      <span className="text-sm text-white/80">
+                        {Math.round(progress)}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={progress}
+                      className="h-3 bg-black/30 border border-white/20"
+                    />
+                    <p className="text-white/70 text-sm text-center mt-3"></p>
+                  </div>
+                )}
+              </div>
+
+              {/* Generated Meals Section */}
+              {generatedMeals.length > 0 && (
+                <div data-wt="rg-results-list" className="space-y-6 mb-6">
+                  <h2 className="text-xl font-bold text-white mb-4">
+                    🍽️ Recommended Meals at{" "}
+                    {restaurantInput
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase(),
+                      )
+                      .join(" ")}
+                    :
+                  </h2>
+                  <div className="grid gap-4">
+                    {generatedMeals.map((meal, index) => (
+                      <Card
+                        data-wt="rg-restaurant-card"
+                        key={meal.id || index}
+                        className="overflow-hidden shadow-lg hover:shadow-orange-500/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-black/40 backdrop-blur-lg border border-white/20"
+                      >
+                        <div className="grid md:grid-cols-3 gap-4">
+                          {/* Meal Image */}
+                          <div className="relative h-48 md:h-auto">
+                            {meal.imageUrl ? (
+                              <img
+                                src={meal.imageUrl}
+                                alt={meal.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-black/20 backdrop-blur-lg flex items-center justify-center">
+                                <div className="text-4xl">🍽️</div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Meal Details */}
+                          <div className="md:col-span-2 p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="text-lg font-semibold text-white">
+                                {meal.name || meal.meal}
+                              </h3>
+                              <span className="text-sm text-white/90 bg-orange-600 px-2 py-1 rounded font-medium">
+                                {meal.calories} cal
+                              </span>
+                            </div>
+
+                            <p className="text-white/80 mb-3">
+                              {meal.description || meal.reason}
+                            </p>
+
+                            {/* Medical Badges */}
+                            {(() => {
+                              // Generate medical badges client-side like weekly meal calendar
+                              const userProfile = getUserMedicalProfile(1);
+                              const mealForBadges = {
+                                name: meal.name || meal.meal,
+                                calories: meal.calories,
+                                protein: meal.protein,
+                                carbs: meal.carbs,
+                                fat: meal.fat,
+                                ingredients:
+                                  meal.ingredients?.map((ing: any) => ({
+                                    name: ing,
+                                    amount: 1,
+                                    unit: "serving",
+                                  })) || [],
+                              };
+                              const medicalBadges = generateMedicalBadges(
+                                mealForBadges as any,
+                                userProfile,
+                              );
+                              // Convert complex badge objects to simple strings for HealthBadgesPopover
+                              const badgeStrings = medicalBadges.map(
+                                (b: any) => b.badge || b.label || b.id,
+                              );
+                              return (
+                                badgeStrings &&
+                                badgeStrings.length > 0 && (
+                                  <div className="mb-3">
+                                    <HealthBadgesPopover
+                                      badges={badgeStrings}
+                                      className="mt-2"
+                                    />
+                                  </div>
+                                )
+                              );
+                            })()}
+
+                            {/* Nutrition Info */}
+                            <div className="grid grid-cols-3 gap-4 text-sm mb-3">
+                              <div className="text-center">
+                                <div className="font-semibold text-blue-400">
+                                  {meal.protein}g
+                                </div>
+                                <div className="text-white/60">Protein</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-semibold text-green-400">
+                                  {meal.carbs}g
+                                </div>
+                                <div className="text-white/60">Carbs</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-semibold text-yellow-400">
+                                  {meal.fat}g
+                                </div>
+                                <div className="text-white/60">Fat</div>
+                              </div>
+                            </div>
+
+                            {/* Why It's Healthy */}
+                            <div className="bg-black/20 border border-white/10 rounded-lg p-3 mb-3 backdrop-blur-sm">
+                              <h4 className="font-medium text-green-300 text-sm mb-1">
+                                Why This is Healthy:
+                              </h4>
+                              <p className="text-green-200 text-sm">
+                                {meal.reason}
+                              </p>
+                            </div>
+
+                            {/* Modifications */}
+                            <div className="bg-black/20 border border-white/10 rounded-lg p-3 backdrop-blur-sm">
+                              <h4 className="font-medium text-orange-300 text-sm mb-1">
+                                Ask For:
+                              </h4>
+                              <p className="text-orange-200 text-sm">
+                                {meal.modifications || meal.orderInstructions}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
 
-            {/* Generated Meals Section */}
-            {generatedMeals.length > 0 && (
-              <div data-wt="rg-results-list" className="space-y-6 mb-6">
-                <h2 className="text-xl font-bold text-white mb-4">
-                  🍽️ Recommended Meals at {restaurantInput.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}:
-                </h2>
-                <div className="grid gap-4">
-                  {generatedMeals.map((meal, index) => (
-                    <Card
-                      data-wt="rg-restaurant-card"
-                      key={meal.id || index}
-                      className="overflow-hidden shadow-lg hover:shadow-orange-500/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-black/40 backdrop-blur-lg border border-white/20"
+              {matchedCuisine &&
+              !generateMealsMutation.isPending &&
+              generatedMeals.length === 0 ? (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-bold text-orange-400">
+                    {matchedCuisine} Cuisine Tips:
+                  </h2>
+                  <div className="bg-black/40 backdrop-blur-lg border border-white/20 rounded-lg p-4">
+                    <ul className="space-y-2">
+                      {cuisineTips[matchedCuisine].map((tip, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="text-orange-400 font-bold">•</span>
+                          <span className="text-white/80">{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
+                    <p className="text-orange-200 text-sm">
+                      💡 <strong>Pro Tip:</strong> These recommendations are
+                      tailored to help you stay on track with your health goals
+                      while still enjoying dining out!
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <p className="text-white mb-2"></p>
+                  <p className="text-sm text-white"></p>
+                </div>
+              )}
+
+              <div className="mt-6 pt-4 border-t border-white/20">
+                <h3 className="font-semibold text-lg text-white mb-2">
+                  Quick Access:
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {Object.keys(cuisineTips).map((cuisine) => (
+                    <button
+                      key={cuisine}
+                      onClick={() => {
+                        setRestaurantInput(cuisine);
+                        setMatchedCuisine(cuisine);
+                        generateMealsMutation.mutate({
+                          restaurantName: `${cuisine} Restaurant`,
+                          craving: "",
+                          cuisine: cuisine,
+                        });
+                      }}
+                      className="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded-full text-sm transition-colors font-medium"
                     >
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {/* Meal Image */}
-                        <div className="relative h-48 md:h-auto">
-                          {meal.imageUrl ? (
-                            <img
-                              src={meal.imageUrl}
-                              alt={meal.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-black/20 backdrop-blur-lg flex items-center justify-center">
-                              <div className="text-4xl">🍽️</div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Meal Details */}
-                        <div className="md:col-span-2 p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <h3 className="text-lg font-semibold text-white">
-                              {meal.name || meal.meal}
-                            </h3>
-                            <span className="text-sm text-white/90 bg-orange-600 px-2 py-1 rounded font-medium">
-                              {meal.calories} cal
-                            </span>
-                          </div>
-
-                          <p className="text-white/80 mb-3">
-                            {meal.description || meal.reason}
-                          </p>
-
-                          {/* Medical Badges */}
-                          {(() => {
-                            // Generate medical badges client-side like weekly meal calendar
-                            const userProfile = getUserMedicalProfile(1);
-                            const mealForBadges = {
-                              name: meal.name || meal.meal,
-                              calories: meal.calories,
-                              protein: meal.protein,
-                              carbs: meal.carbs,
-                              fat: meal.fat,
-                              ingredients:
-                                meal.ingredients?.map((ing: any) => ({
-                                  name: ing,
-                                  amount: 1,
-                                  unit: "serving",
-                                })) || [],
-                            };
-                            const medicalBadges = generateMedicalBadges(
-                              mealForBadges as any,
-                              userProfile,
-                            );
-                            // Convert complex badge objects to simple strings for HealthBadgesPopover
-                            const badgeStrings = medicalBadges.map((b: any) => b.badge || b.label || b.id);
-                            return (
-                              badgeStrings &&
-                              badgeStrings.length > 0 && (
-                                <div className="mb-3">
-                                  <HealthBadgesPopover badges={badgeStrings} className="mt-2" />
-                                </div>
-                              )
-                            );
-                          })()}
-
-                          {/* Nutrition Info */}
-                          <div className="grid grid-cols-3 gap-4 text-sm mb-3">
-                            <div className="text-center">
-                              <div className="font-semibold text-blue-400">
-                                {meal.protein}g
-                              </div>
-                              <div className="text-white/60">Protein</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-semibold text-green-400">
-                                {meal.carbs}g
-                              </div>
-                              <div className="text-white/60">Carbs</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-semibold text-yellow-400">
-                                {meal.fat}g
-                              </div>
-                              <div className="text-white/60">Fat</div>
-                            </div>
-                          </div>
-
-                          {/* Why It's Healthy */}
-                          <div className="bg-black/20 border border-white/10 rounded-lg p-3 mb-3 backdrop-blur-sm">
-                            <h4 className="font-medium text-green-300 text-sm mb-1">
-                              Why This is Healthy:
-                            </h4>
-                            <p className="text-green-200 text-sm">
-                              {meal.reason}
-                            </p>
-                          </div>
-
-                          {/* Modifications */}
-                          <div className="bg-black/20 border border-white/10 rounded-lg p-3 backdrop-blur-sm">
-                            <h4 className="font-medium text-orange-300 text-sm mb-1">
-                              Ask For:
-                            </h4>
-                            <p className="text-orange-200 text-sm">
-                              {meal.modifications || meal.orderInstructions}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
+                      {cuisine}
+                    </button>
                   ))}
                 </div>
               </div>
-            )}
-
-
-            {matchedCuisine &&
-            !generateMealsMutation.isPending &&
-            generatedMeals.length === 0 ? (
-              <div className="space-y-4">
-                <h2 className="text-xl font-bold text-orange-400">
-                  {matchedCuisine} Cuisine Tips:
-                </h2>
-                <div className="bg-black/40 backdrop-blur-lg border border-white/20 rounded-lg p-4">
-                  <ul className="space-y-2">
-                    {cuisineTips[matchedCuisine].map((tip, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-orange-400 font-bold">•</span>
-                        <span className="text-white/80">{tip}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-4 p-3 bg-black/20 border border-white/10 rounded-lg backdrop-blur-sm">
-                  <p className="text-orange-200 text-sm">
-                    💡 <strong>Pro Tip:</strong> These recommendations are
-                    tailored to help you stay on track with your health goals
-                    while still enjoying dining out!
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <div className="text-6xl mb-4">🔍</div>
-                <p className="text-white mb-2">
-                  
-                </p>
-                <p className="text-sm text-white">
-                  
-                </p>
-              </div>
-            )}
-
-            <div className="mt-6 pt-4 border-t border-white/20">
-              <h3 className="font-semibold text-lg text-white mb-2">
-                Quick Access:
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(cuisineTips).map((cuisine) => (
-                  <button
-                    key={cuisine}
-                    onClick={() => {
-                      setRestaurantInput(cuisine);
-                      setMatchedCuisine(cuisine);
-                      generateMealsMutation.mutate({
-                        restaurantName: `${cuisine} Restaurant`,
-                        craving: "",
-                        cuisine: cuisine,
-                      });
-                    }}
-                    className="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded-full text-sm transition-colors font-medium"
-                  >
-                    {cuisine}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </motion.div>
+            </CardContent>
+          </Card>
+        </div>
+      </motion.div>
     </PhaseGate>
   );
 }

@@ -356,7 +356,7 @@ const WeaningOffTool = () => {
             <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white text-lg flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-white/80" />
+                    
                     Your Progress
                   </CardTitle>
                 </CardHeader>

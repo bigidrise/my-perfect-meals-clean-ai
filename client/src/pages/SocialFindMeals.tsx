@@ -232,19 +232,19 @@ export default function MealFinder() {
         >
           <Card className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl mb-6">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-xl text-white">
                 <MapPin className="h-5 w-5" />
                 Search by Location
               </CardTitle>
-              <CardDescription className="text-white/80">
-                Enter what you're craving and your ZIP code to find nearby
+              <CardDescription className="text-md text-white/80">
+                Enter what you're craving and your Zip code to find nearby
                 restaurant recommendations
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
+                  <label className="block text-md font-medium text-white/80 mb-2">
                     What are you craving?
                   </label>
                   <Input
@@ -258,8 +258,8 @@ export default function MealFinder() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
-                    ZIP Code
+                  <label className="block text-md text-white/80 mb-2">
+                    Zip Code
                   </label>
                   <Input
                     placeholder="e.g., 30303, 90210, 10001"

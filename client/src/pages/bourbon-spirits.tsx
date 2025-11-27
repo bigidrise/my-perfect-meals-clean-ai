@@ -158,12 +158,12 @@ export default function BourbonSpiritsPage() {
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <ChefHat className="h-5 w-5" />
+              
               Find Your Perfect Spirit Pairing
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4 text-white">
+            <form onSubmit={handleSubmit} className="space-y-4 text-md text-white">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="mealType">Meal Type *</Label>

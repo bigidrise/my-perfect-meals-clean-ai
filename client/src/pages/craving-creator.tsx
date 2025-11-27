@@ -522,15 +522,15 @@ export default function CravingCreator() {
             <div>
               <Card className="shadow-2xl bg-black/30 backdrop-blur-lg border border-white/20 w-full max-w-xl mx-auto">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-sm text-white">
-                    <Brain className="h-4 w-4 text-white" />
+                  <CardTitle className="flex items-center gap-2 text-lg text-white">
+                    
                     Describe Your Craving
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-medium text-white">
+                      <label className="block text-md font-medium text-white">
                         What are you craving?
                       </label>
                     </div>
@@ -542,7 +542,7 @@ export default function CravingCreator() {
                         onChange={(e) => setCravingInput(e.target.value)}
                         placeholder="e.g., I want something creamy chocolate with peanut butter swirl and crunchy topping - BE SPECIFIC and describe what you crave!"
                         className="w-full px-3 py-2 pr-10 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-20 resize-none text-sm"
-                        maxLength={200}
+                        maxLength={300}
                       />
                       {cravingInput && (
                         <TrashButton
@@ -555,17 +555,17 @@ export default function CravingCreator() {
                         />
                       )}
                     </div>
-                    <p className="text-xs text-white mt-1 text-center">
+                    <p className="text-md text-white mt-1 text-center">
                       Use keyboard or voice texting for input.
                     </p>
                     <p className="text-xs text-white/70 mt-1 text-right">
-                      {cravingInput.length}/200
+                      {cravingInput.length}/300
                     </p>
                   </div>
 
                   {/* Dietary Preferences with clear support */}
                   <div>
-                    <label className="block text-xs font-medium mb-1 text-white">
+                    <label className="block text-md mb-1 text-white">
                       Dietary Preferences (Optional)
                     </label>
 
@@ -612,7 +612,7 @@ export default function CravingCreator() {
 
                   {/* NEW: Serving Size Dropdown */}
                   <div>
-                    <label className="block text-xs font-medium mb-1 text-white">
+                    <label className="block text-md font-medium mb-1 text-white">
                       Number of Servings
                     </label>
                     <Select
@@ -636,14 +636,14 @@ export default function CravingCreator() {
                         <SelectItem value="10">10 servings</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-white mt-1">
+                    <p className="text-md text-white mt-1">
                       Ingredients and nutrition will be scaled for {servings}{" "}
                       {servings === 1 ? "serving" : "servings"}
                     </p>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <label className="block text-xs font-medium mb-1 text-white">
+                    <label className="block text-md font-medium mb-1 text-white">
                       Medical Safety Profile (Always Enabled)
                     </label>
                     <div className="flex items-center gap-2">
@@ -653,7 +653,7 @@ export default function CravingCreator() {
                         disabled={true}
                         className="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500 opacity-50"
                       />
-                      <span className="text-xs text-green-300 font-medium">
+                      <span className="text-md text-green-300 font-medium">
                         ✓ Protected
                       </span>
                     </div>
@@ -661,7 +661,7 @@ export default function CravingCreator() {
 
                   {!selectedDiet && (
                     <div>
-                      <label className="block text-xs font-medium mb-1 text-white">
+                      <label className="block text-md font-medium mb-1 text-white">
                         Custom Dietary Restrictions
                       </label>
                       <textarea
@@ -669,11 +669,11 @@ export default function CravingCreator() {
                         value={dietaryRestrictions}
                         onChange={(e) => setDietaryRestrictions(e.target.value)}
                         placeholder="e.g., no nuts, low sodium, diabetic-friendly..."
-                        className="w-full px-3 py-2 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-16 resize-none text-sm"
-                        maxLength={150}
+                        className="w-full px-3 py-2 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-16 resize-none text-md"
+                        maxLength={250}
                       />
                       <p className="text-xs text-white/70 mt-1 text-right">
-                        {dietaryRestrictions.length}/150
+                        {dietaryRestrictions.length}/250
                       </p>
                     </div>
                   )}

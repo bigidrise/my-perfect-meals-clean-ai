@@ -188,12 +188,12 @@ export default function BeerPairingMode() {
       >
         <Card className="bg-black/50 border border-orange-400/70 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
           <CardHeader>
-            <CardTitle className="text-lg text-white">
+            <CardTitle className="text-md text-white">
               Tell us about the meal
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-white">
-            <div className="grid sm:grid-cols-2 gap-4">
+          <CardContent className="text-lg text-white">
+            <div className="text-md grid sm:grid-cols-2 gap-4">
               <div>
                 <Label>Meal Type</Label>
                 <Select value={mealType} onValueChange={setMealType}>

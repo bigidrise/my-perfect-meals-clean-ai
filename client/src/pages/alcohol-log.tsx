@@ -249,36 +249,7 @@ export default function AlcoholLogPage() {
         className="max-w-4xl mx-auto px-4 pb-12"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
-        {/* Main Content Card */}
-        <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur mb-8">
-          <CardHeader className="text-center">
-            <p className="text-sm text-white/90 mt-2">
-              Voluntary logging. Simple charts. Alcohol calories/carbs are
-              informational and do <strong>not</strong> reduce your food
-              targets.
-            </p>
-            <div className="flex gap-2 justify-center mt-4 flex-wrap">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLocation("/alcohol/calculator")}
-                className="bg-white/10 hover:bg-white/20 border border-white/30 text-white"
-                data-testid="button-open-calculator"
-              >
-                Open Calculator
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLocation("/my-biometrics")}
-                className="bg-white/10 hover:bg-white/20 border border-white/30 text-white"
-                data-testid="button-open-biometrics"
-              >
-                Open Biometrics
-              </Button>
-            </div>
-          </CardHeader>
-        </Card>
+        
 
         {/* Form */}
         <Card className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur mb-8">

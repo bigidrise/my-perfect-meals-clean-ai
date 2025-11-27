@@ -141,13 +141,13 @@ export default function MealPairingAIPage() {
         {/* Pairing Form */}
         <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <UtensilsCrossed className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg font-semi-bold text-white">
+              
               Design Your Perfect Meal
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4 text-white">
+            <form onSubmit={handleSubmit} className="space-y-4 text-md text-white">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="drinkType">Drink Category *</Label>

@@ -146,7 +146,7 @@ export default function CravingPresetsPage() {
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <Label className="text-white/80">Search meals</Label>
+                <Label className="text-lg text-white">Search meals</Label>
                 <Input
                   placeholder="Search by name or tag…"
                   value={filterText}
@@ -156,7 +156,7 @@ export default function CravingPresetsPage() {
               </div>
 
               <div>
-                <Label className="text-white/80">Servings</Label>
+                <Label className="text-md text-white">Servings</Label>
                 <div className="flex gap-2 flex-wrap">
                   {SERVING_OPTIONS.map((n) => (
                     <Button
@@ -176,7 +176,7 @@ export default function CravingPresetsPage() {
               </div>
 
               <div>
-                <Label className="text-white/80">Rounding</Label>
+                <Label className="text-md text-white">Rounding</Label>
                 <div className="flex gap-2 flex-wrap">
                   {(["tenth", "half", "whole"] as RoundingMode[]).map((m) => (
                     <Button

@@ -573,10 +573,10 @@ const FridgeRescuePage = () => {
         >
 
           <div className="bg-black/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl p-8 max-w-2xl mx-auto">
-            <div className="space-y-4">
+            <div className="space-y-2">
               <div className="text-center">
                 <h2 className="text-xl font-bold text-white mb-4">
-                  What's in your fridge?
+                 
                 </h2>
                 <p className="text-sm text-white/80 mb-6"></p>
               </div>
@@ -585,9 +585,9 @@ const FridgeRescuePage = () => {
                 <div className="space-y-3">
                   <label
                     htmlFor="ingredients"
-                    className="block text-sm font-medium text-white"
+                    className="block text-lg font-medium text-white"
                   >
-                    Enter your ingredients:
+                    Enter ingredients from your fridge:
                   </label>
                   <div className="relative">
                     <textarea
@@ -611,7 +611,7 @@ const FridgeRescuePage = () => {
                       />
                     )}
                   </div>
-                  <p className="text-xs text-white mt-1 text-center">
+                  <p className="text-md text-white mt-1 text-center">
                     Use keyboard or speech-to-text for input
                   </p>
                 </div>

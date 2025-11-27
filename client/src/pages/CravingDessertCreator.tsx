@@ -171,8 +171,8 @@ export default function DessertCreator() {
           {/* Form Card */}
           <Card className="shadow-2xl bg-black/30 backdrop-blur-lg border border-white/20 w-full max-w-xl mx-auto mb-6">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm text-white">
-                <Sparkles className="h-4 w-4 text-white" />
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                
                 Describe Your Dessert
               </CardTitle>
             </CardHeader>
@@ -180,7 +180,7 @@ export default function DessertCreator() {
             <CardContent className="space-y-3">
               {/* Dessert Input */}
               <div>
-                <label className="block text-xs font-medium text-white mb-1">
+                <label className="block text-md font-medium text-white mb-1">
                   What dessert are you craving?
                 </label>
                 <textarea
@@ -188,16 +188,16 @@ export default function DessertCreator() {
                   onChange={(e) => setDessert(e.target.value)}
                   className="w-full px-3 py-2 bg-black text-white placeholder:text-white/50 border border-white/30 rounded-lg h-20 resize-none text-sm"
                   placeholder="Example: warm apple pie, fudge brownies, lemon cheesecake…"
-                  maxLength={200}
+                  maxLength={300}
                 />
                 <p className="text-xs text-white/70 text-right mt-1">
-                  {dessert.length}/200
+                  {dessert.length}/300
                 </p>
               </div>
 
               {/* Dessert Type Dropdown */}
               <div>
-                <label className="block text-xs font-medium mb-1 text-white">
+                <label className="block text-md font-medium mb-1 text-white">
                   What type of dessert?
                 </label>
                 <Select value={dessertType} onValueChange={(v) => setDessertType(v)}>
@@ -225,7 +225,7 @@ export default function DessertCreator() {
 
               {/* Flavor Input */}
               <div>
-                <label className="block text-xs font-medium mb-1 text-white">
+                <label className="block text-md font-medium mb-1 text-white">
                   Flavor / Texture Vibe
                 </label>
                 <input
@@ -238,7 +238,7 @@ export default function DessertCreator() {
 
               {/* Servings Dropdown */}
               <div>
-                <label className="block text-xs font-medium mb-1 text-white">
+                <label className="block text-md font-medium mb-1 text-white">
                   Servings
                 </label>
                 <Select value={String(servings)} onValueChange={(v) => setServings(Number(v))}>
@@ -257,7 +257,7 @@ export default function DessertCreator() {
 
               {/* Dietary Restrictions */}
               <div>
-                <label className="block text-xs font-medium mb-1 text-white">
+                <label className="block text-md font-medium mb-1 text-white">
                   Dietary Requirements (optional)
                 </label>
                 <input
