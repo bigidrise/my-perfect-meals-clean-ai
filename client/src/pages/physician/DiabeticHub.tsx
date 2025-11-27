@@ -166,14 +166,7 @@ export default function DiabeticHub() {
           style={{ top: "env(safe-area-inset-top, 0px)" }}
         >
           <div className="px-4 py-3 flex items-center gap-3">
-            {/* Back to Planner */}
-            <Button
-              onClick={() => setLocation("/planner")}
-              className="bg-black/10 hover:bg-black/10 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-2 px-3 h-10"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span className="text-sm font-medium">Back</span>
-            </Button>
+            <Activity className="h-6 w-6 text-orange-500" />
 
             {/* Title */}
             <h1 className="text-lg font-bold text-white">Diabetic Hub</h1>
@@ -195,14 +188,14 @@ export default function DiabeticHub() {
                 <h2 className="text-lg font-bold text-white">
                   Doctor / Coach Guardrails
                 </h2>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-md">
                   Set your clinical targets and constraints
                 </p>
               </div>
             </div>
 
             <div className="mb-6 relative z-10">
-              <label className="block text-sm text-white mb-2">
+              <label className="block text-md text-white mb-2">
                 Apply Clinical Preset
               </label>
               <Select value={selectedPreset} onValueChange={handleApplyPreset}>
@@ -229,7 +222,7 @@ export default function DiabeticHub() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10 mb-6">
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   Fasting Range (mg/dL)
                 </label>
                 <div className="flex gap-2">
@@ -251,7 +244,7 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   Post-Meal Max (mg/dL)
                 </label>
                 <input
@@ -263,7 +256,7 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   Daily Carb Limit (g)
                 </label>
                 <input
@@ -275,7 +268,7 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   Fiber Minimum (g)
                 </label>
                 <input
@@ -287,7 +280,7 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   GI Cap (Max)
                 </label>
                 <input
@@ -299,7 +292,7 @@ export default function DiabeticHub() {
               </div>
 
               <div>
-                <label className="block text-sm text-white mb-2">
+                <label className="block text-md text-white mb-2">
                   Meal Frequency (per day)
                 </label>
                 <input
@@ -314,7 +307,7 @@ export default function DiabeticHub() {
             <button
               onClick={handleSaveGuardrails}
               disabled={saveMutation.isPending}
-              className="w-full px-6 py-3 rounded-xl bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
+              className="w-full px-6 py-3 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-blue-600/90 text-white font-medium transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
               <span className="relative z-10">
@@ -338,7 +331,7 @@ export default function DiabeticHub() {
             <div className="grid md:grid-cols-2 gap-6 relative z-10">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-white mb-2">
+                  <label className="block text-md text-white mb-2">
                     Glucose Reading (mg/dL)
                   </label>
                   <input
@@ -351,7 +344,7 @@ export default function DiabeticHub() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white mb-2">
+                  <label className="block text-md text-white mb-2">
                     Context
                   </label>
                   <Select
@@ -374,7 +367,7 @@ export default function DiabeticHub() {
                 <button
                   onClick={handleLogGlucose}
                   disabled={logMutation.isPending}
-                  className="w-full px-6 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-orange-600/90 text-white font-semi-bold transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
+                  className="w-full px-6 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-orange-600/90 text-md text-white font-semi-bold transition-all shadow-xl border border-white/20 relative overflow-hidden disabled:opacity-50"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
                   <span className="relative z-10">
@@ -384,7 +377,7 @@ export default function DiabeticHub() {
               </div>
 
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-6 border border-orange-400/30">
-                <div className="text-white font-medium text-sm mb-2">
+                <div className="text-white font-medium text-md mb-2">
                   Last Reading
                 </div>
                 <div className="text-xl font-medium text-white mb-2">
@@ -393,12 +386,12 @@ export default function DiabeticHub() {
                 {latestReading && (
                   <>
                     <div
-                      className={`text-sm mb-3 ${inRange ? "text-green-200" : "text-yellow-200"}`}
+                      className={`text-md mb-3 ${inRange ? "text-green-200" : "text-yellow-200"}`}
                     >
                       {inRange ? "✅ In Target Range" : "⚠️ Outside Target"}
                     </div>
                     {glucoseLogs?.data && glucoseLogs.data.length > 1 && (
-                      <div className="text-white/80 text-sm mb-2">
+                      <div className="text-white/80 text-md mb-2">
                         7-Day Avg:{" "}
                         {Math.round(
                           glucoseLogs.data
@@ -556,11 +549,11 @@ export default function DiabeticHub() {
                               >
                                 {log.valueMgdl} mg/dL
                               </span>
-                              <span className="text-white/60 text-sm ml-2">
+                              <span className="text-white/60 text-md ml-2">
                                 ({log.context})
                               </span>
                             </div>
-                            <div className="text-white/60 text-sm">
+                            <div className="text-white/60 text-md">
                               {new Date(log.recordedAt).toLocaleString()}
                             </div>
                           </div>
@@ -574,7 +567,7 @@ export default function DiabeticHub() {
                 <div className="text-center text-white/80">
                   <TrendingUp className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium">No readings yet</p>
-                  <p className="text-sm">
+                  <p className="text-md">
                     Log your first glucose reading above to start tracking
                   </p>
                 </div>
@@ -593,14 +586,14 @@ export default function DiabeticHub() {
               <h2 className="text-lg font-bold text-white">
                 AI Diabetic Meal Generator
               </h2>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-md">
                 Low-GI meals based on your guardrails
               </p>
             </div>
 
             <button
               onClick={() => setLocation("/diabetic-menu-builder")}
-              className="w-full px-8 py-4 rounded-xl bg-green-500/90 backdrop-blur-sm hover:bg-green-600/90 text-white font-semibold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border border-white/20 relative overflow-hidden"
+              className="w-full px-8 py-4 rounded-xl bg-orange-500/90 backdrop-blur-sm hover:bg-green-600/90 text-white font-semibold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border border-white/20 relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 pointer-events-none" />
               <span className="relative z-10"> Diabetic Meal Builder </span>

@@ -83,16 +83,7 @@ export default function CravingCreatorLanding() {
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="px-8 py-3 flex items-center gap-3">
-          {/* Back Button */}
-          <Button
-            onClick={() => setLocation("/lifestyle")}
-            variant="ghost"
-            className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2"
-            data-testid="button-back-to-lifestyle"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-medium">Back</span>
-          </Button>
+          <Sparkles className="h-6 w-6 text-orange-500" />
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Craving Creator Hub</h1>

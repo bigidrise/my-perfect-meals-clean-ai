@@ -32,6 +32,7 @@ import {
   CheckCircle2,
   XCircle,
   ArrowLeft,
+  Crown
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
@@ -211,16 +212,8 @@ export default function CareTeamPage() {
         className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-8 py-3 flex items-center gap-3">
-          {/* Back Button */}
-          <button
-            onClick={() => setLocation("/procare-cover")}
-            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
-            data-testid="button-back-dashboard"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-medium">Back</span>
-          </button>
+          <div className="px-8 py-3 flex items-center gap-3">
+            <Users className="h-6 w-6 text-orange-500" />
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Care Team & Pro Access</h1>
@@ -237,10 +230,10 @@ export default function CareTeamPage() {
         {/* Invite Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Invite by Email */}
-          <GlassCard className="border-2 border-indigo-500/40">
+          <GlassCard className="border-2 border-orange-500/40">
             <GlassCardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2">
-                <Mail className="h-5 w-5 text-indigo-300" />
+                <Mail className="h-5 w-5 text-orange-600" />
                 <h2 className="text-xl font-bold text-white">
                   Invite by Email
                 </h2>
@@ -307,7 +300,7 @@ export default function CareTeamPage() {
               <Button
                 disabled={loading}
                 onClick={inviteByEmail}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="w-full bg-orange-600/20 hover:bg-orange-600/20 text-white"
                 data-testid="button-send-invite"
               >
                 <UserPlus2 className="h-4 w-4 mr-2" />
@@ -317,10 +310,10 @@ export default function CareTeamPage() {
           </GlassCard>
 
           {/* Connect with Access Code */}
-          <GlassCard className="border-2 border-teal-500/40">
+          <GlassCard className="border-2 border-orange-500/40">
             <GlassCardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2">
-                <KeyRound className="h-5 w-5 text-teal-300" />
+                <KeyRound className="h-5 w-5 text-orange-500" />
                 <h2 className="text-xl font-bold text-white">
                   Connect with Access Code
                 </h2>
@@ -342,7 +335,7 @@ export default function CareTeamPage() {
               <Button
                 disabled={loading}
                 onClick={connectWithCode}
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white"
                 data-testid="button-submit-code"
               >
                 <ClipboardEdit className="h-4 w-4 mr-2" />
@@ -352,7 +345,7 @@ export default function CareTeamPage() {
           </GlassCard>
 
           {/* How it Works */}
-          <GlassCard className="border-2 border-emerald-500/40">
+          <GlassCard className="border-2 border-orange-500/40">
             <GlassCardContent className="p-6 space-y-3">
               <h2 className="text-xl font-bold text-white">How it Works</h2>
               <ul className="list-disc pl-5 text-white/80 text-sm space-y-2">
@@ -458,7 +451,7 @@ function roleBadge(role: Role) {
   const map: Record<Role, { text: string; className: string }> = {
     trainer: {
       text: "Trainer",
-      className: "bg-emerald-600/20 text-emerald-300 border-emerald-400/40",
+      className: "bg-orange-600/20 text-orange-600/20 border-orange-600/20",
     },
     doctor: {
       text: "Doctor",
@@ -531,7 +524,7 @@ function MemberCard({
           {member.status === "active" && (
             <Button
               onClick={() => setLocation("/pro/clients")}
-              className="bg-purple-600 hover:bg-purple-700 text-white"
+              className="bg-orange-600 hover:bg-orange-700 text-white"
               data-testid="button-open-pro-portal"
             >
               <ClipboardEdit className="h-4 w-4 mr-2" />
@@ -541,7 +534,7 @@ function MemberCard({
           {member.status === "pending" && onApprove && (
             <Button
               onClick={onApprove}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="bg-orange-600/20 hover:bg-orange-600/20 text-white"
               data-testid="button-approve-member"
             >
               <CheckCircle2 className="h-4 w-4 mr-2" />

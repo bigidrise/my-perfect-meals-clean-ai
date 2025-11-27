@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ArrowUp, ArrowLeft, Info } from "lucide-react";
+import { ArrowUp, ArrowLeft, Info, Crown} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -116,15 +116,9 @@ export default function SupplementHub() {
         className="fixed left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-8 py-3 flex items-center gap-3">
-          {/* Back Button */}
-          <button
-            onClick={() => setLocation("/procare-cover")}
-            className="flex items-center gap-1 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-medium">Back</span>
-          </button>
+          <div className="px-8 py-3 flex items-center gap-3">
+            <Crown className="h-6 w-6 text-orange-500" />
+          
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Supplement Hub</h1>

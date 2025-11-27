@@ -1195,7 +1195,7 @@ export default function GLP1MealBuilder() {
         <div className="px-4 py-3 flex items-center gap-3">
           {/* Back to GLP-1 Hub */}
           <Button
-            onClick={() => setLocation("/planner")}
+            onClick={() => setLocation("/glp1-hub")}
             className="bg-black/10 hover:bg-black/10 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-2 px-3 h-10"
           >
             <ArrowLeft className="h-5 w-5" />

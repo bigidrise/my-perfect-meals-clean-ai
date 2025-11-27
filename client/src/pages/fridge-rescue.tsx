@@ -13,6 +13,7 @@ import {
   ChevronUp,
   Home,
   Loader2,
+  Refrigerator
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -549,17 +550,7 @@ const FridgeRescuePage = () => {
           style={{ top: "env(safe-area-inset-top, 0px)" }}
         >
           <div className="px-8 py-3 flex items-center gap-3">
-            {/* Back Button */}
-            <button
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "instant" });
-                setLocation("/lifestyle");
-              }}
-              className="flex items-center gap-2 text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-lg"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span className="text-sm font-medium">Back</span>
-            </button>
+            <Refrigerator className="h-6 w-6 text-orange-500" />
 
             {/* Title */}
             <h1 data-wt="fridge-rescue-header" className="text-lg font-bold text-white">Fridge Rescue</h1>

@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trophy, Users, Crown } from "lucide-react";
+import { Trophy, Users, Crown,} from "lucide-react";
 
 interface ProCareFeature {
   title: string;
@@ -53,7 +53,7 @@ export default function ProCareCover() {
         className="fixed left-0 right-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10"
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="px-4 py-3 flex items-center gap-3">
+          <div className="px-8 py-3 flex items-center gap-3">
           <Crown className="h-6 w-6 text-orange-500" />
           <h1 className="text-lg font-bold text-white">ProCare</h1>
         </div>

@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, ChevronDown, ChevronUp, Activity } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, Activity, Pill, } from "lucide-react";
 import { useGLP1Profile, useSaveGLP1Profile } from "@/hooks/useGLP1";
 import { useToast } from "@/hooks/use-toast";
 import { glp1Presets } from "@/data/glp1Presets";
@@ -108,16 +108,8 @@ export default function GLP1Hub() {
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Back to Planner */}
-          <Button
-            onClick={() => setLocation("/planner")}
-            className="bg-black/10 hover:bg-black/10 text-white rounded-xl border border-white/10 backdrop-blur-none flex items-center gap-2 px-3 h-10"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-medium">Back</span>
-          </Button>
-
-
+          
+          <Pill className="h-6 w-6 text-orange-500" />
           {/* Title */}
           <h1 className="text-lg font-bold text-white">GLP-1 Hub</h1>
 
@@ -139,7 +131,7 @@ export default function GLP1Hub() {
           >
             <span className="font-medium">
               <span className="text-emerald-400">Important:</span>{" "}
-              <span className="text-sm text-white">
+              <span className="text-md text-white">
                 How This App Supports Your Care
               </span>
             </span>
@@ -151,7 +143,7 @@ export default function GLP1Hub() {
           </button>
           {noteOpen && (
             <div className="px-4 pb-4">
-              <p className="text-sm leading-relaxed text-white/90">
+              <p className="text-md leading-relaxed text-white/90">
                 <span className="font-semibold text-emerald-400">
                   Important:
                 </span>{" "}
@@ -175,7 +167,7 @@ export default function GLP1Hub() {
             <h2 className="text-lg text-white font-bold">GLP-1 Shot Tracker</h2>
             <Button
               onClick={() => setShotTrackerOpen(!shotTrackerOpen)}
-              className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-4 py-2"
+              className="bg-orange-500/90 hover:bg-orange-700 text-md font-bold text-white rounded-xl px-4 py-2"
               data-testid="button-toggle-shot-tracker"
             >
               {shotTrackerOpen ? "Hide Tracker" : "Open Tracker"}
@@ -190,9 +182,9 @@ export default function GLP1Hub() {
             </div>
           )}
           {!shotTrackerOpen && (
-            <p className="text-white/80 text-sm">
+            <p className="text-white/80 text-md">
               Track your medication shots with date, dosage, injection site, and
-              notes. Click "Open Tracker" to manage your shot history.
+              notes. Click to manage your shot history.
             </p>
           )}
         </section>
@@ -202,14 +194,14 @@ export default function GLP1Hub() {
           <h2 className="text-lg text-white font-bold mb-2">
             Doctor / Coach Guardrails
           </h2>
-          <p className="text-white/80 text-sm mb-4">
+          <p className="text-white/80 text-md mb-4">
             Set clinical meal guardrails for GLP-1 patients (portion, macros,
             hydration).
           </p>
 
           {/* Preset Selector */}
           <div className="mb-4">
-            <label className="text-white/90 text-sm block mb-1">
+            <label className="text-white/90 text-md block mb-1">
               Quick Start Preset
             </label>
             <Select value={selectedPreset} onValueChange={handlePresetSelect}>
@@ -233,7 +225,7 @@ export default function GLP1Hub() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Max Meal Volume (mL)
               </label>
               <input
@@ -245,12 +237,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Protein Min (g per meal)
               </label>
               <input
@@ -262,12 +254,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Fat Max (g per meal)
               </label>
               <input
@@ -279,12 +271,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Fiber Min (g per day)
               </label>
               <input
@@ -296,12 +288,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Hydration Goal (mL per day)
               </label>
               <input
@@ -313,12 +305,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div>
-              <label className="text-white/90 text-sm block mb-1">
+              <label className="text-white/90 text-md block mb-1">
                 Meals per Day
               </label>
               <input
@@ -330,12 +322,12 @@ export default function GLP1Hub() {
                     e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
-                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-black/30 border border-purple-300/30 text-white px-3 py-2 text-md focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-white/90 text-sm">
+              <label className="text-white/90 text-md">
                 Slow-Digest Foods Only
               </label>
               <input
@@ -347,7 +339,7 @@ export default function GLP1Hub() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-white/90 text-sm">Limit Carbonation</label>
+              <label className="text-white/90 text-md">Limit Carbonation</label>
               <input
                 type="checkbox"
                 checked={limitCarbonation}
@@ -357,7 +349,7 @@ export default function GLP1Hub() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-white/90 text-sm">Limit Alcohol</label>
+              <label className="text-white/90 text-md">Limit Alcohol</label>
               <input
                 type="checkbox"
                 checked={limitAlcohol}
@@ -370,7 +362,7 @@ export default function GLP1Hub() {
           <Button
             onClick={handleSave}
             disabled={saveMutation.isPending}
-            className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl mt-4"
+            className="bg-orange-500/90 hover:bg-orange-700 text-md font-bold text-white w-full rounded-xl mt-4"
           >
             {saveMutation.isPending ? "Saving..." : "Save Guardrails"}
           </Button>
@@ -381,15 +373,15 @@ export default function GLP1Hub() {
           <h3 className="text-white font-bold text-lg mb-1">
             Find Meals for GLP-1 Users
           </h3>
-          <p className="text-white/90 text-sm mb-3">
+          <p className="text-white/90 text-md mb-3">
             Small portions • Calorie-dense • Mixed cuisines.
           </p>
           <Button
             onClick={() => setLocation("/glp1-meal-builder")}
-            className="bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl"
+            className="bg-orange-500/90 hover:bg-orange-700 text-md font-bold text-white w-full rounded-xl"
             data-testid="button-go-to-glp1-meals"
           >
-            Go to GLP-1 Meal Builder
+            GLP-1 Meal Builder
           </Button>
         </section>
       </div>
