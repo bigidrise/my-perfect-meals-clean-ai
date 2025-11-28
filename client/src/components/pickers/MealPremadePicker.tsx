@@ -764,23 +764,23 @@ export default function MealPremadePicker({
 
       console.log("📤 Request body:", JSON.stringify(requestBody, null, 2));
 
-      const response = await fetch("/fridge-rescue/generate", {
+      const response = await fetch("/api/meals/fridge-rescue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Canonical backend contract
-          items: ingredientsList,
+          // Canonical backend contract - uses fridgeItems
+          fridgeItems: ingredientsList,
 
           // Optional macro guardrails
           ...(customMacroTargets && {
-            macroTargetsPerMeal: customMacroTargets,
+            macroTargets: customMacroTargets,
           }),
 
-          // Useful metadata (ignored if backend doesn't use it)
-          mealSlot: mealType,
-          context: "AI_PREMADE_PICKER",
+          // Meal context
+          mealType: mealType,
+          userId: "1",
         }),
         signal: abortControllerRef.current.signal,
       });

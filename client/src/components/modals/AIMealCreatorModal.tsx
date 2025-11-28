@@ -311,23 +311,24 @@ export default function AIMealCreatorModal({
         ? beachBodyGuardrails
         : macroTargetingState.serializeForRequest();
 
-      const response = await fetch("/api/craving-creator/generate", {
+      const response = await fetch("/api/meals/craving-creator", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // AI generation requires craving input
-          craving: ingredientsWithStyles.join(", "),
+          // Canonical backend contract
+          targetMealType: mealSlot,
+          cravingInput: ingredientsWithStyles.join(", "),
           
           // Optional macro guardrails (Beach Body or trainer macros)
           ...(customMacroTargets && {
             macroTargets: customMacroTargets,
           }),
 
-          // Meal context
-          mealType: mealSlot,
-          userId: "1", // Default user for now
+          // User context
+          userId: "1",
+          dietaryRestrictions: [],
         }),
         signal: abortControllerRef.current.signal,
       });
