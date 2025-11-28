@@ -9,15 +9,52 @@ import type {
 
 type WalkthroughEventListener = (event: WalkthroughEvent) => void;
 type EngineStatus = "idle" | "starting" | "active" | "cancelling";
+type StateSubscriber = () => void;
 
 export class WalkthroughScriptEngine {
   private script: WalkthroughScript | null = null;
   private currentStepIndex: number = 0;
   private listeners: WalkthroughEventListener[] = [];
+  private stateSubscribers: Set<StateSubscriber> = new Set();
   private actionListener: ((e: Event) => void) | null = null;
   private currentElement: Element | null = null;
   private eventElement: Element | null = null; // Separate tracking for waitForEvent target
   private status: EngineStatus = "idle";
+
+  /**
+   * Set status and notify state subscribers
+   */
+  private setStatus(newStatus: EngineStatus): void {
+    if (this.status !== newStatus) {
+      this.status = newStatus;
+      this.notifyStateSubscribers();
+    }
+  }
+
+  /**
+   * Notify all state subscribers of a state change
+   */
+  private notifyStateSubscribers(): void {
+    this.stateSubscribers.forEach(subscriber => subscriber());
+  }
+
+  /**
+   * Subscribe to state changes (for useSyncExternalStore)
+   * Returns unsubscribe function
+   */
+  subscribe(callback: StateSubscriber): () => void {
+    this.stateSubscribers.add(callback);
+    return () => {
+      this.stateSubscribers.delete(callback);
+    };
+  }
+
+  /**
+   * Get snapshot of current state (for useSyncExternalStore)
+   */
+  getSnapshot(): WalkthroughState {
+    return this.getState();
+  }
 
   /**
    * Start a walkthrough script
@@ -28,7 +65,7 @@ export class WalkthroughScriptEngine {
       return;
     }
 
-    this.status = "starting";
+    this.setStatus("starting");
     this.script = script;
     this.currentStepIndex = 0;
 
@@ -38,7 +75,7 @@ export class WalkthroughScriptEngine {
       stepIndex: 0,
     });
 
-    this.status = "active";
+    this.setStatus("active");
     await this.executeCurrentStep();
   }
 
@@ -112,7 +149,7 @@ export class WalkthroughScriptEngine {
   async cancel(): Promise<void> {
     if (!this.script || this.status === "idle" || this.status === "cancelling") return;
 
-    this.status = "cancelling";
+    this.setStatus("cancelling");
     const scriptId = this.script.id;
     this.cleanupCurrentStep();
     this.reset();
@@ -308,7 +345,7 @@ export class WalkthroughScriptEngine {
   private reset(): void {
     this.script = null;
     this.currentStepIndex = 0;
-    this.status = "idle";
+    this.setStatus("idle");
     this.currentElement = null;
     this.eventElement = null;
     this.actionListener = null;

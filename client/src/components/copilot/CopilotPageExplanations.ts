@@ -158,19 +158,52 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     spokenText: 'Lifestyle page. Here you\'ll find tools for cravings, dining out, kids meals, and social moments. Tap any card to explore, or tell me what you need. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
-  '/macro-calculator': {
-    pageId: 'macro-calculator',
+
+  '/macro-counter': {
+    pageId: 'macro-counter',
     title: 'Macro Calculator',
     description: 'Enter your stats and goals to calculate your daily protein, carbs, and fat.',
-    spokenText:
-      'Macro Calculator. Enter your stats and your goals, and I’ll calculate your daily macros. When you’re done, press Calculate. Close Copilot anytime if you don’t need help.',
+    spokenText: 'Macro Calculator. Enter your stats and your goals, and I\'ll calculate your daily macros. When you\'re done, press Calculate. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
-  },'/shopping-list': {
+  },
+
+  '/shopping-list': {
     pageId: 'shopping-list',
     title: 'Shopping List',
     description: 'Add items, check them off, or create a list for your next grocery run.',
-    spokenText:
-      'Shopping List. Add items manually or by using voice commands. You can check items off as you shop, or remove them anytime. Close Copilot anytime if you don’t need help.',
+    spokenText: 'Shopping List. Add items manually or by using voice commands. You can check items off as you shop, or remove them anytime. Close Copilot anytime if you don\'t need help.',
+    autoClose: true,
+  },
+
+  '/get-inspiration': {
+    pageId: 'get-inspiration',
+    title: 'Get Inspiration',
+    description: 'Daily motivation and journaling to keep you on track with your health goals.',
+    spokenText: 'Get Inspiration. Here you\'ll find daily motivation quotes and a journal to record your thoughts. Use this space to reflect on your journey. Close Copilot anytime if you don\'t need help.',
+    autoClose: true,
+  },
+
+  '/my-biometrics': {
+    pageId: 'my-biometrics',
+    title: 'My Biometrics',
+    description: 'Track your macros, weight, body stats, and health metrics all in one place.',
+    spokenText: 'My Biometrics. Track your daily macros, log your weight, and monitor your health metrics. Tap any section to add or view your data. Close Copilot anytime if you don\'t need help.',
+    autoClose: true,
+  },
+
+  '/weekly-meal-board': {
+    pageId: 'weekly-meal-board',
+    title: 'Weekly Meal Board',
+    description: 'Plan your meals for the week. Add breakfast, lunch, dinner, and snacks for each day.',
+    spokenText: 'Weekly Meal Board. Plan your meals for the entire week. Tap the plus button to add meals for breakfast, lunch, dinner, or snacks. Switch between days using the tabs at the top. Close Copilot anytime if you don\'t need help.',
+    autoClose: true,
+  },
+
+  '/diabetic-hub': {
+    pageId: 'diabetic-hub',
+    title: 'Diabetic Hub',
+    description: 'Manage your diabetes with glucose tracking, guardrails, and diabetic-friendly meal suggestions.',
+    spokenText: 'Diabetic Hub. Track your glucose readings, set your guardrails for blood sugar targets, and browse diabetic-friendly meals. Everything here is designed to help you manage diabetes. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
 };
