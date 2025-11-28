@@ -11,7 +11,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     pageId: 'craving-creator',
     title: 'Craving Creator',
     description: 'Describe what you\'re craving and get a personalized meal. Try saying: "I want something sweet and crunchy" or "a creamy shake" or "something tangy and refreshing."',
-    spokenText: 'Craving Creator. Describe what you\'re craving. For example, say I want something sweet and crunchy, or I want a creamy shake, or something tangy and refreshing. Select your servings, press Create, and enjoy your personalized meal. Close Copilot anytime if you don\'t need help.',
+    spokenText: 'Craving Creator. Describe what you\'re craving. For example, say I want something sweet, crunchy, lowfat, low sugar, no gluten or I want a creamy shake, or something tangy and refreshing. Select your servings, press Create, and enjoy your personalized meal. You NEVER have to ignore your cravings again!',
     autoClose: true,
   },
 
@@ -19,7 +19,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     pageId: 'dessert-creator',
     title: 'Dessert Creator',
     description: 'Describe your dessert, pick what type like pie or cake, choose flavor and texture, select servings and dietary requirements, then create your dessert.',
-    spokenText: 'Dessert Creator. Describe your dessert. Pick what type of dessert, whether it\'s a pie, cake, or whatever. Pick your flavor texture if you need to. Pick your servings. Pick your dietary requirements if you have any. Then create your dessert. Close Copilot anytime if you don\'t need help.',
+    spokenText: 'Dessert Creator. Describe your dessert. Pick what type of dessert, whether it\'s a pie, cake, or whatever. Pick your flavor texture if you need to. Pick your servings. Pick your dietary requirements if you have any. Then create your dessert.',
     autoClose: true,
   },
 
@@ -35,7 +35,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     pageId: 'craving-presets',
     title: 'Craving Premades',
     description: 'Browse our collection of ready-made craving meals. Tap any picture to see ingredients and nutrition info.',
-    spokenText: 'Craving Premades. Browse our ready-made options. Tap any picture to see the ingredients, nutrition info, and cooking instructions. Close Copilot anytime if you don\'t need help.',
+    spokenText: 'Craving Premades. Pick how many servings your preparing, chose your increment of measure, then browse our ready-made AI created dessert options. Tap any picture to see the ingredients, nutrition info, and cooking instructions. Send ingredients to the master shopping list, log your macros or both.',
     autoClose: true,
   },
 
@@ -158,52 +158,19 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     spokenText: 'Lifestyle page. Here you\'ll find tools for cravings, dining out, kids meals, and social moments. Tap any card to explore, or tell me what you need. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
-
-  '/macro-counter': {
-    pageId: 'macro-counter',
+  '/macro-calculator': {
+    pageId: 'macro-calculator',
     title: 'Macro Calculator',
     description: 'Enter your stats and goals to calculate your daily protein, carbs, and fat.',
-    spokenText: 'Macro Calculator. Enter your stats and your goals, and I\'ll calculate your daily macros. When you\'re done, press Calculate. Close Copilot anytime if you don\'t need help.',
+    spokenText:
+      'Macro Calculator. Enter your stats and your goals, and I’ll calculate your daily macros. When you’re done, press Calculate. Close Copilot anytime if you don’t need help.',
     autoClose: true,
-  },
-
-  '/shopping-list': {
+  },'/shopping-list': {
     pageId: 'shopping-list',
     title: 'Shopping List',
     description: 'Add items, check them off, or create a list for your next grocery run.',
-    spokenText: 'Shopping List. Add items manually or by using voice commands. You can check items off as you shop, or remove them anytime. Close Copilot anytime if you don\'t need help.',
-    autoClose: true,
-  },
-
-  '/get-inspiration': {
-    pageId: 'get-inspiration',
-    title: 'Get Inspiration',
-    description: 'Daily motivation and journaling to keep you on track with your health goals.',
-    spokenText: 'Get Inspiration. Here you\'ll find daily motivation quotes and a journal to record your thoughts. Use this space to reflect on your journey. Close Copilot anytime if you don\'t need help.',
-    autoClose: true,
-  },
-
-  '/my-biometrics': {
-    pageId: 'my-biometrics',
-    title: 'My Biometrics',
-    description: 'Track your macros, weight, body stats, and health metrics all in one place.',
-    spokenText: 'My Biometrics. Track your daily macros, log your weight, and monitor your health metrics. Tap any section to add or view your data. Close Copilot anytime if you don\'t need help.',
-    autoClose: true,
-  },
-
-  '/weekly-meal-board': {
-    pageId: 'weekly-meal-board',
-    title: 'Weekly Meal Board',
-    description: 'Plan your meals for the week. Add breakfast, lunch, dinner, and snacks for each day.',
-    spokenText: 'Weekly Meal Board. Plan your meals for the entire week. Tap the plus button to add meals for breakfast, lunch, dinner, or snacks. Switch between days using the tabs at the top. Close Copilot anytime if you don\'t need help.',
-    autoClose: true,
-  },
-
-  '/diabetic-hub': {
-    pageId: 'diabetic-hub',
-    title: 'Diabetic Hub',
-    description: 'Manage your diabetes with glucose tracking, guardrails, and diabetic-friendly meal suggestions.',
-    spokenText: 'Diabetic Hub. Track your glucose readings, set your guardrails for blood sugar targets, and browse diabetic-friendly meals. Everything here is designed to help you manage diabetes. Close Copilot anytime if you don\'t need help.',
+    spokenText:
+      'Shopping List. Add items manually or by using voice commands. You can check items off as you shop, or remove them anytime. Close Copilot anytime if you don’t need help.',
     autoClose: true,
   },
 };

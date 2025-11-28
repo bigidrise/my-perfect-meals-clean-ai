@@ -77,7 +77,7 @@ export function startCopilotIntro(force = false) {
   // Send intro response through existing pipeline
   if (responseCallback) {
     responseCallback({
-      title: "Welcome to Your My Perfect Copilot! 🎤",
+      title: "Welcome, I'm My Perfect Copilot! 🎤",
       description:
         "I'm here to help you navigate the app and get things done fast.",
       spokenText: introScript,
