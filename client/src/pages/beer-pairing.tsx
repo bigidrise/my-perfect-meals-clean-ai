@@ -340,7 +340,7 @@ export default function BeerPairingMode() {
               <Button
                 onClick={fetchBeerRecs}
                 disabled={loading || !canSubmit}
-                className="bg-black/90 backdrop-blur-lg border border-white/30 text-white hover:bg-black/95"
+                className="w-full bg-orange-600 backdrop-blur-lg border border-white/30 text-white hover:bg-orange-600"
               >
                 {loading ? "Finding pairings…" : "Get Beer Pairings"}
               </Button>
@@ -456,13 +456,7 @@ export default function BeerPairingMode() {
 
         {showBackToTop && (
           <div className="flex justify-center mt-10">
-            <Button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="!rounded-full bg-black/30 backdrop-blur-lg border border-black/50 hover:bg-black/40 text-white px-6 py-3"
-            >
-              <ChevronUp className="h-4 w-4 mr-2" />
-              Back to Top
-            </Button>
+            
           </div>
         )}
       </div>

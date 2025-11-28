@@ -257,7 +257,7 @@ export default function WinePairingPage() {
               <Button 
                 type="submit" 
                 disabled={loading || !mealType} 
-                className="w-full bg-purple-600 hover:bg-purple-700"
+                className="w-full bg-orange-600 hover:bg-orange-700"
               >
                 {loading ? (
                   <>
@@ -355,13 +355,7 @@ export default function WinePairingPage() {
       {/* Back to Top Button */}
       {showBackToTop && (
         <div className="flex justify-center mt-12">
-          <Button
-            onClick={scrollToTop}
-            className="!rounded-full bg-black/30 backdrop-blur-lg border border-black/50 hover:bg-black/40 text-white px-6 py-3"
-          >
-            <ChevronUp className="h-4 w-4 mr-2" />
-            Back to Top
-          </Button>
+          
         </div>
       )}
     </div>

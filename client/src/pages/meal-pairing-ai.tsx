@@ -139,7 +139,7 @@ export default function MealPairingAIPage() {
       >
 
         {/* Pairing Form */}
-        <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+        <Card className="mb-8 bg-black/50 backdrop-blur-lg border border-orange-600 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg font-semi-bold text-white">
               
@@ -232,7 +232,7 @@ export default function MealPairingAIPage() {
               <Button 
                 type="submit" 
                 disabled={loading || !drinkType || !specificDrink} 
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-orange-600 hover:bg-orange-700"
               >
                 {loading ? (
                   <>
