@@ -30,8 +30,8 @@ import DashboardNew from "@/pages/DashboardNew";
 import Learn from "@/pages/Learn";
 import ProfileNew from "@/pages/Profile";
 import PrivacySecurity from "@/pages/privacy";
-import Onboarding from "@/pages/onboarding"; // Legacy onboarding
-import OnboardingV2 from "@/pages/OnboardingV2"; // New V2 onboarding
+// Legacy onboarding removed - using OnboardingV2 for all onboarding routes
+import OnboardingV2 from "@/pages/OnboardingV2";
 import Welcome from "@/pages/Welcome";
 import Auth from "@/pages/Auth";
 import ForgotPassword from "@/pages/ForgotPassword";
@@ -200,7 +200,7 @@ export default function Router() {
         {/* DELETED: CommunityTestPage, CommunityPage routes */}
         <Route
           path="/onboarding"
-          component={withPageErrorBoundary(Onboarding, "Onboarding")}
+          component={withPageErrorBoundary(OnboardingV2, "Onboarding")}
         />
         <Route
           path="/onboarding-v2"
@@ -208,7 +208,7 @@ export default function Router() {
         />
         <Route
           path="/onboarding-legacy"
-          component={withPageErrorBoundary(Onboarding, "Onboarding")}
+          component={withPageErrorBoundary(OnboardingV2, "Onboarding")}
         />
         <Route
           path="/dashboard"
