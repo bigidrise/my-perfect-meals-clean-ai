@@ -20,6 +20,7 @@ export class WalkthroughScriptEngine {
   private currentElement: Element | null = null;
   private eventElement: Element | null = null; // Separate tracking for waitForEvent target
   private status: EngineStatus = "idle";
+  private cachedSnapshot: WalkthroughState | null = null;
 
   /**
    * Set status and notify state subscribers
@@ -27,8 +28,16 @@ export class WalkthroughScriptEngine {
   private setStatus(newStatus: EngineStatus): void {
     if (this.status !== newStatus) {
       this.status = newStatus;
+      this.invalidateSnapshot();
       this.notifyStateSubscribers();
     }
+  }
+
+  /**
+   * Invalidate cached snapshot (called when state changes)
+   */
+  private invalidateSnapshot(): void {
+    this.cachedSnapshot = null;
   }
 
   /**
@@ -51,9 +60,13 @@ export class WalkthroughScriptEngine {
 
   /**
    * Get snapshot of current state (for useSyncExternalStore)
+   * Returns cached snapshot to avoid infinite loops
    */
   getSnapshot(): WalkthroughState {
-    return this.getState();
+    if (!this.cachedSnapshot) {
+      this.cachedSnapshot = this.getState();
+    }
+    return this.cachedSnapshot;
   }
 
   /**
@@ -68,6 +81,7 @@ export class WalkthroughScriptEngine {
     this.setStatus("starting");
     this.script = script;
     this.currentStepIndex = 0;
+    this.invalidateSnapshot();
 
     this.emitEvent({
       type: "started",
@@ -92,6 +106,7 @@ export class WalkthroughScriptEngine {
 
     if (this.currentStepIndex < this.script.steps.length - 1) {
       this.currentStepIndex++;
+      this.invalidateSnapshot();
       this.emitEvent({
         type: "step_changed",
         scriptId: this.script.id,
@@ -116,6 +131,7 @@ export class WalkthroughScriptEngine {
 
     if (this.currentStepIndex > 0) {
       this.currentStepIndex--;
+      this.invalidateSnapshot();
       this.emitEvent({
         type: "step_changed",
         scriptId: this.script.id,
@@ -345,6 +361,7 @@ export class WalkthroughScriptEngine {
   private reset(): void {
     this.script = null;
     this.currentStepIndex = 0;
+    this.invalidateSnapshot();
     this.setStatus("idle");
     this.currentElement = null;
     this.eventElement = null;
