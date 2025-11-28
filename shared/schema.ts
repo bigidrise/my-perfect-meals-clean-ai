@@ -226,6 +226,7 @@ export const users = pgTable("users", {
   weight: integer("weight"), // in kg
   activityLevel: text("activity_level"), // sedentary, lightly_active, moderately_active, very_active, extremely_active
   bodyType: text("body_type"), // ectomorph, mesomorph, endomorph
+  birthday: text("birthday"), // Format: "MM-DD" or "YYYY-MM-DD"
   fitnessGoal: text("fitness_goal"), // weight_loss, muscle_gain, maintenance, endurance
   dailyCalorieTarget: integer("daily_calorie_target"),
   dailyProteinTarget: integer("daily_protein_target"),
@@ -432,17 +433,17 @@ export const mealInstructions = pgTable("meal_instructions", {
 export const shoppingListItems = pgTable("shopping_list_items", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  
+
   // Item details
   name: text("name").notNull(),
   quantity: text("quantity").notNull(), // "2", "1.5", etc.
   unit: text("unit"), // "lb", "cups", "oz", etc.
   category: text("category"), // "protein", "produce", "dairy", etc.
-  
+
   // Scope: determines where this item belongs
   scopeType: text("scope_type").notNull(), // "day" | "week" | "adhoc"
   scopeKey: text("scope_key").notNull(), // "2025-10-03" | "2025-10-06" | "inbox"
-  
+
   // Metadata
   sourceBuilder: text("source_builder"), // "smart_menu" | "glp1" | "diabetic" | "weekly_board" | "craving"
   checked: boolean("checked").default(false),
@@ -817,6 +818,7 @@ export const challengeSubmissions = pgTable("challenge_submissions", {
 
 export const challengeVotes = pgTable("challenge_votes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  challengeId: varchar("challenge_id").references(() => cookingChallenges.id, { onDelete: "cascade" }).notNull(),
   submissionId: varchar("submission_id").references(() => challengeSubmissions.id, { onDelete: "cascade" }).notNull(),
   userId: varchar("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
   voteType: text("vote_type").notNull(), // "like", "love", "favorite"
@@ -1593,7 +1595,7 @@ export const physicianReports = pgTable("physician_reports", {
   accessCode: varchar("access_code", { length: 12 }).notNull().unique(),
   reportDate: timestamp("report_date", { withTimezone: true }).defaultNow().notNull(),
   patientName: text("patient_name"),
-  
+
   // Patient Health Profile
   healthProfile: jsonb("health_profile").$type<{
     hasDiabetes: boolean;
@@ -1603,7 +1605,7 @@ export const physicianReports = pgTable("physician_reports", {
     medications: string[];
     dietaryRestrictions: string[];
   }>().notNull(),
-  
+
   // Generated Meal Plan
   mealPlan: jsonb("meal_plan").$type<Array<{
     name: string;
@@ -1619,19 +1621,19 @@ export const physicianReports = pgTable("physician_reports", {
       reason: string;
     }>;
   }>>().notNull(),
-  
+
   // Clinical Protocol Used
   protocol: text("protocol"), // e.g., "Diabetic", "GLP-1", "Renal", "Cardiac"
-  
+
   // Summary/Notes
   clinicalNotes: text("clinical_notes"),
-  
+
   // Access tracking
   viewCount: integer("view_count").default(0).notNull(),
   lastViewedAt: timestamp("last_viewed_at", { withTimezone: true }),
   isActive: boolean("is_active").default(true).notNull(),
   expiresAt: timestamp("expires_at", { withTimezone: true }), // Optional expiration
-  
+
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

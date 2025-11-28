@@ -19,6 +19,8 @@ interface OnboardingData {
   activity?: string;
   preset?: string;
   starterPackId?: string;
+  // Birthday
+  birthday: string; // Format: "MM-DD"
 }
 
 const FOCUS_OPTIONS = [
@@ -57,6 +59,9 @@ const STARTER_PACKS: Record<string, Array<{id: string, name: string, meals: stri
   ],
 };
 
+// 1=Name+Profile+Goal, 2=Medical, 3=Birthday, 4=Nutritional Profile
+const TOTAL_STEPS = 4;
+
 export default function OnboardingV2() {
   const [, setLocation] = useLocation();
   const [currentScreen, setCurrentScreen] = useState(1);
@@ -64,9 +69,26 @@ export default function OnboardingV2() {
     focus: "",
     allergies: [],
     macroSource: "auto",
+    // Birthday
+    birthday: "",
   });
 
-  const progress = (currentScreen / 4) * 100;
+  const progress = (currentScreen / TOTAL_STEPS) * 100;
+
+  const isStepValid = (step: number): boolean => {
+    switch (step) {
+      case 1: // Focus & Allergies
+        return data.focus !== "";
+      case 2: // Medical Conditions & Allergies
+        return true; // Optional - allow proceeding even if nothing selected
+      case 3: // Birthday
+        return data.birthday !== ""; // Required
+      case 4: // Nutritional Profile
+        return true; // Optional - allow proceeding even if nothing selected
+      default:
+        return false;
+    }
+  };
 
   // Screen 1: Focus & Allergies
   const renderFocusAllergies = () => (
@@ -140,7 +162,7 @@ export default function OnboardingV2() {
           // Persist to API
           saveFocusData();
         }}
-        disabled={!data.focus}
+        disabled={!isStepValid(currentScreen)}
         className="w-full h-12 bg-indigo-600 hover:bg-indigo-500"
         data-testid="button-continue-screen-1"
       >
@@ -154,7 +176,7 @@ export default function OnboardingV2() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-4 text-white">How should we set your macro targets?</h2>
-        
+
         <RadioGroup
           value={data.macroSource}
           onValueChange={(value) => setData({ ...data, macroSource: value as any })}
@@ -165,7 +187,7 @@ export default function OnboardingV2() {
               <div className="flex-1">
                 <div className="font-semibold text-white mb-1">Set automatically (Recommended)</div>
                 <p className="text-sm text-neutral-400">We'll calculate based on your profile</p>
-                
+
                 {data.macroSource === "auto" && (
                   <div className="mt-4 space-y-3 pl-4 border-l-2 border-indigo-500">
                     <div className="grid grid-cols-2 gap-3">
@@ -226,7 +248,7 @@ export default function OnboardingV2() {
               <div className="flex-1">
                 <div className="font-semibold text-white mb-1">Use a preset</div>
                 <p className="text-sm text-neutral-400">Choose a common goal</p>
-                
+
                 {data.macroSource === "preset" && (
                   <div className="mt-4 space-y-2 pl-4 border-l-2 border-indigo-500">
                     {["Weight Loss", "Maintain", "Muscle Gain"].map((preset) => (
@@ -284,7 +306,84 @@ export default function OnboardingV2() {
     </div>
   );
 
-  // Screen 3: Starter Pack
+  // Screen 3: Birthday
+  const renderBirthday = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold mb-4 text-white">When's your birthday?</h2>
+        <p className="text-neutral-400 mb-6">We'll send you a special message!</p>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label className="text-white">Month</Label>
+            <select
+              value={data.birthday.split("-")[0] || ""}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  birthday: `${e.target.value}-${data.birthday.split("-")[1] || "DD"}`,
+                })
+              }
+              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+            >
+              <option value="">Select Month</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                <option key={month} value={month.toString().padStart(2, "0")}>
+                  {new Date(2000, month - 1, 1).toLocaleString("default", {
+                    month: "long",
+                  })}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <Label className="text-white">Day</Label>
+            <select
+              value={data.birthday.split("-")[1] || ""}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  birthday: `${data.birthday.split("-")[0] || "MM"}-${e.target.value}`,
+                })
+              }
+              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+            >
+              <option value="">Select Day</option>
+              {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                <option key={day} value={day.toString().padStart(2, "0")}>
+                  {day}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <Button
+          onClick={() => setCurrentScreen(2)}
+          variant="outline"
+          className="flex-1 h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
+        >
+          Back
+        </Button>
+        <Button
+          onClick={() => {
+            setCurrentScreen(4);
+            console.log("📊 Analytics: onboarding_birthday_set", data.birthday);
+            saveBirthdayData();
+          }}
+          disabled={!isStepValid(currentScreen)}
+          className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
+          data-testid="button-continue-screen-3"
+        >
+          Continue <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Screen 4: Starter Pack
   const renderStarterPack = () => {
     const packs = STARTER_PACKS[data.focus] || STARTER_PACKS.general;
 
@@ -293,7 +392,7 @@ export default function OnboardingV2() {
         <div>
           <h2 className="text-2xl font-bold mb-2 text-white">Choose your starter pack</h2>
           <p className="text-neutral-400 mb-6">We'll show you meals from this collection first</p>
-          
+
           <div className="space-y-4">
             {packs.map((pack) => (
               <button
@@ -301,7 +400,7 @@ export default function OnboardingV2() {
                 onClick={() => {
                   setData({ ...data, starterPackId: pack.id });
                   console.log("📊 Analytics: onboarding_starter_pack_selected", pack.id);
-                  setCurrentScreen(4);
+                  setCurrentScreen(5); // Changed to 5 to account for birthday step
                   saveStarterPackData();
                 }}
                 className="w-full p-5 rounded-xl border-2 border-white/20 bg-white/5 hover:border-indigo-500 hover:bg-indigo-500/10 text-left transition-all"
@@ -325,7 +424,7 @@ export default function OnboardingV2() {
         </div>
 
         <Button
-          onClick={() => setCurrentScreen(2)}
+          onClick={() => setCurrentScreen(3)} // Changed to 3 to go back to birthday
           variant="outline"
           className="w-full h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
         >
@@ -335,7 +434,7 @@ export default function OnboardingV2() {
     );
   };
 
-  // Screen 4: First Win
+  // Screen 5: First Win
   const renderFirstWin = () => (
     <div className="space-y-6 text-center">
       <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
@@ -365,7 +464,7 @@ export default function OnboardingV2() {
           localStorage.setItem("completedIntro", "true");
           localStorage.setItem("isAuthenticated", "true");
           console.log("📊 Analytics: onboarding_completed", { focus: data.focus, starterPackId: data.starterPackId });
-          
+
           // Route to fast-food with starter pack filter
           setLocation(`/fast-food?pack=${data.starterPackId || "quickstart"}`);
         }}
@@ -376,6 +475,23 @@ export default function OnboardingV2() {
       </Button>
     </div>
   );
+
+  const renderCurrentStep = () => {
+    switch (currentScreen) {
+      case 1:
+        return renderFocusAllergies();
+      case 2:
+        return renderTargets();
+      case 3:
+        return renderBirthday();
+      case 4: // Changed from 3 to 4 for starter pack
+        return renderStarterPack();
+      case 5: // Changed from 4 to 5 for first win
+        return renderFirstWin();
+      default:
+        return <div>Error: Unknown step</div>;
+    }
+  };
 
   // API save functions (stubs for now - implement based on existing backend)
   const saveFocusData = async () => {
@@ -396,6 +512,15 @@ export default function OnboardingV2() {
     }
   };
 
+  const saveBirthdayData = async () => {
+    try {
+      // PUT /api/onboarding/step/birthday
+      console.log("💾 Saving birthday data:", { birthday: data.birthday });
+    } catch (error) {
+      console.error("Failed to save birthday data:", error);
+    }
+  };
+
   const saveStarterPackData = async () => {
     try {
       // PUT /api/onboarding/step/starterPack
@@ -405,14 +530,53 @@ export default function OnboardingV2() {
     }
   };
 
+  const handleSubmit = async () => {
+    // This function will be called when the user completes the final step
+    try {
+      // Assuming a final API call to submit all onboarding data
+      const response = await fetch("/api/onboarding/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          focus: data.focus,
+          allergies: data.allergies,
+          macroSource: data.macroSource,
+          sex: data.sex,
+          weight: data.weight,
+          height: data.height,
+          activity: data.activity,
+          preset: data.preset,
+          starterPackId: data.starterPackId,
+          birthday: data.birthday,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to complete onboarding");
+      }
+
+      // Set completion flags
+      localStorage.setItem("onboardingCompleted", "true");
+      localStorage.setItem("completedProfile", "true");
+      localStorage.setItem("completedIntro", "true");
+      localStorage.setItem("isAuthenticated", "true");
+      console.log("📊 Analytics: onboarding_completed", { focus: data.focus, starterPackId: data.starterPackId, birthday: data.birthday });
+
+      // Route to fast-food with starter pack filter
+      setLocation(`/fast-food?pack=${data.starterPackId || "quickstart"}`);
+    } catch (error) {
+      console.error("Failed to complete onboarding:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-white flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
-        
+
         {/* Progress bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-neutral-400">Step {currentScreen} of 4</span>
+            <span className="text-sm text-neutral-400">Step {currentScreen} of {TOTAL_STEPS}</span>
             <span className="text-sm text-neutral-400">{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -424,12 +588,46 @@ export default function OnboardingV2() {
             <CardTitle className="text-white">Quick Setup</CardTitle>
           </CardHeader>
           <CardContent>
-            {currentScreen === 1 && renderFocusAllergies()}
-            {currentScreen === 2 && renderTargets()}
-            {currentScreen === 3 && renderStarterPack()}
-            {currentScreen === 4 && renderFirstWin()}
+            {renderCurrentStep()}
           </CardContent>
         </Card>
+
+        {/* Navigation buttons - only shown on screens that are not the final screen */}
+        {currentScreen < TOTAL_STEPS + 1 && ( // Adjust condition to show on all screens except the very last one
+          <div className="mt-8 flex gap-3">
+            {currentScreen > 1 && (
+              <Button
+                onClick={() => setCurrentScreen(currentScreen - 1)}
+                variant="outline"
+                className="flex-1 h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
+              >
+                Back
+              </Button>
+            )}
+            {currentScreen === TOTAL_STEPS ? ( // If it's the last step before completion
+              <Button
+                onClick={handleSubmit} // Call handleSubmit for final submission
+                className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
+                data-testid="button-complete-onboarding"
+              >
+                Finish Setup <Check className="h-4 w-4 ml-2" />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  if (isStepValid(currentScreen)) {
+                    setCurrentScreen(currentScreen + 1);
+                  }
+                }}
+                disabled={!isStepValid(currentScreen)}
+                className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
+                data-testid={`button-continue-screen-${currentScreen}`}
+              >
+                Continue <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,16 +1,36 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Gift, Cake, Sparkles } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface BirthdayGreetingProps {
   userId: number;
 }
 
 export const BirthdayGreeting = ({ userId }: BirthdayGreetingProps) => {
-  // For demo purposes, showing birthday greeting occasionally
-  const showBirthdayGreeting = Math.random() > 0.8; // 20% chance to show
+  const { data: userData } = useQuery({
+    queryKey: [`/api/users/${userId}`],
+  });
+
+  // Check if today is the user's birthday
+  const isBirthday = () => {
+    if (!userData?.birthday) return false;
+    
+    const today = new Date();
+    const todayMonth = (today.getMonth() + 1).toString().padStart(2, "0");
+    const todayDay = today.getDate().toString().padStart(2, "0");
+    const todayFormatted = `${todayMonth}-${todayDay}`;
+    
+    // Birthday can be stored as "MM-DD" or "YYYY-MM-DD"
+    const userBirthday = userData.birthday.includes("-") 
+      ? userData.birthday.slice(-5) // Get last 5 chars (MM-DD)
+      : userData.birthday;
+    
+    return todayFormatted === userBirthday;
+  };
   
-  if (!showBirthdayGreeting) return null;
+  if (!isBirthday()) return null;
 
   return (
     <Card className="w-full bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-200 dark:border-yellow-800">
@@ -49,7 +69,7 @@ export const BirthdayGreeting = ({ userId }: BirthdayGreetingProps) => {
         </div>
         
         <Button className="w-full bg-orange-500 hover:bg-orange-600">
-          <Gift className="w-4 h-4 mr-2" />
+          <Gift className="w-4 w-4 mr-2" />
           Claim Birthday Treat
         </Button>
       </CardContent>
