@@ -158,6 +158,21 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     spokenText: 'Lifestyle page. Here you\'ll find tools for cravings, dining out, kids meals, and social moments. Tap any card to explore, or tell me what you need. Close Copilot anytime if you don\'t need help.',
     autoClose: true,
   },
+  '/macro-calculator': {
+    pageId: 'macro-calculator',
+    title: 'Macro Calculator',
+    description: 'Enter your stats and goals to calculate your daily protein, carbs, and fat.',
+    spokenText:
+      'Macro Calculator. Enter your stats and your goals, and I’ll calculate your daily macros. When you’re done, press Calculate. Close Copilot anytime if you don’t need help.',
+    autoClose: true,
+  },'/shopping-list': {
+    pageId: 'shopping-list',
+    title: 'Shopping List',
+    description: 'Add items, check them off, or create a list for your next grocery run.',
+    spokenText:
+      'Shopping List. Add items manually or by using voice commands. You can check items off as you shop, or remove them anytime. Close Copilot anytime if you don’t need help.',
+    autoClose: true,
+  },
 };
 
 export function getPageExplanation(pathname: string): PageExplanation | null {

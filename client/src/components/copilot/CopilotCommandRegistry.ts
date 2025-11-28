@@ -72,12 +72,12 @@ export function startCopilotIntro(force = false) {
 
   // Intro script (voice + text)
   const introScript =
-    "Hello, and welcome! I'm your Perfect Copilot. Anytime you need help, tap my button and tell me what you want to do. Try saying things like 'Fridge Rescue,' 'Plan my week,' or 'Show me macros.' I'll take you straight there and walk you through every step. Ready when you are.";
+    "Hello, and welcome! I’m your My Perfect Copilot. Tap my button anytime you need help. You can talk to me, type your request, or use voice-to-text for the most accurate results. Say things like ‘Fridge Rescue,’ ‘Plan my week,’ or ‘Show me macros. I’ll take you straight there. Ready when you are..";
 
   // Send intro response through existing pipeline
   if (responseCallback) {
     responseCallback({
-      title: "Welcome to Your Perfect Copilot! 🎤",
+      title: "Welcome to Your My Perfect Copilot! 🎤",
       description:
         "I'm here to help you navigate the app and get things done fast.",
       spokenText: introScript,
