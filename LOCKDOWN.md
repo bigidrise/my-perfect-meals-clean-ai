@@ -38,10 +38,17 @@ If a locked feature breaks unexpectedly, the agent has violated lockdown protoco
 - ✅ Macro Targeting System (custom macro controls)
 - ✅ Medical Badge System (safety validation)
 - ✅ Unified Meal Engine Service (backend AI orchestration)
+- ✅ **Unified Meal Pipeline** (`server/services/unifiedMealPipeline.ts`) - **LOCKED November 28, 2025**
+  - Canonical endpoint: `/api/meals/generate`
+  - Deterministic fallbacks when OpenAI unavailable
+  - Guaranteed image URLs (DALL-E or fallback)
+  - MealType normalization (handles "snacks" → "snack")
+  - Production-stable for App Store submission
 
 **CRITICAL MEAL PICKER FILES (ABSOLUTELY LOCKED):**
 - `client/src/components/modals/AIMealCreatorModal.tsx` - NO UI structure changes
 - `client/src/components/pickers/MealPremadePicker.tsx` - NO UI structure changes
+- `server/services/unifiedMealPipeline.ts` - CORE PIPELINE - NO MODIFICATIONS
 - `client/src/data/snackIngredients.ts` - Data additions allowed via registry pattern
 - `client/src/data/diabeticPremadeSnacks.ts` - Data additions allowed via registry pattern
 
@@ -234,10 +241,10 @@ If a locked feature has a critical bug:
 ---
 
 ## 🔥 LAST UPDATED
-**Date:** November 24, 2025  
-**Status:** Complete codebase lockdown active + Meal Picker Three-Layer Lockdown Protocol implemented  
+**Date:** November 28, 2025  
+**Status:** Complete codebase lockdown active + Unified Meal Pipeline production-locked  
 **Active Work:** NONE - all systems locked  
-**Recent Completion:** Meal Picker Lockdown Protocol (AI Meal Creator Modal, AI Premade Picker, Snack Systems)
+**Recent Completion:** Unified Meal Pipeline stabilization (AI Meal Creator, AI Premades, consistent fallbacks)
 
 ---
 

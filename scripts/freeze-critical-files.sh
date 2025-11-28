@@ -9,11 +9,13 @@ echo "🔒 Creating checksums of critical files..."
 CRITICAL_FILES=(
   "client/src/components/modals/AIMealCreatorModal.tsx"
   "client/src/components/PreparationModal.tsx"
+  "client/src/components/pickers/MealPremadePicker.tsx"
   "client/src/pages/WeeklyMealBoard.tsx"
   "client/src/pages/BeachBodyMealBoard.tsx"
   "client/src/pages/pro/PerformanceCompetitionBuilder.tsx"
   "client/src/pages/Planner.tsx"
   "server/routes/manualMacros.ts"
+  "server/services/unifiedMealPipeline.ts"
 )
 
 # Create checksums
