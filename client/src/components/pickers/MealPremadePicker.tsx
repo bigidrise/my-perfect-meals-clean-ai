@@ -749,38 +749,24 @@ export default function MealPremadePicker({
         `🎨 Generating ${mealType} meal with ingredients:`,
         ingredientsList,
       );
-      console.log("📡 Calling API endpoint: /api/meals/fridge-rescue");
+      console.log("📡 Calling unified API endpoint: /api/meals/generate");
 
       // Get custom macro targets if enabled
       const customMacroTargets = macroTargetingState.serializeForRequest();
 
-      // Use the SAME endpoint as the working AI Meal Creator
-      const requestBody = {
-        fridgeItems: ingredientsList,
-        userId: 1,
-        mealType: mealType,
-        ...(customMacroTargets && { macroTargets: customMacroTargets }),
-      };
-
-      console.log("📤 Request body:", JSON.stringify(requestBody, null, 2));
-
-      const response = await fetch("/api/meals/fridge-rescue", {
+      // Use unified meal generation endpoint
+      const response = await fetch("/api/meals/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Canonical backend contract - uses fridgeItems
-          fridgeItems: ingredientsList,
-
-          // Optional macro guardrails
-          ...(customMacroTargets && {
-            macroTargets: customMacroTargets,
-          }),
-
-          // Meal context
+          type: "premade",
           mealType: mealType,
+          input: ingredientsList,
           userId: "1",
+          ...(customMacroTargets && { macroTargets: customMacroTargets }),
+          count: 1,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -798,34 +784,19 @@ export default function MealPremadePicker({
       const data = await response.json();
       console.log("📦 API Response data:", data);
 
-      // Handle both response formats
-      let generatedMeal;
-      if (data.meals && Array.isArray(data.meals) && data.meals.length > 0) {
-        generatedMeal = data.meals[0];
-        console.log("✅ Found meal in data.meals[0]");
-      } else if (data.meal) {
-        generatedMeal = data.meal;
-        console.log("✅ Found meal in data.meal");
-      } else {
+      // Unified pipeline returns { success, meal, source }
+      if (!data.success || !data.meal) {
         console.error(
           "❌ No meal found in response. Data structure:",
           Object.keys(data),
         );
-        throw new Error("No meal found in response");
+        throw new Error(data.error || "No meal found in response");
       }
 
+      const generatedMeal = data.meal;
       console.log("🍽️ Generated meal:", generatedMeal);
 
-      // Transform to match board format
-      const defaultImage =
-        mealType === "breakfast"
-          ? "/assets/meals/default-breakfast.jpg"
-          : mealType === "lunch"
-            ? "/assets/meals/default-lunch.jpg"
-            : mealType === "snack"
-              ? "/assets/meals/default-snack.jpg"
-              : "/assets/meals/default-dinner.jpg";
-
+      // Unified pipeline guarantees imageUrl with fallback
       const premadeMeal = {
         id: `premade-${meal.id}-${Date.now()}`,
         title: generatedMeal.name || meal.name,
@@ -834,7 +805,7 @@ export default function MealPremadePicker({
         servings: 1,
         ingredients: generatedMeal.ingredients || meal.ingredients,
         instructions: generatedMeal.instructions || [],
-        imageUrl: generatedMeal.imageUrl || defaultImage,
+        imageUrl: generatedMeal.imageUrl || "/images/cravings/satisfy-cravings.jpg",
         nutrition: generatedMeal.nutrition || {
           calories: generatedMeal.calories || 350,
           protein: generatedMeal.protein || 30,

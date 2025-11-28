@@ -311,24 +311,19 @@ export default function AIMealCreatorModal({
         ? beachBodyGuardrails
         : macroTargetingState.serializeForRequest();
 
-      const response = await fetch("/api/meals/craving-creator", {
+      // Use unified meal generation endpoint
+      const response = await fetch("/api/meals/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Canonical backend contract
-          targetMealType: mealSlot,
-          cravingInput: ingredientsWithStyles.join(", "),
-          
-          // Optional macro guardrails (Beach Body or trainer macros)
-          ...(customMacroTargets && {
-            macroTargets: customMacroTargets,
-          }),
-
-          // User context
+          type: "craving",
+          mealType: mealSlot,
+          input: ingredientsWithStyles.join(", "),
           userId: "1",
-          dietaryRestrictions: [],
+          ...(customMacroTargets && { macroTargets: customMacroTargets }),
+          count: 1,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -340,18 +335,17 @@ export default function AIMealCreatorModal({
       const data = await response.json();
       console.log("🍳 AI Meal Creator received data:", data);
 
-      // AI Craving Creator returns { meal: UnifiedMeal }
-      if (!data.meal) {
+      // Unified pipeline returns { success, meal, source }
+      if (!data.success || !data.meal) {
         console.error("❌ Invalid data structure:", data);
-        throw new Error("No meal returned from AI generator");
+        throw new Error(data.error || "No meal returned from AI generator");
       }
 
       const meal = data.meal;
 
+      // Unified pipeline guarantees imageUrl, but add fallback just in case
       if (!meal.imageUrl) {
-        meal.imageUrl =
-          `/assets/meals/default-${mealSlot}.jpg` ||
-          "/assets/meals/default-meal.jpg";
+        meal.imageUrl = `/images/cravings/satisfy-cravings.jpg`;
       }
       if (!meal.id) {
         meal.id = `ai-meal-${Date.now()}`;

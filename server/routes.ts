@@ -386,6 +386,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   };
 
+  // Non-middleware version for use inside route handlers
+  const checkFeatureAccess = (_featureKey: string, _req: any): { allowed: boolean; reason?: string } => {
+    // During alpha testing, allow all users
+    return { allowed: true };
+  };
+
   // 🔒 LOCKED: Deterministic Fridge Rescue Engine - DO NOT MODIFY
   // User confirmed this new system works perfectly - keep it locked!
   app.use("/api", fridgeRescueRouter);
@@ -443,33 +449,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   */
 
-  /* 🗑️ REMOVED: Original fridge rescue generator
-  app.post("/api/fridge-rescue-generator", requireFeature("FRIDGE_RESCUE"), normalizeFridgeRescue, async (req, res) => {
+  /* 🗑️ REMOVED: Original fridge rescue generator - replaced by unified pipeline */
+
+  // ============================================================================
+  // UNIFIED MEAL GENERATION ENDPOINT
+  // Single canonical endpoint for ALL meal generation (AI Meal Creator, AI Premades, Fridge Rescue)
+  // Guarantees: consistent response format, fallback images, error handling
+  // ============================================================================
+  app.post("/api/meals/generate", async (req, res) => {
+    console.log("🔄 Unified meal generation endpoint hit");
+    
     try {
-      console.log("🥕 Fridge Rescue route hit - generating meal");
+      const { 
+        type = 'craving',           // 'craving' | 'fridge-rescue' | 'premade'
+        mealType = 'lunch',         // 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'snacks'
+        input,                      // string (craving) or string[] (ingredients)
+        userId,
+        macroTargets,
+        count = 1
+      } = req.body;
 
-      const { fridgeItems, userId, _aliasUsed } = req.body;
+      // Feature gate for fridge-rescue and premade types
+      if (type === 'fridge-rescue' || type === 'premade') {
+        const featureCheck = checkFeatureAccess("FRIDGE_RESCUE", req);
+        if (!featureCheck.allowed) {
+          return res.status(403).json({
+            success: false,
+            error: featureCheck.reason || "Fridge Rescue feature requires a subscription",
+            source: 'error'
+          });
+        }
+      }
 
-      if (!fridgeItems || !Array.isArray(fridgeItems)) {
+      // Validate input
+      if (!input) {
         return res.status(400).json({ 
-          error: "fridgeItems is required and must be an array"
+          success: false, 
+          error: "input is required (craving text or ingredients array)" 
         });
       }
 
-      // Import the generator service
-      const { generateFridgeRescueMeals } = await import("./services/fridgeRescueGenerator");
+      // Validate input is array for fridge-rescue/premade
+      if ((type === 'fridge-rescue' || type === 'premade') && typeof input === 'string') {
+        // Convert comma-separated string to array
+        const inputArray = input.split(',').map((s: string) => s.trim()).filter(Boolean);
+        if (inputArray.length === 0) {
+          return res.status(400).json({
+            success: false,
+            error: "At least one ingredient is required",
+            source: 'error'
+          });
+        }
+      }
 
-      // Generate the meal
-      const generatedMeals = await generateFridgeRescueMeals({ fridgeItems });
+      // Import unified pipeline
+      const { generateMealUnified } = await import("./services/unifiedMealPipeline");
 
-      console.log("🎉 Fridge rescue meals generated:", generatedMeals.length, "meals");
-      res.json({ meals: generatedMeals });
+      const result = await generateMealUnified({
+        type,
+        mealType,
+        input,
+        userId,
+        macroTargets,
+        count
+      });
+
+      console.log(`✅ Unified generation complete: source=${result.source}, success=${result.success}`);
+
+      // Return consistent response format
+      res.json(result);
+
     } catch (error: any) {
-      console.error("❌ Fridge rescue error:", error);
-      res.status(500).json({ error: error.message || "Failed to generate fridge rescue meal" });
+      console.error("❌ Unified generation error:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to generate meal",
+        source: 'error'
+      });
     }
   });
-  */
 
 
   // Fridge Rescue API Main Route - Generate 3 meals with macros and amounts
