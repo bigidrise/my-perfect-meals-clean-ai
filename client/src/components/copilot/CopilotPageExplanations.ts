@@ -21,7 +21,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     pageId: "craving-creator",
     title: "Craving Creator",
     description:
-      'Create healthy versions of whatever your craving. Describe the flavor, texture, or style you want, choose your servings and preferences, and let the app generate a personalized meal that matches your craving in a clean, goal-friendly way.',
+      "Create healthy versions of whatever your craving. Describe the flavor, texture, or style you want, choose your servings and preferences, and let the app generate a personalized meal that matches your craving in a clean, goal-friendly way.",
     spokenText:
       "Craving Creator. Describe what you're craving. For example, say I want something sweet, crunchy, lowfat, low sugar, no gluten or I want a creamy shake, or something tangy and refreshing. Select your servings, press Create, and enjoy your personalized meal. You NEVER have to ignore your cravings again!",
     autoClose: true,
@@ -217,6 +217,16 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     autoClose: true,
   },
 
+  "/planner": {
+    pageId: "planner",
+    title: "Planner",
+    description:
+      "Your complete meal-planning command center. Choose from all the meal builders — Weekly, Diabetic, GLP-1, Anti-Inflammatory, and Beachbody — and build the exact nutrition plan that fits your goals and your lifestyle.",
+    spokenText:
+      "Planner Page. Here you can choose from every meal builder we offer. Use the Weekly Meal Builder to plan your entire week, or pick the Diabetic, GLP-1, Anti-Inflammatory, or Beachbody builders to tailor your meals to your specific goal. Tap the builder you need and I’ll walk you through how to create your day.",
+    autoClose: true,
+  },
+
   "/lifestyle": {
     pageId: "lifestyle-landing",
     title: "Lifestyle",
@@ -226,6 +236,17 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
       "Lifestyle Hub. Everything you need to navigate real life is right here. You can create healthy versions of your cravings, turn whatever you have in your fridge into meals, find smart options when you’re eating out, pick meals for kids or toddlers, and explore smarter drink choices in the Spirits and Lifestyle Hub. Choose what you need and I’ll walk you through it.",
     autoClose: true,
   },
+
+  "/procare-cover": {
+    pageId: "procare-cover",
+    title: "Procare",
+    description:
+      "Your professional-grade support center. Access the Supplement Hub for performance and health optimization, and connect with your trainer or physician through the ProCare tools for personalized guidance and expert-driven nutrition setups.",
+    spokenText:
+      "ProCare. This is your professional support center. Here you can access the Supplement Hub for targeted health and performance supplements, or connect with your trainer or physician through the ProCare tools to get expert guidance built around your goals. Select the option you need and I’ll walk you through it.",
+    autoClose: true,
+  },
+
   "/macro-counter": {
     pageId: "macro-counter",
     title: "Macro Calculator",
@@ -256,11 +277,11 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
 
   "/weekly-meal-board": {
     pageId: "weekly-meal-board",
-    title: "My Weekly Meal Builder",
+    title: "Weekly Meal Builder",
     description:
-      "Plan your entire week in one place. Build each day’s meals, duplicate days, adjust servings, and send your finished week to macros or your shopping list.",
+      "Review and manage your entire week of meals in one place. See each day’s breakfast, lunch, dinner, and snacks at a glance, make quick edits, swap meals, or jump into any builder to adjust your plan.",
     spokenText:
-      "Weekly Meal Builder. Plan your whole week here. Create each day’s meals, duplicate days to save time, adjust servings, and when you’re done, you can send a single day to macros or send the entire week to your shopping list.",
+      "Weekly Meal Board. Here you can view your entire week of meals at a glance. Tap any day to open it, make changes, swap meals, or jump into the meal builders to update your plan. It’s the easiest way to stay organized and keep your weekly nutrition on track.",
     autoClose: true,
   },
 
@@ -321,6 +342,16 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
       "Build fast, lean meals designed to get you event-ready—perfect for summer cuts, weddings, or any deadline.",
     spokenText:
       "Beachbody Meal Builder — perfect for getting event-ready fast. Whether you're prepping for summer, a wedding, or a big moment, this builder helps you create clean, lean meals that support rapid results. Here you’ll build your meals for the day using the AI Meal Creator or the AI Premades. Choose your meals, pick how you want them prepared, adjust servings, and generate your breakfast, lunch, dinner, and snacks. At the top, pick how many days you want to build — you can duplicate the same day across the week or customize each day differently. When you're done, you can send a single day to your Macro Table, or send everything to your shopping list for easy grocery planning. ",
+    autoClose: true,
+  },
+
+  "/care-team": {
+    pageId: "care-team",
+    title: "Care Team & Pro Care",
+    description:
+      "Connect with your personal care network. Invite trainers, physicians, or coaches by email, assign their role, or join someone’s team using their access code. ",
+    spokenText:
+      "Care Team and ProAccess. Here you can invite your trainer, physician, coach, patient or client by email and assign their role, or join someone’s team using their access code. Once the connection is made, you’ll both appear on each other’s Active Care Team, and you can manage your list of people who support your goals. Choose the option you need to get started. ",
     autoClose: true,
   },
 };
