@@ -217,7 +217,7 @@ export default function MacroCounter() {
   const { user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
 
-  usePageWalkthrough('macro-calculator');
+  // usePageWalkthrough('macro-calculator'); // Disabled - conflicts with Copilot intro
 
   // Load calculator settings from localStorage
   const loadCalculatorSettings = () => {
@@ -269,35 +269,34 @@ export default function MacroCounter() {
     savedSettings?.sugarCapMode ?? "AHA",
   );
 
-  // Start simple walkthrough on page mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // Start the new simple walkthrough system
-      startSimpleWalkthrough("macro-calculator", [
-        {
-          selector: "#goal-card",
-          text: "Pick your fitness goal - weight loss, maintenance, or muscle gain",
-          showArrow: true,
-        },
-        {
-          selector: "#bodytype-card",
-          text: "Pick your body type - ectomorph burns fast, mesomorph is balanced, endomorph holds weight",
-          showArrow: true,
-        },
-        {
-          selector: "#details-card",
-          text: "Enter your stats - age, height, weight, and activity level",
-          showArrow: true,
-        },
-        {
-          selector: "#set-targets-button",
-          text: "Tap here to save your personalized macros",
-          showArrow: true,
-        },
-      ]);
-    }, 3000); // Wait 3 seconds to let Copilot finish speaking before walkthrough starts
-    return () => clearTimeout(timer);
-  }, []);
+  // Walkthrough disabled - conflicts with Copilot intro TTS
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     startSimpleWalkthrough("macro-calculator", [
+  //       {
+  //         selector: "#goal-card",
+  //         text: "Pick your fitness goal - weight loss, maintenance, or muscle gain",
+  //         showArrow: true,
+  //       },
+  //       {
+  //         selector: "#bodytype-card",
+  //         text: "Pick your body type - ectomorph burns fast, mesomorph is balanced, endomorph holds weight",
+  //         showArrow: true,
+  //       },
+  //       {
+  //         selector: "#details-card",
+  //         text: "Enter your stats - age, height, weight, and activity level",
+  //         showArrow: true,
+  //       },
+  //       {
+  //         selector: "#set-targets-button",
+  //         text: "Tap here to save your personalized macros",
+  //         showArrow: true,
+  //       },
+  //     ]);
+  //   }, 3000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Nutrition Profile state
   // Save calculator settings to localStorage whenever they change
