@@ -47,10 +47,10 @@ export const HUBS: Record<string, FeatureDefinition> = {
     walkthroughId: "craving-hub-walkthrough", // Phase C.7: Hub-level walkthrough
     isHub: true,
     hubSize: "small",
-    keywords: ["cravings", "craving creator", "craving hub", "satisfy cravings", "craving ideas", "i have a craving", "craving center", "cravings hub", "sweet tooth", "snack ideas", "pre mades", "premades", "presets", "craving premades"],
+    keywords: ["cravings", "craving creator", "craving hub", "satisfy cravings", "craving ideas", "i have a craving", "craving center", "cravings hub", "sweet tooth", "snack ideas", "pre mades", "premades", "presets", "craving premades", "dessert", "desserts", "dessert creator", "dessert hub", "healthy dessert"],
     spokenPrompt: "Welcome to the Craving Hub! Here you can generate healthy versions of your cravings.",
-    selectionPrompt: "Which part do you want? Say 'Creator' to build custom meals, or 'Premades' to browse our curated recipes.",
-    voiceTimeoutMessage: "I didn't catch that. Try typing 'Creator' or 'Premades' instead.",
+    selectionPrompt: "Which part do you want? Say 'Creator' to build custom meals, 'Premades' to browse our curated recipes, or 'Desserts' for healthy sweet treats.",
+    voiceTimeoutMessage: "I didn't catch that. Try typing 'Creator', 'Premades', or 'Desserts' instead.",
     subOptions: [
       {
         id: "CRAVING_CREATOR",
@@ -69,8 +69,15 @@ export const HUBS: Record<string, FeatureDefinition> = {
         walkthroughId: "craving-premades-walkthrough",
         aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"],
         voiceHint: "premades"
+      },
+      {
+        id: "CRAVING_DESSERTS",
+        label: "Desserts",
+        route: "/craving-desserts",
+        testId: "cravinghub-desserts",
+        aliases: ["dessert", "desserts", "dessert creator", "healthy dessert", "dessert ideas", "sweet treats", "make dessert", "create dessert"],
+        voiceHint: "desserts"
       }
-      
     ]
   },
 
