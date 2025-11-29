@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ArrowRight, ArrowLeft, X, Check } from "lucide-react";
@@ -373,21 +372,16 @@ export default function OnboardingStandalone() {
         </p>
       </CardHeader>
       <CardContent className="space-y-6 text-white pt-6">
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Medical Conditions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Medical Conditions</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {medicalConditionsList.map((condition) => (
-              <label
-                key={condition.id}
-                className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
-                  data.medicalConditions.includes(condition.id)
-                    ? "border-orange-500 bg-orange-500/20"
-                    : "border-white/20 bg-white/5 hover:border-white/40"
-                }`}
-              >
-                <Checkbox
+              <label key={condition.id} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
                   checked={data.medicalConditions.includes(condition.id)}
-                  onCheckedChange={() => handleArrayToggle("medicalConditions", condition.id)}
+                  onChange={() => handleArrayToggle("medicalConditions", condition.id)}
+                  className="h-4 w-4 rounded border-white/30"
                 />
                 <span className="text-sm">{condition.label}</span>
               </label>
@@ -395,21 +389,16 @@ export default function OnboardingStandalone() {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Food Allergies</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Food Allergies</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {allergyOptions.map((allergy) => (
-              <label
-                key={allergy}
-                className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
-                  data.foodAllergies.includes(allergy)
-                    ? "border-red-500 bg-red-500/20"
-                    : "border-white/20 bg-white/5 hover:border-white/40"
-                }`}
-              >
-                <Checkbox
+              <label key={allergy} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
                   checked={data.foodAllergies.includes(allergy)}
-                  onCheckedChange={() => handleArrayToggle("foodAllergies", allergy)}
+                  onChange={() => handleArrayToggle("foodAllergies", allergy)}
+                  className="h-4 w-4 rounded border-white/30"
                 />
                 <span className="text-sm">{allergy}</span>
               </label>
@@ -443,21 +432,16 @@ export default function OnboardingStandalone() {
           )}
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Dietary Restrictions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Dietary Restrictions</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {dietaryRestrictionOptions.map((restriction) => (
-              <label
-                key={restriction}
-                className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
-                  data.dietaryRestrictions.includes(restriction)
-                    ? "border-emerald-500 bg-emerald-500/20"
-                    : "border-white/20 bg-white/5 hover:border-white/40"
-                }`}
-              >
-                <Checkbox
+              <label key={restriction} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
                   checked={data.dietaryRestrictions.includes(restriction)}
-                  onCheckedChange={() => handleArrayToggle("dietaryRestrictions", restriction)}
+                  onChange={() => handleArrayToggle("dietaryRestrictions", restriction)}
+                  className="h-4 w-4 rounded border-white/30"
                 />
                 <span className="text-sm">{restriction}</span>
               </label>
