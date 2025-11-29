@@ -569,7 +569,7 @@ export default function OnboardingStandalone() {
           )}
           <Button
             onClick={handleNext}
-            className={`${currentStep === 1 ? "w-full" : "flex-1"} h-12 bg-orange-600 hover:bg-orange-500`}
+            className={`${currentStep === 1 ? "w-full" : "flex-1"} h-12 bg-indigo-600 hover:bg-indigo-700 `}
           >
             {currentStep === TOTAL_STEPS ? (
               <>
