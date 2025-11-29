@@ -246,7 +246,7 @@ export default function OnboardingStandalone() {
         </div>
 
         <div>
-          <Label className={showValidation && (!data.birthdayMonth || !data.birthdayDay) ? "text-red-400" : ""}>
+          <Label className={showValidation && (!data.birthdayMonth || !data.birthdayDay) ? "text-white" : ""}>
             Birthday (Month & Day) *
           </Label>
           <div className="flex gap-2">
@@ -381,7 +381,7 @@ export default function OnboardingStandalone() {
                 key={condition.id}
                 className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
                   data.medicalConditions.includes(condition.id)
-                    ? "border-indigo-500 bg-indigo-500/20"
+                    ? "border-orange-500 bg-orange-500/20"
                     : "border-white/20 bg-white/5 hover:border-white/40"
                 }`}
               >
@@ -569,7 +569,7 @@ export default function OnboardingStandalone() {
           )}
           <Button
             onClick={handleNext}
-            className={`${currentStep === 1 ? "w-full" : "flex-1"} h-12 bg-indigo-600 hover:bg-indigo-500`}
+            className={`${currentStep === 1 ? "w-full" : "flex-1"} h-12 bg-orange-600 hover:bg-orange-500`}
           >
             {currentStep === TOTAL_STEPS ? (
               <>
