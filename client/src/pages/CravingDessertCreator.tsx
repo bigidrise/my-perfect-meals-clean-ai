@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import ShoppingAggregateBar from "@/components/ShoppingAggregateBar";
 import PhaseGate from "@/components/PhaseGate";
 import { useCopilotPageExplanation } from "@/components/copilot/useCopilotPageExplanation";
+import CopyRecipeButton from "@/components/CopyRecipeButton";
 
 const DEV_USER_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -371,7 +372,24 @@ export default function DessertCreator() {
                     </div>
                   )}
 
-
+                  {/* Copy Recipe Button */}
+                  <div className="mb-4">
+                    <CopyRecipeButton
+                      recipe={{
+                        name: generatedDessert.name,
+                        ingredients: (generatedDessert.ingredients ?? []).map((ing: any) => ({
+                          name: ing.name || ing.item,
+                          amount: ing.amount,
+                          unit: ing.unit,
+                        })),
+                        instructions: Array.isArray(generatedDessert.instructions)
+                          ? generatedDessert.instructions
+                          : generatedDessert.instructions
+                            ? generatedDessert.instructions.split("\n").filter((s: string) => s.trim())
+                            : [],
+                      }}
+                    />
+                  </div>
 
                   {/* Add Macros */}
                   <GlassButton
