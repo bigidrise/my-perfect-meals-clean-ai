@@ -9,7 +9,7 @@ export interface PageExplanation {
 export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
   "/my-biometrics": {
     pageId: "my-biometrics",
-    title: "My-Biometrics",
+    title: "My Biometrics",
     description:
       "Use My Biometrics to keep your daily macros, log macros using our barcode photo logger, keep track of your calories up to 30 days, keep track of your weight up to a year, and track your water with our water log tracker.",
     spokenText:
