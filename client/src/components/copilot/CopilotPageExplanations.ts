@@ -21,7 +21,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     pageId: "craving-creator",
     title: "Craving Creator",
     description:
-      'Describe what you\'re craving and get a personalized meal. Try saying: "I want something sweet and crunchy" or "a creamy shake" or "something tangy and refreshing."',
+      'Create healthy versions of whatever your craving. Describe the flavor, texture, or style you want, choose your servings and preferences, and let the app generate a personalized meal that matches your craving in a clean, goal-friendly way.',
     spokenText:
       "Craving Creator. Describe what you're craving. For example, say I want something sweet, crunchy, lowfat, low sugar, no gluten or I want a creamy shake, or something tangy and refreshing. Select your servings, press Create, and enjoy your personalized meal. You NEVER have to ignore your cravings again!",
     autoClose: true,
