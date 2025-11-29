@@ -9,20 +9,30 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Heart, Activity, Users, Utensils, Target, ArrowRight, Check } from "lucide-react";
 
+// ----------------------------
+// TYPES
+// ----------------------------
 interface OnboardingData {
   focus: string;
   allergies: string[];
+  birthdayMonth?: string;
+  birthdayDay?: string;
+
   macroSource: "auto" | "preset" | "default";
   sex?: string;
   weight?: number;
   height?: number;
   activity?: string;
   preset?: string;
-  starterPackId?: string;
-  // Birthday
-  birthday: string; // Format: "MM-DD"
+
+  preferredLowGICarbs: string[];
+  preferredMidGICarbs: string[];
+  preferredHighGICarbs: string[];
 }
 
+// ----------------------------
+// CONSTANTS
+// ----------------------------
 const FOCUS_OPTIONS = [
   { id: "general", label: "General", icon: Utensils, color: "indigo" },
   { id: "diabetes", label: "Diabetes", icon: Activity, color: "red" },
@@ -31,68 +41,59 @@ const FOCUS_OPTIONS = [
   { id: "family", label: "Family/Kids", icon: Users, color: "emerald" },
 ];
 
-const ALLERGY_OPTIONS = [
-  "nuts", "shellfish", "dairy", "gluten", "eggs", "soy"
+const ALLERGY_OPTIONS = ["nuts", "shellfish", "dairy", "gluten", "eggs", "soy"];
+
+const MONTHS = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
 ];
 
-const STARTER_PACKS: Record<string, Array<{id: string, name: string, meals: string[]}>> = {
-  general: [
-    { id: "balanced", name: "Balanced Basics", meals: ["Grilled Chicken Salad", "Quinoa Bowl", "Veggie Wrap"] },
-    { id: "high-protein", name: "High-Protein Simple", meals: ["Egg White Scramble", "Turkey Chili", "Grilled Salmon"] },
-    { id: "quick-easy", name: "Quick & Easy", meals: ["Overnight Oats", "Chicken Wrap", "Stir-Fry"] },
-  ],
-  diabetes: [
-    { id: "diabetic-quickstart", name: "Diabetes Quickstart", meals: ["Low-GI Oatmeal", "Turkey & Veggie Plate", "Grilled Fish"] },
-    { id: "blood-sugar-friendly", name: "Blood Sugar Friendly", meals: ["Chia Pudding", "Lentil Soup", "Chicken & Greens"] },
-  ],
-  glp1: [
-    { id: "glp1-lite", name: "GLP-1 Lite", meals: ["Protein Shake", "Light Chicken Soup", "Steamed Fish & Veggies"] },
-    { id: "gentle-start", name: "Gentle Start", meals: ["Greek Yogurt", "Soft Scrambled Eggs", "Baked Cod"] },
-  ],
-  cardiac: [
-    { id: "heart-healthy", name: "Heart Healthy", meals: ["Oatmeal with Berries", "Salmon Salad", "Baked Chicken"] },
-    { id: "low-sodium", name: "Low Sodium", meals: ["Fresh Fruit Bowl", "Herb Chicken", "Steamed Veggies"] },
-  ],
-  family: [
-    { id: "busy-parent", name: "Busy Parent", meals: ["Breakfast Burritos", "Mac & Cheese", "Taco Night"] },
-    { id: "kid-friendly", name: "Kid-Friendly", meals: ["Pancakes", "Chicken Nuggets", "Spaghetti"] },
-  ],
-};
+const DAYS = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
 
-// 1=Name+Profile+Goal, 2=Medical, 3=Birthday, 4=Nutritional Profile
-const TOTAL_STEPS = 4;
+const lowGIOptions = ["Oats", "Lentils", "Chickpeas", "Beans", "Apples", "Berries"];
+const midGIOptions = ["Brown Rice", "Quinoa", "Couscous", "Sweet Potato"];
+const highGIOptions = ["White Rice", "Bread", "Potatoes", "Sugary Cereals"];
 
+// ----------------------------
+// COMPONENT
+// ----------------------------
 export default function OnboardingV2() {
   const [, setLocation] = useLocation();
+  const TOTAL_STEPS = 3;
+
   const [currentScreen, setCurrentScreen] = useState(1);
   const [data, setData] = useState<OnboardingData>({
     focus: "",
     allergies: [],
     macroSource: "auto",
-    // Birthday
-    birthday: "",
+    preferredLowGICarbs: [],
+    preferredMidGICarbs: [],
+    preferredHighGICarbs: []
   });
 
   const progress = (currentScreen / TOTAL_STEPS) * 100;
 
-  const isStepValid = (step: number): boolean => {
-    switch (step) {
-      case 1: // Focus & Allergies
-        return data.focus !== "";
-      case 2: // Medical Conditions & Allergies
-        return true; // Optional - allow proceeding even if nothing selected
-      case 3: // Birthday
-        return data.birthday !== ""; // Required
-      case 4: // Nutritional Profile
-        return true; // Optional - allow proceeding even if nothing selected
-      default:
-        return false;
-    }
+  // ----------------------------
+  // HELPERS
+  // ----------------------------
+  const toggleGI = (key: "preferredLowGICarbs" | "preferredMidGICarbs" | "preferredHighGICarbs", item: string) => {
+    setData((prev) => {
+      const arr = prev[key] || [];
+      return {
+        ...prev,
+        [key]: arr.includes(item)
+          ? arr.filter((x) => x !== item)
+          : [...arr, item]
+      };
+    });
   };
 
-  // Screen 1: Focus & Allergies
-  const renderFocusAllergies = () => (
-    <div className="space-y-6">
+  // ----------------------------
+  // SCREEN 1 — Focus, Allergies, Birthday
+  // ----------------------------
+  const renderStep1 = () => (
+    <div className="space-y-8">
+      {/* Focus */}
       <div>
         <h2 className="text-2xl font-bold mb-4 text-white">What's your main focus?</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -102,20 +103,16 @@ export default function OnboardingV2() {
             return (
               <button
                 key={option.id}
-                onClick={() => {
-                  setData({ ...data, focus: option.id });
-                  console.log("📊 Analytics: onboarding_focus_selected", option.id);
-                }}
+                onClick={() => setData({ ...data, focus: option.id })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   isSelected
                     ? `border-${option.color}-500 bg-${option.color}-500/20`
                     : "border-white/20 bg-white/5 hover:border-white/40"
                 }`}
-                data-testid={`focus-${option.id}`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className="h-6 w-6" />
-                  <span className="font-semibold">{option.label}</span>
+                  <span className="font-semibold text-white">{option.label}</span>
                   {isSelected && <Check className="h-5 w-5 ml-auto text-green-400" />}
                 </div>
               </button>
@@ -124,6 +121,7 @@ export default function OnboardingV2() {
         </div>
       </div>
 
+      {/* Allergies */}
       <div>
         <h3 className="text-lg font-semibold mb-3 text-white">Any allergies? (Optional)</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -149,139 +147,173 @@ export default function OnboardingV2() {
                     });
                   }}
                 />
-                <span className="capitalize text-sm">{allergy}</span>
+                <span className="capitalize text-sm text-white">{allergy}</span>
               </label>
             );
           })}
         </div>
       </div>
 
+      {/* Birthday */}
+      <div>
+        <h3 className="text-lg font-semibold mb-3 text-white">When is your birthday?</h3>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label className="text-neutral-400 text-xs">Month</Label>
+            <select
+              value={data.birthdayMonth || ""}
+              onChange={(e) => setData({ ...data, birthdayMonth: e.target.value })}
+              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+            >
+              <option value="">Select</option>
+              {MONTHS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <Label className="text-neutral-400 text-xs">Day</Label>
+            <select
+              value={data.birthdayDay || ""}
+              onChange={(e) => setData({ ...data, birthdayDay: e.target.value })}
+              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+            >
+              <option value="">Select</option>
+              {DAYS.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
       <Button
-        onClick={() => {
-          setCurrentScreen(2);
-          // Persist to API
-          saveFocusData();
-        }}
-        disabled={!isStepValid(currentScreen)}
+        onClick={() => setCurrentScreen(2)}
+        disabled={!data.focus || !data.birthdayMonth || !data.birthdayDay}
         className="w-full h-12 bg-indigo-600 hover:bg-indigo-500"
-        data-testid="button-continue-screen-1"
       >
         Continue <ArrowRight className="h-4 w-4 ml-2" />
       </Button>
     </div>
   );
 
-  // Screen 2: Targets
-  const renderTargets = () => (
+  // ----------------------------
+  // SCREEN 2 — Macro Setup
+  // ----------------------------
+  const renderStep2 = () => (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-4 text-white">How should we set your macro targets?</h2>
+      <h2 className="text-2xl font-bold mb-4 text-white">How should we set your macro targets?</h2>
 
-        <RadioGroup
-          value={data.macroSource}
-          onValueChange={(value) => setData({ ...data, macroSource: value as any })}
-        >
-          <div className="space-y-3">
-            <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
-              <RadioGroupItem value="auto" id="auto" />
-              <div className="flex-1">
-                <div className="font-semibold text-white mb-1">Set automatically (Recommended)</div>
-                <p className="text-sm text-neutral-400">We'll calculate based on your profile</p>
+      <RadioGroup value={data.macroSource} onValueChange={(value) => setData({ ...data, macroSource: value as any })}>
+        <div className="space-y-3">
 
-                {data.macroSource === "auto" && (
-                  <div className="mt-4 space-y-3 pl-4 border-l-2 border-indigo-500">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <Label className="text-xs text-neutral-400">Sex</Label>
-                        <select
-                          value={data.sex || ""}
-                          onChange={(e) => setData({ ...data, sex: e.target.value })}
-                          className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
-                        >
-                          <option value="">Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
-                      </div>
-                      <div>
-                        <Label className="text-xs text-neutral-400">Weight (lbs)</Label>
-                        <Input
-                          type="number"
-                          value={data.weight || ""}
-                          onChange={(e) => setData({ ...data, weight: Number(e.target.value) })}
-                          placeholder="150"
-                          className="mt-1 bg-black/40 border-white/20 text-white"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs text-neutral-400">Height (inches)</Label>
-                        <Input
-                          type="number"
-                          value={data.height || ""}
-                          onChange={(e) => setData({ ...data, height: Number(e.target.value) })}
-                          placeholder="68"
-                          className="mt-1 bg-black/40 border-white/20 text-white"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs text-neutral-400">Activity</Label>
-                        <select
-                          value={data.activity || ""}
-                          onChange={(e) => setData({ ...data, activity: e.target.value })}
-                          className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
-                        >
-                          <option value="">Select</option>
-                          <option value="sedentary">Sedentary</option>
-                          <option value="light">Light</option>
-                          <option value="moderate">Moderate</option>
-                          <option value="active">Active</option>
-                        </select>
-                      </div>
+          {/* AUTO */}
+          <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
+            <RadioGroupItem value="auto" id="auto" />
+            <div className="flex-1">
+              <div className="font-semibold text-white mb-1">Set automatically (Recommended)</div>
+              <p className="text-sm text-neutral-400">We'll calculate based on your profile</p>
+
+              {data.macroSource === "auto" && (
+                <div className="mt-4 space-y-3 pl-4 border-l-2 border-indigo-500">
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Sex */}
+                    <div>
+                      <Label className="text-xs text-neutral-400">Sex</Label>
+                      <select
+                        value={data.sex || ""}
+                        onChange={(e) => setData({ ...data, sex: e.target.value })}
+                        className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+                      >
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+
+                    {/* Weight */}
+                    <div>
+                      <Label className="text-xs text-neutral-400">Weight (lbs)</Label>
+                      <Input
+                        type="number"
+                        value={data.weight || ""}
+                        onChange={(e) => setData({ ...data, weight: Number(e.target.value) })}
+                        placeholder="150"
+                        className="mt-1 bg-black/40 border-white/20 text-white"
+                      />
+                    </div>
+
+                    {/* Height */}
+                    <div>
+                      <Label className="text-xs text-neutral-400">Height (inches)</Label>
+                      <Input
+                        type="number"
+                        value={data.height || ""}
+                        onChange={(e) => setData({ ...data, height: Number(e.target.value) })}
+                        placeholder="68"
+                        className="mt-1 bg-black/40 border-white/20 text-white"
+                      />
+                    </div>
+
+                    {/* Activity */}
+                    <div>
+                      <Label className="text-xs text-neutral-400">Activity</Label>
+                      <select
+                        value={data.activity || ""}
+                        onChange={(e) => setData({ ...data, activity: e.target.value })}
+                        className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
+                      >
+                        <option value="">Select</option>
+                        <option value="sedentary">Sedentary</option>
+                        <option value="light">Light</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="active">Active</option>
+                      </select>
                     </div>
                   </div>
-                )}
-              </div>
-            </label>
+                </div>
+              )}
+            </div>
+          </label>
 
-            <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
-              <RadioGroupItem value="preset" id="preset" />
-              <div className="flex-1">
-                <div className="font-semibold text-white mb-1">Use a preset</div>
-                <p className="text-sm text-neutral-400">Choose a common goal</p>
+          {/* PRESET */}
+          <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
+            <RadioGroupItem value="preset" id="preset" />
+            <div className="flex-1">
+              <div className="font-semibold text-white mb-1">Use a preset</div>
+              <p className="text-sm text-neutral-400">Choose a common goal</p>
 
-                {data.macroSource === "preset" && (
-                  <div className="mt-4 space-y-2 pl-4 border-l-2 border-indigo-500">
-                    {["Weight Loss", "Maintain", "Muscle Gain"].map((preset) => (
-                      <label
-                        key={preset}
-                        className="flex items-center gap-2 p-2 rounded-lg bg-black/40 cursor-pointer hover:bg-black/60"
-                      >
-                        <input
-                          type="radio"
-                          name="preset"
-                          value={preset}
-                          checked={data.preset === preset}
-                          onChange={(e) => setData({ ...data, preset: e.target.value })}
-                          className="text-indigo-600"
-                        />
-                        <span className="text-sm">{preset}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </label>
+              {data.macroSource === "preset" && (
+                <div className="mt-4 space-y-2 pl-4 border-l-2 border-indigo-500">
+                  {["Weight Loss", "Maintain", "Muscle Gain"].map((preset) => (
+                    <label key={preset} className="flex items-center gap-2 p-2 rounded-lg bg-black/40 cursor-pointer hover:bg-black/60">
+                      <input
+                        type="radio"
+                        name="preset"
+                        value={preset}
+                        checked={data.preset === preset}
+                        onChange={(e) => setData({ ...data, preset: e.target.value })}
+                      />
+                      <span className="text-sm text-white">{preset}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          </label>
 
-            <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
-              <RadioGroupItem value="default" id="default" />
-              <div className="flex-1">
-                <div className="font-semibold text-white mb-1">Use defaults / set later</div>
-                <p className="text-sm text-neutral-400">Skip for now, customize anytime in Settings</p>
-              </div>
-            </label>
-          </div>
-        </RadioGroup>
-      </div>
+          {/* DEFAULT */}
+          <label className="flex items-start gap-3 p-4 rounded-xl border border-white/20 bg-white/5 cursor-pointer hover:border-white/40">
+            <RadioGroupItem value="default" id="default" />
+            <div className="flex-1">
+              <div className="font-semibold text-white mb-1">Use defaults / set later</div>
+              <p className="text-sm text-neutral-400">Skip for now, customize anytime in Settings</p>
+            </div>
+          </label>
+        </div>
+      </RadioGroup>
 
       <div className="flex gap-3">
         <Button
@@ -291,14 +323,10 @@ export default function OnboardingV2() {
         >
           Back
         </Button>
+
         <Button
-          onClick={() => {
-            setCurrentScreen(3);
-            console.log("📊 Analytics: onboarding_targets_set", data.macroSource);
-            saveTargetsData();
-          }}
+          onClick={() => setCurrentScreen(3)}
           className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
-          data-testid="button-continue-screen-2"
         >
           Continue <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
@@ -306,274 +334,103 @@ export default function OnboardingV2() {
     </div>
   );
 
-  // Screen 3: Birthday
-  const renderBirthday = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-4 text-white">When's your birthday?</h2>
-        <p className="text-neutral-400 mb-6">We'll send you a special message!</p>
+  // ----------------------------
+  // SCREEN 3 — Glycemic Preferences
+  // ----------------------------
+  const renderStep3 = () => (
+    <div className="space-y-8">
+      <h2 className="text-2xl font-bold text-white mb-4">Your Glycemic Preferences</h2>
+      <p className="text-neutral-300 text-sm mb-6">Choose the carb types you prefer. This helps personalize your meals.</p>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label className="text-white">Month</Label>
-            <select
-              value={data.birthday.split("-")[0] || ""}
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  birthday: `${e.target.value}-${data.birthday.split("-")[1] || "DD"}`,
-                })
-              }
-              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
-            >
-              <option value="">Select Month</option>
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                <option key={month} value={month.toString().padStart(2, "0")}>
-                  {new Date(2000, month - 1, 1).toLocaleString("default", {
-                    month: "long",
-                  })}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <Label className="text-white">Day</Label>
-            <select
-              value={data.birthday.split("-")[1] || ""}
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  birthday: `${data.birthday.split("-")[0] || "MM"}-${e.target.value}`,
-                })
-              }
-              className="w-full mt-1 px-3 py-2 bg-black/40 border border-white/20 rounded-lg text-white"
-            >
-              <option value="">Select Day</option>
-              {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                <option key={day} value={day.toString().padStart(2, "0")}>
-                  {day}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Low GI */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+          <span className="text-2xl">🟢</span> Low Glycemic Index Foods
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {lowGIOptions.map((item) => (
+            <label key={item} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.preferredLowGICarbs.includes(item)}
+                onChange={() => toggleGI("preferredLowGICarbs", item)}
+                className="h-4 w-4 rounded border-white/30"
+              />
+              <span className="text-white text-sm">{item}</span>
+            </label>
+          ))}
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <Button
-          onClick={() => setCurrentScreen(2)}
-          variant="outline"
-          className="flex-1 h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
-        >
-          Back
-        </Button>
-        <Button
-          onClick={() => {
-            setCurrentScreen(4);
-            console.log("📊 Analytics: onboarding_birthday_set", data.birthday);
-            saveBirthdayData();
-          }}
-          disabled={!isStepValid(currentScreen)}
-          className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
-          data-testid="button-continue-screen-3"
-        >
-          Continue <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
-    </div>
-  );
-
-  // Screen 4: Starter Pack
-  const renderStarterPack = () => {
-    const packs = STARTER_PACKS[data.focus] || STARTER_PACKS.general;
-
-    return (
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-2 text-white">Choose your starter pack</h2>
-          <p className="text-neutral-400 mb-6">We'll show you meals from this collection first</p>
-
-          <div className="space-y-4">
-            {packs.map((pack) => (
-              <button
-                key={pack.id}
-                onClick={() => {
-                  setData({ ...data, starterPackId: pack.id });
-                  console.log("📊 Analytics: onboarding_starter_pack_selected", pack.id);
-                  setCurrentScreen(5); // Changed to 5 to account for birthday step
-                  saveStarterPackData();
-                }}
-                className="w-full p-5 rounded-xl border-2 border-white/20 bg-white/5 hover:border-indigo-500 hover:bg-indigo-500/10 text-left transition-all"
-                data-testid={`pack-${pack.id}`}
-              >
-                <h3 className="font-bold text-lg mb-2 text-white">{pack.name}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {pack.meals.map((meal, i) => (
-                    <span key={i} className="px-2 py-1 bg-black/40 rounded text-xs text-neutral-300">
-                      {meal}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-3 flex items-center gap-2 text-indigo-400">
-                  <span className="text-sm font-semibold">Use this pack</span>
-                  <ArrowRight className="h-4 w-4" />
-                </div>
-              </button>
-            ))}
-          </div>
+      {/* Mid GI */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+          <span className="text-2xl">🟡</span> Mid Glycemic Index Foods
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {midGIOptions.map((item) => (
+            <label key={item} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.preferredMidGICarbs.includes(item)}
+                onChange={() => toggleGI("preferredMidGICarbs", item)}
+                className="h-4 w-4 rounded border-white/30"
+              />
+              <span className="text-white text-sm">{item}</span>
+            </label>
+          ))}
         </div>
-
-        <Button
-          onClick={() => setCurrentScreen(3)} // Changed to 3 to go back to birthday
-          variant="outline"
-          className="w-full h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
-        >
-          Back
-        </Button>
-      </div>
-    );
-  };
-
-  // Screen 5: First Win
-  const renderFirstWin = () => (
-    <div className="space-y-6 text-center">
-      <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-        <Check className="h-10 w-10 text-white" />
       </div>
 
-      <div>
-        <h2 className="text-3xl font-bold mb-3 text-white">You're all set!</h2>
-        <p className="text-xl text-neutral-300 mb-6">
-          Tap <span className="font-bold text-indigo-400">Add to Macros</span> on any meal. That's it.
-        </p>
+      {/* High GI */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+          <span className="text-2xl">🔴</span> High Glycemic Index Foods
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {highGIOptions.map((item) => (
+            <label key={item} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.preferredHighGICarbs.includes(item)}
+                onChange={() => toggleGI("preferredHighGICarbs", item)}
+                className="h-4 w-4 rounded border-white/30"
+              />
+              <span className="text-white text-sm">{item}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
-      <div className="bg-indigo-500/20 border border-indigo-500/50 rounded-xl p-6">
-        <p className="text-sm text-neutral-300">
-          We've personalized your meal recommendations based on your {data.focus} focus
-          {data.allergies.length > 0 && `, excluding ${data.allergies.join(", ")}`}.
-          You can change these anytime in Settings.
-        </p>
-      </div>
-
+      {/* Continue button */}
       <Button
         onClick={() => {
-          // Set completion flags
           localStorage.setItem("onboardingCompleted", "true");
-          localStorage.setItem("completedProfile", "true");
-          localStorage.setItem("completedIntro", "true");
-          localStorage.setItem("isAuthenticated", "true");
-          console.log("📊 Analytics: onboarding_completed", { focus: data.focus, starterPackId: data.starterPackId });
-
-          // Route to fast-food with starter pack filter
-          setLocation(`/fast-food?pack=${data.starterPackId || "quickstart"}`);
+          setLocation("/pricing");
         }}
-        className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500"
-        data-testid="button-take-me-to-meals"
+        className="w-full h-12 bg-indigo-600 hover:bg-indigo-500"
       >
-        Take me to meals <ArrowRight className="h-5 w-5 ml-2" />
+        Continue to Pricing <ArrowRight className="h-4 w-4 ml-2" />
+      </Button>
+
+      <Button
+        variant="outline"
+        onClick={() => setCurrentScreen(2)}
+        className="w-full h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
+      >
+        Back
       </Button>
     </div>
   );
 
-  const renderCurrentStep = () => {
-    switch (currentScreen) {
-      case 1:
-        return renderFocusAllergies();
-      case 2:
-        return renderTargets();
-      case 3:
-        return renderBirthday();
-      case 4: // Changed from 3 to 4 for starter pack
-        return renderStarterPack();
-      case 5: // Changed from 4 to 5 for first win
-        return renderFirstWin();
-      default:
-        return <div>Error: Unknown step</div>;
-    }
-  };
-
-  // API save functions (stubs for now - implement based on existing backend)
-  const saveFocusData = async () => {
-    try {
-      // PUT /api/onboarding/step/focus with { data: { focus, allergies } }
-      console.log("💾 Saving focus data:", { focus: data.focus, allergies: data.allergies });
-    } catch (error) {
-      console.error("Failed to save focus data:", error);
-    }
-  };
-
-  const saveTargetsData = async () => {
-    try {
-      // PUT /api/onboarding/step/targets
-      console.log("💾 Saving targets data:", data);
-    } catch (error) {
-      console.error("Failed to save targets data:", error);
-    }
-  };
-
-  const saveBirthdayData = async () => {
-    try {
-      // PUT /api/onboarding/step/birthday
-      console.log("💾 Saving birthday data:", { birthday: data.birthday });
-    } catch (error) {
-      console.error("Failed to save birthday data:", error);
-    }
-  };
-
-  const saveStarterPackData = async () => {
-    try {
-      // PUT /api/onboarding/step/starterPack
-      console.log("💾 Saving starter pack data:", { starterPackId: data.starterPackId });
-    } catch (error) {
-      console.error("Failed to save starter pack data:", error);
-    }
-  };
-
-  const handleSubmit = async () => {
-    // This function will be called when the user completes the final step
-    try {
-      // Assuming a final API call to submit all onboarding data
-      const response = await fetch("/api/onboarding/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          focus: data.focus,
-          allergies: data.allergies,
-          macroSource: data.macroSource,
-          sex: data.sex,
-          weight: data.weight,
-          height: data.height,
-          activity: data.activity,
-          preset: data.preset,
-          starterPackId: data.starterPackId,
-          birthday: data.birthday,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to complete onboarding");
-      }
-
-      // Set completion flags
-      localStorage.setItem("onboardingCompleted", "true");
-      localStorage.setItem("completedProfile", "true");
-      localStorage.setItem("completedIntro", "true");
-      localStorage.setItem("isAuthenticated", "true");
-      console.log("📊 Analytics: onboarding_completed", { focus: data.focus, starterPackId: data.starterPackId, birthday: data.birthday });
-
-      // Route to fast-food with starter pack filter
-      setLocation(`/fast-food?pack=${data.starterPackId || "quickstart"}`);
-    } catch (error) {
-      console.error("Failed to complete onboarding:", error);
-    }
-  };
-
+  // ----------------------------
+  // MAIN LAYOUT
+  // ----------------------------
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-white flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
 
-        {/* Progress bar */}
+        {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-neutral-400">Step {currentScreen} of {TOTAL_STEPS}</span>
@@ -582,52 +439,17 @@ export default function OnboardingV2() {
           <Progress value={progress} className="h-2" />
         </div>
 
-        {/* Main card */}
+        {/* Card */}
         <Card className="bg-black/40 backdrop-blur-xl border-white/10">
           <CardHeader>
             <CardTitle className="text-white">Quick Setup</CardTitle>
           </CardHeader>
           <CardContent>
-            {renderCurrentStep()}
+            {currentScreen === 1 && renderStep1()}
+            {currentScreen === 2 && renderStep2()}
+            {currentScreen === 3 && renderStep3()}
           </CardContent>
         </Card>
-
-        {/* Navigation buttons - only shown on screens that are not the final screen */}
-        {currentScreen < TOTAL_STEPS + 1 && ( // Adjust condition to show on all screens except the very last one
-          <div className="mt-8 flex gap-3">
-            {currentScreen > 1 && (
-              <Button
-                onClick={() => setCurrentScreen(currentScreen - 1)}
-                variant="outline"
-                className="flex-1 h-12 border-white/30 bg-white/5 hover:bg-white/10 text-white"
-              >
-                Back
-              </Button>
-            )}
-            {currentScreen === TOTAL_STEPS ? ( // If it's the last step before completion
-              <Button
-                onClick={handleSubmit} // Call handleSubmit for final submission
-                className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
-                data-testid="button-complete-onboarding"
-              >
-                Finish Setup <Check className="h-4 w-4 ml-2" />
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  if (isStepValid(currentScreen)) {
-                    setCurrentScreen(currentScreen + 1);
-                  }
-                }}
-                disabled={!isStepValid(currentScreen)}
-                className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-500"
-                data-testid={`button-continue-screen-${currentScreen}`}
-              >
-                Continue <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
