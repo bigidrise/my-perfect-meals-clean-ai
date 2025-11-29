@@ -5,6 +5,7 @@ import { getPageExplanation } from './CopilotPageExplanations';
 import { getWalkthroughConfig } from './WalkthroughRegistry';
 import { walkthroughEngine } from './walkthrough/WalkthroughScriptEngine';
 import { CopilotExplanationStore } from './CopilotExplanationStore';
+import { shouldAllowAutoOpen } from './CopilotRespectGuard';
 
 export function useCopilotPageExplanation() {
   const [pathname] = useLocation();
@@ -41,6 +42,12 @@ export function useCopilotPageExplanation() {
 
   // Main explanation effect
   useEffect(() => {
+    // ╔═══════════════════════════════════════════════════════════════════════╗
+    // ║  PROTECTED INVARIANT: Respect user's mode preference                  ║
+    // ║  See CopilotRespectGuard.ts for details - DO NOT BYPASS              ║
+    // ╚═══════════════════════════════════════════════════════════════════════╝
+    if (!shouldAllowAutoOpen()) return;
+
     const normalizedPath = normalizePath(pathname);
 
     // Don't re-run for already explained paths

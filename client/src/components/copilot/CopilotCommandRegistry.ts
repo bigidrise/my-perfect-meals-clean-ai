@@ -5,6 +5,7 @@ import {
 } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
 import { startWalkthrough } from "./commands/startWalkthrough";
+import { shouldAllowAutoOpen } from "./CopilotRespectGuard";
 import beginScriptWalkthrough from "./commands/beginScriptWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
@@ -63,6 +64,13 @@ export function setActiveFeature(feature: ActiveFeature) {
 // Copilot Introduction - plays once when user chooses "My Perfect Copilot"
 export function startCopilotIntro(force = false) {
   const INTRO_FLAG = "copilot-intro-seen";
+  
+  // ⚠️ PROTECTED INVARIANT: Use central guard to respect user's coaching mode choice
+  // This ensures any future updates to guard logic automatically apply here
+  if (!shouldAllowAutoOpen()) {
+    console.log("🛑 Copilot intro blocked: CopilotRespectGuard denied auto-open");
+    return;
+  }
 
   // Check if intro has already been played (unless forced)
   if (!force && localStorage.getItem(INTRO_FLAG) === "true") {

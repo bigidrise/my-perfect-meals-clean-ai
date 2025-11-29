@@ -20,6 +20,13 @@ export const CopilotSheet: React.FC = () => {
   const { isGuidedModeEnabled, toggleGuidedMode } = useCopilotGuidedMode();
 
   // =========================================
+  // VOICE INPUT - Declare early so cleanup effect can use stop()
+  // =========================================
+  const { start, stop, recording } = useMicRecorder();
+  const [listening, setListening] = useState(false);
+  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // =========================================
   // AUDIO - Visual-First with Graceful Degradation
   // ElevenLabs → Browser SpeechSynthesis → Silent Mode
   // Apple App Store Ready - Works 100% offline
@@ -107,9 +114,14 @@ export const CopilotSheet: React.FC = () => {
     }
   };
 
-  // Cleanup audio and state when sheet closes
+  // ╔═══════════════════════════════════════════════════════════════════════╗
+  // ║  PROTECTED INVARIANT: Stop ALL active sessions when sheet closes      ║
+  // ║  This includes: audio playback, microphone recording, pending timers  ║
+  // ║  DO NOT REMOVE - prevents recording from continuing after close       ║
+  // ╚═══════════════════════════════════════════════════════════════════════╝
   useEffect(() => {
     if (!isOpen) {
+      // Stop audio playback
       if (audioRef.current) {
         audioRef.current.pause();
       }
@@ -122,8 +134,21 @@ export const CopilotSheet: React.FC = () => {
       // Clear voice fallback state on close
       setNeedsRetry(false);
       setAudioBlocked(false);
+      
+      // CRITICAL: Stop microphone recording if active
+      stop();
+      
+      // Clear any pending recording timeout
+      if (recordingTimeoutRef.current) {
+        clearTimeout(recordingTimeoutRef.current);
+        recordingTimeoutRef.current = null;
+      }
+      
+      // Reset listening state
+      setListening(false);
+      setMode("idle");
     }
-  }, [isOpen, setNeedsRetry]);
+  }, [isOpen, setNeedsRetry, stop, setMode]);
 
   // =========================================
   // COPILOT INTRO - Trigger when user chooses "My Perfect Copilot"
@@ -146,11 +171,9 @@ export const CopilotSheet: React.FC = () => {
 
   // =========================================
   // VOICE INPUT (Whisper) - with error handling
+  // Note: start, stop, recording, listening, recordingTimeoutRef 
+  // are declared at top of component for cleanup effect access
   // =========================================
-  const { start, stop, recording } = useMicRecorder();
-  const [listening, setListening] = useState(false);
-  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const handleVoiceStart = async () => {
     // Prevent concurrent recordings
     if (listening || recording) {

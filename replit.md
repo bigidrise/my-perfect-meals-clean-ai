@@ -45,6 +45,22 @@ If a locked feature has a critical bug:
 4. Agent fixes ONLY the reported issue
 5. Agent requests re-lock immediately
 
+### **PROTECTED INVARIANTS:**
+These are system-level rules that MUST NEVER be violated. Any code that violates these will cause regressions.
+
+**COPILOT RESPECT GUARD (client/src/components/copilot/CopilotRespectGuard.ts):**
+- Copilot MUST NEVER auto-open when user chose "Do-It-Yourself" mode (`coachMode === "self"`)
+- Copilot MUST NEVER auto-open when user disabled the Guide toggle (`isGuidedModeEnabled === false`)
+- ALL auto-trigger code paths MUST call `shouldAllowAutoOpen()` before opening Copilot
+- This includes: page explanations, walkthrough launchers, intro flows, any future auto-trigger feature
+- DO NOT BYPASS THIS GUARD - any violation causes the bugs reported on Nov 29, 2025
+
+**COPILOT CLOSE CLEANUP (CopilotSheet.tsx):**
+- When sheet closes, MUST stop microphone recording via `stop()`
+- MUST clear pending recording timeouts
+- MUST reset listening state
+- DO NOT REMOVE the cleanup effect - prevents recording from continuing after close
+
 ### **DEPLOYMENT STRATEGY:**
 Following professional software company best practices (Facebook/Twitter model):
 - **Development (Current):** This Replit workspace - all changes happen here first

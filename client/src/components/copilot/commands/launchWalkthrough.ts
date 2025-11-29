@@ -1,12 +1,23 @@
 import { walkthroughEngine } from "../walkthrough/WalkthroughScriptEngine";
 import { getScript, hasScript } from "../walkthrough/ScriptRegistry";
+import { shouldAllowAutoOpen } from "../CopilotRespectGuard";
 
 /**
  * Phase C.1: Launch a guided walkthrough using the Script Engine
  * This is the new command that uses the WalkthroughScriptEngine
+ * 
+ * ⚠️ PROTECTED INVARIANT: Must respect user's coaching mode choice
+ * If user chose "Do-It-Yourself" mode or disabled guided mode,
+ * walkthroughs should not auto-launch.
  */
 export async function launchWalkthrough(scriptId: string): Promise<void> {
   console.log(`[launchWalkthrough] Attempting to start: ${scriptId}`);
+  
+  // ⚠️ PROTECTED INVARIANT: Respect user's coaching mode choice
+  if (!shouldAllowAutoOpen()) {
+    console.log(`🛑 [launchWalkthrough] Blocked: User disabled auto-open (DIY mode or guided mode off)`);
+    return;
+  }
   
   if (!hasScript(scriptId)) {
     console.error(`[launchWalkthrough] Script not found: ${scriptId}`);
