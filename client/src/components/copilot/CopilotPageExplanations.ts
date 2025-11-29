@@ -113,7 +113,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     description:
       "Find healthy meals at any restaurant. Enter the restaurant name and what you want to eat, and the app will return three smart, goal-friendly options.",
     spokenText:
-      "Restaurant Guide. Just type what you want to eat and the name of the restaurant, and I’ll show you three healthy options that fit your goals. Tap any meal to see the details or send ingredients to your shopping list. ",
+      "Restaurant Guide. Just type what you want to eat and the name of the restaurant, and I’ll show you three healthy options that fit your goals. ",
     autoClose: true,
   },
 
