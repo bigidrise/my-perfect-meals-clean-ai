@@ -61,6 +61,14 @@ These are system-level rules that MUST NEVER be violated. Any code that violates
 - MUST reset listening state
 - DO NOT REMOVE the cleanup effect - prevents recording from continuing after close
 
+**WALKTHROUGH ARCHITECTURE (Stability-First):**
+- `usePageWalkthrough` hook is DEPRECATED - removed from Biometrics and WeeklyMealBoard for stability
+- SimpleWalkthrough system is LEGACY - bypasses guard and lacks telemetry, do not use for new features
+- Only MacroCalculator retains walkthrough functionality (uses guard-checked Copilot commands)
+- All walkthroughs MUST route through CopilotRespectGuard + CopilotCommandRegistry
+- Users can always manually invoke walkthroughs via Copilot button or voice/text commands
+- Simple pages should use inline hints, not complex walkthrough systems
+
 ### **DEPLOYMENT STRATEGY:**
 Following professional software company best practices (Facebook/Twitter model):
 - **Development (Current):** This Replit workspace - all changes happen here first

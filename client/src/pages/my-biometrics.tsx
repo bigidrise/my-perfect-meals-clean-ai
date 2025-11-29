@@ -28,7 +28,6 @@ import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import OpenAI from "openai";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
-import { usePageWalkthrough } from "@/hooks/usePageWalkthrough";
 
 // ============================== CONFIG ==============================
 const SYNC_ENDPOINT = ""; // optional API endpoint; if set, we POST after local save
@@ -56,8 +55,6 @@ const saveJSON = (k:string, v:any) => { try { localStorage.setItem(k, JSON.strin
 // ============================== PAGE ==============================
 export default function MyBiometrics() {
   const [, setLocation] = useLocation();
-
-  usePageWalkthrough('biometrics');
 
   // OpenAI client for photo upload
   const openai = new OpenAI({

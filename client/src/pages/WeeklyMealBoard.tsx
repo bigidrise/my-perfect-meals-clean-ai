@@ -38,7 +38,6 @@ import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { useCopilot } from "@/components/copilot/CopilotContext";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
-import { usePageWalkthrough } from "@/hooks/usePageWalkthrough";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -81,8 +80,6 @@ export default function WeeklyMealBoard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { runAction, open, startWalkthrough } = useCopilot();
-
-  usePageWalkthrough('weekly-meal-builder');
 
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
