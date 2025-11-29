@@ -33,7 +33,7 @@ export const PAGE_EXPLANATIONS: Record<string, PageExplanation> = {
     description:
       "Describe your dessert, pick what type like pie or cake, choose flavor and texture, select servings and dietary requirements, then create your dessert.",
     spokenText:
-      "Dessert Creator. Describe your dessert. Pick what type of dessert, whether its a pie, cake, or whatever. Pick your flavor texture if you need to. Pick your servings. Pick your dietary requirements if you have any. Then create your dessert.",
+      "Dessert Creator. Describe your dessert. Pick which type of dessert you want to make, from  pie, cake, cookies to smoothies, frozen desserts, and our fun choice, surprise me, which makes up a dessert for you. Pick your flavor or texture and how many servings. Choose dietary requirements if you have any, then create your dessert.",
     autoClose: true,
   },
 
