@@ -42,7 +42,7 @@ export default function CravingCreatorLanding() {
     {
       title: "Premade Cravings",
       description:
-        "20 smarter recipes that satisfy the feeling you're chasing — with servings 1–10",
+        "Browse our collection of ready-made craving meals. Tap any picture to see ingredients and nutrition info.",
       icon: Sparkles,
       route: "/craving-presets",
       gradient: "from-orange-500/20 to-orange-600/20",
