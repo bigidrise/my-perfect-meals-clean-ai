@@ -32,6 +32,8 @@ interface OnboardingData {
   foodAllergies: string[];
   dietaryRestrictions: string[];
   customAllergies: string[];
+  customMedicalConditions: string[];
+  customDietaryRestrictions: string[];
   preferredLowGICarbs: string[];
   preferredMidGICarbs: string[];
   preferredHighGICarbs: string[];
@@ -89,6 +91,8 @@ export default function OnboardingStandalone() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showValidation, setShowValidation] = useState(false);
   const [customAllergyInput, setCustomAllergyInput] = useState("");
+  const [customMedicalInput, setCustomMedicalInput] = useState("");
+  const [customDietaryInput, setCustomDietaryInput] = useState("");
 
   const [data, setData] = useState<OnboardingData>({
     firstName: "",
@@ -106,6 +110,8 @@ export default function OnboardingStandalone() {
     foodAllergies: [],
     dietaryRestrictions: [],
     customAllergies: [],
+    customMedicalConditions: [],
+    customDietaryRestrictions: [],
     preferredLowGICarbs: [],
     preferredMidGICarbs: [],
     preferredHighGICarbs: [],
@@ -195,6 +201,26 @@ export default function OnboardingStandalone() {
       updateData({ customAllergies: [...data.customAllergies, trimmed] });
       setCustomAllergyInput("");
     }
+  };
+
+  const handleAddCustomMedical = () => {
+    const trimmed = customMedicalInput.trim();
+    if (trimmed && !data.customMedicalConditions.includes(trimmed)) {
+      updateData({ customMedicalConditions: [...data.customMedicalConditions, trimmed] });
+      setCustomMedicalInput("");
+    }
+  };
+
+  const handleAddCustomDietary = () => {
+    const trimmed = customDietaryInput.trim();
+    if (trimmed && !data.customDietaryRestrictions.includes(trimmed)) {
+      updateData({ customDietaryRestrictions: [...data.customDietaryRestrictions, trimmed] });
+      setCustomDietaryInput("");
+    }
+  };
+
+  const handleSaveStep2 = () => {
+    localStorage.setItem("onboardingData", JSON.stringify(data));
   };
 
   const renderStep1 = () => (
@@ -387,6 +413,32 @@ export default function OnboardingStandalone() {
               </label>
             ))}
           </div>
+          
+          <div className="mt-3 flex gap-2">
+            <Input
+              value={customMedicalInput}
+              onChange={(e) => setCustomMedicalInput(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddCustomMedical())}
+              placeholder="Add other condition..."
+              className="flex-1 text-white bg-black/40 border-white/20"
+            />
+            <Button onClick={handleAddCustomMedical} variant="outline" size="sm" disabled={!customMedicalInput.trim()}>
+              Add
+            </Button>
+          </div>
+          
+          {data.customMedicalConditions.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {data.customMedicalConditions.map((condition) => (
+                <Badge key={condition} variant="secondary" className="bg-white/20 text-white">
+                  {condition}
+                  <button onClick={() => updateData({ customMedicalConditions: data.customMedicalConditions.filter((c) => c !== condition) })} className="ml-1 hover:text-red-400">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -447,6 +499,41 @@ export default function OnboardingStandalone() {
               </label>
             ))}
           </div>
+          
+          <div className="mt-3 flex gap-2">
+            <Input
+              value={customDietaryInput}
+              onChange={(e) => setCustomDietaryInput(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddCustomDietary())}
+              placeholder="Add other restriction..."
+              className="flex-1 text-white bg-black/40 border-white/20"
+            />
+            <Button onClick={handleAddCustomDietary} variant="outline" size="sm" disabled={!customDietaryInput.trim()}>
+              Add
+            </Button>
+          </div>
+          
+          {data.customDietaryRestrictions.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {data.customDietaryRestrictions.map((restriction) => (
+                <Badge key={restriction} variant="secondary" className="bg-white/20 text-white">
+                  {restriction}
+                  <button onClick={() => updateData({ customDietaryRestrictions: data.customDietaryRestrictions.filter((r) => r !== restriction) })} className="ml-1 hover:text-red-400">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="pt-4 border-t border-white/10">
+          <Button 
+            onClick={handleSaveStep2} 
+            className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold"
+          >
+            <Check className="h-4 w-4 mr-2" /> Save Medical & Dietary Info
+          </Button>
         </div>
       </CardContent>
     </Card>
