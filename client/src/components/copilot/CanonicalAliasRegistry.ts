@@ -70,6 +70,7 @@ export const HUBS: Record<string, FeatureDefinition> = {
         aliases: ["premades", "presets", "premade cravings", "premade", "craving premades", "pre-mades", "pre made", "pre maid", "pro maids", "maids"],
         voiceHint: "premades"
       }
+      
     ]
   },
 
