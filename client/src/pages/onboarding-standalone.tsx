@@ -251,7 +251,7 @@ export default function OnboardingStandalone() {
           </Label>
           <div className="flex gap-2">
             <Select value={data.birthdayMonth} onValueChange={(v) => updateData({ birthdayMonth: v })}>
-              <SelectTrigger className={`flex-1 bg-black/40 border-white/20 ${showValidation && !data.birthdayMonth ? "border-red-500 border-2" : ""}`}>
+              <SelectTrigger className={`flex-1 text-white bg-black/40 border-white/20 ${showValidation && !data.birthdayMonth ? "border-red-500 border-2" : ""}`}>
                 <SelectValue placeholder="Month" />
               </SelectTrigger>
               <SelectContent>
@@ -261,7 +261,7 @@ export default function OnboardingStandalone() {
               </SelectContent>
             </Select>
             <Select value={data.birthdayDay} onValueChange={(v) => updateData({ birthdayDay: v })}>
-              <SelectTrigger className={`w-24 bg-black/40 border-white/20 ${showValidation && !data.birthdayDay ? "border-red-500 border-2" : ""}`}>
+              <SelectTrigger className={`w-24 text-white bg-black/40 border-white/20 ${showValidation && !data.birthdayDay ? "border-red-500 border-2" : ""}`}>
                 <SelectValue placeholder="Day" />
               </SelectTrigger>
               <SelectContent>
@@ -279,7 +279,7 @@ export default function OnboardingStandalone() {
             Gender *
           </Label>
           <Select value={data.gender} onValueChange={(v) => updateData({ gender: v })}>
-            <SelectTrigger className={`bg-black/40 border-white/20 ${showValidation && !data.gender ? "border-red-500 border-2" : ""}`}>
+            <SelectTrigger className={`text-white bg-black/40 border-white/20 ${showValidation && !data.gender ? "border-red-500 border-2" : ""}`}>
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
             <SelectContent>
@@ -315,7 +315,7 @@ export default function OnboardingStandalone() {
             Activity Level *
           </Label>
           <Select value={data.activityLevel} onValueChange={(v) => updateData({ activityLevel: v })}>
-            <SelectTrigger className={`bg-black/40 border-white/20 ${showValidation && !data.activityLevel ? "border-red-500 border-2" : ""}`}>
+            <SelectTrigger className={`text-white bg-black/40 border-white/20 ${showValidation && !data.activityLevel ? "border-red-500 border-2" : ""}`}>
               <SelectValue placeholder="Select activity level" />
             </SelectTrigger>
             <SelectContent>
@@ -333,7 +333,7 @@ export default function OnboardingStandalone() {
             Primary Goal *
           </Label>
           <Select value={data.primaryGoal} onValueChange={(v) => updateData({ primaryGoal: v, customGoal: v !== "custom" ? "" : data.customGoal })}>
-            <SelectTrigger className={`bg-black/40 border-white/20 ${showValidation && !data.primaryGoal ? "border-red-500 border-2" : ""}`}>
+            <SelectTrigger className={`text-white bg-black/40 border-white/20 ${showValidation && !data.primaryGoal ? "border-red-500 border-2" : ""}`}>
               <SelectValue placeholder="Select your goal" />
             </SelectTrigger>
             <SelectContent>
