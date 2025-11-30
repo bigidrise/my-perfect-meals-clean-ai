@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import { HubControlIcon } from "@/components/icons/HubControlIcon";
-import OpenAI from "openai"; // Import OpenAI
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useCopilot } from "@/components/copilot/CopilotContext";
+import { launchMacroPhotoCapture } from "@/lib/photoMacroCapture";
 
 interface FeatureCard {
   title: string;
@@ -50,15 +50,45 @@ export default function DashboardNew() {
   const [isGuidedMode, setIsGuidedMode] = useState(false);
   const { open: openCopilot } = useCopilot();
 
-  // Initialize OpenAI client
-  const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
+  const handlePhotoLog = async () => {
+    const result = await launchMacroPhotoCapture({
+      onStart: () => {
+        console.log("[Dashboard] Camera launched");
+      },
+      onAnalyzing: () => {
+        toast({
+          title: "Analyzing photo...",
+          description: "Please wait while AI estimates the nutrition values.",
+        });
+      },
+      onSuccess: (macros) => {
+        toast({
+          title: "Photo Analyzed",
+          description: `Detected ${Math.round(macros.calories)} kcal — Protein ${macros.protein}g, Carbs ${macros.carbs}g, Fat ${macros.fat}g`,
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error,
+          variant: "destructive",
+        });
+      },
+      onCancel: () => {
+        console.log("[Dashboard] Photo capture cancelled");
+      },
+    });
 
-  // Handler for navigating to biometrics for photo logging
-  const handlePhotoLog = () => {
-    setLocation("/my-biometrics");
+    if (result) {
+      const params = new URLSearchParams({
+        p: String(result.protein),
+        c: String(result.carbs),
+        f: String(result.fat),
+        k: String(result.calories),
+        from: "photo",
+      });
+      setLocation(`/my-biometrics?${params.toString()}`);
+    }
   };
 
   useEffect(() => {

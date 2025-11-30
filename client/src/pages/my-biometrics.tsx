@@ -26,7 +26,7 @@ import { getResolvedTargets } from "@/lib/macroResolver";
 import { useToast } from "@/hooks/use-toast";
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
-import OpenAI from "openai";
+import { launchMacroPhotoCapture } from "@/lib/photoMacroCapture";
 
 // ============================== CONFIG ==============================
 const SYNC_ENDPOINT = ""; // optional API endpoint; if set, we POST after local save
@@ -54,12 +54,6 @@ const saveJSON = (k:string, v:any) => { try { localStorage.setItem(k, JSON.strin
 // ============================== PAGE ==============================
 export default function MyBiometrics() {
   const [, setLocation] = useLocation();
-
-  // OpenAI client for photo upload
-  const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
 
   // ------- MACROS (local) -------
   const [macroRows, setMacroRows] = useState<OfflineDay[]>(() => {
@@ -309,117 +303,59 @@ export default function MyBiometrics() {
     });
   };
 
-  // Photo upload for AI macro estimation
   const handlePhotoUpload = async () => {
-    try {
-      // Prompt user to select or capture photo
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.capture = "environment" as any;
-      
-      // Add the input to the DOM temporarily (helps with mobile reliability)
-      input.style.display = "none";
-      document.body.appendChild(input);
-      
-      input.onchange = async (e) => {
-        const file = (e.target as HTMLInputElement).files?.[0];
-        
-        // Clean up the input element
-        document.body.removeChild(input);
-        
-        if (!file) {
-          console.log("No file selected");
-          return;
-        }
-
-        console.log("File selected, starting analysis:", file.name);
-        
+    await launchMacroPhotoCapture({
+      onAnalyzing: () => {
         toast({
           title: "Analyzing photo...",
           description: "Please wait while AI estimates the nutrition values.",
         });
+      },
+      onSuccess: (result) => {
+        setP(String(result.protein));
+        setC(String(result.carbs));
+        setF(String(result.fat));
+        setK(String(result.calories));
 
-        // Convert image to base64
-        const reader = new FileReader();
-        reader.onerror = () => {
-          console.error("FileReader error");
-          toast({
-            title: "Error",
-            description: "Could not read the image file.",
-            variant: "destructive",
-          });
-        };
-        
-        reader.onloadend = async () => {
-          try {
-            const imageDataUrl = reader.result as string;
-            
-            if (!imageDataUrl) {
-              throw new Error("Failed to convert image to data URL");
-            }
-
-            console.log("Image converted, sending to AI...");
-
-            // Send to GPT-4o Vision
-            const response = await openai.chat.completions.create({
-              model: "gpt-4o-mini",
-              messages: [
-                {
-                  role: "system",
-                  content:
-                    "You are a nutrition AI that analyzes food images and estimates nutrition values. Respond ONLY in JSON format with keys: calories, protein, carbs, fat (all numbers).",
-                },
-                {
-                  role: "user",
-                  content: [
-                    { type: "text", text: "Estimate the calories, protein (g), carbs (g), and fat (g) in this meal. Return only a JSON object." },
-                    { type: "image_url", image_url: { url: imageDataUrl } },
-                  ],
-                },
-              ],
-              response_format: { type: "json_object" },
-            });
-
-            const parsed = JSON.parse(response.choices[0].message.content || "{}");
-            const { calories, protein, carbs, fat } = parsed;
-
-            console.log("AI analysis complete:", parsed);
-
-            // Auto-fill Biometrics input boxes
-            setP(String(protein || ""));
-            setC(String(carbs || ""));
-            setF(String(fat || ""));
-            setK(String(calories || ""));
-
-            toast({
-              title: "✅ AI Estimate Added",
-              description: `Detected ${Math.round(calories || 0)} kcal — Protein ${protein || 0}g, Carbs ${carbs || 0}g, Fat ${fat || 0}g.`,
-            });
-          } catch (err) {
-            console.error("AI analysis failed:", err);
-            toast({
-              title: "Error",
-              description: "Could not analyze photo. Please try again.",
-              variant: "destructive",
-            });
-          }
-        };
-        
-        reader.readAsDataURL(file);
-      };
-      
-      // Trigger the file picker
-      input.click();
-    } catch (err) {
-      console.error("Photo upload failed:", err);
-      toast({
-        title: "Error",
-        description: "Could not access camera. Please try again.",
-        variant: "destructive",
-      });
-    }
+        toast({
+          title: "AI Estimate Added",
+          description: `Detected ${Math.round(result.calories)} kcal — Protein ${result.protein}g, Carbs ${result.carbs}g, Fat ${result.fat}g.`,
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error,
+          variant: "destructive",
+        });
+      },
+    });
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.get("from") === "photo") {
+      const protein = params.get("p");
+      const carbs = params.get("c");
+      const fat = params.get("f");
+      const calories = params.get("k");
+      
+      if (protein) setP(protein);
+      if (carbs) setC(carbs);
+      if (fat) setF(fat);
+      if (calories) setK(calories);
+      
+      const url = new URL(window.location.href);
+      url.searchParams.delete("p");
+      url.searchParams.delete("c");
+      url.searchParams.delete("f");
+      url.searchParams.delete("k");
+      url.searchParams.delete("from");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
 
   // Draft intake from "Add to Biometrics" button (no clipboard needed!)
   useEffect(() => {
