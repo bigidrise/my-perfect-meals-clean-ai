@@ -38,6 +38,9 @@ import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { useCopilot } from "@/components/copilot/CopilotContext";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -75,11 +78,41 @@ function formatWeekLabel(weekStartISO: string): string {
   return `${fmt(start)}–${fmt(end)}`;
 }
 
+const WEEKLY_TOUR_STEPS: TourStep[] = [
+  {
+    icon: "1",
+    title: "Choose Your Builder",
+    description: "Tap 'Craving Creator' to pick ingredients, or 'AI Pre-Mades' for ready-to-go meals."
+  },
+  {
+    icon: "2",
+    title: "Fill Each Meal Card",
+    description: "Add breakfast, lunch, dinner, and snacks. Preparation cards will guide you if needed."
+  },
+  {
+    icon: "3",
+    title: "Duplicate Your Days",
+    description: "Use 'Duplicate' to copy meals to other days of the week."
+  },
+  {
+    icon: "4",
+    title: "Track Your Macros",
+    description: "Send your day to the Macro Calculator to track nutrition."
+  },
+  {
+    icon: "5",
+    title: "Build Your Grocery List",
+    description: "Send ingredients to the Shopping List for easy grocery shopping."
+  }
+];
+
 export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { runAction, open, startWalkthrough } = useCopilot();
+  
+  const quickTour = useQuickTour("weekly-meal-board");
 
   // 🎯 BULLETPROOF BOARD LOADING: Cache-first, guaranteed to render
   const [weekStartISO, setWeekStartISO] = React.useState<string>(getMondayISO());
@@ -1028,7 +1061,8 @@ export default function WeeklyMealBoard() {
 
           <div className="flex-grow" />
 
-          
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -1686,6 +1720,14 @@ export default function WeeklyMealBoard() {
         onClose={() => setPremadePickerOpen(false)}
         mealType={premadePickerSlot}
         onMealSelect={handlePremadeSelect} // Pass the handler here
+      />
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="How to Build Your Week"
+        steps={WEEKLY_TOUR_STEPS}
       />
       </div>
     </motion.div>
