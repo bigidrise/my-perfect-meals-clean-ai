@@ -36,6 +36,16 @@ import {
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const CARE_TEAM_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Invite Your Team", description: "Add trainers, doctors, or nutritionists by entering their email." },
+  { icon: "2", title: "Set Permissions", description: "Control what each team member can see and modify." },
+  { icon: "3", title: "Access Codes", description: "Share your unique access code so professionals can connect with you." },
+  { icon: "4", title: "Manage Members", description: "Review and revoke access to your nutrition data at any time." }
+];
 
 // Types
 type Role = "trainer" | "doctor" | "nutritionist" | "other";
@@ -63,6 +73,7 @@ const DEFAULT_PERMS: Record<Role, Permissions> = {
 
 export default function CareTeamPage() {
   const [, setLocation] = useLocation();
+  const quickTour = useQuickTour("care-team");
 
   // UI state
   const [members, setMembers] = useState<CareMember[]>([]);
@@ -218,7 +229,10 @@ export default function CareTeamPage() {
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Care Team & Pro Access</h1>
 
-          
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -396,6 +410,14 @@ export default function CareTeamPage() {
         {/* Bottom spacer */}
         <div className="h-8" />
       </div>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Care Team Guide"
+        steps={CARE_TEAM_TOUR_STEPS}
+      />
     </motion.div>
   );
 }

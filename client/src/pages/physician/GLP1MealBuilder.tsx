@@ -65,6 +65,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const GLP1_BUILDER_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Small Portions", description: "All meals are designed for reduced appetite with maximum nutrition density." },
+  { icon: "2", title: "Add Your Meals", description: "Tap + on any meal card to add GLP-1 optimized recipes." },
+  { icon: "3", title: "Duplicate Days", description: "Copy meals to other days when you find what works for you." },
+  { icon: "4", title: "Track Macros", description: "Send meals to the Macro Calculator to ensure adequate protein." },
+  { icon: "5", title: "Shopping List", description: "Export ingredients for easy meal prep shopping." }
+];
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -104,6 +115,7 @@ function formatWeekLabel(weekStartISO: string): string {
 }
 
 export default function GLP1MealBuilder() {
+  const quickTour = useQuickTour("glp1-meal-builder");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1207,10 +1219,10 @@ export default function GLP1MealBuilder() {
           {/* Page Title */}
           <h1 className="text-lg font-bold text-white">GLP-1 Meal Builder</h1>
 
-          {/* Info Button + Optional Client Dashboard Button */}
+          {/* Help + Optional Client Dashboard Button */}
           <div className="ml-auto flex items-center gap-2">
-            {/* Info Button */}
-            
+            {/* Quick Tour Help Button */}
+            <QuickTourButton onClick={quickTour.openTour} />
 
             {/* Optional: Client Dashboard Button */}
             {(() => {
@@ -2204,6 +2216,14 @@ export default function GLP1MealBuilder() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="GLP-1 Meal Builder Guide"
+        steps={GLP1_BUILDER_TOUR_STEPS}
+      />
       </div>
     </motion.div>
   );

@@ -64,6 +64,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const ANTI_INFLAMMATORY_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Healing Foods", description: "All meals feature anti-inflammatory ingredients like leafy greens and omega-3s." },
+  { icon: "2", title: "Add Your Meals", description: "Tap + on any meal card to add inflammation-fighting recipes." },
+  { icon: "3", title: "Duplicate Days", description: "Copy your anti-inflammatory meal plan to other days." },
+  { icon: "4", title: "Track Macros", description: "Send meals to the Macro Calculator for balanced nutrition." },
+  { icon: "5", title: "Shopping List", description: "Export ingredients for healing-focused grocery shopping." }
+];
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -103,6 +114,7 @@ function formatWeekLabel(weekStartISO: string): string {
 }
 
 export default function AntiInflammatoryMenuBuilder() {
+  const quickTour = useQuickTour("anti-inflammatory-menu-builder");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1258,9 +1270,10 @@ export default function AntiInflammatoryMenuBuilder() {
             Anti-Inflammatory Builder
           </h1>
 
-          {/* Info Button + Optional Client Dashboard Button */}
+          {/* Help + Optional Client Dashboard Button */}
           <div className="ml-auto flex items-center gap-2">
-            {/* Info Button */}
+            {/* Quick Tour Help Button */}
+            <QuickTourButton onClick={quickTour.openTour} />
 
             {/* Optional: Client Dashboard Button */}
             {(() => {
@@ -2189,6 +2202,14 @@ export default function AntiInflammatoryMenuBuilder() {
               />
             );
           })()}
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Anti-Inflammatory Builder Guide"
+        steps={ANTI_INFLAMMATORY_TOUR_STEPS}
+      />
       </div>
     </motion.div>
   );

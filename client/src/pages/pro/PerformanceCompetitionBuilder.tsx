@@ -56,6 +56,17 @@ import { linkUserToClient } from "@/lib/macroResolver";
 import { saveLastPerformanceClientId } from "@/lib/macroSourcesConfig";
 import MealProgressCoach from "@/components/guided/MealProgressCoach";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const PERFORMANCE_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Competition Prep", description: "Build precise meal plans for bodybuilding shows and athletic events." },
+  { icon: "2", title: "Exact Macros", description: "Hit your protein, carb, and fat targets with precision-calculated meals." },
+  { icon: "3", title: "Meal Timing", description: "Add Meal 4+ for optimal nutrient timing around training." },
+  { icon: "4", title: "Copy Days", description: "Duplicate meal plans for consistent prep week over week." },
+  { icon: "5", title: "Shopping List", description: "Export ingredients for meal prep shopping runs." }
+];
 
 // Week navigation utilities
 function addDaysISO(iso: string, days: number): string {
@@ -98,6 +109,7 @@ interface AthleteBoardProps {
 export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const quickTour = useQuickTour("performance-competition-builder");
 
   // Route params
   const [, athleteParams] = useRoute("/athlete-meal-board/:clientId");
@@ -975,7 +987,8 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
             {/* Title */}
             <h1 className="text-base font-bold text-white flex-1 min-w-0 truncate">Performance & Competition Builder</h1>
 
-            
+            {/* Quick Tour Help Button */}
+            <QuickTourButton onClick={quickTour.openTour} />
           </div>
 
           {/* Row 2: Client Dashboard Button (only in ProCare mode) */}
@@ -2056,6 +2069,14 @@ export default function AthleteBoard({ mode = "athlete" }: AthleteBoardProps) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Performance & Competition Builder Guide"
+        steps={PERFORMANCE_TOUR_STEPS}
+      />
     </motion.div>
   );
 }

@@ -3,9 +3,20 @@ import { useLocation } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const PRO_PORTAL_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Professional Hub", description: "Access your client management tools and professional features." },
+  { icon: "2", title: "View Clients", description: "See all your connected clients and their progress." },
+  { icon: "3", title: "Build Plans", description: "Create customized meal plans for each client's goals." },
+  { icon: "4", title: "Track Results", description: "Monitor client adherence and adjust recommendations." }
+];
 
 export default function ProPortal() {
   const [, setLocation] = useLocation();
+  const quickTour = useQuickTour("pro-portal");
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-black/60 via-indigo-600 to-black/80 pb-safe-nav">
@@ -25,6 +36,11 @@ export default function ProPortal() {
 
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Pro Portal</h1>
+
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -49,6 +65,14 @@ export default function ProPortal() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Pro Portal Guide"
+        steps={PRO_PORTAL_TOUR_STEPS}
+      />
     </div>
   );
 }

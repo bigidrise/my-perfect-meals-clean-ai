@@ -19,6 +19,16 @@ import {
   Target,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const CLIENT_DASHBOARD_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Set Macro Targets", description: "Configure calories, protein, carbs, and fat goals for your client." },
+  { icon: "2", title: "Add Clinical Notes", description: "Document coaching notes or medical context for reference." },
+  { icon: "3", title: "Build Meal Plans", description: "Navigate to meal builders to create customized nutrition plans." },
+  { icon: "4", title: "Track Progress", description: "Monitor your client's adherence and adjust targets as needed." }
+];
 
 type ProRole =
   | "doctor"
@@ -50,6 +60,7 @@ function getRoleLabel(role: ProRole): string {
 export default function ProClientDashboard() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const quickTour = useQuickTour("pro-client-dashboard");
   const [, params] = useRoute("/pro/clients/:id");
   const clientId = params?.id as string;
 
@@ -168,7 +179,10 @@ export default function ProClientDashboard() {
           {/* Title */}
           <h1 className="text-lg font-bold text-white">Client Dashboard</h1>
 
-          {/* Info Button - Optional, can be added if needed */}
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -881,6 +895,14 @@ export default function ProClientDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Client Dashboard Guide"
+        steps={CLIENT_DASHBOARD_TOUR_STEPS}
+      />
     </motion.div>
   );
 }

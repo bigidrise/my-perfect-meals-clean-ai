@@ -64,6 +64,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const DIABETIC_BUILDER_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Add Your Meals", description: "Tap the + button on any meal card to add diabetic-friendly recipes." },
+  { icon: "2", title: "Low-GI Focused", description: "All meals are optimized for stable blood sugar with low glycemic ingredients." },
+  { icon: "3", title: "Duplicate Days", description: "Copy your meal plan to other days for consistent eating patterns." },
+  { icon: "4", title: "Track Macros", description: "Send meals to the Macro Calculator to monitor carbs and nutrition." },
+  { icon: "5", title: "Shopping List", description: "Export ingredients for easy diabetic-friendly grocery shopping." }
+];
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -103,6 +114,7 @@ function formatWeekLabel(weekStartISO: string): string {
 }
 
 export default function DiabeticMenuBuilder() {
+  const quickTour = useQuickTour("diabetic-menu-builder");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1207,8 +1219,10 @@ export default function DiabeticMenuBuilder() {
             Diabetic Meal Builder
           </h1>
 
-          {/* Info Button */}
-         
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -2203,6 +2217,14 @@ export default function DiabeticMenuBuilder() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="Diabetic Meal Builder Guide"
+        steps={DIABETIC_BUILDER_TOUR_STEPS}
+      />
     </motion.div>
   );
 }

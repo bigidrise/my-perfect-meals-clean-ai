@@ -1,7 +1,8 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export interface TourStep {
   icon?: string;
@@ -26,6 +27,9 @@ export function QuickTourModal({ isOpen, onClose, title, steps }: QuickTourModal
           <DialogTitle className="text-xl font-bold text-white text-center">
             {title}
           </DialogTitle>
+          <VisuallyHidden>
+            <DialogDescription>Quick tour guide showing {steps.length} tips for this page</DialogDescription>
+          </VisuallyHidden>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
