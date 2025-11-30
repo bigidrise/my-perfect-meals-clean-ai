@@ -38,6 +38,17 @@ import AIMealCreatorModal from "@/components/modals/AIMealCreatorModal";
 import MealPremadePicker from "@/components/pickers/MealPremadePicker";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SnackPickerDrawer from "@/components/pickers/SnackPickerDrawer";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const GENERAL_NUTRITION_TOUR_STEPS: TourStep[] = [
+  { icon: "1", title: "Build Client Meals", description: "Tap the + button on any meal card to add personalized recipes for your client." },
+  { icon: "2", title: "Set Coach Targets", description: "Macro targets are set from the Client Dashboard - view progress here." },
+  { icon: "3", title: "Day-by-Day Planning", description: "Use day chips to plan specific meals for each day of the week." },
+  { icon: "4", title: "Duplicate Days", description: "Copy a day's meals to other days for consistent eating patterns." },
+  { icon: "5", title: "Shopping List", description: "Export all ingredients for the week to create a shopping list." }
+];
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -79,6 +90,8 @@ export default function WeeklyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  const quickTour = useQuickTour("general-nutrition-builder");
 
   // Get clientId from route params for Pro context
   const [, params] = useRoute("/pro/clients/:id/general-nutrition-builder");
@@ -1010,6 +1023,8 @@ export default function WeeklyMealBoard() {
           </h1>
 
           <div className="ml-auto" />
+          
+          <QuickTourButton onClick={quickTour.openTour} />
 
           
         </div>
@@ -1806,6 +1821,14 @@ export default function WeeklyMealBoard() {
         mealType={premadePickerSlot}
         onMealSelect={handlePremadeSelect}
         showMacroTargeting={false}
+      />
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="General Nutrition Builder"
+        steps={GENERAL_NUTRITION_TOUR_STEPS}
       />
       </div>
     </motion.div>
