@@ -89,7 +89,7 @@ import DiabetesSupportPage from "@/pages/physician/DiabetesSupportPage";
 import DiabeticMenuBuilder from "@/pages/physician/DiabeticMenuBuilder";
 import GLP1Hub from "@/pages/physician/GLP1Hub";
 import GLP1MealBuilder from "@/pages/physician/GLP1MealBuilder";
-import MedicalDietsHub from "@/pages/physician/MedicalDietsHub";
+// QUARANTINED: MedicalDietsHub moved to _quarantine (not in active navigation)
 import AntiInflammatoryMenuBuilder from "@/pages/physician/AntiInflammatoryMenuBuilder";
 
 // Craving pages
@@ -421,13 +421,7 @@ export default function Router() {
             "GLP-1 Meal Builder",
           )}
         />
-        <Route
-          path="/medical-diets-hub"
-          component={withPageErrorBoundary(
-            MedicalDietsHub,
-            "Medical Diets Hub",
-          )}
-        />
+        {/* QUARANTINED: /medical-diets-hub route removed - MedicalDietsHub moved to _quarantine */}
         <Route
           path="/anti-inflammatory-menu-builder"
           component={withPageErrorBoundary(
