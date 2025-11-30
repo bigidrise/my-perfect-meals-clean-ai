@@ -191,12 +191,12 @@ export default function Welcome() {
         </div>
 
         {/* Business Name */}
-        <h1 className="text-3xl md:text-2xl font-semi-bold text-center mb-3">
+        <h1 className="text-2xl md:text-2xl font-bold text-center mb-3">
           My Perfect Meals
         </h1>
 
         {/* Value Proposition */}
-        <p className="text-sm md:text-xl text-white/80 text-center mb-6 max-w-md">
+        <p className="text-md md:text-xl text-white/80 text-center mb-6 max-w-md">
           Healthy Meal Planning
         </p>
 
