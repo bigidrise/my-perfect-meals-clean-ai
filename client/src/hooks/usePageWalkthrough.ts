@@ -1,3 +1,17 @@
+/**
+ * @deprecated DEPRECATED - November 30, 2025
+ * 
+ * This hook is deprecated due to stability issues and complexity.
+ * Use the new Quick Tour system instead:
+ * 
+ * import { useQuickTour } from "@/hooks/useQuickTour";
+ * import { QuickTourModal } from "@/components/guided/QuickTourModal";
+ * import { QuickTourButton } from "@/components/guided/QuickTourButton";
+ * 
+ * See LOCKDOWN.md "WALKTHROUGH SYSTEM" section for details.
+ * 
+ * DO NOT USE THIS HOOK IN NEW CODE.
+ */
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useCopilotGuidedMode } from '@/components/copilot/CopilotGuidedModeContext';
@@ -7,6 +21,7 @@ import { flowOrchestrator } from '@/components/copilot/FlowOrchestrator';
 import { startSimpleWalkthrough } from '@/components/copilot/simple-walkthrough/simpleWalkthroughHelper';
 import { getPageSegment } from '@/components/copilot/simple-walkthrough/simpleWalkthroughFlows';
 
+/** @deprecated Use useQuickTour instead */
 export function usePageWalkthrough(scriptId?: string) {
   const [location, setLocation] = useLocation();
   const { isGuidedModeEnabled } = useCopilotGuidedMode();

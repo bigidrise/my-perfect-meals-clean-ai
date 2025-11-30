@@ -135,11 +135,32 @@ Only run this after architect has reviewed and approved structural changes!
 - ✅ Hub-First Routing (7 hubs, 17 sub-options)
 - ✅ Canonical Alias Registry (35 verified routes)
 - ✅ Keyword Matching System (token-level fallback)
-- ✅ Spotlight Walkthrough Integration
 - ✅ Voice Navigation (direct pages + hub prompts)
 - ✅ Sub-Option Selection Logic
-- ✅ Async Walkthrough Handling
 - 🔒 **LOCKED:** See PHASE_B_COPILOT_LOCK.md for complete lockdown details
+
+### **WALKTHROUGH SYSTEM (Simplified - November 30, 2025)**
+- ✅ **Quick Tour System** - Simple, stable modal-based page guidance
+  - `useQuickTour` hook (localStorage-gated, auto-show on first visit)
+  - `QuickTourModal` component (Glass-styled, numbered steps)
+  - `QuickTourButton` component (header help icon)
+- ✅ **Pages with Quick Tour:**
+  - Weekly Meal Board
+  - Beach Body Meal Board
+  - Diabetic Hub
+  - GLP-1 Hub
+  
+**DEPRECATED WALKTHROUGH SYSTEMS:**
+- ❌ `usePageWalkthrough` hook - DEPRECATED, causes stability issues
+- ❌ `SimpleWalkthrough` system - LEGACY, bypasses guards
+- ❌ Spotlight Walkthrough Integration - RETIRED for simplicity
+
+**QUICK TOUR DESIGN PRINCIPLES:**
+1. localStorage-gated (shows once, remembers "Don't show again")
+2. No Copilot dependency (works independently)
+3. Manual access via help button in header
+4. 3-6 numbered steps per page
+5. Glass-styled modal matching app design
 
 ---
 

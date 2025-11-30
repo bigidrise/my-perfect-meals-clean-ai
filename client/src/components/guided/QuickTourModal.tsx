@@ -20,7 +20,7 @@ export function QuickTourModal({ isOpen, onClose, title, steps }: QuickTourModal
   const [dontShowAgain, setDontShowAgain] = useState(true);
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => onClose(dontShowAgain)}>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(dontShowAgain); }}>
       <DialogContent className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 text-white max-w-md mx-auto rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-white text-center">
