@@ -149,8 +149,16 @@ Located in `/client/src/pages/_quarantine/`:
 - Meal Finder
 - Craving Hub (old version)
 - Alcohol Hub
+- OnboardingV2-backup.tsx - Old onboarding implementation
+- MedicalDietsHub.tsx - Not in active navigation
+- PatientAssignmentDashboard.tsx - Unused physician feature
+- DiabeticSupportHub.tsx - Redundant with DiabeticHub
+- onboarding-ai-voice-journal.tsx - Old onboarding step
+- onboarding-foods-to-avoid.tsx - Old onboarding step
+- onboarding-meal-reminders.tsx - Old onboarding step
+- onboarding-phone-consent.tsx - Old onboarding step
 
-**RULE:** These features are permanently quarantined. Do not activate, modify, or reference.
+**RULE:** These features are permanently quarantined. Do not activate, modify, or reference. All imports to quarantined files have been removed from Router.tsx.
 
 ---
 
@@ -241,10 +249,10 @@ If a locked feature has a critical bug:
 ---
 
 ## 🔥 LAST UPDATED
-**Date:** November 28, 2025  
-**Status:** Complete codebase lockdown active + Unified Meal Pipeline production-locked  
+**Date:** November 30, 2025  
+**Status:** Complete codebase lockdown active + Physical quarantine enforced  
 **Active Work:** NONE - all systems locked  
-**Recent Completion:** Unified Meal Pipeline stabilization (AI Meal Creator, AI Premades, consistent fallbacks)
+**Recent Completion:** Physical quarantine of deprecated files (8 files moved to _quarantine folder)
 
 ---
 
