@@ -14,12 +14,39 @@ import { useToast } from "@/hooks/use-toast";
 import { glp1Presets } from "@/data/glp1Presets";
 import ShotTrackerPanel from "@/pages/glp1/ShotTrackerPanel";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const GLP1_TOUR_STEPS: TourStep[] = [
+  {
+    icon: "1",
+    title: "Choose Your Preset",
+    description: "Select a starting point based on your medication or customize your own guardrails."
+  },
+  {
+    icon: "2",
+    title: "Track Your Shots",
+    description: "Log your GLP-1 injections to stay on schedule and monitor your progress."
+  },
+  {
+    icon: "3",
+    title: "Set Meal Limits",
+    description: "Configure maximum meal volume and macros to match your reduced appetite."
+  },
+  {
+    icon: "4",
+    title: "Get GLP-1 Friendly Meals",
+    description: "Browse meals designed for smaller portions with maximum nutrition."
+  }
+];
 
 export default function GLP1Hub() {
   const [, setLocation] = useLocation();
   const [noteOpen, setNoteOpen] = useState(false);
   const [shotTrackerOpen, setShotTrackerOpen] = useState(false);
   const { user } = useAuth();
+  const quickTour = useQuickTour("glp1-hub");
 
   // Fetch and mutate state for GLP-1 profile
   const { data: profile, isLoading: profileLoading } = useGLP1Profile();
@@ -108,13 +135,14 @@ export default function GLP1Hub() {
         style={{ top: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          
           <Pill className="h-6 w-6 text-orange-500" />
           {/* Title */}
           <h1 className="text-lg font-bold text-white">GLP-1 Hub</h1>
 
-          {/* Info Button */}
-          
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -385,6 +413,14 @@ export default function GLP1Hub() {
           </Button>
         </section>
       </div>
+
+      {/* Quick Tour Modal */}
+      <QuickTourModal
+        isOpen={quickTour.shouldShow}
+        onClose={quickTour.closeTour}
+        title="How to Use GLP-1 Hub"
+        steps={GLP1_TOUR_STEPS}
+      />
     </div>
   );
 }

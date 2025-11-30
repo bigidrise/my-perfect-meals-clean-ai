@@ -28,6 +28,32 @@ import { useToast } from "@/hooks/use-toast";
 import { GLUCOSE_THRESHOLDS } from "@/content/diabetesEducation";
 import { DIABETIC_PRESETS } from "@/data/diabeticPresets";
 import type { GlucoseContext } from "@/hooks/useDiabetes";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const DIABETIC_TOUR_STEPS: TourStep[] = [
+  {
+    icon: "1",
+    title: "Set Your Guardrails",
+    description: "Choose a clinical preset or customize your glucose targets, carb limits, and fiber goals."
+  },
+  {
+    icon: "2",
+    title: "Log Your Readings",
+    description: "Track your glucose readings before and after meals to monitor your progress."
+  },
+  {
+    icon: "3",
+    title: "View Your Analytics",
+    description: "See your 7-day trends and time-in-range percentage at a glance."
+  },
+  {
+    icon: "4",
+    title: "Get Smart Snacks",
+    description: "Browse diabetic-friendly snacks designed to keep your blood sugar stable."
+  }
+];
 
 function getDeviceId(): string {
   let deviceId = localStorage.getItem("deviceId");
@@ -43,6 +69,7 @@ export default function DiabeticHub() {
   const { user } = useAuth();
   const { toast } = useToast();
   const userId = user?.id?.toString() || getDeviceId();
+  const quickTour = useQuickTour("diabetic-hub");
 
   // Hooks
   const saveMutation = useSaveDiabetesProfile();
@@ -171,7 +198,10 @@ export default function DiabeticHub() {
             {/* Title */}
             <h1 className="text-lg font-bold text-white">Diabetic Hub</h1>
 
-            {/* Question Mark Button */}
+            <div className="flex-grow" />
+
+            {/* Quick Tour Help Button */}
+            <QuickTourButton onClick={quickTour.openTour} />
           </div>
         </div>
 
@@ -600,6 +630,14 @@ export default function DiabeticHub() {
             </button>
           </section>
         </div>
+
+        {/* Quick Tour Modal */}
+        <QuickTourModal
+          isOpen={quickTour.shouldShow}
+          onClose={quickTour.closeTour}
+          title="How to Use Diabetic Hub"
+          steps={DIABETIC_TOUR_STEPS}
+        />
       </div>
     </>
   );

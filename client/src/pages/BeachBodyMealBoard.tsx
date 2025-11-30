@@ -52,6 +52,37 @@ import QuickAddMacrosModal from "@/components/modals/QuickAddMacrosModal";
 import { computeTargetsFromOnboarding } from "@/lib/targets";
 import { useTodayMacros } from "@/hooks/useTodayMacros";
 import { useOnboardingProfile } from "@/hooks/useOnboardingProfile";
+import { useQuickTour } from "@/hooks/useQuickTour";
+import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
+import { QuickTourButton } from "@/components/guided/QuickTourButton";
+
+const BEACHBODY_TOUR_STEPS: TourStep[] = [
+  {
+    icon: "1",
+    title: "Fill Your Meals",
+    description: "Add Meal 1, 2, and 3 using AI-generated recipes or athlete-focused premades."
+  },
+  {
+    icon: "2",
+    title: "Add Extra Meals",
+    description: "Tap 'Add Meal 4+' for additional meals to hit your calorie targets."
+  },
+  {
+    icon: "3",
+    title: "Duplicate Days",
+    description: "Copy your day's meals to other days for quick meal prep planning."
+  },
+  {
+    icon: "4",
+    title: "Track Macros",
+    description: "Send your meals to the Macro Calculator for precise nutrition tracking."
+  },
+  {
+    icon: "5",
+    title: "Build Shopping List",
+    description: "Export all ingredients to your shopping list for easy grocery runs."
+  }
+];
 
 // Helper function to create new snacks
 function makeNewSnack(nextIndex: number): Meal {
@@ -92,6 +123,7 @@ const lists: Array<["breakfast"|"lunch"|"dinner"|"snacks", string]> = [
 export default function BeachBodyMealBoard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const quickTour = useQuickTour("beach-body-meal-board");
 
   // Get current user ID
   const getCurrentUserId = () => {
@@ -925,8 +957,10 @@ export default function BeachBodyMealBoard() {
           {/* Page Title */}
           <h1 className="text-lg font-bold text-white">Beach Body Meal Builder</h1>
 
-          {/* Info Button */}
-          
+          <div className="flex-grow" />
+
+          {/* Quick Tour Help Button */}
+          <QuickTourButton onClick={quickTour.openTour} />
         </div>
       </div>
 
@@ -1758,6 +1792,14 @@ export default function BeachBodyMealBoard() {
             />
           );
         })()}
+
+        {/* Quick Tour Modal */}
+        <QuickTourModal
+          isOpen={quickTour.shouldShow}
+          onClose={quickTour.closeTour}
+          title="How to Build Your Beach Body Meals"
+          steps={BEACHBODY_TOUR_STEPS}
+        />
       </div>
     </motion.div>
   );
