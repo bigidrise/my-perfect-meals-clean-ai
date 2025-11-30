@@ -47,6 +47,7 @@ export interface KnowledgeResponse {
   type?: "knowledge" | "walkthrough";
   steps?: WalkthroughStep[];
   spokenText?: string;
+  autoClose?: boolean; // If true, CopilotSheet closes when audio finishes
 }
 
 export interface WalkthroughStep {

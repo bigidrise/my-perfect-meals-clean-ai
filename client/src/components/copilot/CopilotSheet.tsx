@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCopilot } from "./CopilotContext";
 import { useMicRecorder } from "@/hooks/useMicRecorder";
@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CopilotInputBar } from "./CopilotInputBar";
 import { isLikelyMisheard } from "./query/QueryProcessor";
 import { startCopilotIntro } from "./CopilotCommandRegistry";
-import { ttsService } from "@/lib/tts";
+import { ttsService, TTSCallbacks } from "@/lib/tts";
 import { useCopilotGuidedMode } from "./CopilotGuidedModeContext";
 import { Switch } from "@/components/ui/switch";
 
@@ -31,6 +31,62 @@ export const CopilotSheet: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // =========================================
+  // AUTO-CLOSE TIMER - Closes sheet when audio finishes
+  // Uses actual playback events instead of word-count guessing
+  // Safety timeout of 20s in case audio never loads/plays
+  // =========================================
+  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const safetyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  
+  // Clear all auto-close timers
+  const clearAutoCloseTimers = useCallback(() => {
+    if (autoCloseTimerRef.current) {
+      clearTimeout(autoCloseTimerRef.current);
+      autoCloseTimerRef.current = null;
+    }
+    if (safetyTimeoutRef.current) {
+      clearTimeout(safetyTimeoutRef.current);
+      safetyTimeoutRef.current = null;
+    }
+  }, []);
+  
+  // Handle audio completion - schedule auto-close
+  const handleAudioComplete = useCallback(() => {
+    setIsAudioPlaying(false);
+    clearAutoCloseTimers();
+    
+    // Only auto-close if response has autoClose flag (page explanations)
+    if (lastResponse?.autoClose) {
+      // Small delay after audio ends before closing (feels more natural)
+      autoCloseTimerRef.current = setTimeout(() => {
+        close();
+      }, 1500);
+    }
+  }, [lastResponse?.autoClose, close, clearAutoCloseTimers]);
+  
+  // Handle audio start - set up safety timeout based on text length
+  const handleAudioStart = useCallback(() => {
+    setIsAudioPlaying(true);
+    clearAutoCloseTimers();
+    
+    // Dynamic safety timeout: calculate based on word count
+    // Formula: (words * 500ms at 0.95 rate) + 15s buffer for API latency
+    // This ensures even long explanations have time to complete
+    if (lastResponse?.autoClose && lastResponse?.spokenText) {
+      const wordCount = lastResponse.spokenText.split(/\s+/).length;
+      const estimatedDuration = (wordCount * 500) + 15000; // 500ms per word + 15s buffer
+      const safetyTimeout = Math.max(30000, estimatedDuration); // Minimum 30 seconds
+      
+      safetyTimeoutRef.current = setTimeout(() => {
+        console.log('[Copilot] Safety timeout - auto-closing sheet after', safetyTimeout, 'ms');
+        setIsAudioPlaying(false);
+        close();
+      }, safetyTimeout);
+    }
+  }, [lastResponse?.autoClose, lastResponse?.spokenText, close, clearAutoCloseTimers]);
 
   useEffect(() => {
     // Only run TTS in browser context (skip SSR/tests)
@@ -40,10 +96,21 @@ export const CopilotSheet: React.FC = () => {
       try {
         if (!lastResponse.spokenText) return;
         
+        // Callbacks for browser speech (SpeechSynthesis)
+        const callbacks: TTSCallbacks = {
+          onStart: handleAudioStart,
+          onEnd: handleAudioComplete,
+          onError: (error) => {
+            console.warn('[TTS] Audio error:', error);
+            handleAudioComplete(); // Treat error as completion
+          }
+        };
+        
         // Use TTS service with automatic fallback
-        const result = await ttsService.speak(lastResponse.spokenText);
+        const result = await ttsService.speak(lastResponse.spokenText, callbacks);
 
         // If we got ElevenLabs audio, set it up for playback
+        // (onPlay/onEnded events on <audio> element handle the callbacks)
         if (result.audioUrl) {
           setAudioUrl(prevUrl => {
             if (prevUrl) {
@@ -54,10 +121,11 @@ export const CopilotSheet: React.FC = () => {
         }
         
         // Browser speech happens automatically in ttsService.speak()
-        // No need to handle it here - it's already playing
+        // Callbacks are wired to SpeechSynthesisUtterance events
       } catch (err: any) {
         console.error("TTS error:", err);
-        // Silent mode - continue without audio
+        // Silent mode - trigger completion to allow auto-close
+        handleAudioComplete();
       }
     };
 
@@ -66,11 +134,12 @@ export const CopilotSheet: React.FC = () => {
     // Cleanup on unmount or response change
     return () => {
       ttsService.stop();
+      clearAutoCloseTimers();
       if (audioRef.current) {
         audioRef.current.pause();
       }
     };
-  }, [lastResponse]);
+  }, [lastResponse, handleAudioStart, handleAudioComplete, clearAutoCloseTimers]);
 
   // =========================================
   // AUTOPLAY HANDLING - Retry with manual play if autoPlay blocked
@@ -131,6 +200,10 @@ export const CopilotSheet: React.FC = () => {
       // Clear voice fallback state on close
       setNeedsRetry(false);
       setAudioBlocked(false);
+      setIsAudioPlaying(false);
+      
+      // CRITICAL: Clear all auto-close timers when user manually closes
+      clearAutoCloseTimers();
       
       // CRITICAL: Stop microphone recording if active
       stop();
@@ -145,7 +218,7 @@ export const CopilotSheet: React.FC = () => {
       setListening(false);
       setMode("idle");
     }
-  }, [isOpen, setNeedsRetry, stop, setMode]);
+  }, [isOpen, setNeedsRetry, stop, setMode, clearAutoCloseTimers]);
 
   // =========================================
   // COPILOT INTRO - Trigger when user chooses "My Perfect Copilot"
@@ -434,19 +507,27 @@ export const CopilotSheet: React.FC = () => {
                   </div>
                 )}
 
-                {/* Audio Player */}
+                {/* Audio Player - ElevenLabs audio with auto-close wiring */}
                 {audioUrl && (
                   <audio 
                     ref={audioRef}
                     autoPlay
                     src={audioUrl}
+                    onPlay={handleAudioStart}
                     onEnded={() => {
+                      // Clean up URL
                       setAudioUrl(prevUrl => {
                         if (prevUrl) {
                           URL.revokeObjectURL(prevUrl);
                         }
                         return null;
                       });
+                      // Trigger auto-close logic
+                      handleAudioComplete();
+                    }}
+                    onError={() => {
+                      // Audio failed to play - treat as completion
+                      handleAudioComplete();
                     }}
                   />
                 )}

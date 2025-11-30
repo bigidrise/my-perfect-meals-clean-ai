@@ -5,10 +5,20 @@ import { getPageExplanation } from './CopilotPageExplanations';
 import { CopilotExplanationStore } from './CopilotExplanationStore';
 import { shouldAllowAutoOpen } from './CopilotRespectGuard';
 
+/**
+ * Hook that triggers page explanations when navigating to new pages.
+ * 
+ * Auto-close is now handled by CopilotSheet based on actual audio completion
+ * events rather than word-count estimates. This hook just:
+ * 1. Checks if the page should show an explanation
+ * 2. Opens the Copilot sheet
+ * 3. Sets the response with autoClose: true flag
+ * 
+ * CopilotSheet listens for TTS onEnd events and closes the sheet when audio finishes.
+ */
 export function useCopilotPageExplanation() {
   const [pathname] = useLocation();
-  const { isOpen, open, close, setLastResponse } = useCopilot();
-  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const { isOpen, open, setLastResponse } = useCopilot();
   const explanationTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Subscribe to explanation store changes
@@ -35,11 +45,7 @@ export function useCopilotPageExplanation() {
     const explanation = getPageExplanation(normalizedPath);
     if (!explanation) return;
 
-    // Clear any previous timers
-    if (autoCloseTimerRef.current) {
-      clearTimeout(autoCloseTimerRef.current);
-      autoCloseTimerRef.current = null;
-    }
+    // Clear any previous timer
     if (explanationTimerRef.current) {
       clearTimeout(explanationTimerRef.current);
       explanationTimerRef.current = null;
@@ -56,21 +62,14 @@ export function useCopilotPageExplanation() {
         // Mark path as explained ONLY after successfully firing
         CopilotExplanationStore.markExplained(normalizedPath);
 
+        // Set response with autoClose flag - CopilotSheet handles the timing
+        // based on actual audio completion events
         setLastResponse({
           title: explanation.title,
           description: explanation.description,
           spokenText: explanation.spokenText,
+          autoClose: explanation.autoClose ?? true, // Default to auto-close for explanations
         });
-
-        // Auto-close timing based on words (but never less than 7s)
-        if (explanation.autoClose) {
-          const wordCount = explanation.spokenText.split(' ').length;
-          const estimatedDuration = Math.max(7000, wordCount * 400);
-
-          autoCloseTimerRef.current = setTimeout(() => {
-            close();
-          }, estimatedDuration);
-        }
       }, 300);
     };
 
@@ -81,19 +80,12 @@ export function useCopilotPageExplanation() {
         clearTimeout(explanationTimerRef.current);
         explanationTimerRef.current = null;
       }
-      if (autoCloseTimerRef.current) {
-        clearTimeout(autoCloseTimerRef.current);
-        autoCloseTimerRef.current = null;
-      }
     };
-  }, [pathname, isOpen, open, close, setLastResponse, normalizePath, storeVersion]);
+  }, [pathname, isOpen, open, setLastResponse, normalizePath, storeVersion]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (autoCloseTimerRef.current) {
-        clearTimeout(autoCloseTimerRef.current);
-      }
       if (explanationTimerRef.current) {
         clearTimeout(explanationTimerRef.current);
       }

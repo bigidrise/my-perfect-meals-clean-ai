@@ -4,6 +4,8 @@
  * 
  * Apple App Store Ready - Works 100% offline
  * SSR/Test Safe - Guards all browser APIs
+ * 
+ * Audio Completion Events - For reliable UI sync
  */
 
 type TTSProvider = 'elevenlabs' | 'browser' | 'silent';
@@ -13,6 +15,13 @@ interface TTSResult {
   audioUrl?: string;
   success: boolean;
   error?: string;
+}
+
+// Callbacks for audio lifecycle events
+export interface TTSCallbacks {
+  onStart?: () => void;
+  onEnd?: () => void;
+  onError?: (error: string) => void;
 }
 
 // Browser API availability check
@@ -28,13 +37,21 @@ class TTSService {
    * 1. Try ElevenLabs API
    * 2. Fallback to browser SpeechSynthesis
    * 3. Silent mode (no audio, no errors)
+   * 
+   * @param text - Text to speak
+   * @param callbacks - Optional callbacks for audio lifecycle events
+   *   - onStart: Called when audio starts playing
+   *   - onEnd: Called when audio finishes playing
+   *   - onError: Called if audio fails
    */
-  async speak(text: string): Promise<TTSResult> {
+  async speak(text: string, callbacks?: TTSCallbacks): Promise<TTSResult> {
     // Try ElevenLabs first (if not disabled)
     if (!this.elevenLabsDisabled) {
       const elevenLabsResult = await this.tryElevenLabs(text);
       if (elevenLabsResult.success) {
         this.failureCount = 0; // Reset on success
+        // Note: For ElevenLabs, callbacks are handled by the audio element in CopilotSheet
+        // The audioUrl is played there, so onStart/onEnd are wired to <audio> events
         return elevenLabsResult;
       }
 
@@ -47,12 +64,14 @@ class TTSService {
     }
 
     // Fallback to browser speech
-    const browserResult = await this.tryBrowserSpeech(text);
+    const browserResult = await this.tryBrowserSpeech(text, callbacks);
     if (browserResult.success) {
       return browserResult;
     }
 
-    // Silent mode (always succeeds)
+    // Silent mode (always succeeds) - trigger callbacks immediately
+    callbacks?.onStart?.();
+    callbacks?.onEnd?.();
     return {
       provider: 'silent',
       success: true,
@@ -106,9 +125,11 @@ class TTSService {
   /**
    * Try browser SpeechSynthesis API
    * Works offline, no cost, no rate limits
+   * Wires callbacks to utterance events for reliable UI sync
    */
-  private async tryBrowserSpeech(text: string): Promise<TTSResult> {
+  private async tryBrowserSpeech(text: string, callbacks?: TTSCallbacks): Promise<TTSResult> {
     if (!isBrowser || !window.speechSynthesis) {
+      callbacks?.onError?.('Not in browser context');
       return { provider: 'browser', success: false, error: 'Not in browser context' };
     }
 
@@ -120,6 +141,17 @@ class TTSService {
       utterance.rate = 0.95; // Slightly slower for clarity
       utterance.pitch = 1.0;
       utterance.volume = 0.8;
+
+      // Wire callbacks to utterance events
+      if (callbacks?.onStart) {
+        utterance.onstart = () => callbacks.onStart?.();
+      }
+      if (callbacks?.onEnd) {
+        utterance.onend = () => callbacks.onEnd?.();
+      }
+      if (callbacks?.onError) {
+        utterance.onerror = (event) => callbacks.onError?.(event.error || 'Speech synthesis error');
+      }
 
       // Try to use a high-quality voice if available
       const voices = window.speechSynthesis.getVoices();
@@ -140,6 +172,7 @@ class TTSService {
       };
     } catch (err: any) {
       console.warn('[TTS] Browser speech failed:', err.message);
+      callbacks?.onError?.(err.message);
       return {
         provider: 'browser',
         success: false,
