@@ -422,7 +422,7 @@ export default function OnboardingStandalone() {
               placeholder="Add other condition..."
               className="flex-1 text-white bg-black/40 border-white/20"
             />
-            <Button onClick={handleAddCustomMedical} variant="outline" size="sm" disabled={!customMedicalInput.trim()}>
+            <Button onClick={handleAddCustomMedical} size="sm" disabled={!customMedicalInput.trim()} className="bg-black text-white border border-white/30 hover:bg-white/10">
               Add
             </Button>
           </div>
@@ -465,7 +465,7 @@ export default function OnboardingStandalone() {
               placeholder="Add other allergy..."
               className="flex-1 text-white bg-black/40 border-white/20"
             />
-            <Button onClick={handleAddCustomAllergy} variant="outline" size="sm" disabled={!customAllergyInput.trim()}>
+            <Button onClick={handleAddCustomAllergy} size="sm" disabled={!customAllergyInput.trim()} className="bg-black text-white border border-white/30 hover:bg-white/10">
               Add
             </Button>
           </div>
@@ -508,7 +508,7 @@ export default function OnboardingStandalone() {
               placeholder="Add other restriction..."
               className="flex-1 text-white bg-black/40 border-white/20"
             />
-            <Button onClick={handleAddCustomDietary} variant="outline" size="sm" disabled={!customDietaryInput.trim()}>
+            <Button onClick={handleAddCustomDietary} size="sm" disabled={!customDietaryInput.trim()} className="bg-black text-white border border-white/30 hover:bg-white/10">
               Add
             </Button>
           </div>
