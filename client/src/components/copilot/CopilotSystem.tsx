@@ -3,9 +3,6 @@ import { CopilotProvider, CopilotAction, useCopilot } from "./CopilotContext";
 import { CopilotButton } from "./CopilotButton";
 import { CopilotSheet } from "./CopilotSheet";
 import { executeCommand, setResponseHandler } from "./CopilotCommandRegistry";
-import { SpotlightOverlay } from "./SpotlightOverlay";
-import { useWalkthroughController } from "./walkthrough/useWalkthroughController";
-import { registerCopilotCloser } from "./simple-walkthrough/simpleWalkthroughHelper";
 import { CopilotGuidedModeProvider } from "./CopilotGuidedModeContext";
 import { useCopilotPageExplanation } from "./useCopilotPageExplanation";
 
@@ -15,8 +12,7 @@ interface CopilotSystemProps {
 }
 
 const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { setLastResponse, close } = useCopilot();
-  const walkthrough = useWalkthroughController();
+  const { setLastResponse } = useCopilot();
 
   useCopilotPageExplanation();
 
@@ -27,27 +23,10 @@ const CopilotSystemInner: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   }, [setLastResponse]);
 
-  // Register Copilot closer so simple walkthrough can hide it
-  useEffect(() => {
-    registerCopilotCloser(close);
-  }, [close]);
-
   return (
     <>
       {children}
       <CopilotSheet />
-      
-      {/* Phase C.1: Spotlight Walkthrough System */}
-      {walkthrough.state.isActive && walkthrough.currentSpotlightStep && (
-        <SpotlightOverlay
-          currentStep={walkthrough.currentSpotlightStep}
-          onAdvance={walkthrough.next}
-          onExit={walkthrough.cancel}
-          canGoPrevious={false}
-          canGoNext={true}
-          onPrevious={() => {}}
-        />
-      )}
     </>
   );
 };

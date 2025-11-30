@@ -165,11 +165,10 @@ export const CopilotProvider: React.FC<CopilotProviderProps> = ({
     [onAction],
   );
 
-  // Add startWalkthrough method
-  const startWalkthrough = useCallback(async (scriptId: string) => {
-    // Dynamically import the launchWalkthrough command
-    const { launchWalkthrough } = await import("./commands/launchWalkthrough");
-    await launchWalkthrough(scriptId);
+  // Walkthrough system has been quarantined - this is now a no-op
+  // Users should use Quick Tour buttons instead
+  const startWalkthrough = useCallback(async (_scriptId: string) => {
+    console.log("Walkthrough system quarantined - use Quick Tour buttons instead");
   }, []);
 
   const value = useMemo<CopilotContextValue>(

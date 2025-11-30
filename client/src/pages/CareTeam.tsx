@@ -35,7 +35,6 @@ import {
   Crown
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 import { useQuickTour } from "@/hooks/useQuickTour";
 import { QuickTourModal, TourStep } from "@/components/guided/QuickTourModal";
 import { QuickTourButton } from "@/components/guided/QuickTourButton";
@@ -174,7 +173,6 @@ export default function CareTeamPage() {
       });
       setMembers((prev) => [response.member, ...prev]);
       setAccessCode("");
-      dispatchWalkthroughCompletion("careteam:linked");
       alert(`✅ Successfully connected with access code!`);
     } catch (e: any) {
       setError(e?.message ?? "Invalid or expired access code.");

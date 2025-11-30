@@ -4,9 +4,6 @@ import { useCopilot } from "./CopilotContext";
 import { useMicRecorder } from "@/hooks/useMicRecorder";
 import { ChefCapIcon } from "./ChefCapIcon";
 import { useToast } from "@/hooks/use-toast";
-import { FEATURES } from "@/featureFlags";
-import { SpotlightOverlay, SpotlightStep } from "./SpotlightOverlay";
-import { convertToSpotlightStep } from "./WalkthroughEngine";
 import { CopilotInputBar } from "./CopilotInputBar";
 import { isLikelyMisheard } from "./query/QueryProcessor";
 import { startCopilotIntro } from "./CopilotCommandRegistry";
@@ -335,17 +332,6 @@ export const CopilotSheet: React.FC = () => {
   };
 
   // =========================================
-  // SPOTLIGHT INTEGRATION
-  // =========================================
-  const spotlightActive = FEATURES.copilotSpotlight && isWalkthrough && currentStep;
-  const spotlightStep = spotlightActive && currentStep ? convertToSpotlightStep(currentStep) : null;
-  
-  const handleExitSpotlight = () => {
-    setLastResponse(null);
-    setWtIndex(0);
-  };
-
-  // =========================================
   // RENDER
   // =========================================
   return (
@@ -618,19 +604,6 @@ export const CopilotSheet: React.FC = () => {
             </div>
           </motion.div>
         </>
-      )}
-      {/* =========================================
-          SPOTLIGHT OVERLAY (Portal-mounted, outside AnimatePresence)
-          ========================================= */}
-      {spotlightActive && spotlightStep && (
-        <SpotlightOverlay
-          currentStep={spotlightStep}
-          onAdvance={nextStep}
-          onExit={handleExitSpotlight}
-          canGoPrevious={false}
-          canGoNext={true}
-          onPrevious={() => {}}
-        />
       )}
     </AnimatePresence>
   );

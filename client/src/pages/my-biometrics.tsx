@@ -27,7 +27,6 @@ import { useToast } from "@/hooks/use-toast";
 import { MACRO_SOURCES, getMacroSourceBySlug } from "@/lib/macroSourcesConfig";
 import ReadOnlyNote from "@/components/ReadOnlyNote";
 import OpenAI from "openai";
-import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 // ============================== CONFIG ==============================
 const SYNC_ENDPOINT = ""; // optional API endpoint; if set, we POST after local save
@@ -673,9 +672,6 @@ export default function MyBiometrics() {
       } else {
         toast({ title: "✓ Weight saved", description: "Your weight has been saved successfully." });
       }
-      
-      // Dispatch completion event for multi-page walkthrough flow
-      dispatchWalkthroughCompletion('biometrics:weightSaved');
     } catch (error) {
       console.error("Error saving weight:", error);
       toast({ 

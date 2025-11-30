@@ -1,4 +1,6 @@
-import { getWalkthroughConfig } from './WalkthroughRegistry';
+// Walkthrough system quarantined - stub the function with proper types
+type WalkthroughConfig = { scriptId?: string } | null;
+const getWalkthroughConfig = (_path: string): WalkthroughConfig => null;
 
 type StoreSubscriber = () => void;
 

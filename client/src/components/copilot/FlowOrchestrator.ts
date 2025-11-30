@@ -1,5 +1,8 @@
-import { getWalkthroughConfig } from './WalkthroughRegistry';
-import { getPageSegment } from './simple-walkthrough/simpleWalkthroughFlows';
+// Walkthrough system quarantined - stub these functions with proper types
+type WalkthroughConfig = { mode?: string; flowId?: string; scriptId?: string } | null;
+type PageSegment = { autoNavigate?: boolean } | null;
+const getWalkthroughConfig = (_path: string): WalkthroughConfig => null;
+const getPageSegment = (_flowId: string, _pathname: string): PageSegment => null;
 
 type FlowMap = Record<string, string[]>;
 type NavigationCallback = (path: string) => void;

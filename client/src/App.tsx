@@ -22,14 +22,10 @@ import { CopilotSystem } from "@/components/copilot/CopilotSystem";
 import type { CopilotAction } from "@/components/copilot/CopilotContext";
 import { setNavigationHandler, setModalHandler } from "@/components/copilot/CopilotCommandRegistry";
 import { useLocation } from "wouter";
-import { SpotlightOverlay } from "./components/copilot/SpotlightOverlay";
-import { useWalkthroughController } from "./components/copilot/walkthrough/useWalkthroughController";
 import { TourProvider } from "./contexts/TourContext";
 import { MobileVoiceHandler } from "./components/MobileVoiceHandler";
 import { OnboardingFooter } from "./components/OnboardingFooter";
 import { CopilotProvider } from "./components/copilot/CopilotContext";
-import { SimpleWalkthroughProvider } from "./components/copilot/simple-walkthrough/SimpleWalkthroughContext";
-import { SimpleWalkthroughManager } from "./components/copilot/simple-walkthrough/SimpleWalkthroughManager";
 
 
 
@@ -37,10 +33,6 @@ export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const { versionState } = useVersionCheck();
   const [, setLocation] = useLocation();
-  
-  // Walkthrough system disabled - race condition issues
-  // TODO: Re-enable after architectural fix
-  const ENABLE_WALKTHROUGH_OVERLAY = false;
 
   useEffect(() => {
     setNavigationHandler((path) => {
@@ -110,8 +102,7 @@ export default function App() {
         <TooltipProvider>
           <AuthProvider>
             <AudioProvider>
-              <SimpleWalkthroughProvider>
-                <ScrollManager />
+              <ScrollManager />
 
               {/* Forced Update Modal (blocks app access if version too old) */}
               {versionState?.forceUpdate && versionState.remoteInfo && (
@@ -132,10 +123,6 @@ export default function App() {
                 <VoiceConcierge />
                 <Toaster />
               </CopilotSystem>
-              
-                {/* Simple Walkthrough System - Independent of voice/TTS */}
-                <SimpleWalkthroughManager />
-              </SimpleWalkthroughProvider>
             </AudioProvider>
           </AuthProvider>
         </TooltipProvider>

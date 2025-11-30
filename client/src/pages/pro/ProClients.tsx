@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { proStore, ClientProfile, ProRole } from "@/lib/proData";
 import { Plus, User2, ArrowRight, ArrowLeft, Archive, RotateCcw } from "lucide-react";
 import TrashButton from "@/components/ui/TrashButton";
-import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 
 export default function ProClients(){
   const [, setLocation] = useLocation();
@@ -41,7 +40,6 @@ export default function ProClients(){
   };
   
   const go = (id:string)=> {
-    dispatchWalkthroughCompletion("pro:clientOpened");
     setLocation(`/pro/clients/${id}`);
   };
 

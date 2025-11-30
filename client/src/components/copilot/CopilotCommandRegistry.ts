@@ -4,13 +4,10 @@ import {
   generateOnePanFridgeRescue,
 } from "@/lib/copilotActions";
 import { explainFeature } from "./commands/explainFeature";
-import { startWalkthrough } from "./commands/startWalkthrough";
 import { shouldAllowAutoOpen } from "./CopilotRespectGuard";
-import beginScriptWalkthrough from "./commands/beginScriptWalkthrough";
 import { interpretFoodCommand } from "./NLEngine";
 import { FEATURES } from "@/featureFlags";
 import { findFeatureFromKeywords } from "./KeywordFeatureMap";
-import { waitForNavigationReady } from "./WalkthroughEngine";
 import {
   findFeatureFromRegistry,
   findSubOptionByAlias,
@@ -19,8 +16,42 @@ import {
   type FeatureDefinition,
   type SubOption,
 } from "./CanonicalAliasRegistry";
-import { hasScript } from "./walkthrough/ScriptRegistry";
-import { hubWalkthroughEngine } from "./walkthrough/engines/HubWalkthroughEngine";
+
+// Walkthrough system has been quarantined - these are now no-ops
+const startWalkthrough = async (_featureId: string): Promise<KnowledgeResponse> => ({
+  title: "Quick Tour Available",
+  description: "Look for the help (?) icon in the header to start a quick tour of this feature.",
+  spokenText: "Look for the help icon in the header to start a quick tour.",
+});
+
+const hasScript = (_scriptId: string): boolean => false;
+
+const waitForNavigationReady = async (_route?: string): Promise<void> => {};
+
+const beginScriptWalkthrough = async (
+  _scriptId: string,
+  _responseCallback?: ((response: KnowledgeResponse | null) => void) | undefined
+): Promise<{ success: boolean; response: KnowledgeResponse | null }> => ({
+  success: false,
+  response: {
+    title: "Quick Tour Available",
+    description: "Look for the help (?) icon in the header to start a quick tour.",
+    spokenText: "Look for the help icon in the header to start a quick tour.",
+  },
+});
+
+const hubWalkthroughEngine = {
+  start: async (_config: {
+    hubId: string;
+    hubName: string;
+    subOptions: Array<{ id: string; name: string; route: string; testId?: string; voiceAliases: string[] }>;
+    selectionPrompt: string;
+    voiceTimeoutMessage: string;
+    onSelection: (subOption: { id: string; name: string; route: string }) => Promise<void>;
+    responseCallback?: (response: KnowledgeResponse | null) => void;
+    onError?: (error: string) => void;
+  }): Promise<void> => {},
+};
 
 type CommandHandler = (payload?: any) => Promise<void>;
 type NavigationHandler = (path: string) => void;

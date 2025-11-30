@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { proStore, Targets, ClinicalContext } from "@/lib/proData";
-import { dispatchWalkthroughCompletion } from "@/components/copilot/simple-walkthrough/SimpleWalkthroughFlowController";
 import {
   Settings,
   ClipboardList,
@@ -465,8 +464,6 @@ export default function ProClientDashboard() {
                       "@/lib/macroResolver"
                     );
                     linkUserToClient(clientId, clientId);
-
-                    dispatchWalkthroughCompletion("pro:macrosSent");
                     
                     toast({
                       title: "✅ Macros Set to Biometrics!",
